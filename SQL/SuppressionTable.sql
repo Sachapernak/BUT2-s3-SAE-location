@@ -1,4 +1,3 @@
-
 -- desactiver les FK
 BEGIN
     FOR rec IN (SELECT uc.constraint_name, ucc.table_name
@@ -41,6 +40,7 @@ TRUNCATE TABLE SAE_Charge_cf;
 TRUNCATE TABLE SAE_charge_index;
 /
 
+-- Reactiver les FK
 BEGIN
     FOR rec IN (SELECT uc.constraint_name, ucc.table_name
                 FROM user_constraints uc
@@ -54,6 +54,7 @@ BEGIN
 END;
 /
 
+-- Afficher les contraintes des tables
 SELECT table_name,
           CASE constraint_type
        WHEN 'C' THEN 'Check Constraint'
