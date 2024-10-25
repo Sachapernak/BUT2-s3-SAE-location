@@ -152,6 +152,13 @@ CREATE TABLE SAE_document_comptable(
    CONSTRAINT fk_SAE_doc_compta_id_logement FOREIGN KEY(identifiant_logement) REFERENCES SAE_Bien_locatif(identifiant_logement)
 );
 
+ALTER TABLE SAE_document_comptable
+ADD CONSTRAINT chk_SAE_doc_compta_type
+CHECK (
+    (Type_de_document!= 'quittance' OR SIRET IS NULL) AND
+    (Type_de_document = 'quittance' OR SIRET IS NOT NULL)
+);
+
 CREATE TABLE sae_charge_index(
    Date_de_releve DATE,
    Type VARCHAR2(50) ,
