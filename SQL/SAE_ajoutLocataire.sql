@@ -9,7 +9,7 @@ begin
     if (p_id_locataire is null or p_id_bail is null) then
         raise_application_error(-20011, 'L''identifiant du locataire et du bail doivent etre renseignes');
     end if;
-    if (p_date_sortie < p_date_entreee) then
+    if (p_date_sortie < p_date_entree) then
         raise_application_error(-20012, 'La date d''entree ne peut pas etre superieur a celui de sortie');
     end if;
 
@@ -53,8 +53,8 @@ create or replace procedure SAE_ajoutLocataire(
     P_PROV_POUR_CHARGE sae_bail.provision_pour_charge%TYPE, 
     P_DATE_DEB_BAIL sae_bail.date_de_debut%TYPE, 
     P_DATE_FIN_BAIL sae_bail.date_de_fin%TYPE,
-    P_DATE_entre_contrat sae_contracter.date_d_entreen%TYPE,
-    p_date_sortie_contrat sae_contracter.date_de_sortiet%TYPE,
+    P_DATE_entre_contrat sae_contracter.date_d_entree%TYPE,
+    p_date_sortie_contrat sae_contracter.date_de_sortie%TYPE,
     p_part_loyer_contrat sae_contracter.part_de_loyer%TYPE)
 as
 begin
@@ -86,7 +86,7 @@ begin
     end;
 
     begin
-        SAE_contracter(p_id_loc, p_id_bail,p_date_sortie_contrat,P_DATE_entre_contrat,p_part_loyer);
+        SAE_ajoutcontracter(p_id_loc, p_id_bail,p_date_sortie_contrat,P_DATE_entre_contrat,p_part_loyer_contrat);
     exception
         when others then
             raise_application_error(-20018, 'Erreur lors de l''ajout du contrat');
@@ -99,12 +99,12 @@ end;
 
 
 -- Test 1: Ajout d'un locataire avec un bail
-call SAE_ajoutLocataire('LOC747', 'Dupont', 'Jean', 'jdm', '0678',null, 75001,TO_DATE('1980-05-20', 'YYYY-MM-DD'),'jdaoiejdiaeojdoj','Paris',null,null,null,'B001', 100.00, TO_DATE('2023-01-01', 'YYYY-MM-DD'), TO_DATE('2024-01-01', 'YYYY-MM-DD'));
+call SAE_ajoutLocataire('LOC747', 'Dupont', 'Jean', 'jdm', '0678',null, 75001,TO_DATE('1980-05-20', 'YYYY-MM-DD'),'jdaoiejdiaeojdoj','Paris',null,null,null,'B001', 100.00, TO_DATE('2023-01-01', 'YYYY-MM-DD'), TO_DATE('2024-01-01', 'YYYY-MM-DD'),TO_DATE('2023-01-01', 'YYYY-MM-DD'), TO_DATE('2024-01-01', 'YYYY-MM-DD'),3.22);
 
 
 -- Test 2: Ajout d'un autre locataire avec un bail
 
-call SAE_ajoutLocataire('LOC002', 'Martin', 'Paul', 'paul.martin@example.com', '0623456789', '0654321987', 69001, TO_DATE('1985-03-15', 'YYYY-MM-DD'),'Caution 67890', 'Lyon', NULL, NULL, NULL,'B002', 200.00, TO_DATE('2024-02-01', 'YYYY-MM-DD'), TO_DATE('2026-02-01', 'YYYY-MM-DD'));
+call SAE_ajoutLocataire('LOC002', 'Martin', 'Paul', 'paul.martin@example.com', '0623456789', '0654321987', 69001, TO_DATE('1985-03-15', 'YYYY-MM-DD'),'Caution 67890', 'Lyon', NULL, NULL, NULL,'B002', 200.00, TO_DATE('2024-02-01', 'YYYY-MM-DD'), TO_DATE('2026-02-01', 'YYYY-MM-DD'),TO_DATE('2023-01-01', 'YYYY-MM-DD'), TO_DATE('2024-01-01', 'YYYY-MM-DD'),3.22);
 /
 -- V?rification des insertions dans la table SAE_LOCATAIRE
 SELECT * FROM sae_locataire WHERE identifiant_locataire = 'LOC747';
@@ -114,5 +114,10 @@ SELECT * FROM sae_locataire WHERE identifiant_locataire = 'LOC002';
 SELECT * FROM sae_bail WHERE id_bail = 'B001';
 SELECT * FROM sae_bail WHERE id_bail = 'B002';
 
+-- V?rification des insertions dans la table SAE_Contracter
+SELECT * FROM sae_contracter WHERE id_bail = 'B001' and identifiant_locataire = 'LOC747';
+SELECT * FROM sae_contracter WHERE id_bail = 'B002' and identifiant_locataire = 'LOC747';
+
 -- Annuler les transactions pour ?viter d'alt?rer la base de donn?es
 ROLLBACK;
+
