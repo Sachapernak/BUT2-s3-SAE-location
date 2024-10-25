@@ -15,24 +15,7 @@ end;
 
 create or replace procedure SAE_ajoutLocataire(
     P_ID_LOC sae_locataire.identifiant_locataire%TYPE, 
-    P_NOM sae_locataire.nom_locataire%TYPE,
-    P_PRENOM sae_locataire.prenom_locataire%TYPE, 
-    P_EMAIL sae_locataire.email_locataire%TYPE,
-    P_TEL1 sae_locataire.telephone_1_locataire%TYPE,
-    P_TEL2 sae_locataire.telephone_2_locataire%TYPE,
-    P_CP sae_locataire.code_postal_locataire%TYPE,
-    P_DDN sae_locataire.date_naissance%TYPE,
-    P_ACTECAUTION  sae_locataire.acte_de_caution%TYPE,
-    P_LIEUNAISSANCE sae_locataire.lieu_de_naissance%TYPE,
-    P_ADR_OPT sae_locataire.adresse_optionnelle%TYPE, 
-    P_CP_OPT sae_locataire.code_postal_optionnel%TYPE,
-    P_VILLE_OPT sae_locataire.ville_optionnel%TYPE,
-    P_ID_BAIL sae_bail.id_bail%TYPE, 
-    P_PROV_POUR_CHARGE sae_bail.provision_pour_charge%TYPE, 
-    P_DATE_DEB_BAIL sae_bail.date_de_debut%TYPE, 
-    P_DATE_FIN_BAIL sae_bail.date_de_fin%TYPE)
-as
-begin
+    P_NOM sae_locataire.nom_locataire%TYPE, 
 
     if (p_id_loc is null or p_nom is null or p_cp is null or p_ddn is null) then
         raise_application_error(-20017, 'L''identifiant du locataire, son nom, son code postal et sa date de naissance doivent etre renseignes');
