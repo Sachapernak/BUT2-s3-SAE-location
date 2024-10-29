@@ -180,7 +180,7 @@ CREATE TABLE SAE_Charge_cf(
    numero_document VARCHAR2(50)  NOT NULL,
    Date_document DATE NOT NULL,
    CONSTRAINT pk_SAE_Charge_cf PRIMARY KEY(Date_de_charge, Type),
-   CONSTRAINT un_SAE_chg_fixe_doc UNIQUE(numero_document, Date_document),
+   CONSTRAINT un_SAE_chg_cf_index_doc UNIQUE(numero_document, Date_document),
    CONSTRAINT fk_SAE_chg_cf_doc_compta FOREIGN KEY(numero_document, Date_document) REFERENCES SAE_document_comptable(numero_document, Date_document)
 );
 
@@ -237,7 +237,7 @@ CREATE TABLE sae_comprendre_charge_variable(
    Date_de_releve DATE,
    Type VARCHAR2(50) ,
    part_des_charges NUMBER(3,2)  ,
-   CONSTRAINT pk_sae_compr_ch_vr PRIMARY KEY(identifiant_logement, Date_de_releve, Type),
+   CONSTRAINT pk_sae_compr_chge_vr PRIMARY KEY(identifiant_logement, Date_de_releve, Type),
    CONSTRAINT fk_sae_compr_ch_vr_id_logement FOREIGN KEY(identifiant_logement) REFERENCES SAE_Bien_locatif(identifiant_logement),
    CONSTRAINT fk_sae_compr_ch_vr_date FOREIGN KEY(Date_de_releve, Type) REFERENCES sae_charge_index(Date_de_releve, Type)
 );
