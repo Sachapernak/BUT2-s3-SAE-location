@@ -1,5 +1,5 @@
 set serveroutput on 
---Création du paquetage (l'entête) d'une liste d'adresse
+--Crï¿½ation du paquetage (l'entï¿½te) d'une liste d'adresse
 create or replace package SAE_DAO_ADRESSE as 
 
     TYPE T_ADRESSE_RECORD IS RECORD (
@@ -29,6 +29,8 @@ create or replace package SAE_DAO_ADRESSE as
     p_code_postal sae_ADRESSE.code_postal_%type, 
     p_ville sae_ADRESSE.ville%type, 
     p_complement_adresse sae_ADRESSE.complement_adresse%type);
+    
+    
 end SAE_DAO_ADRESSE;
 /
 CREATE OR REPLACE PACKAGE BODY SAE_DAO_ADRESSE AS
@@ -44,7 +46,7 @@ CREATE OR REPLACE PACKAGE BODY SAE_DAO_ADRESSE AS
     BEGIN
     
         FOR vADRESSE IN curADRESSES LOOP
-            res.EXTEND;  -- Étendre la collection `res` pour ajouter une nouvelle ligne
+            res.EXTEND;  -- ï¿½tendre la collection `res` pour ajouter une nouvelle ligne
             vADRESSERECORD.id_sae_adresse := vADRESSE.id_sae_adresse;
             vADRESSERECORD.adresse := vADRESSE.adresse;
             vADRESSERECORD.code_postal := vADRESSE.code_postal_;
@@ -62,19 +64,20 @@ CREATE OR REPLACE PACKAGE BODY SAE_DAO_ADRESSE AS
         CURSOR curADRESSES IS 
             SELECT id_sae_adresse, adresse, code_postal_, ville, complement_adresse
             FROM SAE_ADRESSE
-            where id_sae_adresse = p_id_adresse
+            
             ORDER BY id_sae_adresse;
 
         vADRESSERECORD T_ADRESSE_RECORD; 
     BEGIN
     
         FOR vADRESSE IN curADRESSES LOOP
-            vADRESSERECORD.id_sae_adresse := vADRESSE.id_sae_adresse;
-            vADRESSERECORD.adresse := vADRESSE.adresse;
-            vADRESSERECORD.code_postal := vADRESSE.code_postal_;
-            vADRESSERECORD.ville := vADRESSE.ville;
-            vADRESSERECORD.complement_adresse := vADRESSE.complement_adresse;
-
+            if (vADRESSE.id_sae_adresse = p_id_adresse) then
+                vADRESSERECORD.id_sae_adresse := vADRESSE.id_sae_adresse;
+                vADRESSERECORD.adresse := vADRESSE.adresse;
+                vADRESSERECORD.code_postal := vADRESSE.code_postal_;
+                vADRESSERECORD.ville := vADRESSE.ville;
+                vADRESSERECORD.complement_adresse := vADRESSE.complement_adresse;
+            end if;
         END LOOP;
 
         RETURN vADRESSERECORD;
@@ -98,7 +101,7 @@ CREATE OR REPLACE PACKAGE BODY SAE_DAO_ADRESSE AS
             exception 
                 when dup_val_on_index then raise_application_error(-20012, 'L''adresse est deja dans la base de donnees');
 
-    end;    
+    end SAE_INSERT_ADRESSE;    
 
 
     procedure sae_delete_adresse(p_id_adresse sae_adresse.id_sae_adresse%type) as
@@ -106,7 +109,7 @@ CREATE OR REPLACE PACKAGE BODY SAE_DAO_ADRESSE AS
     begin
 
         delete from sae_adresse where id_sae_adresse = p_id_adresse;
-    end;
+    end sae_delete_adresse;
 
     procedure SAE_UPDATE_ADRESSE(
     P_ID_ADRESSE sae_ADRESSE.id_sae_adresse%type, 
@@ -120,7 +123,7 @@ CREATE OR REPLACE PACKAGE BODY SAE_DAO_ADRESSE AS
             raise_application_error(-20013, 'Sans l''identifiant on ne pourra pas cibler la ligne que tu souhaties modifier.');
         end if;
         if (p_adresse is null and p_code_postal is null and p_ville is null and p_complement_adresse is null) then
-            raise_application_error(-20014, 'Qu''est-ce que tu veux faire avec Adresse si tu ne met aucun paramètre a modifier');
+            raise_application_error(-20014, 'Qu''est-ce que tu veux faire avec Adresse si tu ne met aucun paramï¿½tre a modifier');
 
         end if;
 
@@ -128,7 +131,7 @@ CREATE OR REPLACE PACKAGE BODY SAE_DAO_ADRESSE AS
         set adresse = p_adresse, code_postal_ = p_code_postal, ville = p_ville, complement_adresse = p_complement_adresse
         where id_sae_adresse = p_id_adresse;
             
-    end;
+    end SAE_UPDATE_ADRESSE;
 
 END SAE_DAO_ADRESSE;
 /
@@ -143,13 +146,13 @@ INSERT INTO SAE_ADRESSE(id_sae_adresse, adresse, code_postal_, ville) values ('A
 INSERT INTO SAE_ADRESSE(id_sae_adresse, adresse, code_postal_, ville) values ('AL0005', 'gouil.martin@example.com', '21002', 'Lavaur');
 
 DECLARE
-    -- Variable pour stocker le tableau retourn� par la fonction
+    -- Variable pour stocker le tableau retourn? par la fonction
     res SAE_DAO_ADRESSE.T_ADRESSES;
     res2 SAE_DAO_ADRESSE.T_ADRESSE_RECORD;
     -- Index pour parcourir le tableau
     
 BEGIN
-    -- Appel de la fonction pour r�cup�rer les baux
+    -- Appel de la fonction pour r?cup?rer les baux
     res := SAE_DAO_ADRESSE.GET_ADRESSES();
     res2 := SAE_DAO_ADRESSE.GET_ADRESSE('AL0005');
     -- Boucle pour parcourir et afficher chaque element du tableau retourne
@@ -174,16 +177,16 @@ END;
 
 -- TEST Insert
 
--- Toutes les paramètres sont valides (doit passé)
+-- Toutes les paramï¿½tres sont valides (doit passï¿½)
 BEGIN
     SAE_DAO_ADRESSE.SAE_INSERT_ADRESSE(
         P_ID_ADRESSE => 'AD001',
         p_adresse => '1 rue de la Paix',
         p_code_postal => '75001',
         p_ville => 'Paris',
-        p_complement_adresse => '2e étage'
+        p_complement_adresse => '2e ï¿½tage'
     );
-    DBMS_OUTPUT.PUT_LINE('Test 1: Insertion réussie.');
+    DBMS_OUTPUT.PUT_LINE('Test 1: Insertion rï¿½ussie.');
 EXCEPTION
     WHEN OTHERS THEN
         DBMS_OUTPUT.PUT_LINE('Test 1: Erreur - ' || SQLERRM);
@@ -191,23 +194,23 @@ END;
 /
 
 
--- Une valeur NULL pour un champ obligatoire (ne doit pas passé)
+-- Une valeur NULL pour un champ obligatoire (ne doit pas passï¿½)
 BEGIN
     SAE_DAO_ADRESSE.SAE_INSERT_ADRESSE(
         P_ID_ADRESSE => 'AD002',
         p_adresse => NULL,
         p_code_postal => '69001',
         p_ville => 'Lyon',
-        p_complement_adresse => '3e étage'
+        p_complement_adresse => '3e ï¿½tage'
     );
     DBMS_OUTPUT.PUT_LINE('Test 2: Il y a un null refait gro');
 EXCEPTION
     WHEN OTHERS THEN
-        DBMS_OUTPUT.PUT_LINE('Test 2: Réussi - ' || SQLERRM);
+        DBMS_OUTPUT.PUT_LINE('Test 2: Rï¿½ussi - ' || SQLERRM);
 END;
 /
 
--- Tentative d'insertion avec le même ID pour tester le doublon (ne doit pas passé)
+-- Tentative d'insertion avec le mï¿½me ID pour tester le doublon (ne doit pas passï¿½)
 
 BEGIN
    
@@ -222,7 +225,7 @@ BEGIN
     DBMS_OUTPUT.PUT_LINE('Test 3: l''ID est en double, refait gro');
 EXCEPTION
     WHEN OTHERS THEN
-        DBMS_OUTPUT.PUT_LINE('Test 3: réussie' || SQLERRM);
+        DBMS_OUTPUT.PUT_LINE('Test 3: rï¿½ussie' || SQLERRM);
 END;
 /
 
@@ -231,7 +234,7 @@ END;
 
 call SAE_DAO_ADRESSE.sae_delete_adresse('AL0001');
 
--- n'est rien censé afficher.
+-- n'est rien censï¿½ afficher.
 SELECT * FROM SAE_ADRESSE where id_sae_adresse = 'AL0001';
 
 /
@@ -240,16 +243,10 @@ SELECT * FROM SAE_ADRESSE where id_sae_adresse = 'AL0001';
 -- TEST UPDATING
 
 
--- Toutes les paramètres sont valides (doit passer)
+-- Toutes les paramï¿½tres sont valides (doit passer)
 BEGIN
-    SAE_UPDATE_ADRESSE(
-        P_ID_ADRESSE => 'AL0001',
-        p_adresse => '10 rue de la Liberté',
-        p_code_postal => '75001',
-        p_ville => 'Paris',
-        p_complement_adresse => '4e étage'
-    );
-    DBMS_OUTPUT.PUT_LINE('Test 1: Mise à jour complète réussie.');
+    sae_dao_adresse.sae_update_adresse('AL0001','10 rue de la Liberte','75001','Paris', '4e ï¿½tage');
+    DBMS_OUTPUT.PUT_LINE('Test 1: Mise ï¿½ jour complï¿½te rï¿½ussie.');
 EXCEPTION
     WHEN OTHERS THEN
         DBMS_OUTPUT.PUT_LINE('Test 1: Erreur - ' || SQLERRM);
@@ -260,17 +257,17 @@ END;
 
 -- Une valeur NULL pour l'ID (ne doit pas passer)
 BEGIN
-    SAE_UPDATE_ADRESSE(
+    SAE_DAO_ADRESSE.SAE_UPDATE_ADRESSE(
         P_ID_ADRESSE => NULL,  -- Identifiant manquant
-        p_adresse => '20 avenue des Champs-Élysées',
+        p_adresse => '20 avenue des Champs-ï¿½lysï¿½es',
         p_code_postal => '75008',
         p_ville => 'Paris',
-        p_complement_adresse => '2e étage'
+        p_complement_adresse => '2e ï¿½tage'
     );
     DBMS_OUTPUT.PUT_LINE('Test 2: Il y a un null');
 EXCEPTION
     WHEN OTHERS THEN
-        DBMS_OUTPUT.PUT_LINE('Test 2: Réussi - ' || SQLERRM);
+        DBMS_OUTPUT.PUT_LINE('Test 2: Rï¿½ussi - ' || SQLERRM);
 END;
 /
 
@@ -278,7 +275,7 @@ END;
 
 BEGIN
    
-    SAE_UPDATE_ADRESSE(
+    SAE_DAO_ADRESSE.SAE_UPDATE_ADRESSE(
         P_ID_ADRESSE => 'AL0001',
         p_adresse => NULL,
         p_code_postal => NULL,
@@ -289,7 +286,7 @@ BEGIN
     DBMS_OUTPUT.PUT_LINE('Test 3: aucun parametre a modifier et a quoi ca sert ?');
 EXCEPTION
     WHEN OTHERS THEN
-        DBMS_OUTPUT.PUT_LINE('Test 3: réussie' || SQLERRM);
+        DBMS_OUTPUT.PUT_LINE('Test 3: rï¿½ussie' || SQLERRM);
 END;
 /
 
