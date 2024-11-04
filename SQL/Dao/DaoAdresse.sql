@@ -2,28 +2,16 @@ set serveroutput on
 --Crï¿½ation du paquetage (l'entï¿½te) d'une liste d'adresse
 create or replace package SAE_DAO_ADRESSE as 
 
-    TYPE T_ADRESSE_RECORD IS RECORD (
-        id_sae_adresse VARCHAR2(20),
-        adresse VARCHAR2(100),
-        code_postal VARCHAR2(10),
-        ville VARCHAR2(50),
-        complement_adresse VARCHAR2(100)
-    );
-    type T_ADRESSES is table of T_ADRESSE_RECORD;
-
-   
-    function GET_ADRESSES return T_ADRESSES;
-    function GET_ADRESSE(p_id_adresse sae_adresse.id_sae_adresse%TYPE) return T_ADRESSE_RECORD;
-    procedure SAE_INSERT_ADRESSE(
+    procedure SAE_CREATE(
     P_ID_ADRESSE sae_ADRESSE.id_sae_adresse%type, 
     p_adresse sae_ADRESSE.adresse%type, 
     p_code_postal sae_ADRESSE.code_postal_%type, 
     p_ville sae_ADRESSE.ville%type, 
     p_complement_adresse sae_ADRESSE.complement_adresse%type);
 
-    procedure sae_delete_adresse(p_id_adresse sae_adresse.id_sae_adresse%type);
+    procedure SAE_DELETE(p_id_adresse sae_adresse.id_sae_adresse%type);
 
-    procedure SAE_UPDATE_ADRESSE(
+    procedure SAE_UPDATE(
     P_ID_ADRESSE sae_ADRESSE.id_sae_adresse%type, 
     p_adresse sae_ADRESSE.adresse%type, 
     p_code_postal sae_ADRESSE.code_postal_%type, 
@@ -34,57 +22,8 @@ create or replace package SAE_DAO_ADRESSE as
 end SAE_DAO_ADRESSE;
 /
 CREATE OR REPLACE PACKAGE BODY SAE_DAO_ADRESSE AS
-    FUNCTION GET_ADRESSES RETURN T_ADRESSES AS
     
-        CURSOR curADRESSES IS 
-            SELECT id_sae_adresse, adresse, code_postal_, ville, complement_adresse
-            FROM SAE_ADRESSE
-            ORDER BY id_sae_adresse;
-
-        res T_ADRESSES := T_ADRESSES();  -- Initialisation de la collection principale
-        vADRESSERECORD T_ADRESSE_RECORD; 
-    BEGIN
-    
-        FOR vADRESSE IN curADRESSES LOOP
-            res.EXTEND;  -- ï¿½tendre la collection `res` pour ajouter une nouvelle ligne
-            vADRESSERECORD.id_sae_adresse := vADRESSE.id_sae_adresse;
-            vADRESSERECORD.adresse := vADRESSE.adresse;
-            vADRESSERECORD.code_postal := vADRESSE.code_postal_;
-            vADRESSERECORD.ville := vADRESSE.ville;
-            vADRESSERECORD.complement_adresse := vADRESSE.complement_adresse;
-
-            res(res.count) := vADRESSERECORD;
-        END LOOP;
-
-        RETURN res;
-    END GET_ADRESSES;
-
-    function GET_ADRESSE(p_id_adresse sae_adresse.id_sae_adresse%TYPE) return T_ADRESSE_RECORD AS
-    
-        CURSOR curADRESSES IS 
-            SELECT id_sae_adresse, adresse, code_postal_, ville, complement_adresse
-            FROM SAE_ADRESSE
-            
-            ORDER BY id_sae_adresse;
-
-        vADRESSERECORD T_ADRESSE_RECORD; 
-    BEGIN
-    
-        FOR vADRESSE IN curADRESSES LOOP
-            if (vADRESSE.id_sae_adresse = p_id_adresse) then
-                vADRESSERECORD.id_sae_adresse := vADRESSE.id_sae_adresse;
-                vADRESSERECORD.adresse := vADRESSE.adresse;
-                vADRESSERECORD.code_postal := vADRESSE.code_postal_;
-                vADRESSERECORD.ville := vADRESSE.ville;
-                vADRESSERECORD.complement_adresse := vADRESSE.complement_adresse;
-            end if;
-        END LOOP;
-
-        RETURN vADRESSERECORD;
-    END GET_ADRESSE;
-
-
-    procedure SAE_INSERT_ADRESSE(
+    procedure SAE_CREATE(
     P_ID_ADRESSE sae_ADRESSE.id_sae_adresse%type, 
     p_adresse sae_ADRESSE.adresse%type, 
     p_code_postal sae_ADRESSE.code_postal_%type, 
@@ -101,17 +40,17 @@ CREATE OR REPLACE PACKAGE BODY SAE_DAO_ADRESSE AS
             exception 
                 when dup_val_on_index then raise_application_error(-20012, 'L''adresse est deja dans la base de donnees');
 
-    end SAE_INSERT_ADRESSE;    
+    end SAE_CREATE;    
 
 
-    procedure sae_delete_adresse(p_id_adresse sae_adresse.id_sae_adresse%type) as
+    procedure SAE_DELETE(p_id_adresse sae_adresse.id_sae_adresse%type) as
 
     begin
 
         delete from sae_adresse where id_sae_adresse = p_id_adresse;
-    end sae_delete_adresse;
+    end SAE_DELETE;
 
-    procedure SAE_UPDATE_ADRESSE(
+    procedure SAE_UPDATE(
     P_ID_ADRESSE sae_ADRESSE.id_sae_adresse%type, 
     p_adresse sae_ADRESSE.adresse%type, 
     p_code_postal sae_ADRESSE.code_postal_%type, 
@@ -131,7 +70,7 @@ CREATE OR REPLACE PACKAGE BODY SAE_DAO_ADRESSE AS
         set adresse = p_adresse, code_postal_ = p_code_postal, ville = p_ville, complement_adresse = p_complement_adresse
         where id_sae_adresse = p_id_adresse;
             
-    end SAE_UPDATE_ADRESSE;
+    end SAE_UPDATE;
 
 END SAE_DAO_ADRESSE;
 /
@@ -144,42 +83,13 @@ INSERT INTO SAE_ADRESSE(id_sae_adresse, adresse, code_postal_, ville) values ('A
 INSERT INTO SAE_ADRESSE(id_sae_adresse, adresse, code_postal_, ville) values ('AL0003', 'louise.martin@example.com', '54002', 'Bordeaux');
 INSERT INTO SAE_ADRESSE(id_sae_adresse, adresse, code_postal_, ville) values ('AL0004', 'maji.martin@example.com', '23002', 'Lyon');
 INSERT INTO SAE_ADRESSE(id_sae_adresse, adresse, code_postal_, ville) values ('AL0005', 'gouil.martin@example.com', '21002', 'Lavaur');
-
-DECLARE
-    -- Variable pour stocker le tableau retourn? par la fonction
-    res SAE_DAO_ADRESSE.T_ADRESSES;
-    res2 SAE_DAO_ADRESSE.T_ADRESSE_RECORD;
-    -- Index pour parcourir le tableau
-    
-BEGIN
-    -- Appel de la fonction pour r?cup?rer les baux
-    res := SAE_DAO_ADRESSE.GET_ADRESSES();
-    res2 := SAE_DAO_ADRESSE.GET_ADRESSE('AL0005');
-    -- Boucle pour parcourir et afficher chaque element du tableau retourne
-    
-    FOR i IN 1 .. res.COUNT LOOP
-        DBMS_OUTPUT.PUT_LINE('ID: ' || res(i).id_sae_adresse || 
-                             ', Adresse: ' || res(i).adresse ||
-                             ', Code Postal: ' || res(i).code_postal ||
-                             ', Ville: ' || res(i).ville ||
-                             ', Complement adresse: ' || res(i).complement_adresse);
-    END LOOP;
-    DBMS_OUTPUT.PUT_LINE('----------------------------------------------------------------');
-    DBMS_OUTPUT.PUT_LINE('ID: ' || res2.id_sae_adresse || 
-                             ', Adresse: ' || res2.adresse ||
-                             ', Code Postal: ' || res2.code_postal ||
-                             ', Ville: ' || res2.ville ||
-                             ', Complement adresse: ' || res2.complement_adresse);
-    
-END;
 /
-
 
 -- TEST Insert
 
 -- Toutes les paramï¿½tres sont valides (doit passï¿½)
 BEGIN
-    SAE_DAO_ADRESSE.SAE_INSERT_ADRESSE(
+    SAE_DAO_ADRESSE.SAE_CREATE(
         P_ID_ADRESSE => 'AD001',
         p_adresse => '1 rue de la Paix',
         p_code_postal => '75001',
@@ -196,7 +106,7 @@ END;
 
 -- Une valeur NULL pour un champ obligatoire (ne doit pas passï¿½)
 BEGIN
-    SAE_DAO_ADRESSE.SAE_INSERT_ADRESSE(
+    SAE_DAO_ADRESSE.SAE_CREATE(
         P_ID_ADRESSE => 'AD002',
         p_adresse => NULL,
         p_code_postal => '69001',
@@ -206,7 +116,7 @@ BEGIN
     DBMS_OUTPUT.PUT_LINE('Test 2: Il y a un null refait gro');
 EXCEPTION
     WHEN OTHERS THEN
-        DBMS_OUTPUT.PUT_LINE('Test 2: Rï¿½ussi - ' || SQLERRM);
+        DBMS_OUTPUT.PUT_LINE('Test 2: Reussi - ' || SQLERRM);
 END;
 /
 
@@ -214,7 +124,7 @@ END;
 
 BEGIN
    
-    SAE_DAO_ADRESSE.SAE_INSERT_ADRESSE(
+    SAE_DAO_ADRESSE.SAE_CREATE(
         P_ID_ADRESSE => 'AD001',
         p_adresse => '10 boulevard Saint-Germain',
         p_code_postal => '75005',
@@ -232,7 +142,7 @@ END;
 -- TEST DELETE 
 
 
-call SAE_DAO_ADRESSE.sae_delete_adresse('AL0001');
+call SAE_DAO_ADRESSE.SAE_DELETE('AL0001');
 
 -- n'est rien censï¿½ afficher.
 SELECT * FROM SAE_ADRESSE where id_sae_adresse = 'AL0001';
@@ -245,7 +155,7 @@ SELECT * FROM SAE_ADRESSE where id_sae_adresse = 'AL0001';
 
 -- Toutes les paramï¿½tres sont valides (doit passer)
 BEGIN
-    sae_dao_adresse.sae_update_adresse('AL0001','10 rue de la Liberte','75001','Paris', '4e ï¿½tage');
+    sae_dao_adresse.SAE_UPDATE('AL0001','10 rue de la Liberte','75001','Paris', '4e ï¿½tage');
     DBMS_OUTPUT.PUT_LINE('Test 1: Mise ï¿½ jour complï¿½te rï¿½ussie.');
 EXCEPTION
     WHEN OTHERS THEN
@@ -257,7 +167,7 @@ END;
 
 -- Une valeur NULL pour l'ID (ne doit pas passer)
 BEGIN
-    SAE_DAO_ADRESSE.SAE_UPDATE_ADRESSE(
+    SAE_DAO_ADRESSE.SAE_UPDATE(
         P_ID_ADRESSE => NULL,  -- Identifiant manquant
         p_adresse => '20 avenue des Champs-ï¿½lysï¿½es',
         p_code_postal => '75008',
@@ -275,7 +185,7 @@ END;
 
 BEGIN
    
-    SAE_DAO_ADRESSE.SAE_UPDATE_ADRESSE(
+    SAE_DAO_ADRESSE.SAE_UPDATE(
         P_ID_ADRESSE => 'AL0001',
         p_adresse => NULL,
         p_code_postal => NULL,
