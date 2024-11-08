@@ -59,10 +59,10 @@ CREATE OR REPLACE PACKAGE BODY SAE_DAO_ADRESSE AS
     as
     begin
         if (P_ID_ADRESSE is null) then
-            raise_application_error(-20013, 'Sans l''identifiant on ne pourra pas cibler la ligne que tu souhaties modifier.');
+            raise_application_error(-20013, 'Vous devez renseigner l''identifiant, sans cela, on ne pourra pas cibler la ligne a modifier.');
         end if;
         if (p_adresse is null and p_code_postal is null and p_ville is null and p_complement_adresse is null) then
-            raise_application_error(-20014, 'Qu''est-ce que tu veux faire avec Adresse si tu ne met aucun paramï¿½tre a modifier');
+            raise_application_error(-20014, 'Vous devez renseigner des valeurs a modifier');
 
         end if;
 
@@ -94,9 +94,9 @@ BEGIN
         p_adresse => '1 rue de la Paix',
         p_code_postal => '75001',
         p_ville => 'Paris',
-        p_complement_adresse => '2e ï¿½tage'
+        p_complement_adresse => '2e etage'
     );
-    DBMS_OUTPUT.PUT_LINE('Test 1: Insertion rï¿½ussie.');
+    DBMS_OUTPUT.PUT_LINE('Test 1: Insertion reussie.');
 EXCEPTION
     WHEN OTHERS THEN
         DBMS_OUTPUT.PUT_LINE('Test 1: Erreur - ' || SQLERRM);
@@ -111,9 +111,9 @@ BEGIN
         p_adresse => NULL,
         p_code_postal => '69001',
         p_ville => 'Lyon',
-        p_complement_adresse => '3e ï¿½tage'
+        p_complement_adresse => '3e etage'
     );
-    DBMS_OUTPUT.PUT_LINE('Test 2: Il y a un null refait gro');
+    DBMS_OUTPUT.PUT_LINE('Test 2: Il y a un null, l''insertion n''est pas cense passer');
 EXCEPTION
     WHEN OTHERS THEN
         DBMS_OUTPUT.PUT_LINE('Test 2: Reussi - ' || SQLERRM);
@@ -132,10 +132,10 @@ BEGIN
         p_complement_adresse => NULL
     );
 
-    DBMS_OUTPUT.PUT_LINE('Test 3: l''ID est en double, refait gro');
+    DBMS_OUTPUT.PUT_LINE('Test 3: l''ID est en double, l''insertion n''est pas cense passer');
 EXCEPTION
     WHEN OTHERS THEN
-        DBMS_OUTPUT.PUT_LINE('Test 3: rï¿½ussie' || SQLERRM);
+        DBMS_OUTPUT.PUT_LINE('Test 3: reussie' || SQLERRM);
 END;
 /
 
@@ -155,8 +155,8 @@ SELECT * FROM SAE_ADRESSE where id_sae_adresse = 'AL0001';
 
 -- Toutes les paramï¿½tres sont valides (doit passer)
 BEGIN
-    sae_dao_adresse.SAE_UPDATE('AL0001','10 rue de la Liberte','75001','Paris', '4e ï¿½tage');
-    DBMS_OUTPUT.PUT_LINE('Test 1: Mise ï¿½ jour complï¿½te rï¿½ussie.');
+    sae_dao_adresse.SAE_UPDATE('AL0001','10 rue de la Liberte','75001','Paris', '4e etage');
+    DBMS_OUTPUT.PUT_LINE('Test 1: Mise a jour complete reussie.');
 EXCEPTION
     WHEN OTHERS THEN
         DBMS_OUTPUT.PUT_LINE('Test 1: Erreur - ' || SQLERRM);
@@ -169,15 +169,15 @@ END;
 BEGIN
     SAE_DAO_ADRESSE.SAE_UPDATE(
         P_ID_ADRESSE => NULL,  -- Identifiant manquant
-        p_adresse => '20 avenue des Champs-ï¿½lysï¿½es',
+        p_adresse => '20 avenue des Champs-elysees',
         p_code_postal => '75008',
         p_ville => 'Paris',
-        p_complement_adresse => '2e ï¿½tage'
+        p_complement_adresse => '2e etage'
     );
-    DBMS_OUTPUT.PUT_LINE('Test 2: Il y a un null');
+    DBMS_OUTPUT.PUT_LINE('Test 2: Il y a un null, la modification n''est pas cense passer');
 EXCEPTION
     WHEN OTHERS THEN
-        DBMS_OUTPUT.PUT_LINE('Test 2: Rï¿½ussi - ' || SQLERRM);
+        DBMS_OUTPUT.PUT_LINE('Test 2: Reussi - ' || SQLERRM);
 END;
 /
 
@@ -193,10 +193,10 @@ BEGIN
         p_complement_adresse => NULL
     );
 
-    DBMS_OUTPUT.PUT_LINE('Test 3: aucun parametre a modifier et a quoi ca sert ?');
+    DBMS_OUTPUT.PUT_LINE('Test 3:Il n''y a aucun parametre a modifier, la modification n''est pas cense fonctionner');
 EXCEPTION
     WHEN OTHERS THEN
-        DBMS_OUTPUT.PUT_LINE('Test 3: rï¿½ussie' || SQLERRM);
+        DBMS_OUTPUT.PUT_LINE('Test 3: reussie' || SQLERRM);
 END;
 /
 

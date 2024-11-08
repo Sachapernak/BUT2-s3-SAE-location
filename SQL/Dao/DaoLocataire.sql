@@ -77,10 +77,10 @@ CREATE OR REPLACE PACKAGE BODY SAE_DAO_LOCATAIRE AS
     as
     begin
         if (p_id_locataire is null) then
-            raise_application_error(-20013, 'Sans l''identifiant on ne pourra pas cibler la ligne que tu souhaties modifier.');
+            raise_application_error(-20013, 'Vous devez renseigner l''identifiant, sans cela, on ne pourra pas cibler la ligne a modifier.');
         end if;
         if (p_nom_locataire is null and p_prenom_locataire is null and p_email_locataire is null and p_telephone_locataire is null and p_date_naissance is null and p_lieu_de_naissance is null and p_acte_de_caution is null and p_adresse_locataire is null) then
-            raise_application_error(-20014, 'Qu''est-ce que tu veux faire avec Locataire si tu ne mets aucun parametre a modifier');
+            raise_application_error(-20014, 'Vous devez renseigner des valeurs a modifier');
 
         end if;
 
@@ -107,7 +107,7 @@ BEGIN
         p_acte_de_caution => 'Acte de caution signé',
         p_adresse_locataire => null
     );
-    DBMS_OUTPUT.PUT_LINE('Test 1: Insertion réussie.');
+    DBMS_OUTPUT.PUT_LINE('Test 1: Insertion reussie.');
 EXCEPTION
     WHEN OTHERS THEN
         DBMS_OUTPUT.PUT_LINE('Test 1: Erreur - ' || SQLERRM);
@@ -129,7 +129,7 @@ BEGIN
     DBMS_OUTPUT.PUT_LINE('Test 2: Il doit y avoir une erreur normalement.');
 EXCEPTION
     WHEN OTHERS THEN
-        DBMS_OUTPUT.PUT_LINE('Test 2: Erreur obtenu, tu as réussi - ' || SQLERRM);
+        DBMS_OUTPUT.PUT_LINE('Test 2: Erreur obtenu, le test est réussi - ' || SQLERRM);
 END;
 /
 
@@ -145,7 +145,7 @@ BEGIN
         p_acte_de_caution => 'Acte de caution signé',
         p_adresse_locataire => null
     );
-    DBMS_OUTPUT.PUT_LINE('Nouvelle insertion réussie.');
+    DBMS_OUTPUT.PUT_LINE('Nouvelle insertion reussie.');
 EXCEPTION
     WHEN OTHERS THEN
         DBMS_OUTPUT.PUT_LINE('Erreur - ' || SQLERRM);
@@ -167,7 +167,7 @@ BEGIN
         p_acte_de_caution => 'Acte mis à jour', -- Nouvel acte de caution
         p_adresse_locataire => null         -- Nouvelle adresse
     );
-    DBMS_OUTPUT.PUT_LINE('Test 1 : Mise à jour complète réussie pour LOC006.');
+    DBMS_OUTPUT.PUT_LINE('Test 1 : Mise a jour complete reussie pour LOC006.');
 EXCEPTION
     WHEN OTHERS THEN
         DBMS_OUTPUT.PUT_LINE('Test 1 : Erreur - ' || SQLERRM);
@@ -186,10 +186,10 @@ BEGIN
         p_acte_de_caution => 'Acte mis à jour', -- Nouvel acte de caution
         p_adresse_locataire => null        -- Nouvelle adresse
     );
-    DBMS_OUTPUT.PUT_LINE('Test 3 : Mise à jour réussie.');
+    DBMS_OUTPUT.PUT_LINE('Test 3 : Veuillez renseigner l''identifiant, l''insertion n''est pas cense passer');
 EXCEPTION
     WHEN OTHERS THEN
-        DBMS_OUTPUT.PUT_LINE('Test 3 : Erreur - ' || SQLERRM);
+        DBMS_OUTPUT.PUT_LINE('Test 3 : Le test est passe - ' || SQLERRM);
 END;
 /
 
@@ -197,7 +197,7 @@ END;
 
 call SAE_DAO_LOCATAIRE.SAE_DELETE('LOC006');
 
--- n'est rien censï¿½ afficher.
+DBMS_OUTPUT.PUT_LINE('Test Delete : Ceci n''est rien cense afficher');
 SELECT * FROM SAE_LOCATAIRE where identifiant_locataire = 'LOC006';
 
 ROLLBACK;
