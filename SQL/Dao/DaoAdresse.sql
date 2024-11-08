@@ -1,5 +1,5 @@
 set serveroutput on 
---Crï¿½ation du paquetage (l'entï¿½te) d'une liste d'adresse
+--Creation du paquetage (l'entite) d'une liste d'adresse
 create or replace package SAE_DAO_ADRESSE as 
 
     procedure SAE_CREATE(
@@ -32,7 +32,7 @@ CREATE OR REPLACE PACKAGE BODY SAE_DAO_ADRESSE AS
     as
     begin
         if (P_ID_ADRESSE is null or p_adresse is null or p_code_postal is null or p_ville is null) then
-            raise_application_error(-20011, 'L''identifiant de l''adresse, l''adresse mail, le code postal et la ville  doivent etre renseignes');
+            raise_application_error(-20011, 'L''identifiant de l''adresse, l''adresse mail, le code postal et la ville doivent etre renseignes');
         end if;
         
 
@@ -87,7 +87,7 @@ INSERT INTO SAE_ADRESSE(id_sae_adresse, adresse, code_postal_, ville) values ('A
 
 -- TEST Insert
 
--- Toutes les paramï¿½tres sont valides (doit passï¿½)
+-- Toutes les paramï¿½tres sont valides (doit passer)
 BEGIN
     SAE_DAO_ADRESSE.SAE_CREATE(
         P_ID_ADRESSE => 'AD001',
@@ -104,7 +104,7 @@ END;
 /
 
 
--- Une valeur NULL pour un champ obligatoire (ne doit pas passï¿½)
+-- Une valeur NULL pour un champ obligatoire (ne doit pas passer)
 BEGIN
     SAE_DAO_ADRESSE.SAE_CREATE(
         P_ID_ADRESSE => 'AD002',
@@ -113,14 +113,14 @@ BEGIN
         p_ville => 'Lyon',
         p_complement_adresse => '3e etage'
     );
-    DBMS_OUTPUT.PUT_LINE('Test 2: Il y a un null, l''insertion n''est pas cense passer');
+    DBMS_OUTPUT.PUT_LINE('Test 2: Il y a un null sur un champ obligatoire, l''insertion n''est pas cense passer');
 EXCEPTION
     WHEN OTHERS THEN
         DBMS_OUTPUT.PUT_LINE('Test 2: Reussi - ' || SQLERRM);
 END;
 /
 
--- Tentative d'insertion avec le mï¿½me ID pour tester le doublon (ne doit pas passï¿½)
+-- Tentative d'insertion avec le meme ID pour tester le doublon (ne doit pas passer)
 
 BEGIN
    
@@ -135,7 +135,7 @@ BEGIN
     DBMS_OUTPUT.PUT_LINE('Test 3: l''ID est en double, l''insertion n''est pas cense passer');
 EXCEPTION
     WHEN OTHERS THEN
-        DBMS_OUTPUT.PUT_LINE('Test 3: reussie' || SQLERRM);
+        DBMS_OUTPUT.PUT_LINE('Test 3: Reussi' || SQLERRM);
 END;
 /
 
@@ -144,7 +144,7 @@ END;
 
 call SAE_DAO_ADRESSE.SAE_DELETE('AL0001');
 
--- n'est rien censï¿½ afficher.
+-- n'est rien cense afficher.
 SELECT * FROM SAE_ADRESSE where id_sae_adresse = 'AL0001';
 
 /
@@ -153,7 +153,7 @@ SELECT * FROM SAE_ADRESSE where id_sae_adresse = 'AL0001';
 -- TEST UPDATING
 
 
--- Toutes les paramï¿½tres sont valides (doit passer)
+-- Toutes les parametres sont valides (doit passer)
 BEGIN
     sae_dao_adresse.SAE_UPDATE('AL0001','10 rue de la Liberte','75001','Paris', '4e etage');
     DBMS_OUTPUT.PUT_LINE('Test 1: Mise a jour complete reussie.');
@@ -196,7 +196,7 @@ BEGIN
     DBMS_OUTPUT.PUT_LINE('Test 3:Il n''y a aucun parametre a modifier, la modification n''est pas cense fonctionner');
 EXCEPTION
     WHEN OTHERS THEN
-        DBMS_OUTPUT.PUT_LINE('Test 3: reussie' || SQLERRM);
+        DBMS_OUTPUT.PUT_LINE('Test 3: Reussi' || SQLERRM);
 END;
 /
 

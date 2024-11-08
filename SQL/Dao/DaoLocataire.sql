@@ -1,5 +1,5 @@
 set serveroutput on 
---Crï¿½ation du paquetage (l'entï¿½te) d'une liste d'adresse
+--Creation du paquetage (l'entite) d'une liste d'adresse
 create or replace package SAE_DAO_LOCATAIRE as 
 
     procedure SAE_CREATE(
@@ -45,7 +45,7 @@ CREATE OR REPLACE PACKAGE BODY SAE_DAO_LOCATAIRE AS
     as
     begin
         if (p_id_locataire is null or p_nom_locataire is null or p_prenom_locataire is null or p_date_naissance is null) then
-            raise_application_error(-20021, 'L''identifiant du locataire, le nom locataire,le prenom locataire et la date de naissance doivent etre renseignes');
+            raise_application_error(-20021, 'L''identifiant du locataire, le nom locataire, le prenom locataire et la date de naissance doivent etre renseignes');
         end if;
         
 
@@ -116,7 +116,7 @@ END;
 
 BEGIN
     SAE_DAO_LOCATAIRE.SAE_CREATE(
-        p_id_locataire => NULL,  -- Identifiant manquant
+        p_id_locataire => NULL,  
         p_nom_locataire => 'Dupont',
         p_prenom_locataire => 'Jean',
         p_email_locataire => 'jean.dupont@example.com',
@@ -157,15 +157,15 @@ END;
 
 BEGIN
     SAE_DAO_LOCATAIRE.SAE_UPDATE(
-        p_id_locataire => 'LOC006',            -- Identifiant existant
-        p_nom_locataire => 'Martin',           -- Nouveau nom
-        p_prenom_locataire => 'Claire',        -- Nouveau prénom
-        p_email_locataire => 'claire.martin@example.com', -- Nouveau courriel
-        p_telephone_locataire => '0600000008', -- Nouveau numéro de téléphone
-        p_date_naissance => TO_DATE('1990-04-20', 'YYYY-MM-DD'), -- Nouvelle date de naissance
-        p_lieu_de_naissance => 'Lille',        -- Nouveau lieu de naissance
-        p_acte_de_caution => 'Acte mis à jour', -- Nouvel acte de caution
-        p_adresse_locataire => null         -- Nouvelle adresse
+        p_id_locataire => 'LOC006',            
+        p_nom_locataire => 'Martin',          
+        p_prenom_locataire => 'Claire',        
+        p_email_locataire => 'claire.martin@example.com', 
+        p_telephone_locataire => '0600000008',
+        p_date_naissance => TO_DATE('1990-04-20', 'YYYY-MM-DD'), 
+        p_lieu_de_naissance => 'Lille',       
+        p_acte_de_caution => 'Acte mis à jour', 
+        p_adresse_locataire => null         
     );
     DBMS_OUTPUT.PUT_LINE('Test 1 : Mise a jour complete reussie pour LOC006.');
 EXCEPTION
@@ -176,15 +176,15 @@ END;
 
 BEGIN
     SAE_DAO_LOCATAIRE.SAE_UPDATE(
-        p_id_locataire => NULL,               -- Identifiant manquant
-        p_nom_locataire => 'Dubois',          -- Nouveau nom
-        p_prenom_locataire => 'Marc',         -- Nouveau prénom
-        p_email_locataire => 'marc.dubois@example.com', -- Nouveau courriel
-        p_telephone_locataire => '0600000010', -- Nouveau numéro de téléphone
-        p_date_naissance => TO_DATE('1985-05-05', 'YYYY-MM-DD'), -- Nouvelle date de naissance
-        p_lieu_de_naissance => 'Paris',       -- Nouveau lieu de naissance
-        p_acte_de_caution => 'Acte mis à jour', -- Nouvel acte de caution
-        p_adresse_locataire => null        -- Nouvelle adresse
+        p_id_locataire => NULL,               
+        p_nom_locataire => 'Dubois',         
+        p_prenom_locataire => 'Marc',         
+        p_email_locataire => 'marc.dubois@example.com', 
+        p_telephone_locataire => '0600000010', 
+        p_date_naissance => TO_DATE('1985-05-05', 'YYYY-MM-DD'),
+        p_lieu_de_naissance => 'Paris',       
+        p_acte_de_caution => 'Acte mis à jour', 
+        p_adresse_locataire => null        
     );
     DBMS_OUTPUT.PUT_LINE('Test 3 : Veuillez renseigner l''identifiant, l''insertion n''est pas cense passer');
 EXCEPTION
