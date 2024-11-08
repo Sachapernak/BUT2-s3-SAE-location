@@ -53,14 +53,14 @@ CREATE OR REPLACE PACKAGE BODY SAE_DAO_BAIL AS
             raise_application_error(-20023, 'Sans l''identifiant, on ne peut pas cibler la ligne a modifier.');
         END IF;
         
-        -- Vérifier l'existence de l'enregistrement
+        -- Vï¿½rifier l'existence de l'enregistrement
         SELECT COUNT(*) INTO vCount 
         FROM sae_bail 
         WHERE id_bail = p_id_bail;
 
         IF vCount = 0 THEN
             -- Lever une erreur si le bail n'existe pas
-            RAISE_APPLICATION_ERROR(-20024, 'Le bail avec l''ID ' || p_id_bail || ' n''existe pas dans la base de données.');
+            RAISE_APPLICATION_ERROR(-20024, 'Le bail avec l''ID ' || p_id_bail || ' n''existe pas dans la base de donnï¿½es.');
         END IF;
 
         UPDATE sae_bail 
