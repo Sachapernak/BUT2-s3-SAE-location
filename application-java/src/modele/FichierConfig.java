@@ -1,7 +1,6 @@
 package modele;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -36,17 +35,13 @@ public class FichierConfig {
     	return chemin;
     }
     
-    public String lire(String propriete) {
-        try (FileInputStream propsInput = new FileInputStream(chemin)) {
+    public String lire(String propriete) throws IOException  {
+    	FileInputStream propsInput = new FileInputStream(chemin);
             Properties prop = new Properties();
             prop.load(propsInput);
             return prop.getProperty(propriete);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-        
     }
+
+        
+    
 }

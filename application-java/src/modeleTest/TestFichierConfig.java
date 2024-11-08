@@ -59,14 +59,14 @@ public class TestFichierConfig {
 	}
 	
 	@Test
-	public void testProperties() {
+	public void testProperties() throws IOException {
 		FichierConfig.changerChemin("src/modeleTest/test1.properties");
 		assertEquals("Ok1", config.lire("TEST"));
 		assertEquals("Ok2", config.lire("TEST2"));
 	}
 	
-	@Test
-	public void testException(){
+	@Test(expected = IOException.class)
+	public void testException()throws IOException{
 		FichierConfig.changerChemin("src/modeleTest/fichierInexistant.properties");
 		assertEquals(null,config.lire("test"));
 		
