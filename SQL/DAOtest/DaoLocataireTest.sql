@@ -32,7 +32,7 @@ BEGIN
         p_acte_de_caution => 'Acte de caution signé',
         p_adresse_locataire => null
     );
-    DBMS_OUTPUT.PUT_LINE('Test 2: Il doit y avoir une erreur normalement.');
+    DBMS_OUTPUT.PUT_LINE('Test 2: L''identifiant est null. Il doit y avoir une erreur normalement.');
 EXCEPTION
     WHEN OTHERS THEN
         DBMS_OUTPUT.PUT_LINE('Test 2: Erreur obtenu, le test est réussi - ' || SQLERRM);
@@ -92,7 +92,7 @@ BEGIN
         p_acte_de_caution => 'Acte mis à jour', 
         p_adresse_locataire => null        
     );
-    DBMS_OUTPUT.PUT_LINE('Test 3 : Veuillez renseigner l''identifiant, l''insertion n''est pas cense passer');
+    DBMS_OUTPUT.PUT_LINE('Test 3 : Veuillez renseigner l''identifiant, la modification n''est pas cense passer');
 EXCEPTION
     WHEN OTHERS THEN
         DBMS_OUTPUT.PUT_LINE('Test 3 : Le test est passe - ' || SQLERRM);
