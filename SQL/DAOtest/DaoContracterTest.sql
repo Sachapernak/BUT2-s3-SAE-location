@@ -37,6 +37,8 @@ INSERT INTO sae_LOCATAIRE VALUES (
     'Acte de caution signe',
     NULL
 );
+SELECT * FROM SAE_ADRESSE;
+call DBMS_OUTPUT.PUT_LINE('rien n''est cense etre affiche');
 
 
 -- Create
@@ -51,6 +53,8 @@ BEGIN
         p_date_d_entree => TO_DATE('2023-01-01', 'YYYY-MM-DD'),
         p_part_loyer => 6 -- la part du loyer est sur 10, pas sur 100.
     );
+    DBMS_OUTPUT.PUT_LINE('Insertion reussie.');
+    
 EXCEPTION
     WHEN OTHERS THEN
         DBMS_OUTPUT.PUT_LINE('Test 1: Erreur - ' || SQLERRM);
@@ -67,6 +71,8 @@ BEGIN
         p_date_d_entree => TO_DATE('2027-01-01', 'YYYY-MM-DD'),
         p_part_loyer => 9 -- la part du loyer est sur 10, pas sur 100.
     );
+    DBMS_OUTPUT.PUT_LINE('Insertion reussie.');
+
 EXCEPTION
     WHEN OTHERS THEN
         DBMS_OUTPUT.PUT_LINE('Test 1(2): Erreur - ' || SQLERRM);
@@ -82,6 +88,8 @@ BEGIN
         p_date_d_entree => TO_DATE('2023-01-01', 'YYYY-MM-DD'),
         p_part_loyer => 6
     );
+    DBMS_OUTPUT.PUT_LINE('Insertion reussie.');
+
 EXCEPTION
     WHEN OTHERS THEN
         DBMS_OUTPUT.PUT_LINE('Test 2: Erreur obtenu, le test est reussi - ' || SQLERRM);
@@ -98,6 +106,8 @@ BEGIN
         p_date_d_entree => TO_DATE('2023-01-01', 'YYYY-MM-DD'),
         p_part_loyer => 6
     );
+    DBMS_OUTPUT.PUT_LINE('Insertion reussie.');
+
 EXCEPTION
     WHEN OTHERS THEN
         DBMS_OUTPUT.PUT_LINE('Test 3: Erreur obtenu, le test est reussi - ' || SQLERRM);
@@ -113,11 +123,15 @@ BEGIN
         p_date_d_entree => TO_DATE('2023-01-01', 'YYYY-MM-DD'),
         p_part_loyer => 6
     );
+    DBMS_OUTPUT.PUT_LINE('Insertion reussie.');
+
 EXCEPTION
     WHEN OTHERS THEN
         DBMS_OUTPUT.PUT_LINE('Test 4: Erreur obtenu, le test est reussi - ' || SQLERRM);
 END;
 /
+call DBMS_OUTPUT.PUT_LINE('Deux lignes sont censees etre affichees');
+
 select * from SAE_CONTRACTER;
 -- Update
 
@@ -131,6 +145,8 @@ BEGIN
         p_date_d_entree => TO_DATE('2024-01-01', 'YYYY-MM-DD'),
         p_part_loyer => 5
     );
+        DBMS_OUTPUT.PUT_LINE('Modification reussie.');
+
 EXCEPTION
     WHEN OTHERS THEN
         DBMS_OUTPUT.PUT_LINE('Test 5 : Erreur - ' || SQLERRM);
@@ -149,6 +165,8 @@ BEGIN
         p_date_d_entree => TO_DATE('2024-01-01', 'YYYY-MM-DD'),
         p_part_loyer => 6
     );
+        DBMS_OUTPUT.PUT_LINE('Modification reussie.');
+
 EXCEPTION
     WHEN OTHERS THEN
         DBMS_OUTPUT.PUT_LINE('Test 6: Erreur obtenu, le test est reussi - ' || SQLERRM);
@@ -165,6 +183,8 @@ BEGIN
         p_date_d_entree => TO_DATE('2024-01-01', 'YYYY-MM-DD'),
         p_part_loyer => 6
     );
+        DBMS_OUTPUT.PUT_LINE('Modification reussie.');
+
 EXCEPTION
     WHEN OTHERS THEN
         DBMS_OUTPUT.PUT_LINE('Test 7: Erreur obtenu, le test est reussi - ' || SQLERRM);
@@ -181,6 +201,8 @@ BEGIN
         p_date_d_entree => TO_DATE('2024-01-01', 'YYYY-MM-DD'),
         p_part_loyer => 6
     );
+        DBMS_OUTPUT.PUT_LINE('Modification reussie.');
+
 EXCEPTION
     WHEN OTHERS THEN
         DBMS_OUTPUT.PUT_LINE('Test 8: Erreur obtenu, le test est reussi - ' || SQLERRM);
@@ -188,6 +210,7 @@ END;
 /
 
 select * from SAE_CONTRACTER;
+call DBMS_OUTPUT.PUT_LINE('Deux lignes dont une modifie sont censees etre affichees');
 
 -- Delete
 begin

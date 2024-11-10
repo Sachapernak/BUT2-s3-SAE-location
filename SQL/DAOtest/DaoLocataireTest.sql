@@ -2,6 +2,7 @@
 -- Create
 
 SELECT * FROM SAE_LOCATAIRE;
+call DBMS_OUTPUT.PUT_LINE('rien n''est cense etre affiche');
 
 BEGIN
     DBMS_OUTPUT.PUT_LINE('Test 1: Insertion doit reussir.');
@@ -17,6 +18,8 @@ BEGIN
         p_acte_de_caution => 'Acte de caution signé',
         p_adresse_locataire => null
     );
+    DBMS_OUTPUT.PUT_LINE('Insertion reussie.');
+
 EXCEPTION
     WHEN OTHERS THEN
         DBMS_OUTPUT.PUT_LINE('Test 1: Erreur - ' || SQLERRM);
@@ -37,6 +40,8 @@ BEGIN
         p_acte_de_caution => 'Acte de caution signé',
         p_adresse_locataire => null
     );
+    DBMS_OUTPUT.PUT_LINE('Insertion reussie.');
+
 EXCEPTION
     WHEN OTHERS THEN
         DBMS_OUTPUT.PUT_LINE('Test 2: Erreur obtenu, le test est réussi - ' || SQLERRM);
@@ -57,6 +62,8 @@ BEGIN
         p_acte_de_caution => 'Acte de caution signé',
         p_adresse_locataire => null
     );
+    DBMS_OUTPUT.PUT_LINE('Insertion reussie.');
+
 EXCEPTION
     WHEN OTHERS THEN
         DBMS_OUTPUT.PUT_LINE('Test 3: Erreur - ' || SQLERRM);
@@ -64,6 +71,8 @@ END;
 /
 
 SELECT * FROM SAE_LOCATAIRE;
+call DBMS_OUTPUT.PUT_LINE('Deux lignes sont censees etre affichees');
+
 -- Update
 
 
@@ -81,6 +90,8 @@ BEGIN
         p_acte_de_caution => 'Acte mis à jour', 
         p_adresse_locataire => null         
     );
+    DBMS_OUTPUT.PUT_LINE('Modification reussie.');
+
 EXCEPTION
     WHEN OTHERS THEN
         DBMS_OUTPUT.PUT_LINE('Test 4: Erreur - ' || SQLERRM);
@@ -101,12 +112,16 @@ BEGIN
         p_acte_de_caution => 'Acte mis à jour', 
         p_adresse_locataire => null        
     );
+    DBMS_OUTPUT.PUT_LINE('Modification reussie.');
+
 EXCEPTION
     WHEN OTHERS THEN
         DBMS_OUTPUT.PUT_LINE('Test 5: Le test est passe - ' || SQLERRM);
 END;
 /
 SELECT * FROM SAE_LOCATAIRE;
+call DBMS_OUTPUT.PUT_LINE('Deux lignes dont une modifie sont censees etre affichees');
+
 
 -- Delete
 begin

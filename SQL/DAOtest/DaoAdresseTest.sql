@@ -2,8 +2,7 @@
 
 
 SELECT * FROM SAE_ADRESSE;
-
-
+call DBMS_OUTPUT.PUT_LINE('rien n''est cense etre affiche');
 
 /
 
@@ -20,6 +19,8 @@ BEGIN
         p_ville => 'Paris',
         p_complement_adresse => '2e etage'
     );
+    DBMS_OUTPUT.PUT_LINE('Insertion reussie.');
+
 EXCEPTION
     WHEN OTHERS THEN
         DBMS_OUTPUT.PUT_LINE('Test 1: Erreur - ' || SQLERRM);
@@ -35,6 +36,8 @@ BEGIN
         p_ville => 'Paris',
         p_complement_adresse => '2e etage'
     );
+    DBMS_OUTPUT.PUT_LINE('Insertion reussie.');
+
 EXCEPTION
     WHEN OTHERS THEN
         DBMS_OUTPUT.PUT_LINE('Test 1(2): Erreur - ' || SQLERRM);
@@ -53,6 +56,8 @@ BEGIN
         p_ville => 'Lyon',
         p_complement_adresse => '3e etage'
     );
+    DBMS_OUTPUT.PUT_LINE('Insertion reussie.');
+
 EXCEPTION
     WHEN OTHERS THEN
         DBMS_OUTPUT.PUT_LINE('Test 2: Reussi - ' || SQLERRM);
@@ -71,6 +76,7 @@ BEGIN
         p_ville => 'Paris',
         p_complement_adresse => NULL
     );
+    DBMS_OUTPUT.PUT_LINE('Insertion reussie.');
 
 EXCEPTION
     WHEN OTHERS THEN
@@ -78,6 +84,7 @@ EXCEPTION
 END;
 /
 SELECT * FROM SAE_ADRESSE;
+call DBMS_OUTPUT.PUT_LINE('Deux lignes sont censees etre affichees');
 
 -- TEST UPDATING
 
@@ -87,6 +94,8 @@ BEGIN
     DBMS_OUTPUT.PUT_LINE('Test 4: Mise a jour complete doit reussir.');
 
     sae_dao_adresse.SAE_UPDATE('AL0001','10 rue de la Liberte','75001','Paris', '4e etage');
+    DBMS_OUTPUT.PUT_LINE('Modification reussie.');
+
 EXCEPTION
     WHEN OTHERS THEN
         DBMS_OUTPUT.PUT_LINE('Test 4: Erreur - ' || SQLERRM);
@@ -106,16 +115,16 @@ BEGIN
         p_ville => 'Paris',
         p_complement_adresse => '2e etage'
     );
+        DBMS_OUTPUT.PUT_LINE('Modification reussie.');
+
 EXCEPTION
     WHEN OTHERS THEN
         DBMS_OUTPUT.PUT_LINE('Test 5: Reussi - ' || SQLERRM);
 END;
 /
+
 SELECT * FROM SAE_ADRESSE;
-
-
-
-
+call DBMS_OUTPUT.PUT_LINE('Deux lignes dont une modifie sont censees etre affichees');
 
 -- Delete
 begin
