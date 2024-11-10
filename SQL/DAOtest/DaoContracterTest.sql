@@ -12,7 +12,7 @@ INSERT INTO sae_LOCATAIRE VALUES (
     '0600000001',
     TO_DATE('1990-01-01', 'YYYY-MM-DD'),
     'Paris',
-    'Acte de caution signé',
+    'Acte de caution signe',
     NULL
 );
 INSERT INTO sae_LOCATAIRE VALUES (
@@ -23,18 +23,18 @@ INSERT INTO sae_LOCATAIRE VALUES (
     '0600001501',
     TO_DATE('1990-01-01', 'YYYY-MM-DD'),
     'Paris',
-    'Acte de caution signé',
+    'Acte de caution signe',
     NULL
 );
 INSERT INTO sae_LOCATAIRE VALUES (
-    'LOC002',
+    'LOC003',
     'Lefrancois',
     'Axel',
     'axel.lefrancois@example.com',
     '0600008901',
     TO_DATE('1990-01-01', 'YYYY-MM-DD'),
     'Paris',
-    'Acte de caution signé',
+    'Acte de caution signe',
     NULL
 );
 
@@ -42,122 +42,163 @@ INSERT INTO sae_LOCATAIRE VALUES (
 -- Create
 
 BEGIN
+    DBMS_OUTPUT.PUT_LINE('Test 1: l''insertion doit reussir.');
+
     SAE_DAO_CONTRACTER.SAE_CREATE(
         p_id_bail => 'bail_1',
         p_id_locataire => 'LOC001',
         p_date_de_sortie => TO_DATE('2024-12-31', 'YYYY-MM-DD'),
         p_date_d_entree => TO_DATE('2023-01-01', 'YYYY-MM-DD'),
-        p_part_loyer => 50
+        p_part_loyer => 6 -- la part du loyer est sur 10, pas sur 100.
     );
-    DBMS_OUTPUT.PUT_LINE('Test 1: Insertion reussie.');
 EXCEPTION
     WHEN OTHERS THEN
         DBMS_OUTPUT.PUT_LINE('Test 1: Erreur - ' || SQLERRM);
 END;
 /
+
 BEGIN
+    DBMS_OUTPUT.PUT_LINE('Test 1(2): l''insertion doit reussir.');
+
+    SAE_DAO_CONTRACTER.SAE_CREATE(
+        p_id_bail => 'bail_2',
+        p_id_locataire => 'LOC002',
+        p_date_de_sortie => TO_DATE('2028-12-31', 'YYYY-MM-DD'),
+        p_date_d_entree => TO_DATE('2027-01-01', 'YYYY-MM-DD'),
+        p_part_loyer => 9 -- la part du loyer est sur 10, pas sur 100.
+    );
+EXCEPTION
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Test 1(2): Erreur - ' || SQLERRM);
+END;
+/
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('Test 2: L''identifiant est null. Il doit y avoir une erreur normalement.');
+
     SAE_DAO_CONTRACTER.SAE_CREATE(
         p_id_bail => NULL,
         p_id_locataire => 'LOC002',
         p_date_de_sortie => TO_DATE('2024-12-31', 'YYYY-MM-DD'),
         p_date_d_entree => TO_DATE('2023-01-01', 'YYYY-MM-DD'),
-        p_part_loyer => 60
+        p_part_loyer => 6
     );
-    DBMS_OUTPUT.PUT_LINE('Test 2: L''identifiant est null. Il doit y avoir une erreur normalement.');
 EXCEPTION
     WHEN OTHERS THEN
-        DBMS_OUTPUT.PUT_LINE('Test 2: Erreur obtenu, le test est réussi - ' || SQLERRM);
+        DBMS_OUTPUT.PUT_LINE('Test 2: Erreur obtenu, le test est reussi - ' || SQLERRM);
 END;
 /
 
 BEGIN
+    DBMS_OUTPUT.PUT_LINE('Test 3: L''identifiant est null. Il doit y avoir une erreur normalement.');
+
     SAE_DAO_CONTRACTER.SAE_CREATE(
         p_id_bail => 'bail_1',
         p_id_locataire => NULL,
         p_date_de_sortie => TO_DATE('2024-12-31', 'YYYY-MM-DD'),
         p_date_d_entree => TO_DATE('2023-01-01', 'YYYY-MM-DD'),
-        p_part_loyer => 60
+        p_part_loyer => 6
     );
-    DBMS_OUTPUT.PUT_LINE('Test 3: L''identifiant est null. Il doit y avoir une erreur normalement.');
 EXCEPTION
     WHEN OTHERS THEN
-        DBMS_OUTPUT.PUT_LINE('Test 3: Erreur obtenu, le test est réussi - ' || SQLERRM);
+        DBMS_OUTPUT.PUT_LINE('Test 3: Erreur obtenu, le test est reussi - ' || SQLERRM);
 END;
 /
 BEGIN
+    DBMS_OUTPUT.PUT_LINE('Test 4: Ce contrat a deja etait place dans la base de donnees. Il doit y avoir une erreur normalement.');
+
     SAE_DAO_CONTRACTER.SAE_CREATE(
         p_id_bail => 'bail_1',
         p_id_locataire => 'LOC001',
         p_date_de_sortie => TO_DATE('2024-12-31', 'YYYY-MM-DD'),
         p_date_d_entree => TO_DATE('2023-01-01', 'YYYY-MM-DD'),
-        p_part_loyer => 60
+        p_part_loyer => 6
     );
-    DBMS_OUTPUT.PUT_LINE('Test 4: Ce contrat a deja etait place dans la base de donnees. Il doit y avoir une erreur normalement.');
 EXCEPTION
     WHEN OTHERS THEN
-        DBMS_OUTPUT.PUT_LINE('Test 4: Erreur obtenu, le test est réussi - ' || SQLERRM);
+        DBMS_OUTPUT.PUT_LINE('Test 4: Erreur obtenu, le test est reussi - ' || SQLERRM);
 END;
 /
-
+select * from SAE_CONTRACTER;
 -- Update
 
 BEGIN
+     DBMS_OUTPUT.PUT_LINE('Test 5 : Mise a jour complete doit reussir');
+
     SAE_DAO_CONTRACTER.SAE_UPDATE(
         p_id_bail => 'bail_1',
         p_id_locataire => 'LOC001',
         p_date_de_sortie => TO_DATE('2025-12-31', 'YYYY-MM-DD'),
         p_date_d_entree => TO_DATE('2024-01-01', 'YYYY-MM-DD'),
-        p_part_loyer => 55
+        p_part_loyer => 5
     );
-     DBMS_OUTPUT.PUT_LINE('Test 1 : Mise a jour complete reussie');
 EXCEPTION
     WHEN OTHERS THEN
-        DBMS_OUTPUT.PUT_LINE('Test 1 : Erreur - ' || SQLERRM);
+        DBMS_OUTPUT.PUT_LINE('Test 5 : Erreur - ' || SQLERRM);
 END;
+    
+
 /
 
 BEGIN
+     DBMS_OUTPUT.PUT_LINE('Test 6: L''identifiant est null. Il doit y avoir une erreur normalement.');
+
     SAE_DAO_CONTRACTER.SAE_UPDATE(
         p_id_bail => NULL,
         p_id_locataire => 'LOC002',
         p_date_de_sortie => TO_DATE('2025-12-31', 'YYYY-MM-DD'),
         p_date_d_entree => TO_DATE('2024-01-01', 'YYYY-MM-DD'),
-        p_part_loyer => 60
+        p_part_loyer => 6
     );
-     DBMS_OUTPUT.PUT_LINE('Test 2: L''identifiant est null. Il doit y avoir une erreur normalement.');
 EXCEPTION
     WHEN OTHERS THEN
-        DBMS_OUTPUT.PUT_LINE('Test 2: Erreur obtenu, le test est réussi - ' || SQLERRM);
+        DBMS_OUTPUT.PUT_LINE('Test 6: Erreur obtenu, le test est reussi - ' || SQLERRM);
 END;
 /
 
 BEGIN
+    DBMS_OUTPUT.PUT_LINE('Test 7: L''identifiant est null. Il doit y avoir une erreur normalement.');
+
     SAE_DAO_CONTRACTER.SAE_UPDATE(
         p_id_bail => 'bail_1',
         p_id_locataire => NULL,
         p_date_de_sortie => TO_DATE('2025-12-31', 'YYYY-MM-DD'),
         p_date_d_entree => TO_DATE('2024-01-01', 'YYYY-MM-DD'),
-        p_part_loyer => 60
+        p_part_loyer => 6
     );
-     DBMS_OUTPUT.PUT_LINE('Test 3: L''identifiant est null. Il doit y avoir une erreur normalement.');
 EXCEPTION
     WHEN OTHERS THEN
-        DBMS_OUTPUT.PUT_LINE('Test 3: Erreur obtenu, le test est réussi - ' || SQLERRM);
+        DBMS_OUTPUT.PUT_LINE('Test 7: Erreur obtenu, le test est reussi - ' || SQLERRM);
 END;
 /
-
 
 BEGIN
+     DBMS_OUTPUT.PUT_LINE('Test 8: L''identifiant n''existe pas. Il doit y avoir une erreur normalement.');
+
     SAE_DAO_CONTRACTER.SAE_UPDATE(
-        p_id_bail => 'bail_1',
-        p_id_locataire => 'LOC001',
-        p_date_de_sortie => NULL,
-        p_date_d_entree => NULL,
-        p_part_loyer => NULL
+        p_id_bail => 'bail_',
+        p_id_locataire => 'Locjda',
+        p_date_de_sortie => TO_DATE('2025-12-31', 'YYYY-MM-DD'),
+        p_date_d_entree => TO_DATE('2024-01-01', 'YYYY-MM-DD'),
+        p_part_loyer => 6
     );
-     DBMS_OUTPUT.PUT_LINE('Test 4 : Mise a jour complete reussie');
 EXCEPTION
     WHEN OTHERS THEN
-        DBMS_OUTPUT.PUT_LINE('Test 4 : Erreur - ' || SQLERRM);
+        DBMS_OUTPUT.PUT_LINE('Test 8: Erreur obtenu, le test est reussi - ' || SQLERRM);
 END;
 /
+
+select * from SAE_CONTRACTER;
+
+-- Delete
+begin
+
+    SAE_DAO_CONTRACTER.SAE_DELETE('bail_1','LOC001');
+
+end;
+/
+select * from SAE_CONTRACTER;
+
+call DBMS_OUTPUT.PUT_LINE('Test Delete : Ceci n''est cense afficher qu''une ligne');
+
+
+Rollback;

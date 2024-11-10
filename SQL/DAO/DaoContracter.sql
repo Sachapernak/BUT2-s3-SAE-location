@@ -32,8 +32,8 @@ CREATE OR REPLACE PACKAGE BODY SAE_DAO_CONTRACTER AS
         p_part_loyer sae_contracter.part_de_loyer%type
     ) AS
     BEGIN
-        IF (p_id_bail IS NULL OR p_id_locataire IS NULL) THEN
-            raise_application_error(-20020, 'L''identifiant du bail et l''identifiant du locataire doivent etre renseignes');
+        IF (p_id_bail IS NULL OR p_id_locataire IS NULL OR p_date_d_entree is null) THEN
+            raise_application_error(-20020, 'L''identifiant du bail, l''identifiant du locataire et la date d''entree doivent etre renseignes');
         END IF;
         
         INSERT INTO sae_contracter (identifiant_locataire,id_bail, date_de_sortie, date_d_entree,part_de_loyer) 
@@ -69,7 +69,7 @@ CREATE OR REPLACE PACKAGE BODY SAE_DAO_CONTRACTER AS
         AND identifiant_locataire = p_id_locataire;
 
         IF vCount = 0 THEN
-            -- Lever une erreur si le bail n'existe pas
+            -- Lever une erreur si le contrat n'existe pas
             RAISE_APPLICATION_ERROR(-20024, 'Il n''existe aucun contrat avec les deux identifiants donnes');
         END IF;
 

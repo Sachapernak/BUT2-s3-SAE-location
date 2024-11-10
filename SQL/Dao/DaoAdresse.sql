@@ -57,14 +57,26 @@ CREATE OR REPLACE PACKAGE BODY SAE_DAO_ADRESSE AS
     p_ville sae_ADRESSE.ville%type, 
     p_complement_adresse sae_ADRESSE.complement_adresse%type)
     as
+    vCount number;
     begin
         if (P_ID_ADRESSE is null) then
             raise_application_error(-20013, 'Vous devez renseigner l''identifiant, sans cela, on ne pourra pas cibler la ligne a modifier.');
         end if;
-        if (p_adresse is null and p_code_postal is null and p_ville is null and p_complement_adresse is null) then
-            raise_application_error(-20014, 'Vous devez renseigner des valeurs a modifier');
+        -- if (p_adresse is null and p_code_postal is null and p_ville is null and p_complement_adresse is null) then
+        --     raise_application_error(-20014, 'Vous devez renseigner des valeurs a modifier');
 
-        end if;
+        -- end if;
+
+        -- Verifier l'existence de l'enregistrement
+        SELECT COUNT(*) INTO vCount 
+        FROM sae_ADRESSE 
+        WHERE id_sae_adresse = P_ID_ADRESSE;
+        
+
+        IF vCount = 0 THEN
+            -- Lever une erreur si l'adresse n'existe pas
+            RAISE_APPLICATION_ERROR(-20024, 'Il n''existe aucune adresse avec l''identifiant donne');
+        END IF;
 
         UPDATE sae_ADRESSE 
         set adresse = p_adresse, code_postal_ = p_code_postal, ville = p_ville, complement_adresse = p_complement_adresse

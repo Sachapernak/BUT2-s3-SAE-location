@@ -75,14 +75,26 @@ CREATE OR REPLACE PACKAGE BODY SAE_DAO_LOCATAIRE AS
     p_acte_de_caution sae_locataire.Acte_de_caution%type,
     p_adresse_locataire sae_locataire.Id_SAE_Adresse%type)
     as
+    vCount number;
     begin
         if (p_id_locataire is null) then
             raise_application_error(-20013, 'Vous devez renseigner l''identifiant, sans cela, on ne pourra pas cibler la ligne a modifier.');
         end if;
-        if (p_nom_locataire is null and p_prenom_locataire is null and p_email_locataire is null and p_telephone_locataire is null and p_date_naissance is null and p_lieu_de_naissance is null and p_acte_de_caution is null and p_adresse_locataire is null) then
-            raise_application_error(-20014, 'Vous devez renseigner des valeurs a modifier');
+        -- if (p_nom_locataire is null and p_prenom_locataire is null and p_email_locataire is null and p_telephone_locataire is null and p_date_naissance is null and p_lieu_de_naissance is null and p_acte_de_caution is null and p_adresse_locataire is null) then
+        --     raise_application_error(-20014, 'Vous devez renseigner des valeurs a modifier');
 
-        end if;
+        -- end if;
+
+        -- Verifier l'existence de l'enregistrement
+        SELECT COUNT(*) INTO vCount 
+        FROM sae_locataire 
+        WHERE identifiant_locataire = p_id_locataire;
+        
+
+        IF vCount = 0 THEN
+            -- Lever une erreur si locataire n'existe pas
+            RAISE_APPLICATION_ERROR(-20024, 'Il n''existe aucun locataire avec l''identifiant donne');
+        END IF;
 
         UPDATE sae_locataire 
         set Nom_locataire = p_nom_locataire, Prenom_locataire = p_prenom_locataire, email_locataire = p_email_locataire, telephone_locataire = p_telephone_locataire, date_naissance = p_date_naissance, Lieu_de_naissance = p_lieu_de_naissance, Acte_de_caution = p_acte_de_caution, Id_SAE_Adresse = p_adresse_locataire

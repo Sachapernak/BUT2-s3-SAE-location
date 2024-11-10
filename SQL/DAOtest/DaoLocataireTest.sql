@@ -1,7 +1,11 @@
 
 -- Create
 
+SELECT * FROM SAE_LOCATAIRE;
+
 BEGIN
+    DBMS_OUTPUT.PUT_LINE('Test 1: Insertion doit reussir.');
+
     SAE_DAO_LOCATAIRE.SAE_CREATE(
         p_id_locataire => 'LOC001',
         p_nom_locataire => 'Dupont',
@@ -13,7 +17,6 @@ BEGIN
         p_acte_de_caution => 'Acte de caution signé',
         p_adresse_locataire => null
     );
-    DBMS_OUTPUT.PUT_LINE('Test 1: Insertion reussie.');
 EXCEPTION
     WHEN OTHERS THEN
         DBMS_OUTPUT.PUT_LINE('Test 1: Erreur - ' || SQLERRM);
@@ -21,6 +24,8 @@ END;
 /
 
 BEGIN
+    DBMS_OUTPUT.PUT_LINE('Test 2: L''identifiant est null. Il doit y avoir une erreur normalement.');
+
     SAE_DAO_LOCATAIRE.SAE_CREATE(
         p_id_locataire => NULL,  
         p_nom_locataire => 'Dupont',
@@ -32,7 +37,6 @@ BEGIN
         p_acte_de_caution => 'Acte de caution signé',
         p_adresse_locataire => null
     );
-    DBMS_OUTPUT.PUT_LINE('Test 2: L''identifiant est null. Il doit y avoir une erreur normalement.');
 EXCEPTION
     WHEN OTHERS THEN
         DBMS_OUTPUT.PUT_LINE('Test 2: Erreur obtenu, le test est réussi - ' || SQLERRM);
@@ -40,6 +44,8 @@ END;
 /
 
 BEGIN
+    DBMS_OUTPUT.PUT_LINE('Test 3: Nouvelle insertion doit reussir.');
+
     SAE_DAO_LOCATAIRE.SAE_CREATE(
         p_id_locataire => 'LOC006',
         p_nom_locataire => 'Bernard',
@@ -51,17 +57,19 @@ BEGIN
         p_acte_de_caution => 'Acte de caution signé',
         p_adresse_locataire => null
     );
-    DBMS_OUTPUT.PUT_LINE('Nouvelle insertion reussie.');
 EXCEPTION
     WHEN OTHERS THEN
-        DBMS_OUTPUT.PUT_LINE('Erreur - ' || SQLERRM);
+        DBMS_OUTPUT.PUT_LINE('Test 3: Erreur - ' || SQLERRM);
 END;
 /
 
+SELECT * FROM SAE_LOCATAIRE;
 -- Update
 
 
 BEGIN
+    DBMS_OUTPUT.PUT_LINE('Test 4: Mise a jour complete doit reussir pour LOC006.');
+
     SAE_DAO_LOCATAIRE.SAE_UPDATE(
         p_id_locataire => 'LOC006',            
         p_nom_locataire => 'Martin',          
@@ -73,14 +81,15 @@ BEGIN
         p_acte_de_caution => 'Acte mis à jour', 
         p_adresse_locataire => null         
     );
-    DBMS_OUTPUT.PUT_LINE('Test 1 : Mise a jour complete reussie pour LOC006.');
 EXCEPTION
     WHEN OTHERS THEN
-        DBMS_OUTPUT.PUT_LINE('Test 1 : Erreur - ' || SQLERRM);
+        DBMS_OUTPUT.PUT_LINE('Test 4: Erreur - ' || SQLERRM);
 END;
 /
 
 BEGIN
+    DBMS_OUTPUT.PUT_LINE('Test 5: Veuillez renseigner l''identifiant, la modification n''est pas cense passer');
+
     SAE_DAO_LOCATAIRE.SAE_UPDATE(
         p_id_locataire => NULL,               
         p_nom_locataire => 'Dubois',         
@@ -92,18 +101,21 @@ BEGIN
         p_acte_de_caution => 'Acte mis à jour', 
         p_adresse_locataire => null        
     );
-    DBMS_OUTPUT.PUT_LINE('Test 3 : Veuillez renseigner l''identifiant, la modification n''est pas cense passer');
 EXCEPTION
     WHEN OTHERS THEN
-        DBMS_OUTPUT.PUT_LINE('Test 3 : Le test est passe - ' || SQLERRM);
+        DBMS_OUTPUT.PUT_LINE('Test 5: Le test est passe - ' || SQLERRM);
 END;
 /
+SELECT * FROM SAE_LOCATAIRE;
 
 -- Delete
+begin
+    SAE_DAO_LOCATAIRE.SAE_DELETE('LOC006');
 
-call SAE_DAO_LOCATAIRE.SAE_DELETE('LOC006');
+end;
+/
+SELECT * FROM SAE_LOCATAIRE;
 
-DBMS_OUTPUT.PUT_LINE('Test Delete : Ceci n''est rien cense afficher');
-SELECT * FROM SAE_LOCATAIRE where identifiant_locataire = 'LOC006';
+call DBMS_OUTPUT.PUT_LINE('Test Delete : Ceci n''est cense afficher qu''une ligne');
 
 ROLLBACK;
