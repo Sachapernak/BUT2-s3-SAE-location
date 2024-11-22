@@ -27,8 +27,6 @@ public class FichierConfig {
     	} else {
     		chemin = nouveauChemin;
     	}
-    			
-        
     }
     
     public static String getChemin() {
