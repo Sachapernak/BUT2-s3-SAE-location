@@ -5,28 +5,29 @@ import java.util.HashSet;
 import java.util.Objects;
 
 public class Locataire {
-	private String Id_locataire;
+	private String Idlocataire;
 	private String nom;
 	private String prenom;
 	private String email;
 	private String telephone;
-	private String date_naissance;
-	private String lieu_de_naissance;
-	private String acte_de_caution;
-	private String Id_adresse;
-	private Collection<Bail> Id_bail;
+	private String dateNaissance;
+	private String lieuDeNaissance;
+	private String acteDeCaution;
+	private Adresse adresse;
+	private Collection<Bail> IdBail;
 	
 	
-	public Locataire(String Id_locataire, String nom, String prenom, String email, String telephone, String date_naissance, String lieu_de_naissance, String acte_de_caution, String Id_adresse) {
-		this.Id_locataire = Id_locataire;
+	public Locataire(String IdLocataire, String nom, String prenom, String dateNaissance) {
+		this.Idlocataire = IdLocataire;
 		this.nom = nom;
 		this.prenom = prenom;
-		this.email = email;
-		this.telephone = telephone;
-		this.date_naissance = date_naissance;
-		this.acte_de_caution = acte_de_caution;
-		this.Id_adresse = Id_adresse;
-		this.Id_bail = new HashSet<Bail>();
+		//this.email = email;
+		//this.telephone = telephone;
+		this.dateNaissance = dateNaissance;
+		//this.acteDeCaution = acte_de_caution;
+		//this.lieuDeNaissance = lieu_de_naissance;
+		//this.adresse = adresse;
+		this.IdBail = new HashSet<Bail>();
 		
 	}
 
@@ -34,8 +35,8 @@ public class Locataire {
 	/**
 	 * @return the id_locataire
 	 */
-	public String getId_locataire() {
-		return Id_locataire;
+	public String getIdLocataire() {
+		return Idlocataire;
 	}
 
 
@@ -74,40 +75,40 @@ public class Locataire {
 	/**
 	 * @return the date_naissance
 	 */
-	public String getDate_naissance() {
-		return date_naissance;
+	public String getDateNaissance() {
+		return dateNaissance;
 	}
 
 
 	/**
 	 * @return the lieu_de_naissance
 	 */
-	public String getLieu_de_naissance() {
-		return lieu_de_naissance;
+	public String getLieuDeNaissance() {
+		return lieuDeNaissance;
 	}
 
 
 	/**
 	 * @return the acte_de_caution
 	 */
-	public String getActe_de_caution() {
-		return acte_de_caution;
+	public String getActeDeCaution() {
+		return acteDeCaution;
 	}
 
 
 	/**
 	 * @return the id_adresse
 	 */
-	public String getId_adresse() {
-		return Id_adresse;
+	public Adresse getAdresse() {
+		return adresse;
 	}
 
 
 	/**
 	 * @return the id_bail
 	 */
-	public Collection<Bail> getId_bail() {
-		return Id_bail;
+	public Collection<Bail> getIdBail() {
+		return IdBail;
 	}
 
 
@@ -146,48 +147,48 @@ public class Locataire {
 	/**
 	 * @param date_naissance the date_naissance to set
 	 */
-	public void setDate_naissance(String date_naissance) {
-		this.date_naissance = date_naissance;
+	public void setDateNaissance(String dateNaissance) {
+		this.dateNaissance = dateNaissance;
 	}
 
 
 	/**
 	 * @param lieu_de_naissance the lieu_de_naissance to set
 	 */
-	public void setLieu_de_naissance(String lieu_de_naissance) {
-		this.lieu_de_naissance = lieu_de_naissance;
+	public void setLieuDeNaissance(String lieuDeNaissance) {
+		this.lieuDeNaissance = lieuDeNaissance;
 	}
 
 
 	/**
 	 * @param acte_de_caution the acte_de_caution to set
 	 */
-	public void setActe_de_caution(String acte_de_caution) {
-		this.acte_de_caution = acte_de_caution;
+	public void setActeDeCaution(String acteDeCaution) {
+		this.acteDeCaution = acteDeCaution;
 	}
 
 
 	/**
 	 * @param id_bail the id_bail to set
 	 */
-	public void setId_bail(Collection<Bail> id_bail) {
-		Id_bail = id_bail;
+	public void setIdBail(Collection<Bail> idBail) {
+		IdBail = idBail;
 	}
 
 
 	@Override
 	public String toString() {
-		return "Locataire [Id_locataire=" + Id_locataire + ", nom=" + nom + ", prenom=" + prenom + ", email=" + email
-				+ ", telephone=" + telephone + ", date_naissance=" + date_naissance + ", lieu_de_naissance="
-				+ lieu_de_naissance + ", acte_de_caution=" + acte_de_caution + ", Id_adresse=" + Id_adresse
-				+ ", Id_bail=" + Id_bail + "]";
+		return "Locataire [Id_locataire=" + Idlocataire + ", nom=" + nom + ", prenom=" + prenom + ", email=" + email
+				+ ", telephone=" + telephone + ", date_naissance=" + dateNaissance + ", lieu_de_naissance="
+				+ lieuDeNaissance + ", acte_de_caution=" + acteDeCaution + ", Id_adresse=" + adresse
+				+ ", Id_bail=" + IdBail + "]";
 	}
 
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(Id_adresse, Id_bail, Id_locataire, acte_de_caution, date_naissance, email,
-				lieu_de_naissance, nom, prenom, telephone);
+		return Objects.hash(adresse, IdBail, Idlocataire, acteDeCaution, dateNaissance, email,
+				lieuDeNaissance, nom, prenom, telephone);
 	}
 
 
@@ -200,7 +201,7 @@ public class Locataire {
 			return false;
 		}
 		Locataire other = (Locataire) obj;
-		return this.Id_locataire == other.Id_locataire;
+		return this.Idlocataire == other.Idlocataire;
 	}
 	
 	
