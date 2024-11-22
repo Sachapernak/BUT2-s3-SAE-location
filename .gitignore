@@ -2,3 +2,7 @@
 /Aide
 /application-java/.settings
 /SQL/.idea
+/application-java/src/config.properties
+application-java/bin/config.properties
+/application-java/bin
+/application-java/bin/modele
