@@ -16,7 +16,7 @@ public class TestFichierConfig {
 	FichierConfig config;	
 	
     @Before 
-    public void initialize() {
+    public void initialize() throws IOException {
 	       config= FichierConfig.getInstance();
 	       FichierConfig.changerChemin(null);
 	 }
@@ -68,9 +68,7 @@ public class TestFichierConfig {
 	@Test(expected = IOException.class)
 	public void testException()throws IOException{
 		FichierConfig.changerChemin("src/modeleTest/fichierInexistant.properties");
-		assertEquals(null,config.lire("test"));
-		
-
+		config.lire("erreur");
 	}
 
 }
