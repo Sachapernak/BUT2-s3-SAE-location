@@ -14,7 +14,7 @@ public class Locataire {
 	private String lieuDeNaissance;
 	private String acteDeCaution;
 	private Adresse adresse;
-	private Collection<Bail> IdBail;
+	private Collection<Bail> baux;
 	
 	
 	public Locataire(String IdLocataire, String nom, String prenom, String dateNaissance) {
@@ -27,13 +27,13 @@ public class Locataire {
 		//this.acteDeCaution = acte_de_caution;
 		//this.lieuDeNaissance = lieu_de_naissance;
 		//this.adresse = adresse;
-		this.IdBail = new HashSet<Bail>();
+		this.baux = new HashSet<Bail>();
 		
 	}
 
 
 	/**
-	 * @return the id_locataire
+	 * @return L'identifiant du locataire
 	 */
 	public String getIdLocataire() {
 		return Idlocataire;
@@ -41,7 +41,7 @@ public class Locataire {
 
 
 	/**
-	 * @return the nom
+	 * @return Le nom du locataire
 	 */
 	public String getNom() {
 		return nom;
@@ -49,7 +49,7 @@ public class Locataire {
 
 
 	/**
-	 * @return the prenom
+	 * @return Le prenom du locataire
 	 */
 	public String getPrenom() {
 		return prenom;
@@ -57,7 +57,7 @@ public class Locataire {
 
 
 	/**
-	 * @return the email
+	 * @return L'email du locataire
 	 */
 	public String getEmail() {
 		return email;
@@ -65,7 +65,7 @@ public class Locataire {
 
 
 	/**
-	 * @return the telephone
+	 * @return Le numero de telephone du locataire
 	 */
 	public String getTelephone() {
 		return telephone;
@@ -73,7 +73,7 @@ public class Locataire {
 
 
 	/**
-	 * @return the date_naissance
+	 * @return La date de naissance du locataire
 	 */
 	public String getDateNaissance() {
 		return dateNaissance;
@@ -81,7 +81,7 @@ public class Locataire {
 
 
 	/**
-	 * @return the lieu_de_naissance
+	 * @return Le lieu de naissance du locataire
 	 */
 	public String getLieuDeNaissance() {
 		return lieuDeNaissance;
@@ -89,7 +89,7 @@ public class Locataire {
 
 
 	/**
-	 * @return the acte_de_caution
+	 * @return Le lien vers l'acte de caution du locataire
 	 */
 	public String getActeDeCaution() {
 		return acteDeCaution;
@@ -97,7 +97,7 @@ public class Locataire {
 
 
 	/**
-	 * @return the id_adresse
+	 * @return L'adresse de contact du locataire
 	 */
 	public Adresse getAdresse() {
 		return adresse;
@@ -105,15 +105,15 @@ public class Locataire {
 
 
 	/**
-	 * @return the id_bail
+	 * @return La liste des bail attachée au locataire
 	 */
-	public Collection<Bail> getIdBail() {
-		return IdBail;
+	public Collection<Bail> getBaux() {
+		return baux;
 	}
 
 
 	/**
-	 * @param nom the nom to set
+	 * @param nom Le nom du locataire
 	 */
 	public void setNom(String nom) {
 		this.nom = nom;
@@ -121,7 +121,7 @@ public class Locataire {
 
 
 	/**
-	 * @param prenom the prenom to set
+	 * @param prenom Le prenom du locataire
 	 */
 	public void setPrenom(String prenom) {
 		this.prenom = prenom;
@@ -129,7 +129,7 @@ public class Locataire {
 
 
 	/**
-	 * @param email the email to set
+	 * @param email L'email du locataire
 	 */
 	public void setEmail(String email) {
 		this.email = email;
@@ -137,7 +137,7 @@ public class Locataire {
 
 
 	/**
-	 * @param telephone the telephone to set
+	 * @param telephone Le numero de telephone du locataire
 	 */
 	public void setTelephone(String telephone) {
 		this.telephone = telephone;
@@ -145,7 +145,7 @@ public class Locataire {
 
 
 	/**
-	 * @param date_naissance the date_naissance to set
+	 * @param date_naissance La date de naissance du locataire
 	 */
 	public void setDateNaissance(String dateNaissance) {
 		this.dateNaissance = dateNaissance;
@@ -153,41 +153,42 @@ public class Locataire {
 
 
 	/**
-	 * @param lieu_de_naissance the lieu_de_naissance to set
+	 * @param lieu_de_naissance Le lieu de naissance du locataire
 	 */
 	public void setLieuDeNaissance(String lieuDeNaissance) {
 		this.lieuDeNaissance = lieuDeNaissance;
 	}
 
+	/**
+	 * @param adresse L'adresse de contact du locataire
+	 */
+	public void setAdresse(Adresse adresse) {
+		this.adresse = adresse;
+	}
 
 	/**
-	 * @param acte_de_caution the acte_de_caution to set
+	 * @param acteDeCaution Le lien vers l'acte de caution
 	 */
 	public void setActeDeCaution(String acteDeCaution) {
 		this.acteDeCaution = acteDeCaution;
 	}
 
 
-	/**
-	 * @param id_bail the id_bail to set
-	 */
-	public void setIdBail(Collection<Bail> idBail) {
-		IdBail = idBail;
-	}
-
 
 	@Override
-	public String toString() {
-		return "Locataire [Id_locataire=" + Idlocataire + ", nom=" + nom + ", prenom=" + prenom + ", email=" + email
-				+ ", telephone=" + telephone + ", date_naissance=" + dateNaissance + ", lieu_de_naissance="
-				+ lieuDeNaissance + ", acte_de_caution=" + acteDeCaution + ", Id_adresse=" + adresse
-				+ ", Id_bail=" + IdBail + "]";
+	public String toString() {		
+		return "Locataire "+ Idlocataire + ": " + nom + " " + prenom 
+				+ "\n    Email, Telephone : " + email + ", " + telephone
+				+ "\n    Naissance : " + dateNaissance + " à " + lieuDeNaissance
+				+ "\n    Lien acte de caution : " + acteDeCaution
+				+ "\n    Adresse : " + adresse
+				+ "\n    Baux : " + baux + "\n";
 	}
 
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(adresse, IdBail, Idlocataire, acteDeCaution, dateNaissance, email,
+		return Objects.hash(adresse, baux, Idlocataire, acteDeCaution, dateNaissance, email,
 				lieuDeNaissance, nom, prenom, telephone);
 	}
 

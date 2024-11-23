@@ -52,7 +52,13 @@ public class DaoLocataire extends DaoModele<Locataire> {
 		String acteCaution = curseur.getString("ACTE_DE_CAUTION");
 		
 		String idAdresse = curseur.getString("ID_SAE_ADRESSE");
-		Adresse adresse = new DaoAdresse().findById(idAdresse);
+		
+		Adresse adresse = null;
+		
+		if (idAdresse != "") {
+			adresse = new DaoAdresse().findById(idAdresse);
+		}
+		
 		
 		Locataire locataire = new Locataire(id, nom, prenom, dateNaissance);
 		
@@ -70,6 +76,10 @@ public class DaoLocataire extends DaoModele<Locataire> {
 		
 		if (email != "") {
 			locataire.setEmail(email);
+		}
+		
+		if (adresse != null) {
+			locataire.setAdresse(adresse);
 		}
 		
 		return locataire;

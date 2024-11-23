@@ -9,13 +9,13 @@ public class RequeteSelectLocataireById extends Requete<Locataire> {
 
 	@Override
 	public String requete() {
-		return "select * from Locataire "
+		return "select * from SAE_Locataire "
 				+ "where identifiant_locataire = ?";
 	}
 	
 	@Override
 	public void parametres(PreparedStatement prSt, Locataire donnee) throws SQLException {
-		prSt.setString(1, donnee.getId_locataire());
+		prSt.setString(1, donnee.getIdLocataire());
 	}
 	
 	@Override

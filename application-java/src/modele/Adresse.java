@@ -4,38 +4,37 @@ import java.util.Objects;
 
 public class Adresse {
 	
-	private String Id_adresse;
+	private String idAdresse;
 	private String adresse;
-	private int Code_postal;
+	private int codePostal;
 	private String ville;
-	private String Complement_adresse;
+	private String complementAdresse;
 	
-	public Adresse(String Id_adresse, String adresse, int Code_postal, String ville, String Complement_adresse) {
-		this.Id_adresse = Id_adresse;
+	public Adresse(String idAdresse, String adresse, int codePostal, String ville) {
+		this.idAdresse = idAdresse;
 		this.adresse =adresse;
-		this.Code_postal = Code_postal;
+		this.codePostal = codePostal;
 		this.ville = ville;
-		this.Complement_adresse = Complement_adresse;
+		
 	}
 
 
 	@Override
 	public String toString() {
-		return "Adresse [Id_adresse=" + Id_adresse + ", adresse=" + adresse + ", Code_postal=" + Code_postal
-				+ ", ville=" + ville + ", Complement_adresse=" + Complement_adresse + "]";
+		return "(adresse " + idAdresse + ") " + adresse + ", " + complementAdresse + ", " + codePostal + " " + ville;
 	}
 
 
 	/**
-	 * @return the id_adresse
+	 * @return l'identifiant de l'adresse
 	 */
-	public String getId_adresse() {
-		return Id_adresse;
+	public String getIdAdresse() {
+		return idAdresse;
 	}
 
 
 	/**
-	 * @return the adresse
+	 * @return l'adresse
 	 */
 	public String getAdresse() {
 		return adresse;
@@ -43,15 +42,15 @@ public class Adresse {
 
 
 	/**
-	 * @return the code_postal
+	 * @return le code postal
 	 */
-	public int getCode_postal() {
-		return Code_postal;
+	public int getCodePostal() {
+		return codePostal;
 	}
 
 
 	/**
-	 * @return the ville
+	 * @return la ville
 	 */
 	public String getVille() {
 		return ville;
@@ -59,15 +58,15 @@ public class Adresse {
 
 
 	/**
-	 * @return the complement_adresse
+	 * @return le complement d'adresse
 	 */
-	public String getComplement_adresse() {
-		return Complement_adresse;
+	public String getComplementAdresse() {
+		return complementAdresse;
 	}
 
 
 	/**
-	 * @param adresse the adresse to set
+	 * @param adresse La premiere ligne d'adresse
 	 */
 	public void setAdresse(String adresse) {
 		this.adresse = adresse;
@@ -75,15 +74,15 @@ public class Adresse {
 
 
 	/**
-	 * @param code_postal the code_postal to set
+	 * @param code_postal Le code postal
 	 */
-	public void setCode_postal(int code_postal) {
-		Code_postal = code_postal;
+	public void setCodePostal(int codePostal) {
+		this.codePostal = codePostal;
 	}
 
 
 	/**
-	 * @param ville the ville to set
+	 * @param ville La ville
 	 */
 	public void setVille(String ville) {
 		this.ville = ville;
@@ -91,16 +90,16 @@ public class Adresse {
 
 
 	/**
-	 * @param complement_adresse the complement_adresse to set
+	 * @param complement_adresse Le complement d'adresse
 	 */
-	public void setComplement_adresse(String complement_adresse) {
-		Complement_adresse = complement_adresse;
+	public void setComplementAdresse(String complementAdresse) {
+		this.complementAdresse = complementAdresse;
 	}
 
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(Code_postal, Complement_adresse, Id_adresse, adresse, ville);
+		return Objects.hash(codePostal, complementAdresse, idAdresse, adresse, ville);
 	}
 
 
@@ -113,7 +112,7 @@ public class Adresse {
 			return false;
 		}
 		Adresse other = (Adresse) obj;
-		return this.Id_adresse == other.Id_adresse;
+		return this.idAdresse == other.idAdresse;
 	}
 	
 	

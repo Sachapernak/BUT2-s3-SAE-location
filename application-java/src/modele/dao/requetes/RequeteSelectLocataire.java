@@ -6,7 +6,7 @@ public class RequeteSelectLocataire extends Requete<Locataire> {
 
 	@Override
 	public String requete() {
-		return "select * from Locataire";
+		return "select * from SAE_Locataire";
 	}
 
 }
