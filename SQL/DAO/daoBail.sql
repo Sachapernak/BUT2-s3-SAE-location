@@ -27,14 +27,14 @@ CREATE OR REPLACE PACKAGE BODY SAE_DAO_BAIL AS
     ) AS
     BEGIN
         IF (p_id_bail IS NULL OR p_date_de_debut IS NULL OR p_date_de_fin IS NULL) THEN
-            raise_application_error(-20020, 'L''identifiant du bail, la date de debut et la date de fin doivent etre renseignes');
+            raise_application_error(-20040, 'L''identifiant du bail, la date de debut et la date de fin doivent etre renseignes');
         END IF;
         
         INSERT INTO sae_bail (id_bail, date_de_debut, date_de_fin) 
         VALUES (p_id_bail, p_date_de_debut, p_date_de_fin);
     EXCEPTION 
         WHEN dup_val_on_index THEN 
-            raise_application_error(-20022, 'Le bail est deja dans la base de donnees');
+            raise_application_error(-20041, 'Le bail est deja dans la base de donnees');
     END SAE_CREATE;    
 
     procedure SAE_DELETE(p_id_bail sae_bail.id_bail%type) AS
@@ -50,7 +50,7 @@ CREATE OR REPLACE PACKAGE BODY SAE_DAO_BAIL AS
         vCount number;
     BEGIN
         IF (p_id_bail IS NULL) THEN
-            raise_application_error(-20023, 'Sans l''identifiant, on ne peut pas cibler la ligne a modifier.');
+            raise_application_error(-20042, 'Sans l''identifiant, on ne peut pas cibler la ligne a modifier.');
         END IF;
         
         -- V�rifier l'existence de l'enregistrement
@@ -60,7 +60,7 @@ CREATE OR REPLACE PACKAGE BODY SAE_DAO_BAIL AS
 
         IF vCount = 0 THEN
             -- Lever une erreur si le bail n'existe pas
-            RAISE_APPLICATION_ERROR(-20024, 'Le bail avec l''ID ' || p_id_bail || ' n''existe pas dans la base de donn�es.');
+            RAISE_APPLICATION_ERROR(-20043, 'Le bail avec l''ID ' || p_id_bail || ' n''existe pas dans la base de donn�es.');
         END IF;
 
         UPDATE sae_bail 

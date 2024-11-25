@@ -45,13 +45,13 @@ CREATE OR REPLACE PACKAGE BODY SAE_DAO_LOCATAIRE AS
     as
     begin
         if (p_id_locataire is null or p_nom_locataire is null or p_prenom_locataire is null or p_date_naissance is null) then
-            raise_application_error(-20021, 'L''identifiant du locataire, le nom locataire, le prenom locataire et la date de naissance doivent etre renseignes');
+            raise_application_error(-20020, 'L''identifiant du locataire, le nom locataire, le prenom locataire et la date de naissance doivent etre renseignes');
         end if;
         
 
         insert into sae_LOCATAIRE values (p_id_locataire, p_nom_locataire, p_prenom_locataire, p_email_locataire, p_telephone_locataire,p_date_naissance, p_lieu_de_naissance , p_acte_de_caution, p_adresse_locataire);
             exception 
-                when dup_val_on_index then raise_application_error(-20023, 'Le locataire est deja dans la base de donnees');
+                when dup_val_on_index then raise_application_error(-20021, 'Le locataire est deja dans la base de donnees');
 
     end SAE_CREATE;    
 
@@ -78,7 +78,7 @@ CREATE OR REPLACE PACKAGE BODY SAE_DAO_LOCATAIRE AS
     vCount number;
     begin
         if (p_id_locataire is null) then
-            raise_application_error(-20013, 'Vous devez renseigner l''identifiant, sans cela, on ne pourra pas cibler la ligne a modifier.');
+            raise_application_error(-20022, 'Vous devez renseigner l''identifiant, sans cela, on ne pourra pas cibler la ligne a modifier.');
         end if;
         -- if (p_nom_locataire is null and p_prenom_locataire is null and p_email_locataire is null and p_telephone_locataire is null and p_date_naissance is null and p_lieu_de_naissance is null and p_acte_de_caution is null and p_adresse_locataire is null) then
         --     raise_application_error(-20014, 'Vous devez renseigner des valeurs a modifier');
@@ -93,7 +93,7 @@ CREATE OR REPLACE PACKAGE BODY SAE_DAO_LOCATAIRE AS
 
         IF vCount = 0 THEN
             -- Lever une erreur si locataire n'existe pas
-            RAISE_APPLICATION_ERROR(-20024, 'Il n''existe aucun locataire avec l''identifiant donne');
+            RAISE_APPLICATION_ERROR(-20023, 'Il n''existe aucun locataire avec l''identifiant donne');
         END IF;
 
         UPDATE sae_locataire 

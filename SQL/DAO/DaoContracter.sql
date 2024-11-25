@@ -33,14 +33,14 @@ CREATE OR REPLACE PACKAGE BODY SAE_DAO_CONTRACTER AS
     ) AS
     BEGIN
         IF (p_id_bail IS NULL OR p_id_locataire IS NULL OR p_date_d_entree is null) THEN
-            raise_application_error(-20020, 'L''identifiant du bail, l''identifiant du locataire et la date d''entree doivent etre renseignes');
+            raise_application_error(-20030, 'L''identifiant du bail, l''identifiant du locataire et la date d''entree doivent etre renseignes');
         END IF;
         
         INSERT INTO sae_contracter (identifiant_locataire,id_bail, date_de_sortie, date_d_entree,part_de_loyer) 
         VALUES (p_id_locataire, p_id_bail, p_date_de_sortie, p_date_d_entree, p_part_loyer);
     EXCEPTION 
         WHEN dup_val_on_index THEN 
-            raise_application_error(-20022, 'Le contrat est deja dans la base de donnees');
+            raise_application_error(-20031, 'Le contrat est deja dans la base de donnees');
     END SAE_CREATE;    
 
     procedure SAE_DELETE(p_id_bail sae_bail.id_bail%TYPE, p_id_locataire sae_locataire.identifiant_locataire%type) AS
@@ -59,7 +59,7 @@ CREATE OR REPLACE PACKAGE BODY SAE_DAO_CONTRACTER AS
         vCount number;
     BEGIN
         IF (p_id_bail IS NULL or p_id_locataire is NULL) THEN
-            raise_application_error(-20023, 'Sans l''identifiant, on ne peut pas cibler la ligne a modifier.');
+            raise_application_error(-20032, 'Sans l''identifiant, on ne peut pas cibler la ligne a modifier.');
         END IF;
         
         -- Verifier l'existence de l'enregistrement
@@ -70,7 +70,7 @@ CREATE OR REPLACE PACKAGE BODY SAE_DAO_CONTRACTER AS
 
         IF vCount = 0 THEN
             -- Lever une erreur si le contrat n'existe pas
-            RAISE_APPLICATION_ERROR(-20024, 'Il n''existe aucun contrat avec les deux identifiants donnes');
+            RAISE_APPLICATION_ERROR(-20033, 'Il n''existe aucun contrat avec les deux identifiants donnes');
         END IF;
 
         UPDATE sae_contracter
