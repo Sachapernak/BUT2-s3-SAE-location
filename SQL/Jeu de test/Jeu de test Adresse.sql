@@ -11,3 +11,5 @@ VALUES ('ADDR003', '5 impasse des Érables', 69000, 'Lyon', NULL);
 -- Adresse non utilisée (pour test d'intégrité)
 INSERT INTO SAE_Adresse (Id_SAE_Adresse, adresse, Code_postal, ville, Complement_adresse) 
 VALUES ('ADDR004', '7 chemin des Pins', 34000, 'Montpellier', NULL);
+
+select * from SAE_Adresse;

@@ -96,10 +96,11 @@ public class Adresse {
 		this.complementAdresse = complementAdresse;
 	}
 
-
+	
+	// modifier
 	@Override
 	public int hashCode() {
-		return Objects.hash(codePostal, complementAdresse, idAdresse, adresse, ville);
+		return Objects.hash(idAdresse);
 	}
 
 

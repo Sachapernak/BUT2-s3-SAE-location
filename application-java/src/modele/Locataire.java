@@ -185,12 +185,12 @@ public class Locataire {
 				+ "\n    Baux : " + baux + "\n";
 	}
 
-
+	// Que les truc du equals
 	@Override
 	public int hashCode() {
-		return Objects.hash(adresse, baux, Idlocataire, acteDeCaution, dateNaissance, email,
-				lieuDeNaissance, nom, prenom, telephone);
+		return Objects.hash(Idlocataire);
 	}
+
 
 
 	@Override

@@ -13,6 +13,7 @@ public class FichierConfig {
     private FichierConfig() {
     }
     
+    // pas obligé 
     public static synchronized FichierConfig getInstance() {
         if (instance == null) {
             instance = new FichierConfig();

@@ -7,7 +7,7 @@ begin
     end if;
     insert into SAE_BAIL values (P_ID_BAIL, P_PROV_POUR_CHARGE, P_DATE_DEB_BAIL, P_DATE_FIN_BAIL);
     exception 
-        when dup_val_on_index then raise_application_error(-20010, 'Le bail est dÃ©jÃ  dans la base de donnÃ©es');
+        when dup_val_on_index then raise_application_error(-20010, 'Le bail est deja dans la base de donnees');
 end;
 /
 

@@ -26,6 +26,7 @@ public class ConnexionBD {
 		
 	}
 	
+	// synchronized potentiellement pas utile
     public static synchronized ConnexionBD getInstance() throws SQLException, IOException {
         if (instance == null) {
             instance = new ConnexionBD();
