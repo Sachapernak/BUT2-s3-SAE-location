@@ -4,54 +4,63 @@ import java.util.Objects;
 
 public class Bail {
 	
-	private String id_bail;
-	private String date_de_debut;
-	private String date_de_fin;
+	private String idBail;
+	private String dateDeDebut;
+
+	private String dateDeFin;
 	
-	public Bail(String id_bail, String date_de_debut, String date_de_fin) {
-		this.date_de_debut = date_de_debut;
-		this.date_de_fin = date_de_fin;
+	
+	public Bail(String idBail, String dateDeDebut, String dateDeFin) {
+		this.dateDeDebut = dateDeDebut;
+		this.dateDeFin = dateDeFin;
 	}
 	
 	
+	
+	
+	@Override
+	public String toString() {
+		return "Bail " + idBail + ", " + dateDeDebut + ", " + dateDeFin;
+	}
+
 	/**
 	 * @return l'identifiant du bail
 	 */
-	public String getId_bail() {
-		return id_bail;
+	public String getIdBail() {
+		return idBail;
 	}
 
 	/**
 	 * @return la date de debut
 	 */
-	public String getDate_de_debut() {
-		return date_de_debut;
+	public String getDateDeDebut() {
+		return dateDeDebut;
 	}
 
 	/**
 	 * @param date de debut la date de debut au bail
 	 */
-	public void setDate_de_debut(String date_de_debut) {
-		this.date_de_debut = date_de_debut;
+	public void setDateDeDebut(String date_de_debut) {
+		this.dateDeDebut = date_de_debut;
 	}
 
 	/**
 	 * @return la date de fin
 	 */
-	public String getDate_de_fin() {
-		return date_de_fin;
+	public String getDateDeFin() {
+		return dateDeFin;
 	}
 
 	/**
 	 * @param date de fin la date de fin au bail
 	 */
-	public void setDate_de_fin(String date_de_fin) {
-		this.date_de_fin = date_de_fin;
+	public void setDateDeFin(String date_de_fin) {
+		this.dateDeFin = date_de_fin;
 	}
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(id_bail);
+		return Objects.hash(idBail);
 	}
 
 	@Override
@@ -63,7 +72,7 @@ public class Bail {
 			return false;
 		}
 		Bail other = (Bail) obj;
-		return Objects.equals(id_bail, other.id_bail);
+		return Objects.equals(idBail, other.idBail);
 	}
 
 	
