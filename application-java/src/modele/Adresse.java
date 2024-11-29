@@ -10,11 +10,34 @@ public class Adresse {
 	private String ville;
 	private String complementAdresse;
 	
+	/**
+	 * Constructeur de la classe Adresse. 
+	 *
+	 * @param idAdresse   l'identifiant unique de l'adresse
+	 * @param adresse     la description textuelle de l'adresse (ex. rue et numéro)
+	 * @param codePostal  le code postal de l'adresse
+	 * @param ville       la ville associée à l'adresse
+	 */
 	public Adresse(String idAdresse, String adresse, int codePostal, String ville) {
 		this.idAdresse = idAdresse;
 		this.adresse =adresse;
 		this.codePostal = codePostal;
 		this.ville = ville;
+		
+	}
+	
+	/**
+	 * Constructeur de la classe Adresse. 
+	 *
+	 * @param idAdresse   l'identifiant unique de l'adresse
+	 * @param adresse     la description textuelle de l'adresse (ex. rue et numéro)
+	 * @param codePostal  le code postal de l'adresse
+	 * @param ville       la ville associée à l'adresse
+	 * @param complement  le complement d'adresse
+	 */
+	public Adresse(String idAdresse, String adresse, int codePostal, String ville, String complement) {
+		this(idAdresse, adresse, codePostal, ville);
+		this.complementAdresse = complement;
 		
 	}
 

@@ -7,6 +7,9 @@ import java.util.List;
 
 import modele.dao.requetes.RequeteSelectAdresse;
 import modele.dao.requetes.RequeteSelectAdresseById;
+import modele.dao.requetes.RequeteDeleteAdresse; 
+import modele.dao.requetes.RequeteUpdateAdresse;
+import modele.dao.requetes.RequeteCreateAdresse; 
 
 import modele.Adresse;
 
@@ -14,19 +17,19 @@ public class DaoAdresse extends DaoModele<Adresse> {
 
 	@Override
 	public void create(Adresse donnees) throws SQLException, IOException {
-		// TODO Auto-generated method stub
+		miseAJour(new RequeteCreateAdresse(), donnees);
 		
 	}
 
 	@Override
 	public void update(Adresse donnees) throws SQLException, IOException {
-		// TODO Auto-generated method stub
+		miseAJour(new RequeteUpdateAdresse(), donnees);
 		
 	}
 
 	@Override
 	public void delete(Adresse donnees) throws SQLException, IOException {
-		// TODO Auto-generated method stub
+		miseAJour(new RequeteDeleteAdresse(), donnees);
 		
 	}
 
@@ -50,7 +53,7 @@ public class DaoAdresse extends DaoModele<Adresse> {
 		
 		Adresse adresse = new Adresse(idAdresse, adresseLigne, codePostal, ville );
 		
-		if (complementAdresse != "") {
+		if (complementAdresse != null) {
 			adresse.setComplementAdresse(complementAdresse);
 		}
 		

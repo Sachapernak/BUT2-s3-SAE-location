@@ -1,4 +1,4 @@
-package modeleTest;
+package modeleTest.UITest;
 
 import java.awt.EventQueue;
 
@@ -22,7 +22,7 @@ import javax.swing.JTextField;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class TestUILocataire {
+public class UITestLocataire {
 
 	private JFrame frame;
 	private JTable tableLocataire;
@@ -38,7 +38,7 @@ public class TestUILocataire {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					TestUILocataire window = new TestUILocataire();
+					UITestLocataire window = new UITestLocataire();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -50,7 +50,7 @@ public class TestUILocataire {
 	/**
 	 * Create the application.
 	 */
-	public TestUILocataire() {
+	public UITestLocataire() {
 		initialize();
 	}
 
