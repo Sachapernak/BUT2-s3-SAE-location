@@ -1,125 +1,211 @@
 package modele;
 
-import java.util.List;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Objects;
 
 public class Locataire {
-	private String id;
+	private String Idlocataire;
 	private String nom;
 	private String prenom;
 	private String email;
 	private String telephone;
-	private String dateNaissance; // est une date ?
-	private String lieuNaissance;
-	private String fichierCaution;
-	
-	private List<EtreLie> liens;
-	
+	private String dateNaissance;
+	private String lieuDeNaissance;
+	private String acteDeCaution;
 	private Adresse adresse;
+	private Collection<Bail> baux;
 	
-	public Locataire(String id, String nom, String prenom, String dateNaissance) {
+	
+	public Locataire(String IdLocataire, String nom, String prenom, String dateNaissance) {
+		this.Idlocataire = IdLocataire;
+		this.nom = nom;
+		this.prenom = prenom;
+		//this.email = email;
+		//this.telephone = telephone;
+		this.dateNaissance = dateNaissance;
+		//this.acteDeCaution = acte_de_caution;
+		//this.lieuDeNaissance = lieu_de_naissance;
+		//this.adresse = adresse;
+		this.baux = new HashSet<Bail>();
 		
 	}
 
-	
-	
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
+
+	/**
+	 * @return L'identifiant du locataire
+	 */
+	public String getIdLocataire() {
+		return Idlocataire;
 	}
 
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Locataire other = (Locataire) obj;
-		return Objects.equals(id, other.id);
-	}
-
-
-	// Getter / Setters
+	/**
+	 * @return Le nom du locataire
+	 */
 	public String getNom() {
 		return nom;
 	}
 
-	public void setNom(String nom) {
-		this.nom = nom;
-	}
 
+	/**
+	 * @return Le prenom du locataire
+	 */
 	public String getPrenom() {
 		return prenom;
 	}
 
-	public void setPrenom(String prenom) {
-		this.prenom = prenom;
-	}
 
+	/**
+	 * @return L'email du locataire
+	 */
 	public String getEmail() {
 		return email;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
 
+	/**
+	 * @return Le numero de telephone du locataire
+	 */
 	public String getTelephone() {
 		return telephone;
 	}
 
-	public void setTelephone(String telephone) {
-		this.telephone = telephone;
-	}
 
+	/**
+	 * @return La date de naissance du locataire
+	 */
 	public String getDateNaissance() {
 		return dateNaissance;
 	}
 
-	public void setDateNaissance(String dateNaissance) {
-		this.dateNaissance = dateNaissance;
+
+	/**
+	 * @return Le lieu de naissance du locataire
+	 */
+	public String getLieuDeNaissance() {
+		return lieuDeNaissance;
 	}
 
-	public String getLieuNaissance() {
-		return lieuNaissance;
+
+	/**
+	 * @return Le lien vers l'acte de caution du locataire
+	 */
+	public String getActeDeCaution() {
+		return acteDeCaution;
 	}
 
-	public void setLieuNaissance(String lieuNaissance) {
-		this.lieuNaissance = lieuNaissance;
-	}
 
-	public String getFichierCaution() {
-		return fichierCaution;
-	}
-
-	public void setFichierCaution(String fichierCaution) {
-		this.fichierCaution = fichierCaution;
-	}
-
-	public List<EtreLie> getLiens() {
-		return liens;
-	}
-
-	public void setLiens(List<EtreLie> liens) {
-		this.liens = liens;
-	}
-
+	/**
+	 * @return L'adresse de contact du locataire
+	 */
 	public Adresse getAdresse() {
 		return adresse;
 	}
 
+
+	/**
+	 * @return La liste des bail attachée au locataire
+	 */
+	public Collection<Bail> getBaux() {
+		return baux;
+	}
+
+
+	/**
+	 * @param nom Le nom du locataire
+	 */
+	public void setNom(String nom) {
+		this.nom = nom;
+	}
+
+
+	/**
+	 * @param prenom Le prenom du locataire
+	 */
+	public void setPrenom(String prenom) {
+		this.prenom = prenom;
+	}
+
+
+	/**
+	 * @param email L'email du locataire
+	 */
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+
+	/**
+	 * @param telephone Le numero de telephone du locataire
+	 */
+	public void setTelephone(String telephone) {
+		this.telephone = telephone;
+	}
+
+
+	/**
+	 * @param date_naissance La date de naissance du locataire
+	 */
+	public void setDateNaissance(String dateNaissance) {
+		this.dateNaissance = dateNaissance;
+	}
+
+
+	/**
+	 * @param lieu_de_naissance Le lieu de naissance du locataire
+	 */
+	public void setLieuDeNaissance(String lieuDeNaissance) {
+		this.lieuDeNaissance = lieuDeNaissance;
+	}
+
+	/**
+	 * @param adresse L'adresse de contact du locataire
+	 */
 	public void setAdresse(Adresse adresse) {
 		this.adresse = adresse;
 	}
 
-	public String getId() {
-		return id;
+	/**
+	 * @param acteDeCaution Le lien vers l'acte de caution
+	 */
+	public void setActeDeCaution(String acteDeCaution) {
+		this.acteDeCaution = acteDeCaution;
+	}
+
+
+
+	@Override
+	public String toString() {		
+		return "Locataire "+ Idlocataire + ": " + nom + " " + prenom 
+				+ "\n    Email, Telephone : " + email + ", " + telephone
+				+ "\n    Naissance : " + dateNaissance + " à " + lieuDeNaissance
+				+ "\n    Lien acte de caution : " + acteDeCaution
+				+ "\n    Adresse : " + adresse
+				+ "\n    Baux : " + baux + "\n";
+	}
+
+	// Que les truc du equals
+	@Override
+	public int hashCode() {
+		return Objects.hash(Idlocataire);
+	}
+
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof Locataire)) {
+			return false;
+		}
+		Locataire other = (Locataire) obj;
+		return this.Idlocataire == other.Idlocataire;
 	}
 	
 	
 	
-}
 
+}
