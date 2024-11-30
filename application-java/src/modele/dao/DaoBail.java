@@ -51,6 +51,10 @@ public class DaoBail extends DaoModele<Bail> implements Dao<Bail> {
 		
 		Bail bail = new Bail(idBail, dateDeDebut, dateDeFin );
 		
+		if (dateDeFin == "") {
+			bail.setDateDeFin(dateDeFin);
+		}
+		
 		return bail;
 		
 	}

@@ -7,7 +7,7 @@ import java.util.Properties;
 
 public class FichierConfig {
     
-    private static String chemin = "src/config.properties";
+    private static String chemin = "application-java/src/config.properties";
     private static FichierConfig instance;
     
     private FichierConfig() {
@@ -24,7 +24,7 @@ public class FichierConfig {
     public static void changerChemin(String nouveauChemin) {
     	
     	if( nouveauChemin == null) {
-    		chemin = "src/config.properties";
+    		chemin = "application-java/src/config.properties";
     	} else {
     		chemin = nouveauChemin;
     	}
