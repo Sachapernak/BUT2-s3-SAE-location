@@ -21,5 +21,4 @@ public class TestLocataireApp {
 		   System.out.println(locataire.toString());
 		}
 	}
-
 }
