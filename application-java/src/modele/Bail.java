@@ -10,7 +10,28 @@ public class Bail {
 	private String dateDeFin;
 	
 	
+	
+	/**
+	 * Constructeur de la classe Bail. 
+	 *
+	 * @param idBail      l'identifiant unique du bail
+	 * @param dateDeDebut la date du debut du bail
+	 */
+	public Bail(String idBail, String dateDeDebut) {
+		this.idBail = idBail;
+		this.dateDeDebut = dateDeDebut;
+		
+	}
+	
+	/**
+	 * Constructeur de la classe Bail. 
+	 *
+	 * @param idBail      l'identifiant unique du bail
+	 * @param dateDeDebut la date de debut du bail
+	 * @param dateDeFin   la date de fin du bail
+	 */
 	public Bail(String idBail, String dateDeDebut, String dateDeFin) {
+		this.idBail = idBail;
 		this.dateDeDebut = dateDeDebut;
 		this.dateDeFin = dateDeFin;
 	}
