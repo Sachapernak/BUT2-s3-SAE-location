@@ -13,11 +13,11 @@ import modele.Contracter;
 import modele.Locataire;
 import oracle.jdbc.OracleConnection;
 
-public class RequeteUpdateLocataire extends Requete<Locataire> {
+public class RequeteCreateLocataire extends Requete<Locataire> {
 
     @Override
     public String requete() {
-        return "{ call pkg_locataire.update_locataire(?, ?, ?, ?, ?, ?, ?, ?, ?, ?) }";
+        return "{ call pkg_locataire.create_locataire(?, ?, ?, ?, ?, ?, ?, ?, ?, ?) }";
     }
     
 
@@ -32,9 +32,8 @@ public class RequeteUpdateLocataire extends Requete<Locataire> {
         prSt.setString(7, donnee.getLieuDeNaissance());
         prSt.setString(8, donnee.getActeDeCaution());
         prSt.setString(9, donnee.getAdresse() == null ? null : donnee.getAdresse().getIdAdresse());
-        
-        // envoie de la liste de contrats
-        
+         
+        // Ajout des contrats
         ArrayList<Object[]> tabContrat = new ArrayList<>();
         
 		for (Contracter c : donnee.getContrats()) {

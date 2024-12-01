@@ -1,3 +1,5 @@
+select * from sae_locataire;/
+
 -- Type de donner comme la table
 CREATE OR REPLACE TYPE contract_type AS OBJECT (
     identifiant_locataire varchar2(50),
@@ -39,11 +41,25 @@ CREATE OR REPLACE PACKAGE pkg_locataire AS
         p_id_sae_adresse IN SAE_LOCATAIRE.id_sae_adresse%type,
         p_contrats in contract_array);
         
+    PROCEDURE create_locataire(
+        p_identifiant_locataire IN SAE_LOCATAIRE.identifiant_locataire%type,
+        p_nom_locataire IN SAE_LOCATAIRE.nom_locataire%type,
+        p_prenom_locataire IN SAE_LOCATAIRE.prenom_locataire%type,
+        p_email_locataire IN SAE_LOCATAIRE.email_locataire%type,
+        p_telephone_locataire IN SAE_LOCATAIRE.telephone_locataire%type,
+        p_date_naissance IN SAE_LOCATAIRE.date_naissance%type,
+        p_lieu_de_naissance IN SAE_LOCATAIRE.lieu_de_naissance%type,
+        p_acte_de_caution IN SAE_LOCATAIRE.acte_de_caution%type,
+        p_id_sae_adresse IN SAE_LOCATAIRE.id_sae_adresse%type,
+        p_contrats in contract_array);
+        
 END pkg_locataire;
 /
 
 CREATE OR REPLACE PACKAGE BODY pkg_locataire AS
 
+
+    
     -- update_contrats_bail pour update les contrats du "point de vue" du bail ?
     PROCEDURE update_contrats_loc(p_contrats in contract_array,
                                   p_identifiant_locataire IN SAE_LOCATAIRE.identifiant_locataire%type)
@@ -81,6 +97,52 @@ CREATE OR REPLACE PACKAGE BODY pkg_locataire AS
                 source.date_d_entree, source.part_de_loyer);
     
     END update_contrats_loc;
+
+     PROCEDURE create_locataire(
+        p_identifiant_locataire IN SAE_LOCATAIRE.identifiant_locataire%type,
+        p_nom_locataire IN SAE_LOCATAIRE.nom_locataire%type,
+        p_prenom_locataire IN SAE_LOCATAIRE.prenom_locataire%type,
+        p_email_locataire IN SAE_LOCATAIRE.email_locataire%type,
+        p_telephone_locataire IN SAE_LOCATAIRE.telephone_locataire%type,
+        p_date_naissance IN SAE_LOCATAIRE.date_naissance%type,
+        p_lieu_de_naissance IN SAE_LOCATAIRE.lieu_de_naissance%type,
+        p_acte_de_caution IN SAE_LOCATAIRE.acte_de_caution%type,
+        p_id_sae_adresse IN SAE_LOCATAIRE.id_sae_adresse%type,
+        p_contrats in contract_array) 
+    AS
+    BEGIN
+        -- Mise à jour des informations du locataire dans la table SAE_Locataire
+        INSERT INTO SAE_Locataire (
+            IDENTIFIANT_LOCATAIRE,
+            NOM_LOCATAIRE,
+            PRENOM_LOCATAIRE,
+            EMAIL_LOCATAIRE,
+            TELEPHONE_LOCATAIRE,
+            DATE_NAISSANCE,
+            LIEU_DE_NAISSANCE,
+            ACTE_DE_CAUTION,
+            ID_SAE_ADRESSE)
+        VALUES( 
+            p_identifiant_locataire,
+            p_nom_locataire,
+            p_prenom_locataire,
+            p_email_locataire,
+            p_telephone_locataire,
+            p_date_naissance,
+            p_lieu_de_naissance,
+            p_acte_de_caution,
+            p_id_sae_adresse
+        );
+        
+        update_contrats_loc(p_contrats, p_identifiant_locataire);
+    
+        COMMIT;
+    EXCEPTION
+        WHEN OTHERS THEN
+            ROLLBACK;
+            RAISE_APPLICATION_ERROR(-20001, 
+                'Erreur lors de la suppression du locataire : ' || SQLERRM);
+    END create_locataire;
 
     PROCEDURE update_locataire(
         p_identifiant_locataire IN SAE_LOCATAIRE.identifiant_locataire%type,

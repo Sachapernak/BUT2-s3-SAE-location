@@ -26,8 +26,6 @@ public class TestDaoLocataire {
         adresseTest = new Adresse("TESTADDR", "10 rue du Test", 12345, "TestVille");
         DaoAdresse daoA = new DaoAdresse();
         
-        daoA.delete(adresseTest);
-        daoA.create(adresseTest); // On crée une adresse à associer au locataire
     }
 
     
@@ -106,16 +104,34 @@ public class TestDaoLocataire {
     @Test
     public void testDaoFindAll() throws SQLException, IOException {
         Locataire locataire = creerLocataireTest("TEST04");
+        Locataire locataire2 = creerLocataireTest("TEST05");
+        
         ajouterLocataire(locataire);
+        ajouterLocataire(locataire2);
 
         List<Locataire> list = daoLocataire.findAll();
+        System.out.println(list);
         
-        boolean contientId = list.stream()
-                                 .anyMatch(l -> "TEST04".equals(l.getIdLocataire()));
-
-        assertTrue("Le locataire inséré n'est pas présent dans la liste récupérée.", contientId);
-
+        Boolean contientId1 = false;
+        Boolean contientId2 = false;
+        for (Locataire loc : list) {
+        	System.out.println(loc.getIdLocataire());
+        	
+        	if (loc.getIdLocataire().equals("TEST04")) {
+        		contientId1 = true;
+        	}
+        	if (loc.getIdLocataire().equals("TEST05")) {
+        		contientId2 = true;
+        	}
+        		
+        }
+        
+        supprimerLocataire(locataire2);
         supprimerLocataire(locataire);
+        assertTrue("Le locataire inséré n'est pas présent dans la liste récupérée.", contientId1);
+        assertTrue("Le locataire inséré n'est pas présent dans la liste récupérée.", contientId2);
+
+        
     }
 
     @Test

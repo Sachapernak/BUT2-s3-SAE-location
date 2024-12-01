@@ -197,7 +197,7 @@ public class Locataire {
 	        res.append("Aucun bail associé");
 	    }
 
-	    res.append("]");
+	    res.append("]\n");
 	    return res.toString();
 	}
 
