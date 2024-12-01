@@ -1,7 +1,7 @@
 package modele;
 
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Locataire {
@@ -14,7 +14,7 @@ public class Locataire {
 	private String lieuDeNaissance;
 	private String acteDeCaution;
 	private Adresse adresse;
-	private Collection<Bail> baux;
+	private List<Contracter> contrats;
 	
 	
 	public Locataire(String IdLocataire, String nom, String prenom, String dateNaissance) {
@@ -27,8 +27,7 @@ public class Locataire {
 		//this.acteDeCaution = acte_de_caution;
 		//this.lieuDeNaissance = lieu_de_naissance;
 		//this.adresse = adresse;
-		this.baux = new HashSet<Bail>();
-		
+		this.contrats = new ArrayList<Contracter>();		
 	}
 
 
@@ -105,10 +104,10 @@ public class Locataire {
 
 
 	/**
-	 * @return La liste des bail attachée au locataire
+	 * @return La liste des contrats attaché au locataires
 	 */
-	public Collection<Bail> getBaux() {
-		return baux;
+	public List<Contracter> getContrats() {
+		return contrats;
 	}
 
 
@@ -176,14 +175,32 @@ public class Locataire {
 
 
 	@Override
-	public String toString() {		
-		return "Locataire "+ Idlocataire + ": " + nom + " " + prenom 
-				+ "\n    Email, Telephone : " + email + ", " + telephone
-				+ "\n    Naissance : " + dateNaissance + " à " + lieuDeNaissance
-				+ "\n    Lien acte de caution : " + acteDeCaution
-				+ "\n    Adresse : " + adresse
-				+ "\n    Baux : " + baux + "\n";
+	public String toString() {
+	    StringBuilder res = new StringBuilder();
+
+	    res.append("Locataire ").append(Idlocataire).append(": ")
+	       .append(nom).append(" ").append(prenom)
+	       .append("\n    Email, Telephone : ").append(email != null ? email : "non renseigné")
+	       .append(", ").append(telephone != null ? telephone : "non renseigné")
+	       .append("\n    Naissance : ").append(dateNaissance)
+	       .append(" à ").append(lieuDeNaissance != null ? lieuDeNaissance : "non renseigné")
+	       .append("\n    Lien acte de caution : ").append(acteDeCaution != null ? acteDeCaution : "non renseigné")
+	       .append("\n    Adresse : ").append(adresse != null ? adresse.toString() : "non renseignée")
+	       .append("\n    Baux : [");
+
+	    if (contrats != null && !contrats.isEmpty()) {
+	        for (Contracter contrat : contrats) {
+	            res.append(contrat.getBail() != null ? contrat.getBail().toString() : "Bail non renseigné").append(", ");
+	        }
+	        res.setLength(res.length() - 2); // Supprimer la dernière virgule et l'espace
+	    } else {
+	        res.append("Aucun bail associé");
+	    }
+
+	    res.append("]");
+	    return res.toString();
 	}
+
 
 	// Que les truc du equals
 	@Override

@@ -7,26 +7,37 @@ import java.util.List;
 
 import modele.dao.requetes.RequeteSelectLocataireById;
 import modele.dao.requetes.RequeteSelectLocataire;
+import modele.dao.requetes.RequeteDeleteLocataire;
+import modele.dao.requetes.RequeteUpdateLocataire;
 import modele.Adresse;
 import modele.Locataire;
 
 public class DaoLocataire extends DaoModele<Locataire> {
 
 	@Override
-	public void create(Locataire donnees) throws SQLException {
-		// TODO Auto-generated method stub
+	public void create(Locataire donnees) throws SQLException, IOException {
+		
 		
 	}
 
 	@Override
-	public void update(Locataire donnees) throws SQLException {
-		// TODO Auto-generated method stub
+	public void update(Locataire donnees) throws SQLException, IOException {
+		miseAJour(new RequeteUpdateLocataire(), donnees);
 		
 	}
 
+	/**
+	 * Supprime un locataire de la base de données.
+	 * 
+	 * @param donnees le locataire à supprimer (objet contenant les informations nécessaires).
+	 * @throws SQLException si une erreur survient lors de l'exécution de la requête SQL,
+	 *                     Nottament : l'erreur Oracle -20002 en cas de documents comptables existants.
+	 *                     
+	 * @throws IOException si il y a erreur dans la lecture du fichier config.
+	 */
 	@Override
-	public void delete(Locataire donnees) throws SQLException {
-		// TODO Auto-generated method stub
+	public void delete(Locataire donnees) throws SQLException, IOException {
+		miseAJour(new RequeteDeleteLocataire(), donnees);
 		
 	}
 
@@ -55,26 +66,26 @@ public class DaoLocataire extends DaoModele<Locataire> {
 		
 		Adresse adresse = null;
 		
-		if (idAdresse != "") {
+		if (idAdresse != null) {
 			adresse = new DaoAdresse().findById(idAdresse);
 		}
 		
 		
 		Locataire locataire = new Locataire(id, nom, prenom, dateNaissance);
 		
-		if (telephone != "") {
+		if (telephone != null) {
 			locataire.setTelephone(telephone);
 		}
 		
-		if (lieuNaissance != "") {
+		if (lieuNaissance != null) {
 			locataire.setLieuDeNaissance(lieuNaissance);
 		}
 		
-		if (acteCaution != "") {
+		if (acteCaution != null) {
 			locataire.setActeDeCaution(acteCaution);
 		}
 		
-		if (email != "") {
+		if (email != null) {
 			locataire.setEmail(email);
 		}
 		

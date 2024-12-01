@@ -45,11 +45,11 @@ public class TestDaoLocataire {
         return locataire;
     }
 
-    private void ajouterLocataire(Locataire locataire) throws SQLException {
+    private void ajouterLocataire(Locataire locataire) throws SQLException, IOException {
         daoLocataire.create(locataire);
     }
 
-    private void supprimerLocataire(Locataire locataire) throws SQLException {
+    private void supprimerLocataire(Locataire locataire) throws SQLException, IOException {
         daoLocataire.delete(locataire);
     }
 
