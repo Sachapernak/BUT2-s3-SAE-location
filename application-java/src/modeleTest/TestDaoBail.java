@@ -107,6 +107,6 @@ public class TestDaoBail {
         Bail fakeBail = new Bail("FAKE", "Non Existent", "Nowhere");
         daoB.delete(fakeBail);
         Bail bail = daoB.findById("FAKE");
-        assertNull("La suppression d'un bail inexistante ne devrait pas lever une erreur.", bail);
+        assertNull("La suppression d'un bail inexistant ne devrait pas lever une erreur.", bail);
     }
 }
