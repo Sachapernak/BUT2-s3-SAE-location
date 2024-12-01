@@ -1,4 +1,4 @@
-select * from sae_locataire;/
+
 
 -- Type de donner comme la table
 CREATE OR REPLACE TYPE contract_type AS OBJECT (
@@ -57,8 +57,6 @@ END pkg_locataire;
 /
 
 CREATE OR REPLACE PACKAGE BODY pkg_locataire AS
-
-
     
     -- update_contrats_bail pour update les contrats du "point de vue" du bail ?
     PROCEDURE update_contrats_loc(p_contrats in contract_array,
@@ -220,7 +218,6 @@ CREATE OR REPLACE PACKAGE BODY pkg_locataire AS
             RAISE_APPLICATION_ERROR(-20001, 
                 'Erreur lors de la suppression du locataire : ' || SQLERRM);
     END supprimer_locataire;
-
     
 END pkg_locataire;
 /
