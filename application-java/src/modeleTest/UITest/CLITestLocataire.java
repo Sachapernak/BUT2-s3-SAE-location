@@ -21,5 +21,4 @@ public class CLITestLocataire {
 		   System.out.println(locataire.toString());
 		}
 	}
-
 }
