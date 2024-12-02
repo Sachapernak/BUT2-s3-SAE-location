@@ -112,7 +112,8 @@ public class TestDaoBail {
     
     @Test(expected = IllegalArgumentException.class)
     public void testDateInvalideCreate() throws SQLException, IOException {
-    	Bail majBail = new Bail("TEST02", "01/01/2025", "01/01/2024");
+    	new Bail("TEST02", "01/01/2025", "01/01/2024");
+ 
     	
     	
     }

@@ -27,9 +27,9 @@ public class testArrayAsParam {
 		deleteTestData();
 		
 		
-		Bail bail = new Bail("BAI01");
-		Bail bail2 = new Bail("BAI02");
-		Bail bail3 = new Bail("BAI03");
+		Bail bail = new Bail("BAI01", "2001-01-01");
+		Bail bail2 = new Bail("BAI02", "2001-01-01");
+		Bail bail3 = new Bail("BAI03", "2001-01-01");
 		
 		Locataire loca = new Locataire("idLocTest1000", "Didier", "Jean", "1999-10-11");
 

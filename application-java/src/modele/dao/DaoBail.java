@@ -29,7 +29,6 @@ public class DaoBail extends DaoModele<Bail> implements Dao<Bail> {
 
 	@Override
 	public void update(Bail donnees) throws SQLException, IOException {
-		
 		miseAJour(new RequeteUpdateBail(), donnees);
 	}
 

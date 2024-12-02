@@ -187,8 +187,8 @@ public class TestDaoLocataire {
     public void testFindByIdContrat() throws SQLException, IOException {
     	Locataire locataire = creerLocataireTest("TEST06");
     	// Bail dans les jeu de test
-    	Bail bail = new Bail("BAI01");
-    	Bail bail2 = new Bail("BAI02");
+    	Bail bail = new Bail("BAI01", "2001-01-01");
+    	Bail bail2 = new Bail("BAI02", "2001-01-01");
     	
     	Contracter ctr1 = new Contracter(locataire, bail, "2021-10-10", 1f);
     	
