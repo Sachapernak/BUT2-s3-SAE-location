@@ -34,24 +34,16 @@ public class Bail {
 	 * pour s'assurer que la date de début est strictement antérieure à la date de fin.
 	 *
 	 * @param idBail      l'identifiant unique du bail, sous forme de chaîne de caractères.
-	 * @param dateDeDebut la date de début du bail, au format "dd/MM/yyyy".
-	 * @param dateDeFin   la date de fin du bail, au format "dd/MM/yyyy".
+	 * @param dateDeDebut la date de début du bail, au format "yyyy-dd-MM".
+	 * @param dateDeFin   la date de fin du bail, au format "yyyy-dd-MM".
 	 * 
 	 * @throws IllegalArgumentException si la date de début n'est pas strictement antérieure à la date de fin 
 	 *                                  ou si les dates ne respectent pas le format attendu.
 	 * 
-	 * Exemple d'utilisation :
-	 * <pre>
-	 * try {
-	 *     Bail bail = new Bail("B123", "01/01/2023", "31/12/2023");
-	 * } catch (IllegalArgumentException e) {
-	 *     System.out.println(e.getMessage());
-	 * }
-	 * </pre>
 	 */
 	public Bail(String idBail, String dateDeDebut, String dateDeFin) throws IllegalArgumentException {
 	    // Définir le format attendu pour les dates
-	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-dd-MM");
 
 	    // Convertir les chaînes en objets LocalDate
 	    LocalDate date1 = LocalDate.parse(dateDeDebut, formatter);
@@ -111,24 +103,16 @@ public class Bail {
 	 * Cette méthode permet de modifier la date de fin du bail en s'assurant 
 	 * que la nouvelle date de fin est strictement postérieure à la date de début déjà définie.
 	 *
-	 * @param dateDeFin la nouvelle date de fin, au format "dd/MM/yyyy".
+	 * @param dateDeFin la nouvelle date de fin, au format "yyyy-dd-MM".
 	 * 
 	 * @throws IllegalArgumentException si la nouvelle date de fin est antérieure 
 	 *                                  ou égale à la date de début actuelle, ou si le format est invalide.
 	 * 
-	 * Exemple d'utilisation :
-	 * <pre>
-	 * try {
-	 *     Bail bail = new Bail("B123", "01/01/2023", "31/12/2023");
-	 *     bail.setDateDeFin("15/12/2023"); // Modification valide
-	 * } catch (IllegalArgumentException e) {
-	 *     System.out.println(e.getMessage());
-	 * }
-	 * </pre>
+	 *
 	 */
 	public void setDateDeFin(String dateDeFin) throws IllegalArgumentException {
 	    // Définir le format attendu pour les dates
-	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-dd-MM");
 
 	    // Convertir les dates en objets LocalDate
 	    LocalDate date1 = LocalDate.parse(this.dateDeDebut, formatter); // Date de début actuelle
