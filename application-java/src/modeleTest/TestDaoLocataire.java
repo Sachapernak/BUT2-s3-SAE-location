@@ -306,6 +306,8 @@ public class TestDaoLocataire {
 
         supprimerLocataire(locataire);
     }
+    
+    // ajouter des tests (find all par exemple)
 
 
 
