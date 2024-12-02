@@ -5,13 +5,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import modele.Adresse;
+import modele.dao.requetes.RequeteCreateAdresse;
+import modele.dao.requetes.RequeteDeleteAdresse;
 import modele.dao.requetes.RequeteSelectAdresse;
 import modele.dao.requetes.RequeteSelectAdresseById;
-import modele.dao.requetes.RequeteDeleteAdresse; 
 import modele.dao.requetes.RequeteUpdateAdresse;
-import modele.dao.requetes.RequeteCreateAdresse; 
-
-import modele.Adresse;
 
 /**
  * Classe DaoAdresse qui implémente les opérations CRUD pour l'entité Adresse.

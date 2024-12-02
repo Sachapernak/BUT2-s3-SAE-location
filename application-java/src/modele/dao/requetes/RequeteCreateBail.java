@@ -1,10 +1,11 @@
 package modele.dao.requetes;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.sql.Date;
+
 import modele.Bail;
 
 public class RequeteCreateBail extends Requete<Bail>{

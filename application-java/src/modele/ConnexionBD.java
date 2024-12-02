@@ -3,6 +3,7 @@ package modele;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+
 import oracle.jdbc.pool.OracleDataSource;
 
 /**
@@ -67,7 +68,9 @@ public class ConnexionBD {
     private static void initierBD() throws SQLException, IOException {
         bd = new OracleDataSource();
         bd.setUser(conf.lire("DB_USER"));
-        bd.setPassword(conf.lire("DB_PASSWORD"));
+  
+		bd.setPassword(conf.recupererMdp());
+
         bd.setURL(conf.lire("DB_LINK"));
     }
 

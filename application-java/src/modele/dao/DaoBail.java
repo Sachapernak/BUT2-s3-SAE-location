@@ -9,12 +9,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import modele.Bail;
-
+import modele.dao.requetes.RequeteCreateBail;
+import modele.dao.requetes.RequeteDeleteBail;
 import modele.dao.requetes.RequeteSelectBail;
 import modele.dao.requetes.RequeteSelectBailById;
-import modele.dao.requetes.RequeteCreateBail;
 import modele.dao.requetes.RequeteUpdateBail;
-import modele.dao.requetes.RequeteDeleteBail;
 
 /**
  * Classe DaoBail qui implémente les opérations CRUD pour l'entité Bail.

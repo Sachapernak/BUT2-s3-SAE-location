@@ -5,14 +5,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import modele.dao.requetes.RequeteSelectLocataireById;
-import modele.dao.requetes.RequeteSelectLocataire;
-import modele.dao.requetes.RequeteDeleteLocataire;
-import modele.dao.requetes.RequeteUpdateLocataire;
-import modele.dao.requetes.ProcedureCreateLocataire;
 import modele.Adresse;
 import modele.Contracter;
 import modele.Locataire;
+import modele.dao.requetes.ProcedureCreateLocataire;
+import modele.dao.requetes.RequeteDeleteLocataire;
+import modele.dao.requetes.RequeteSelectLocataire;
+import modele.dao.requetes.RequeteSelectLocataireById;
+import modele.dao.requetes.RequeteUpdateLocataire;
 
 /**
  * Classe DaoLocataire qui gère l'accès aux données relatives aux locataires dans la base de données.
