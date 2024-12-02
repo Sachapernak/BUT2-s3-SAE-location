@@ -103,10 +103,25 @@ public class TestDaoBail {
     }
 
     @Test
-    public void testDeleteNonExistent() throws SQLException, IOException {
-        Bail fakeBail = new Bail("FAKE", "Non Existent", "Nowhere");
+    public void testDeleteNonExistent() throws SQLException, IOException, IllegalArgumentException {
+        Bail fakeBail = new Bail("FAKE", "01/01/2024", "01/01/2025");
         daoB.delete(fakeBail);
         Bail bail = daoB.findById("FAKE");
         assertNull("La suppression d'un bail inexistant ne devrait pas lever une erreur.", bail);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testDateInvalideCreate() throws SQLException, IOException {
+    	Bail majBail = new Bail("TEST02", "01/01/2025", "01/01/2024");
+    	
+    	
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testDateInvalideSet() throws SQLException, IOException {
+    	Bail majBail = new Bail("TEST02", "01/01/2025");
+    	majBail.setDateDeFin("01/01/2024");
+    	
+    	
     }
 }

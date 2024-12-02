@@ -1,5 +1,7 @@
 package modele;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class Bail {
@@ -21,20 +23,51 @@ public class Bail {
 		this.idBail = idBail;
 		this.dateDeDebut = dateDeDebut;
 		
+		
 	}
 	
 	/**
-	 * Constructeur de la classe Bail. 
+	 * Constructeur de la classe Bail.
+	 * 
+	 * Ce constructeur initialise un objet de type Bail avec un identifiant unique, 
+	 * une date de début et une date de fin. Il effectue une validation des dates 
+	 * pour s'assurer que la date de début est strictement antérieure à la date de fin.
 	 *
-	 * @param idBail      l'identifiant unique du bail
-	 * @param dateDeDebut la date de debut du bail
-	 * @param dateDeFin   la date de fin du bail
+	 * @param idBail      l'identifiant unique du bail, sous forme de chaîne de caractères.
+	 * @param dateDeDebut la date de début du bail, au format "dd/MM/yyyy".
+	 * @param dateDeFin   la date de fin du bail, au format "dd/MM/yyyy".
+	 * 
+	 * @throws IllegalArgumentException si la date de début n'est pas strictement antérieure à la date de fin 
+	 *                                  ou si les dates ne respectent pas le format attendu.
+	 * 
+	 * Exemple d'utilisation :
+	 * <pre>
+	 * try {
+	 *     Bail bail = new Bail("B123", "01/01/2023", "31/12/2023");
+	 * } catch (IllegalArgumentException e) {
+	 *     System.out.println(e.getMessage());
+	 * }
+	 * </pre>
 	 */
-	public Bail(String idBail, String dateDeDebut, String dateDeFin) {
-		this.idBail = idBail;
-		this.dateDeDebut = dateDeDebut;
-		this.dateDeFin = dateDeFin;
+	public Bail(String idBail, String dateDeDebut, String dateDeFin) throws IllegalArgumentException {
+	    // Définir le format attendu pour les dates
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+	    // Convertir les chaînes en objets LocalDate
+	    LocalDate date1 = LocalDate.parse(dateDeDebut, formatter);
+	    LocalDate date2 = LocalDate.parse(dateDeFin, formatter);
+
+	    // Vérifier que la date de début est strictement antérieure à la date de fin
+	    if (date1.isAfter(date2) || date1.isEqual(date2)) {
+	        throw new IllegalArgumentException("La date de début doit être avant celle de la fin");
+	    }
+
+	    // Initialiser les attributs de l'objet
+	    this.idBail = idBail;
+	    this.dateDeDebut = dateDeDebut;
+	    this.dateDeFin = dateDeFin;
 	}
+
 	
 	
 	
@@ -73,11 +106,43 @@ public class Bail {
 	}
 
 	/**
-	 * @param date de fin la date de fin au bail
+	 * Définit la date de fin du bail.
+	 * 
+	 * Cette méthode permet de modifier la date de fin du bail en s'assurant 
+	 * que la nouvelle date de fin est strictement postérieure à la date de début déjà définie.
+	 *
+	 * @param dateDeFin la nouvelle date de fin, au format "dd/MM/yyyy".
+	 * 
+	 * @throws IllegalArgumentException si la nouvelle date de fin est antérieure 
+	 *                                  ou égale à la date de début actuelle, ou si le format est invalide.
+	 * 
+	 * Exemple d'utilisation :
+	 * <pre>
+	 * try {
+	 *     Bail bail = new Bail("B123", "01/01/2023", "31/12/2023");
+	 *     bail.setDateDeFin("15/12/2023"); // Modification valide
+	 * } catch (IllegalArgumentException e) {
+	 *     System.out.println(e.getMessage());
+	 * }
+	 * </pre>
 	 */
-	public void setDateDeFin(String date_de_fin) {
-		this.dateDeFin = date_de_fin;
+	public void setDateDeFin(String dateDeFin) throws IllegalArgumentException {
+	    // Définir le format attendu pour les dates
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+	    // Convertir les dates en objets LocalDate
+	    LocalDate date1 = LocalDate.parse(this.dateDeDebut, formatter); // Date de début actuelle
+	    LocalDate date2 = LocalDate.parse(dateDeFin, formatter);       // Nouvelle date de fin
+
+	    // Vérifier que la nouvelle date de fin est postérieure à la date de début
+	    if (date1.isAfter(date2) || date1.isEqual(date2)) {
+	        throw new IllegalArgumentException("La date de début doit être avant celle de la fin");
+	    }
+
+	    this.dateDeFin = dateDeFin;
 	}
+
+
 	
 	@Override
 	public int hashCode() {

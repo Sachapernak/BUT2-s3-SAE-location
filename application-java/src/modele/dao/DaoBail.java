@@ -2,6 +2,7 @@ package modele.dao;
 
 import java.io.IOException;
 
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -23,6 +24,7 @@ public class DaoBail extends DaoModele<Bail> implements Dao<Bail> {
 	@Override
 	public void create(Bail donnees) throws SQLException, IOException {
 		miseAJour(new RequeteCreateBail(), donnees);
+	
 	}
 
 	@Override
