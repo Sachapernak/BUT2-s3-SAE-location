@@ -40,7 +40,7 @@ public class TestDaoAdresse {
 
         assertNotNull("Adresse non trouvée après insertion.", adresseRecup);
         assertEquals("L'ID de l'adresse est incorrect.", "TEST01", adresseRecup.getIdAdresse());
-        assertEquals("L'adresse est incorrecte.", "10 rue du test", adresseRecup.getAdresse());
+        assertEquals("L'adresse est incorrecte.", "10 rue du test", adresseRecup.getAdressePostale());
         assertEquals("Le code postal est incorrect.", 1, adresseRecup.getCodePostal());
         assertEquals("La ville est incorrecte.", "testVille", adresseRecup.getVille());
         assertNull("Le complément d'adresse devrait être null.", adresseRecup.getComplementAdresse());
@@ -55,14 +55,14 @@ public class TestDaoAdresse {
 
         adresseRecup = daoA.findById("TEST02");
         assertNotNull("Adresse non trouvée après insertion.", adresseRecup);
-        assertEquals("L'adresse initiale est incorrecte.", "20 rue du test", adresseRecup.getAdresse());
+        assertEquals("L'adresse initiale est incorrecte.", "20 rue du test", adresseRecup.getAdressePostale());
 
         // Modification de l'adresse
         majAdresse.setAdresse("20 avenue du test");
         daoA.update(majAdresse);
 
         adresseRecup = daoA.findById("TEST02");
-        assertEquals("L'adresse modifiée est incorrecte.", "20 avenue du test", adresseRecup.getAdresse());
+        assertEquals("L'adresse modifiée est incorrecte.", "20 avenue du test", adresseRecup.getAdressePostale());
 
         supprimerAdresse(majAdresse);
     }

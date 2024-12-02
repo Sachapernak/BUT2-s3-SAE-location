@@ -68,18 +68,20 @@ public class TestDaoLocataire {
 
         Connection cn = ConnexionBD.getInstance().getConnexion();
 
-        	Statement stmt = cn.createStatement();
-        
-            // Commencer une transaction
-            cn.setAutoCommit(false);
+        try (Statement stmt = cn.createStatement()) {
+        	// Commencer une transaction
+        	cn.setAutoCommit(false);
 
             // Exécuter les suppressions
             stmt.executeUpdate(deleteContracts);
             stmt.executeUpdate(deleteLocataires);
             stmt.executeUpdate(deleteAddresses);
-
+            
             // Valider les modifications
             cn.commit();
+        }
+        
+
             System.out.println("Les données contenant 'test' ont été supprimées avec succès.");
 
     }
@@ -270,14 +272,17 @@ public class TestDaoLocataire {
         Connection cn = ConnexionBD.getInstance().getConnexion();
         String insertDocComptable = "INSERT INTO sae_document_comptable (numero_document, date_document, " +
                                     "type_de_document, identifiant_locataire) VALUES ('TESTDOC01', SYSDATE, 'quittance', 'TEST08')";
-        cn.createStatement().executeUpdate(insertDocComptable);
-        cn.commit();
+        try (Statement st = cn.createStatement()) {
+            st.executeUpdate(insertDocComptable);
+            cn.commit();
+        }
 
         // Pas de Expected pour pouvoir supprimer les fichier comptable fictif
         SQLException exception = assertThrows(SQLException.class, () -> {
             supprimerLocataire(locataire);
         });
-
+        
+        
         assertTrue("L'erreur de suppression n'a pas été levée ou n'est pas correcte.",
                    exception.getMessage().contains("Des paiements ou documents comptables sont liés à ce locataire"));
         

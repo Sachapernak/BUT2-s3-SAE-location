@@ -175,7 +175,7 @@ public class UITestLocataire {
 			Adresse adr = loc.getAdresse();
 			
 			
-			String adresse = adr.getAdresse();
+			String adresse = adr.getAdressePostale();
 			String complementAdresse = "";
 			String codePostal = Integer.toString(adr.getCodePostal());
 			String ville = adr.getVille();
