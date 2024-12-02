@@ -21,12 +21,7 @@ public class Locataire {
 		this.Idlocataire = IdLocataire;
 		this.nom = nom;
 		this.prenom = prenom;
-		//this.email = email;
-		//this.telephone = telephone;
 		this.dateNaissance = dateNaissance;
-		//this.acteDeCaution = acte_de_caution;
-		//this.lieuDeNaissance = lieu_de_naissance;
-		//this.adresse = adresse;
 		this.contrats = new ArrayList<Contracter>();		
 	}
 

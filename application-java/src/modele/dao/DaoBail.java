@@ -29,7 +29,7 @@ public class DaoBail extends DaoModele<Bail> {
 
 	@Override
 	public Bail findById(String... id) throws SQLException, IOException {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 

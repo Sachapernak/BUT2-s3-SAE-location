@@ -22,14 +22,15 @@ public class DaoContracter {
 		
 	}
 	
-	protected Contracter createInstance(ResultSet curseur) throws SQLException, IllegalArgumentException, IOException {
+	protected Contracter createInstance(ResultSet curseur, Locataire locataire) throws SQLException, IllegalArgumentException, IOException {
 		String idloc= curseur.getString("identifiant_locataire");
 		String idBail = curseur.getString("id_bail");
 		String dateEntre = curseur.getDate("Date_d_entree").toString();
-		String dateSortie = curseur.getDate("Date_de_sortie").toString();
+		String dateSortie;
+		dateSortie = curseur.getDate("Date_de_sortie") == null ?  null : curseur.getDate("Date_de_sortie").toString();
 		float partLoyer = curseur.getFloat("PART_DE_LOYER");
 		
-		Contracter contrat = new Contracter(new DaoLocataire().findById(idloc),
+		Contracter contrat = new Contracter(locataire,
 											new DaoBail().findById(idBail),
 											dateEntre,
 											partLoyer);
@@ -52,31 +53,11 @@ public class DaoContracter {
 		
 		String id = donnees.getIdLocataire();
 
-		return getContrats(id, req);
-
-
-	}
-	
-	protected List<Contracter> getContrats(Bail donnees) throws SQLException, IOException {
-
-		if(donnees == null) {
-			return new ArrayList<Contracter>();
-		}
-		
-		Requete<Contracter> req = new RequeteSelectContratByIdBail();
-		
-		String id = donnees.getIdBail();
-
-		return getContrats(id, req);
-
-
-	}
-	
-	private List<Contracter> getContrats(String id, Requete<Contracter> req) throws SQLException, IOException{
 		
 		List<Contracter> res = new ArrayList<>();
 		
 		Connection cn = ConnexionBD.getInstance().getConnexion();
+		
 		PreparedStatement prSt = cn.prepareStatement(req.requete());
 		
 		req.parametres(prSt, id);
@@ -85,11 +66,15 @@ public class DaoContracter {
 		ResultSet rs = prSt.executeQuery();
 		
 		while(rs.next()) {
-			res.add(new DaoContracter().createInstance(rs));
+			res.add(createInstance(rs, donnees));
 		}
 		
 		rs.close();
 		prSt.close();
 		return res;
+
+
 	}
+	
+	
 }

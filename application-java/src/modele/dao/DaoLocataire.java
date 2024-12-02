@@ -1,22 +1,16 @@
 package modele.dao;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import modele.dao.requetes.RequeteSelectLocataireById;
 import modele.dao.requetes.RequeteSelectLocataire;
 import modele.dao.requetes.RequeteDeleteLocataire;
-import modele.dao.requetes.RequeteSelectContratByIdLocataire;
 import modele.dao.requetes.RequeteUpdateLocataire;
-import modele.dao.requetes.Requete;
-import modele.dao.requetes.RequeteCreateLocataire;
+import modele.dao.requetes.ProcedureCreateLocataire;
 import modele.Adresse;
-import modele.ConnexionBD;
 import modele.Contracter;
 import modele.Locataire;
 
@@ -24,7 +18,7 @@ public class DaoLocataire extends DaoModele<Locataire> {
 
 	@Override
 	public void create(Locataire donnees) throws SQLException, IOException {
-		miseAJour(new RequeteCreateLocataire(), donnees);
+		appelProcedure(new ProcedureCreateLocataire(), donnees);
 		
 	}
 

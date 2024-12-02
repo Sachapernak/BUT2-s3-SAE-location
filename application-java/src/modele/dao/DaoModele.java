@@ -1,6 +1,7 @@
 package modele.dao;
 
 import java.io.IOException;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import modele.ConnexionBD;
+import modele.dao.requetes.Procedure;
 import modele.dao.requetes.Requete;
 
 public abstract class DaoModele<T> implements Dao<T> {
@@ -32,12 +34,24 @@ public abstract class DaoModele<T> implements Dao<T> {
 
 	}
 	
+	public int appelProcedure(Procedure<T> pro, T donnee) throws SQLException, IOException {
+		Connection cn = ConnexionBD.getInstance().getConnexion();
+		CallableStatement clSt = cn.prepareCall(pro.procedure());
+		pro.parametres(clSt, donnee);
+
+		int res = clSt.executeUpdate();
+		
+		return res;
+	}
+	
 	public int miseAJour(Requete<T> req, T donnee) throws SQLException, IOException {
 		Connection cn = ConnexionBD.getInstance().getConnexion();
 		PreparedStatement prSt = cn.prepareStatement(req.requete());
 		req.parametres(prSt, donnee);
+
+		int res = prSt.executeUpdate();
 		
-		return prSt.executeUpdate();	
+		return res;
 	}
 	
 	public List<T> find(Requete<T> req, String...id) throws SQLException, IOException{

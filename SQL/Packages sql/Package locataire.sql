@@ -1,11 +1,15 @@
-
+-- suppresion des types
+DROP TYPE contract_array;
+DROP TYPE contract_type;
+/
 
 -- Type de donner comme la table
 CREATE OR REPLACE TYPE contract_type AS OBJECT (
     identifiant_locataire varchar2(50),
     Id_bail varchar2(50),
-    date_de_sortie DATE,
     date_d_entree DATE,
+    date_de_sortie DATE,
+    
     part_de_loyer NUMBER(3,2));
 /
     
@@ -93,8 +97,13 @@ CREATE OR REPLACE PACKAGE BODY pkg_locataire AS
             VALUES (
                 p_identifiant_locataire, source.Id_bail, source.date_de_sortie, 
                 source.date_d_entree, source.part_de_loyer);
-    
+                
+        COMMIT;
+    EXCEPTION
+        WHEN OTHERS THEN RAISE;
     END update_contrats_loc;
+
+
 
      PROCEDURE create_locataire(
         p_identifiant_locataire IN SAE_LOCATAIRE.identifiant_locataire%type,
@@ -132,14 +141,15 @@ CREATE OR REPLACE PACKAGE BODY pkg_locataire AS
             p_id_sae_adresse
         );
         
-        update_contrats_loc(p_contrats, p_identifiant_locataire);
-    
         COMMIT;
+        
+        update_contrats_loc(p_contrats, p_identifiant_locataire);
+        
     EXCEPTION
         WHEN OTHERS THEN
             ROLLBACK;
             RAISE_APPLICATION_ERROR(-20001, 
-                'Erreur lors de la suppression du locataire : ' || SQLERRM);
+                'Erreur lors de la creation du locataire : ' || SQLERRM);
     END create_locataire;
 
     PROCEDURE update_locataire(
@@ -168,6 +178,8 @@ CREATE OR REPLACE PACKAGE BODY pkg_locataire AS
             Id_SAE_Adresse = p_id_sae_adresse
         WHERE identifiant_locataire = p_identifiant_locataire;
         
+        commit;
+        
         update_contrats_loc(p_contrats, p_identifiant_locataire);
     
         COMMIT;
@@ -178,7 +190,7 @@ CREATE OR REPLACE PACKAGE BODY pkg_locataire AS
         WHEN OTHERS THEN
             ROLLBACK;
             RAISE_APPLICATION_ERROR(-20001, 
-                'Erreur lors de la suppression du locataire : ' || SQLERRM);
+                'Erreur lors de la mise a jour du locataire: ' || SQLERRM);
     END update_locataire;
 
     PROCEDURE supprimer_locataire(p_id_locataire IN SAE_LOCATAIRE.identifiant_locataire%type) IS

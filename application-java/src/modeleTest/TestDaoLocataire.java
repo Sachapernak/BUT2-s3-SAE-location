@@ -3,13 +3,19 @@ package modeleTest;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import modele.Adresse;
+import modele.Bail;
+import modele.ConnexionBD;
+import modele.Contracter;
 import modele.Locataire;
 import modele.dao.DaoAdresse;
 import modele.dao.DaoLocataire;
@@ -21,13 +27,17 @@ public class TestDaoLocataire {
 
     @Before
     public void setUp() throws SQLException, IOException {
-        daoLocataire = new DaoLocataire();
-        
+
+    	daoLocataire = new DaoLocataire();        
         adresseTest = new Adresse("TESTADDR", "10 rue du Test", 12345, "TestVille");
         DaoAdresse daoA = new DaoAdresse();
         
+        deleteTestData();
+        
+        daoA.create(adresseTest);
+        
     }
-
+    
     
     // Methodes support pour les test
     private Locataire creerLocataireTest(String id) {
@@ -49,6 +59,29 @@ public class TestDaoLocataire {
 
     private void supprimerLocataire(Locataire locataire) throws SQLException, IOException {
         daoLocataire.delete(locataire);
+    }
+    
+    public void deleteTestData() throws SQLException, IOException {
+        String deleteContracts = "DELETE FROM SAE_contracter WHERE lower(identifiant_locataire) LIKE '%test%'";
+        String deleteLocataires = "DELETE FROM SAE_LOCATAIRE WHERE lower(identifiant_locataire) LIKE '%test%'";
+        String deleteAddresses = "DELETE FROM SAE_ADRESSE WHERE lower(ID_SAE_ADRESSE) LIKE '%test%'";
+
+        Connection cn = ConnexionBD.getInstance().getConnexion();
+
+        	Statement stmt = cn.createStatement();
+        
+            // Commencer une transaction
+            cn.setAutoCommit(false);
+
+            // Exécuter les suppressions
+            stmt.executeUpdate(deleteContracts);
+            stmt.executeUpdate(deleteLocataires);
+            stmt.executeUpdate(deleteAddresses);
+
+            // Valider les modifications
+            cn.commit();
+            System.out.println("Les données contenant 'test' ont été supprimées avec succès.");
+
     }
 
     @Test
@@ -133,6 +166,7 @@ public class TestDaoLocataire {
 
         
     }
+    
 
     @Test
     public void testFindByIdInvalid() throws SQLException, IOException {
@@ -147,5 +181,30 @@ public class TestDaoLocataire {
 
         Locataire locataire = daoLocataire.findById("FAKE");
         assertNull("La suppression d'un locataire inexistant ne devrait pas lever une erreur.", locataire);
+    }
+    
+    @Test
+    public void testFindByIdContrat() throws SQLException, IOException {
+    	Locataire locataire = creerLocataireTest("TEST06");
+    	// Bail dans les jeu de test
+    	Bail bail = new Bail("BAI01");
+    	Bail bail2 = new Bail("BAI02");
+    	
+    	Contracter ctr1 = new Contracter(locataire, bail, "2021-10-10", 1f);
+    	
+    	Contracter ctr2 = new Contracter(locataire, bail2, "2020-10-10", 1f);
+    	
+    	locataire.getContrats().add(ctr1);
+    	locataire.getContrats().add(ctr2);
+    	
+    	
+    	ajouterLocataire(locataire);
+    	
+    	
+    	Locataire recup = daoLocataire.findById("TEST06");
+    	
+    	System.out.println(recup.getContrats());
+    	
+    	assertEquals("TEST06", recup.getIdLocataire());
     }
 }
