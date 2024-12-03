@@ -9,3 +9,4 @@ application-java/bin/config.properties
 application-java/src/config.properties
 config.properties
 application-java/src/key.config
+/.sonarlint

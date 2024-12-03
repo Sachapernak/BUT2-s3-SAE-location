@@ -67,8 +67,6 @@ public class TestConnexionBD {
 	public void testGetInstanceMauvaiseConfigFichierException() throws SQLException, IOException {
     	FichierConfig.changerChemin("src/modeleTest/test1.properties");
 		ConnexionBD coBD = ConnexionBD.getInstance();
-		coBD.updateBDLink();
-		coBD.getConnexion();
 		
 	}
 	

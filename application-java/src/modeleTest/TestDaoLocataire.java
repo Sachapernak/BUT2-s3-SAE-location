@@ -315,7 +315,49 @@ public class TestDaoLocataire {
         supprimerLocataire(locataire);
     }
     
-    // ajouter des tests (find all par exemple)
+    @Test
+    public void testFindAllAvecContrat() throws SQLException, IOException {
+    	Locataire locataire = creerLocataireTest("TEST10");
+    	Locataire locataire2 = creerLocataireTest("TEST11");
+    	// Bail dans les jeu de test
+    	Bail bail = new Bail("BAI01", "2001-01-01");
+    	Bail bail2 = new Bail("BAI02", "2001-01-01");
+    	
+    	Contracter ctr1 = new Contracter(locataire, bail, "2021-10-10", 1f);
+    	
+    	Contracter ctr2 = new Contracter(locataire, bail2, "2020-10-10", 1f);
+    	
+    	locataire.getContrats().add(ctr1);
+    	locataire2.getContrats().add(ctr2);
+    	
+    	
+    	ajouterLocataire(locataire);
+    	ajouterLocataire(locataire2);
+    	
+    	
+    	List<Locataire> recup = daoLocataire.findAll();
+    	
+    	boolean foundBAI01 = false;
+    	boolean foundBAI02 = false;
+
+    	for (Locataire loca : recup) {
+	    	for (Contracter contrat : loca.getContrats()) {
+	    	    if ("BAI01".equals(contrat.getBail().getIdBail())) {
+	    	        foundBAI01 = true;
+	    	    }
+	    	    if ("BAI02".equals(contrat.getBail().getIdBail())) {
+	    	        foundBAI02 = true;
+	    	    }
+	    	    if (foundBAI01 && foundBAI02) {
+	    	        break; // Arrête la boucle si les deux IDs sont trouvés
+	    	    }
+	    	}
+    	}
+
+    	assertTrue("Le bail 'BAI01' est introuvable.", foundBAI01);
+    	assertTrue("Le bail 'BAI02' est introuvable.", foundBAI02);
+    	
+    }
 
 
 
