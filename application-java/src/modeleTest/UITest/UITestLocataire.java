@@ -1,28 +1,28 @@
-package modeleTest;
+package modeleTest.UITest;
 
+import java.awt.BorderLayout;
 import java.awt.EventQueue;
-
-import javax.swing.JFrame;
+import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+
 import javax.swing.BoxLayout;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+
 import modele.Adresse;
 import modele.Locataire;
 import modele.dao.DaoLocataire;
 
-import java.awt.BorderLayout;
-import javax.swing.JLabel;
-import java.awt.Font;
-import javax.swing.JTextField;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
-public class TestUILocataire {
+public class UITestLocataire {
 
 	private JFrame frame;
 	private JTable tableLocataire;
@@ -38,7 +38,7 @@ public class TestUILocataire {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					TestUILocataire window = new TestUILocataire();
+					UITestLocataire window = new UITestLocataire();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -50,7 +50,7 @@ public class TestUILocataire {
 	/**
 	 * Create the application.
 	 */
-	public TestUILocataire() {
+	public UITestLocataire() {
 		initialize();
 	}
 
@@ -175,7 +175,7 @@ public class TestUILocataire {
 			Adresse adr = loc.getAdresse();
 			
 			
-			String adresse = adr.getAdresse();
+			String adresse = adr.getAdressePostale();
 			String complementAdresse = "";
 			String codePostal = Integer.toString(adr.getCodePostal());
 			String ville = adr.getVille();

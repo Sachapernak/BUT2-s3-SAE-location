@@ -1,11 +1,11 @@
-package modeleTest;
+package modeleTest.UITest;
 
 import java.util.List;
 
 import modele.Locataire;
 import modele.dao.DaoLocataire;
 
-public class TestLocataireApp {
+public class CLITestLocataire {
 	
 	// Permet d'afficher les locataires depuis la BD
 	// Utilisé a des fin de test
