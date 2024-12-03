@@ -64,7 +64,7 @@ CREATE TABLE sae_loyer(
 CREATE TABLE SAE_Adresse(
    Id_SAE_Adresse VARCHAR2(20) ,
    adresse VARCHAR2(50)  NOT NULL,
-   Code_postal_ NUMBER(10) NOT NULL,
+   Code_postal NUMBER(10) NOT NULL,
    ville VARCHAR2(50)  NOT NULL,
    Complement_adresse VARCHAR2(50) ,
    CONSTRAINT pk_sae_adresse PRIMARY KEY(Id_SAE_Adresse)
@@ -86,7 +86,7 @@ CREATE TABLE SAE_Locataire(
    telephone_locataire VARCHAR2(50) ,
    date_naissance DATE NOT NULL,
    Lieu_de_naissance VARCHAR2(50) ,
-   Acte_de_caution CLOB,
+   Acte_de_caution VARCHAR2(100),
    Id_SAE_Adresse VARCHAR2(20) ,
    CONSTRAINT pk_SAE_Locataire PRIMARY KEY(identifiant_locataire),
    CONSTRAINT fk_sae_Locat_adresse FOREIGN KEY(Id_SAE_Adresse) REFERENCES SAE_Adresse(Id_SAE_Adresse)
@@ -103,7 +103,7 @@ CREATE TABLE SAE_Cautionnaire(
    Id_Caution NUMBER(10),
    Nom_ou_organisme VARCHAR2(70)  NOT NULL,
    Prenom VARCHAR2(50) ,
-   Description_du_cautionnaire CLOB,
+   Description_du_cautionnaire VARCHAR2(100),
    Id_SAE_Adresse VARCHAR2(20) ,
    CONSTRAINT pk_SAE_Cautionnaire PRIMARY KEY(Id_Caution),
    CONSTRAINT fk_SAE_Cautionnaire_Id_adresse FOREIGN KEY(Id_SAE_Adresse) REFERENCES SAE_Adresse(Id_SAE_Adresse)
@@ -122,7 +122,7 @@ CREATE TABLE SAE_diagnostiques(
    Date_diagnostique DATE,
    identifiant VARCHAR2(50) ,
    Resultats_des_diagnostiques VARCHAR2(50)  NOT NULL,
-   fichier_diagnostique CLOB,
+   fichier_diagnostique VARCHAR2(100),
    identifiant_batiment VARCHAR2(50) ,
    identifiant_logement VARCHAR2(50) ,
    CONSTRAINT pk_SAE_diagnostiques PRIMARY KEY(Date_diagnostique, identifiant),
@@ -135,7 +135,7 @@ CREATE TABLE SAE_document_comptable(
    Date_document DATE,
    Type_de_document VARCHAR2(50)  NOT NULL,
    montant VARCHAR2(50) ,
-   fichier_document CLOB,
+   fichier_document VARCHAR2(100),
    montant_devis VARCHAR2(50) ,
    recuperable_locataire NUMBER(1),
    identifiant_locataire VARCHAR2(50) ,
@@ -198,7 +198,7 @@ CREATE TABLE sae_Cautionner(
    Id_Caution NUMBER(10),
    Id_bail VARCHAR2(50) ,
    Montant NUMBER(15,2)  ,
-   Fichier_caution CLOB,
+   Fichier_caution VARCHAR2(100),
    CONSTRAINT pk_sae_Cautionner PRIMARY KEY(Id_Caution, Id_bail),
    CONSTRAINT fk_sae_Cautionner_Id_Caution FOREIGN KEY(Id_Caution) REFERENCES SAE_Cautionnaire(Id_Caution),
    CONSTRAINT fk_sae_Cautionner_Id_bail FOREIGN KEY(Id_bail) REFERENCES SAE_Bail(Id_bail)

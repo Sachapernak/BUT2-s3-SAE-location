@@ -1,10 +1,12 @@
 package modeleTest;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.lang.reflect.Field;
 
 import org.junit.After;
 import org.junit.Before;
@@ -33,6 +35,7 @@ public class TestConnexionBD {
 
     @After
     public void teardown() throws Exception {
+    	FichierConfig.changerChemin(null);
         connexion = ConnexionBD.getInstance(); 
         connexion.fermerConnexion();
         // Utilise la réflexion pour réinitialiser l'instance du singleton après chaque test
@@ -60,12 +63,10 @@ public class TestConnexionBD {
 		assertEquals(e1,e2);
 	}
 	
-	@Test(expected=SQLException.class)
+	@Test(expected = IOException.class)
 	public void testGetInstanceMauvaiseConfigFichierException() throws SQLException, IOException {
     	FichierConfig.changerChemin("src/modeleTest/test1.properties");
 		ConnexionBD coBD = ConnexionBD.getInstance();
-		coBD.updateBDLink();
-		coBD.getConnexion();
 		
 	}
 	
