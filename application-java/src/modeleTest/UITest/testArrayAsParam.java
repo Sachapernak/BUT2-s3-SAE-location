@@ -11,10 +11,14 @@ import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
 
+import modele.Adresse;
 import modele.Bail;
+import modele.Batiment;
+import modele.BienLocatif;
 import modele.ConnexionBD;
 import modele.Contracter;
 import modele.Locataire;
+import modele.TypeDeBien;
 import oracle.jdbc.OracleConnection;
 
 // Classe de test permettant de mieux comprendre la transmission de tableau dans PL/SQL
@@ -25,11 +29,26 @@ public class testArrayAsParam {
 		Connection cn = ConnexionBD.getInstance().getConnexion();
 		
 		deleteTestData();
+        Adresse adresse = new Adresse("ADR001", "10 rue des Lilas", 31000, "Toulouse");
+        
+        Batiment batiment = new Batiment("BAT001", adresse);
+
+        // Création d'un objet BienLocatif
+        BienLocatif bien = new BienLocatif(
+            "LOG001",                  // identifiantLogement
+            TypeDeBien.LOGEMENT,       // type (Enum TypeDeBien)
+            45,                        // surface en m²
+            2,                         // nombre de pièces
+            650.0f,                    // loyer de base
+            batiment                   // bâtiment associé
+        );
+        
+        Bail createBail = new Bail("BAI01", "2001-01-01", null, bien);
 		
 		
-		Bail bail = new Bail("BAI01", "2001-01-01");
-		Bail bail2 = new Bail("BAI02", "2001-01-01");
-		Bail bail3 = new Bail("BAI03", "2001-01-01");
+		Bail bail = new Bail("BAI01", "2001-01-01", bien);
+		Bail bail2 = new Bail("BAI02", "2001-01-01", bien);
+		Bail bail3 = new Bail("BAI03", "2001-01-01", bien);
 		
 		Locataire loca = new Locataire("idLocTest1000", "Didier", "Jean", "1999-10-11");
 

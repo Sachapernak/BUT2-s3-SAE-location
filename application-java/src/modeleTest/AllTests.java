@@ -6,7 +6,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({ TestConnexionBD.class, TestFichierConfig.class, TestDaoAdresse.class, TestDaoLocataire.class,
-	            TestDaoBail.class})
+	            TestDaoBail.class, TestDaoBatiment.class})
 public class AllTests {
 
 }

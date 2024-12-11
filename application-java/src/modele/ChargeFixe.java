@@ -1,14 +1,13 @@
 package modele;
 
-import java.time.LocalDate;
 
 public class ChargeFixe {
     String idBien;
-    LocalDate dateDeCharge;
+    String dateDeCharge;
     String type;
     String montant;
 
-    public ChargeFixe(String idBien, LocalDate dateDeCharge, String type, String montant) {
+    public ChargeFixe(String idBien, String dateDeCharge, String type, String montant) {
         this.idBien = idBien;
         this.dateDeCharge = dateDeCharge;
         this.type = type;
@@ -19,7 +18,7 @@ public class ChargeFixe {
         return idBien;
     }
 
-    public LocalDate getDateDeCharge() {
+    public String getDateDeCharge() {
         return dateDeCharge;
     }
 

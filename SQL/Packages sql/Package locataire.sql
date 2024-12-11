@@ -211,8 +211,8 @@ CREATE OR REPLACE PACKAGE BODY pkg_locataire AS
 
         -- Suppression des relations dans la table sae_etre_lie
         DELETE FROM sae_etre_lie
-        WHERE identifiant_locataire = p_id_locataire
-           OR identifiant_locataire_1 = p_id_locataire;
+        WHERE identifiant_locataire1 = p_id_locataire
+           OR identifiant_locataire2 = p_id_locataire;
 
         -- Suppression des relations dans la table sae_contracter
         DELETE FROM sae_contracter

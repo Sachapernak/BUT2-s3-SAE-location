@@ -1,21 +1,16 @@
 package modele;
 
 public class ICC {
-    String idBien;
     String annee;
     String trimestre;
     int indiceICC;
 
-    public ICC(String idBien, String annee, String trimestre, int indiceICC) {
-        this.idBien = idBien;
+    public ICC(String annee, String trimestre, int indiceICC) {
         this.annee = annee;
         this.trimestre = trimestre;
         this.indiceICC = indiceICC;
     }
 
-    public String getIdBien() {
-        return idBien;
-    }
 
     public String getAnnee() {
         return annee;

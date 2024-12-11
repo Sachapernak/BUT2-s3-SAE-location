@@ -99,12 +99,11 @@ public class DaoICC extends DaoModele<ICC> {
 	@Override
 	protected ICC createInstance(ResultSet curseur) throws SQLException, IOException {
 		
-		String idIcc = curseur.getString("IDENTIFIANT_LOGEMENT");
 		String annee = curseur.getString("ANNEE_ICC");
 		String trimestre = curseur.getString("TRIMESTRE_ICC");
 		int indice = curseur.getInt("INDICE");
 		
-		return new ICC(idIcc, annee, trimestre, indice);
+		return new ICC(annee, trimestre, indice);
 	}
 
 }

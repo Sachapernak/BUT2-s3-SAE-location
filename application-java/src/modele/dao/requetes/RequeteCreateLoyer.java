@@ -8,7 +8,8 @@ public class RequeteCreateLoyer extends Requete<Loyer> {
 
     @Override
     public String requete() {
-        return "INSERT INTO SAE_LOYER (IDENTIFIANT_LOGEMENT, DATE_DE_CHANGEMENT, MONTANT_LOYER) VALUES (?, ?, ?);";
+        return "INSERT INTO SAE_LOYER (IDENTIFIANT_LOGEMENT, DATE_DE_CHANGEMENT, MONTANT_LOYER) "
+        		+ "VALUES (?, ?, ?)";
     }
 
     @Override

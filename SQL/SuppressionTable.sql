@@ -1,4 +1,4 @@
--- desactiver les FK
+-- Désactiver les FK
 BEGIN
     FOR rec IN (SELECT uc.constraint_name, ucc.table_name
                 FROM user_constraints uc
@@ -12,40 +12,16 @@ BEGIN
 END;
 /
 
-
--- Vider les tables avec TRUNCATE
-TRUNCATE TABLE SAE_comprendre_cf;
-TRUNCATE TABLE SAE_comprendre_charge_variable;
-TRUNCATE TABLE SAE_mettre_en_location;
-TRUNCATE TABLE SAE_contracter;
-TRUNCATE TABLE SAE_appartenir;
-TRUNCATE TABLE SAE_Cautionner;
-TRUNCATE TABLE SAE_etre_lie;
-TRUNCATE TABLE SAE_ICC;
-TRUNCATE TABLE SAE_diagnostiques;
-TRUNCATE TABLE SAE_Regularisation;
-TRUNCATE TABLE SAE_Document;
-
-TRUNCATE TABLE SAE_Bail;
-TRUNCATE TABLE SAE_Cautionnaire;
-TRUNCATE TABLE SAE_batiment;
-TRUNCATE TABLE SAE_Bien_locatif;
-TRUNCATE TABLE SAE_LOYER;
-TRUNCATE TABLE SAE_document_comptable;
-TRUNCATE TABLE SAE_entreprise;
-TRUNCATE TABLE SAE_assurance;
-TRUNCATE TABLE SAE_Locataire;
-
-TRUNCATE TABLE SAE_Charge_cf;
-TRUNCATE TABLE SAE_charge_index;
-TRUNCATE TABLE SAE_ADRESSE;
-TRUNCATE TABLE SAE_COMPRENDRE_LOG_CF;
-TRUNCATE TABLE SAE_PROVISION_CHARGE;
-
-
+-- Vider les tables avec DELETE pour permettre les relations
+BEGIN
+    FOR rec IN (SELECT table_name FROM user_tables WHERE table_name LIKE 'SAE_%')
+    LOOP
+        EXECUTE IMMEDIATE 'DELETE FROM ' || rec.table_name;
+    END LOOP;
+END;
 /
 
--- Reactiver les FK
+-- Réactiver les FK
 BEGIN
     FOR rec IN (SELECT uc.constraint_name, ucc.table_name
                 FROM user_constraints uc
@@ -71,36 +47,16 @@ SELECT table_name,
     END AS constraint_type_name,
     constraint_name,
     status AS is_active
-
 FROM user_constraints
 WHERE table_name LIKE '%SAE%'
 ORDER BY table_name, constraint_type, constraint_name;
 /
 
-
---Supprimer table
-DROP TABLE SAE_comprendre_cf CASCADE CONSTRAINTS;
-DROP TABLE SAE_comprendre_charge_variable CASCADE CONSTRAINTS;
-DROP TABLE SAE_mettre_en_location CASCADE CONSTRAINTS;
-DROP TABLE SAE_contracter CASCADE CONSTRAINTS;
-DROP TABLE SAE_appartenir CASCADE CONSTRAINTS;
-DROP TABLE SAE_Cautionner CASCADE CONSTRAINTS;
-DROP TABLE SAE_etre_lie CASCADE CONSTRAINTS;
-DROP TABLE SAE_Charge_cf CASCADE CONSTRAINTS;
-DROP TABLE SAE_charge_index CASCADE CONSTRAINTS;
-DROP TABLE SAE_document_comptable CASCADE CONSTRAINTS;
-DROP TABLE SAE_ICC CASCADE CONSTRAINTS;
-DROP TABLE SAE_diagnostiques CASCADE CONSTRAINTS;
-DROP TABLE SAE_Regularisation CASCADE CONSTRAINTS;
-DROP TABLE SAE_Document CASCADE CONSTRAINTS;
-DROP TABLE SAE_assurance CASCADE CONSTRAINTS;
-DROP TABLE SAE_entreprise CASCADE CONSTRAINTS;
-DROP TABLE SAE_Bail CASCADE CONSTRAINTS;
-DROP TABLE SAE_Cautionnaire CASCADE CONSTRAINTS;
-DROP TABLE SAE_batiment CASCADE CONSTRAINTS;
-DROP TABLE SAE_Bien_locatif CASCADE CONSTRAINTS;
-DROP TABLE SAE_Locataire CASCADE CONSTRAINTS;
-DROP TABLE SAE_Loyer CASCADE CONSTRAINTS;
-DROP TABLE SAE_ADRESSE CASCADE CONSTRAINTS;
-DROP TABLE SAE_COMPRENDRE_LOG_CF CASCADE CONSTRAINTS;
-DROP TABLE SAE_PROVISION_CHARGE CASCADE CONSTRAINTS;
+-- Supprimer toutes les tables
+BEGIN
+    FOR rec IN (SELECT table_name FROM user_tables WHERE table_name LIKE 'SAE_%')
+    LOOP
+        EXECUTE IMMEDIATE 'DROP TABLE ' || rec.table_name || ' CASCADE CONSTRAINTS';
+    END LOOP;
+END;
+/

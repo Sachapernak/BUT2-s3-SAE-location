@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Supplier;
 
 import modele.dao.DaoICC;
 import modele.dao.DaoLoyer;
@@ -20,26 +19,23 @@ public class BienLocatif {
     TypeDeBien type;
     int surface;
     int nbPiece;
-    float partChargeBat;
     float loyerBase;
     Batiment bat;
 
     // Listes des entités associées
-    private List<ICC> iccList = new ArrayList<>();
     private List<Loyer> loyers = new ArrayList<>();
     private List<ComprendreChargeFixe> comprendreChargesFixes = new ArrayList<>();
     private List<ComprendreChargeVariable> comprendreChargesVariables = new ArrayList<>();
     private List<DocumentComptable> docsComptables = new ArrayList<>();
     private List<Diagnostiques> diagnostiques = new ArrayList<>();
 
-    public BienLocatif(String identifiantLogement, TypeDeBien type, int surface, int nbPiece, float partChargeBat,
+    public BienLocatif(String identifiantLogement, TypeDeBien type, int surface, int nbPiece,
             float loyerBase, Batiment bat) {
 
         this.identifiantLogement = identifiantLogement;
         this.type = type;
         this.surface = surface;
         this.nbPiece = nbPiece;
-        this.partChargeBat = partChargeBat;
         this.loyerBase = loyerBase;
         this.bat = bat;
     }
@@ -85,13 +81,6 @@ public class BienLocatif {
         this.nbPiece = nbPiece;
     }
 
-    public float getPartChargeBat() {
-        return partChargeBat;
-    }
-
-    public void setPartChargeBat(float partChargeBat) {
-        this.partChargeBat = partChargeBat;
-    }
 
     public float getLoyerBase() {
         return loyerBase;
@@ -123,13 +112,6 @@ public class BienLocatif {
 
     // Getters avec Lazy-loading pour les listes : 
     
-    public List<ICC> getIccList() {
-        if (iccList.isEmpty()) {
-            iccList = loadData(() -> new DaoICC().findByIdLogement(this.identifiantLogement));
-        }
-        return iccList;
-    }
-
     public List<Loyer> getLoyers() {
         if (loyers.isEmpty()) {
             loyers = loadData(() -> new DaoLoyer().findByIdLogement(this.identifiantLogement));
