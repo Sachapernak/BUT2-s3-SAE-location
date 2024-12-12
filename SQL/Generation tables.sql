@@ -225,3 +225,14 @@ CREATE TABLE sae_facture_du_bien(
    CONSTRAINT fk_sae_facture_id_loc FOREIGN KEY (identifiant_logement) REFERENCES SAE_Bien_locatif(identifiant_logement),
    CONSTRAINT fk_sae_facture_num_date FOREIGN KEY (numero_document, Date_document) REFERENCES SAE_document_comptable(numero_document, Date_document)
 );
+
+
+
+
+ALTER TABLE SAE_document_comptable
+ADD CONSTRAINT chk_SAE_doc_compta_type
+CHECK (
+    (Type_de_document!= 'quittance' OR SIRET IS NULL) AND
+    (Type_de_document = 'quittance' OR SIRET IS NOT NULL)
+);
+
