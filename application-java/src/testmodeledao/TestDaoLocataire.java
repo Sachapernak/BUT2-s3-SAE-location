@@ -1,4 +1,4 @@
-package modeleTest;
+package testmodeledao;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -7,6 +7,7 @@ import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -17,9 +18,12 @@ import org.junit.Test;
 
 import modele.Adresse;
 import modele.Bail;
+import modele.Batiment;
+import modele.BienLocatif;
 import modele.ConnexionBD;
 import modele.Contracter;
 import modele.Locataire;
+import modele.TypeDeBien;
 import modele.dao.DaoAdresse;
 import modele.dao.DaoLocataire;
 
@@ -27,6 +31,7 @@ public class TestDaoLocataire {
 
     private DaoLocataire daoLocataire;
     private Adresse adresseTest;
+    private BienLocatif bien;
 
     @Before
     public void setUp() throws SQLException, IOException {
@@ -34,6 +39,21 @@ public class TestDaoLocataire {
     	daoLocataire = new DaoLocataire();        
         adresseTest = new Adresse("TESTADDR", "10 rue du Test", 12345, "TestVille");
         DaoAdresse daoA = new DaoAdresse();
+        
+        Adresse adresse = new Adresse("ADR001", "10 rue des Lilas", 31000, "Toulouse");
+        
+        Batiment batiment = new Batiment("BAT001", adresse);
+
+        // Création d'un objet BienLocatif
+        bien = new BienLocatif(
+            "LOG001",                  // identifiantLogement
+            TypeDeBien.LOGEMENT,       // type (Enum TypeDeBien)
+            45,                        // surface en m²
+            2,                         // nombre de pièces
+            new BigDecimal("650.00"),                    // loyer de base
+            batiment                   // bâtiment associé
+        );
+        
         
         deleteTestData();
         
@@ -83,9 +103,6 @@ public class TestDaoLocataire {
             // Valider les modifications
             cn.commit();
         }
-        
-
-            System.out.println("Les données contenant 'test' ont été supprimées avec succès.");
 
     }
 
@@ -148,12 +165,10 @@ public class TestDaoLocataire {
         ajouterLocataire(locataire2);
 
         List<Locataire> list = daoLocataire.findAll();
-        System.out.println(list);
         
         Boolean contientId1 = false;
         Boolean contientId2 = false;
         for (Locataire loc : list) {
-        	System.out.println(loc.getIdLocataire());
         	
         	if (loc.getIdLocataire().equals("TEST04")) {
         		contientId1 = true;
@@ -192,8 +207,8 @@ public class TestDaoLocataire {
     public void testFindByIdContrat() throws SQLException, IOException {
     	Locataire locataire = creerLocataireTest("TEST06");
     	// Bail dans les jeu de test
-    	Bail bail = new Bail("BAI01", "2001-01-01");
-    	Bail bail2 = new Bail("BAI02", "2001-01-01");
+    	Bail bail = new Bail("BAI01", "2001-01-01", bien);
+    	Bail bail2 = new Bail("BAI02", "2001-01-01", bien);
     	
     	Contracter ctr1 = new Contracter(locataire, bail, "2021-10-10", 1f);
     	
@@ -233,8 +248,8 @@ public class TestDaoLocataire {
         Locataire locataire = creerLocataireTest("TEST07");
 
         // Ajout initial de contrats
-        Bail bail1 = new Bail("BAI01", "2001-01-01");
-        Bail bail2 = new Bail("BAI02", "2001-01-01");
+        Bail bail1 = new Bail("BAI01", "2001-01-01", bien);
+        Bail bail2 = new Bail("BAI02", "2001-01-01", bien);
         Contracter contrat1 = new Contracter(locataire, bail1, "2021-10-10", 1f);
         Contracter contrat2 = new Contracter(locataire, bail2, "2022-10-10", 1f);
 
@@ -244,7 +259,7 @@ public class TestDaoLocataire {
         ajouterLocataire(locataire);
 
         // Mise à jour : modification d'un contrat et ajout d'un nouveau
-        Bail bail3 = new Bail("BAI03", "2001-01-01", "2023-11-10");
+        Bail bail3 = new Bail("BAI03", "2001-01-01", "2023-11-10", bien);
         Contracter contrat3 = new Contracter(locataire, bail3, "2023-10-10", 1f);
         contrat3.ajouterDateSortie("2023-11-10");
         locataire.getContrats().clear(); // Remplace les contrats
@@ -302,7 +317,7 @@ public class TestDaoLocataire {
         Locataire locataire = creerLocataireTest("TEST09");
 
         // Associer un contrat avec un bail inexistant
-        Bail bailInexistant = new Bail("BAI_INVALIDE", "2000-01-01");
+        Bail bailInexistant = new Bail("BAI_INVALIDE", "2000-01-01", bien);
         Contracter contrat = new Contracter(locataire, bailInexistant, "2021-10-10", 1f);
         locataire.getContrats().add(contrat);
 
@@ -320,8 +335,8 @@ public class TestDaoLocataire {
     	Locataire locataire = creerLocataireTest("TEST10");
     	Locataire locataire2 = creerLocataireTest("TEST11");
     	// Bail dans les jeu de test
-    	Bail bail = new Bail("BAI01", "2001-01-01");
-    	Bail bail2 = new Bail("BAI02", "2001-01-01");
+    	Bail bail = new Bail("BAI01", "2001-01-01", bien);
+    	Bail bail2 = new Bail("BAI02", "2001-01-01", bien);
     	
     	Contracter ctr1 = new Contracter(locataire, bail, "2021-10-10", 1f);
     	

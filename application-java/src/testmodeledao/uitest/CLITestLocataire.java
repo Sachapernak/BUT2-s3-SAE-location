@@ -1,4 +1,4 @@
-package modeleTest.UITest;
+package testmodeledao.uitest;
 
 import java.util.List;
 

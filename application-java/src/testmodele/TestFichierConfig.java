@@ -1,4 +1,4 @@
-package modeleTest;
+package testmodele;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -15,12 +15,11 @@ import modele.FichierConfig;
 public class TestFichierConfig {
 
 	    private FichierConfig config;
-	    private static final String CHEMIN_TEST_KEY_CONFIG = "src/modeleTest/test-key.config"; // Nouveau chemin pour la clé de test
+	    private static final String CHEMIN_TEST_KEY_CONFIG = "src/testmodele/test-key.config"; // Nouveau chemin pour la clé de test
 	    
 	    @Before 
 	    public void initialize() throws IOException {
 	    	FichierConfig.setCheminKeyConfig(CHEMIN_TEST_KEY_CONFIG);
-	    	System.out.println(FichierConfig.getCheminKeyConfig());
 	        config = FichierConfig.getInstance();   
 	    }
 
@@ -54,29 +53,29 @@ public class TestFichierConfig {
 
 	    @Test
 	    public void testChangerChemin() {
-	        FichierConfig.changerChemin("src/modeleTest/test1.properties");
-	        assertEquals("src/modeleTest/test1.properties", FichierConfig.getChemin());
+	        FichierConfig.changerChemin("src/testmodele/test1.properties");
+	        assertEquals("src/testmodele/test1.properties", FichierConfig.getChemin());
 	        FichierConfig.changerChemin(null);
-	        assertNotEquals("src/modeleTest/test1.properties", FichierConfig.getChemin());
+	        assertNotEquals("src/testmodele/test1.properties", FichierConfig.getChemin());
 	    }
 
 	    @Test
 	    public void testProperties() throws IOException {
-	        FichierConfig.changerChemin("src/modeleTest/test1.properties");
+	        FichierConfig.changerChemin("src/testmodele/test1.properties");
 	        assertEquals("Ok1", config.lire("TEST"));
 	        assertEquals("Ok2", config.lire("TEST2"));
 	    }
 
 	    @Test(expected = IOException.class)
 	    public void testException() throws IOException {
-	        FichierConfig.changerChemin("src/modeleTest/fichierInexistant.properties");
+	        FichierConfig.changerChemin("src/testmodele/fichierInexistant.properties");
 	        config.lire("erreur");
 	    }
 
 	    // Test pour la génération et la sauvegarde de la clé secrète
 	    @Test
 	    public void testGenererEtSauvegarderCle() throws IOException {
-	    	FichierConfig.changerChemin("src/modeleTest/test1.properties");
+	    	FichierConfig.changerChemin("src/testmodele/test1.properties");
 	    	FichierConfig.setCheminKeyConfig(CHEMIN_TEST_KEY_CONFIG);
 	        // Sauvegarder la clé si elle n'existe pas
 	        File keyFile = new File(CHEMIN_TEST_KEY_CONFIG);
@@ -91,7 +90,7 @@ public class TestFichierConfig {
 	    // Test pour le chiffrement et déchiffrement d'un mot de passe
 	    @Test
 	    public void testChiffrementEtDechiffrementMdp() throws Exception {
-	    	FichierConfig.changerChemin("src/modeleTest/test1.properties");
+	    	FichierConfig.changerChemin("src/testmodele/test1.properties");
 	    	FichierConfig.setCheminKeyConfig(CHEMIN_TEST_KEY_CONFIG);
 	        String mdp = "motDePasseTest123!";
 	        config.enregistrerMdp(mdp);
@@ -103,7 +102,7 @@ public class TestFichierConfig {
 	    // Test pour vérifier le comportement lorsque la clé est manquante
 	    @Test(expected = IOException.class)
 	    public void testCléManquante() throws IOException {
-	    	FichierConfig.changerChemin("src/modeleTest/test1.properties");
+	    	FichierConfig.changerChemin("src/testmodele/test1.properties");
 	        // Supprimer le fichier de clé si il existe
 	        File keyFile = new File(CHEMIN_TEST_KEY_CONFIG);
 	        if (keyFile.exists()) {

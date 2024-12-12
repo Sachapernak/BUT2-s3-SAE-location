@@ -24,16 +24,20 @@ public class Bail {
      * Date de fin du bail au format "yyyy-dd-MM".
      */
     private String dateDeFin;
+    
+    private BienLocatif bien;
 
     /**
      * Constructeur de la classe Bail.
      *
      * @param idBail      Identifiant unique du bail.
      * @param dateDeDebut Date de début du bail au format "yyyy-dd-MM".
+     * @param bien 		  Le bien dans lequel le bail se trouve.
      */
-    public Bail(String idBail, String dateDeDebut) {
+    public Bail(String idBail, String dateDeDebut, BienLocatif bien) {
         this.idBail = idBail;
         this.dateDeDebut = dateDeDebut;
+        this.bien = bien;
     }
 
     /**
@@ -48,7 +52,7 @@ public class Bail {
      * @throws IllegalArgumentException Si la date de début n'est pas strictement antérieure à la date de fin
      *                                  ou si le format des dates est incorrect.
      */
-    public Bail(String idBail, String dateDeDebut, String dateDeFin) throws IllegalArgumentException {
+    public Bail(String idBail, String dateDeDebut, String dateDeFin, BienLocatif bien) throws IllegalArgumentException {
         // Définir le format attendu pour les dates
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-dd-MM");
 
@@ -65,6 +69,7 @@ public class Bail {
         this.idBail = idBail;
         this.dateDeDebut = dateDeDebut;
         this.dateDeFin = dateDeFin;
+        this.bien = bien;
     }
 
     /**
@@ -75,6 +80,10 @@ public class Bail {
     @Override
     public String toString() {
         return "Bail " + idBail + ", " + dateDeDebut + ", " + dateDeFin;
+    }
+    
+    public BienLocatif getBien() {
+    	return this.bien;
     }
 
     /**

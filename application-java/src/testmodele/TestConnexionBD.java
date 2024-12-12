@@ -1,4 +1,4 @@
-package modeleTest;
+package testmodele;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -18,10 +18,10 @@ import oracle.jdbc.datasource.OracleDataSource;
 
 public class TestConnexionBD {
 
-    private ConnexionBD connexion;
+    
 
     @Before
-    public void initialize() throws SQLException, IOException {
+    public void initialize() throws IOException {
 
     	FichierConfig.changerChemin(null);
     	FichierConfig config= FichierConfig.getInstance();
@@ -35,6 +35,7 @@ public class TestConnexionBD {
 
     @After
     public void teardown() throws Exception {
+     ConnexionBD connexion;
     	FichierConfig.changerChemin(null);
         connexion = ConnexionBD.getInstance(); 
         connexion.fermerConnexion();
@@ -65,15 +66,15 @@ public class TestConnexionBD {
 	
 	@Test(expected = IOException.class)
 	public void testGetInstanceMauvaiseConfigFichierException() throws SQLException, IOException {
-    	FichierConfig.changerChemin("src/modeleTest/test1.properties");
-		ConnexionBD coBD = ConnexionBD.getInstance();
+    	FichierConfig.changerChemin("src/testmodeledao/test1.properties");
+		ConnexionBD.getInstance();
 		
 	}
 	
 	@Test
 	public void testGetConnexionPremiereFois() throws SQLException, IOException {
 		ConnexionBD coBD = ConnexionBD.getInstance();
-		Connection cn = coBD.getConnexion();
+		coBD.getConnexion();
 	}
 	
 	@Test
@@ -85,14 +86,14 @@ public class TestConnexionBD {
 	}
 	
 	@Test
-	public void GetBDPremiereFois() throws SQLException, IOException {
+	public void getBDPremiereFois() throws SQLException, IOException {
 		ConnexionBD coBD = ConnexionBD.getInstance();
-		OracleDataSource bd = coBD.getBD();
+		coBD.getBD();
 		
 	}
 	
 	@Test
-	public void GetBDDeuxiemeFois() throws SQLException, IOException {
+	public void getBDDeuxiemeFois() throws SQLException, IOException {
 		ConnexionBD coBD = ConnexionBD.getInstance();
 		OracleDataSource bd = coBD.getBD();
 		OracleDataSource bd2 = coBD.getBD();

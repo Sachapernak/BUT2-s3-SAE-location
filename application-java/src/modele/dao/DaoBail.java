@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import modele.Bail;
+import modele.BienLocatif;
 import modele.dao.requetes.RequeteCreateBail;
 import modele.dao.requetes.RequeteDeleteBail;
 import modele.dao.requetes.RequeteSelectBail;
@@ -103,9 +104,10 @@ public class DaoBail extends DaoModele<Bail> implements Dao<Bail> {
      * @param curseur Le `ResultSet` contenant les données d'un bail.
      * @return L'instance de Bail correspondant aux données extraites.
      * @throws SQLException Si une erreur survient lors de l'accès aux données du `ResultSet`.
+     * @throws IOException 
      */
     @Override
-    protected Bail createInstance(ResultSet curseur) throws SQLException {
+    protected Bail createInstance(ResultSet curseur) throws SQLException, IOException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         // Convertir la chaîne en LocalDateTime
@@ -115,11 +117,15 @@ public class DaoBail extends DaoModele<Bail> implements Dao<Bail> {
         LocalDate localDateDebut = localDateTimeDebut.toLocalDate();
         
         String idBail = curseur.getString("ID_BAIL");
+        
+        String idBien = curseur.getString("IDENTIFIANT_LOGEMENT");
+        
+        BienLocatif bien = new DaoBienLocatif().findById(idBien);
 
         // Formatter la date de début
         String dateDeDebut = localDateDebut.format(DateTimeFormatter.ofPattern("yyyy-dd-MM"));
 
-        Bail bail = new Bail(idBail, dateDeDebut);
+        Bail bail = new Bail(idBail, dateDeDebut, bien);
         String dateDeFin = curseur.getString("DATE_DE_FIN");
         if (dateDeFin != null) {
             LocalDateTime localDateTimeFin = LocalDateTime.parse(dateDeFin, formatter);
