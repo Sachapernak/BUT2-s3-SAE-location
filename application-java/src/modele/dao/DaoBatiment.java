@@ -20,12 +20,7 @@ public class DaoBatiment extends DaoModele<Batiment> {
 		
 	}
 
-	@Override
-	public void update(Batiment donnees) throws SQLException, IOException {
-		// TODO Auto-generated method stub 
-		// Pas besoins ? 
-		
-	}
+
 
 	@Override
 	public void delete(Batiment donnees) throws SQLException, IOException {
@@ -52,6 +47,16 @@ public class DaoBatiment extends DaoModele<Batiment> {
 		Adresse adresse = new DaoAdresse().findById(idAdresse);
 		
 		return new Batiment(id, adresse);
+	}
+
+
+	@Override
+	public void update(Batiment donnees) throws SQLException, IOException {
+		throw new UnsupportedOperationException("Le batiment ne peut etre modifié : "
+				+ "Il n'y aucun attribut a modifier (hormis l'adresse, qui ne devrait "
+				+ "pas changer)");
+		
+		
 	}
 
 }

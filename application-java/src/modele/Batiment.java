@@ -24,6 +24,6 @@ public class Batiment {
 	public Adresse getAdresse() {
 		return adresse;
 	}
-	
+
 	
 }

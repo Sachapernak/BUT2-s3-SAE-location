@@ -1,4 +1,4 @@
-package modeleTest;
+package testmodele;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -7,6 +7,7 @@ import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -49,7 +50,7 @@ public class TestDaoLocataire {
             TypeDeBien.LOGEMENT,       // type (Enum TypeDeBien)
             45,                        // surface en m²
             2,                         // nombre de pièces
-            650.0f,                    // loyer de base
+            new BigDecimal("650.00"),                    // loyer de base
             batiment                   // bâtiment associé
         );
         
@@ -102,9 +103,6 @@ public class TestDaoLocataire {
             // Valider les modifications
             cn.commit();
         }
-        
-
-            System.out.println("Les données contenant 'test' ont été supprimées avec succès.");
 
     }
 
@@ -167,12 +165,10 @@ public class TestDaoLocataire {
         ajouterLocataire(locataire2);
 
         List<Locataire> list = daoLocataire.findAll();
-        System.out.println(list);
         
         Boolean contientId1 = false;
         Boolean contientId2 = false;
         for (Locataire loc : list) {
-        	System.out.println(loc.getIdLocataire());
         	
         	if (loc.getIdLocataire().equals("TEST04")) {
         		contientId1 = true;

@@ -11,7 +11,7 @@ public class RequeteCreateICC extends Requete<ICC> {
 	public String requete() {
 		return "INSERT INTO SAE_ICC (ANNEE_ICC,"
 				+ " TRIMESTRE_ICC, INDICE) "
-				+ "VALUES(?, ?, ?);";
+				+ "VALUES(?, ?, ?)";
 	}
 	
 	

@@ -1,4 +1,4 @@
-package modeleTest.UITest;
+package testmodele.uitest;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;

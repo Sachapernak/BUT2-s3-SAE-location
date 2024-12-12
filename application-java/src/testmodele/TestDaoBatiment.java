@@ -1,4 +1,4 @@
-package modeleTest;
+package testmodele;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -93,5 +93,10 @@ public class TestDaoBatiment {
 
         supprimerBatiment(batiment);
         daoAdresse.delete(adresse);
+    }
+    
+    @Test (expected = UnsupportedOperationException.class)
+    public void testUpdateBatimentNotSupported() throws SQLException, IOException {
+    	daoBat.update(null);
     }
 }

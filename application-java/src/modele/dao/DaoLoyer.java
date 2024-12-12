@@ -1,6 +1,7 @@
 package modele.dao;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -48,7 +49,7 @@ public class DaoLoyer extends DaoModele<Loyer> {
     protected Loyer createInstance(ResultSet curseur) throws SQLException, IOException {
         String idBien = curseur.getString("IDENTIFIANT_LOGEMENT");
         String date = curseur.getDate("DATE_DE_CHANGEMENT").toString();
-        double montant = curseur.getDouble("MONTANT_LOYER");
+        BigDecimal montant = curseur.getBigDecimal("MONTANT_LOYER");
 
         return new Loyer(idBien, date, montant);
     }

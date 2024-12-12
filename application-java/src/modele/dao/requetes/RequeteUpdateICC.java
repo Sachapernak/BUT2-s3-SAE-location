@@ -10,7 +10,7 @@ public class RequeteUpdateICC extends Requete<ICC> {
     @Override
     public String requete() {
         return "UPDATE SAE_ICC SET INDICE = ? "
-               + "ANNEE_ICC = ? AND TRIMESTRE_ICC = ?;";
+               + "WHERE ANNEE_ICC = ? AND TRIMESTRE_ICC = ?";
     }
 
     @Override

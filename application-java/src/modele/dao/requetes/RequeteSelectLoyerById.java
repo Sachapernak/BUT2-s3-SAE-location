@@ -8,7 +8,7 @@ public class RequeteSelectLoyerById extends Requete<Loyer> {
 
     @Override
     public String requete() {
-        return "SELECT * FROM SAE_LOYER WHERE IDENTIFIANT_LOGEMENT = ? AND DATE_DE_CHANGEMENT = ?;";
+        return "SELECT * FROM SAE_LOYER WHERE IDENTIFIANT_LOGEMENT = ? AND DATE_DE_CHANGEMENT = ?";
     }
 
     @Override

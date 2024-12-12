@@ -10,4 +10,7 @@ public enum TypeDeBien {
 		this.valeur = valeur;
 	}
 	
+    public String getValeur() {
+        return this.valeur;
+    }
 }

@@ -1,4 +1,4 @@
-package modeleTest;
+package testmodele;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -17,6 +18,9 @@ import modele.dao.DaoLoyer;
 
 public class TestDaoLoyer {
 
+	static final String NOM_BIEN_LOC1 = "LOG001";
+	static final String NOM_BIEN_LOC2 = "LOG002";
+	static final String NOM_BIEN_LOC3 = "LOG003";
     private DaoLoyer daoLoyer;
     Loyer loyerRecup;
 
@@ -35,15 +39,15 @@ public class TestDaoLoyer {
 
     @Test
     public void testDaoLoyerCreate() throws SQLException, IOException {
-        Loyer loyer = new Loyer("LOGBIENTEST01", "2024-01-01", 800.50);
+        Loyer loyer = new Loyer(NOM_BIEN_LOC1, "2024-01-01", new BigDecimal("800.50"));
         ajouterLoyer(loyer);
 
-        loyerRecup = daoLoyer.findById("LOGBIENTEST01", "2024-01-01");
+        loyerRecup = daoLoyer.findById(NOM_BIEN_LOC1, "2024-01-01");
 
         assertNotNull("Le loyer n'a pas été trouvé après insertion.", loyerRecup);
-        assertEquals("L'ID du bien est incorrect.", "LOGBIENTEST01", loyerRecup.getIdBien());
+        assertEquals("L'ID du bien est incorrect.", NOM_BIEN_LOC1, loyerRecup.getIdBien());
         assertEquals("La date de changement est incorrecte.", "2024-01-01", loyerRecup.getDateDeChangement());
-        assertEquals("Le montant du loyer est incorrect.", 800.50, loyerRecup.getMontantLoyer(), 0.01);
+        assertEquals("Le montant du loyer est incorrect.", 0, new BigDecimal("800.50").compareTo(loyerRecup.getMontantLoyer()));
 
         supprimerLoyer(loyer);
     }
@@ -56,23 +60,23 @@ public class TestDaoLoyer {
 
     @Test
     public void testDaoLoyerDelete() throws SQLException, IOException {
-        Loyer loyer = new Loyer("LOGBIENTEST02", "2024-02-01", 900.75);
+        Loyer loyer = new Loyer(NOM_BIEN_LOC2, "2024-02-01", new BigDecimal("900.75"));
         ajouterLoyer(loyer);
 
         supprimerLoyer(loyer);
-        loyerRecup = daoLoyer.findById("LOGBIENTEST02", "2024-02-01");
+        loyerRecup = daoLoyer.findById(NOM_BIEN_LOC2, "2024-02-01");
         assertNull("Le loyer n'a pas été correctement supprimé.", loyerRecup);
     }
 
     @Test
     public void testDaoFindAll() throws SQLException, IOException {
-        Loyer loyer = new Loyer("LOGBIENTEST03", "2024-03-01", 950.00);
+        Loyer loyer = new Loyer(NOM_BIEN_LOC3, "2024-03-01", new BigDecimal("950.00"));
         ajouterLoyer(loyer);
 
         List<Loyer> loyers = daoLoyer.findAll();
 
         boolean contientLoyer = loyers.stream()
-                                      .anyMatch(l -> "LOGBIENTEST03".equals(l.getIdBien()) && "2024-03-01".equals(l.getDateDeChangement()));
+                                      .anyMatch(l -> NOM_BIEN_LOC3.equals(l.getIdBien()) && "2024-03-01".equals(l.getDateDeChangement()));
 
         assertTrue("Le loyer inséré n'est pas présent dans la liste récupérée.", contientLoyer);
 
@@ -81,14 +85,34 @@ public class TestDaoLoyer {
 
     @Test
     public void testFindByIdLogement() throws SQLException, IOException {
-        Loyer loyer = new Loyer("LOGBIENTEST04", "2024-04-01", 1000.00);
+        Loyer loyer = new Loyer(NOM_BIEN_LOC1, "2024-04-01", new BigDecimal("1000.00"));
         ajouterLoyer(loyer);
 
-        List<Loyer> loyers = daoLoyer.findByIdLogement("LOGBIENTEST04");
+        List<Loyer> loyers = daoLoyer.findByIdLogement(NOM_BIEN_LOC1);
 
         assertNotNull("La méthode findByIdLogement n'a pas retourné de résultat.", loyers);
-        assertTrue("Le logement recherché n'a pas été trouvé.", loyers.stream().anyMatch(l -> "LOGBIENTEST04".equals(l.getIdBien())));
+        assertTrue("Le logement recherché n'a pas été trouvé.", loyers.stream().anyMatch(l -> NOM_BIEN_LOC1.equals(l.getIdBien())));
 
         supprimerLoyer(loyer);
+    }
+    
+    @Test 
+    public void testDaoLoyerUpdate() throws SQLException, IOException {
+    	Loyer loyer = new Loyer(NOM_BIEN_LOC1, "2024-02-02", new BigDecimal("11000.00"));
+    	ajouterLoyer(loyer);
+    	
+    	loyerRecup = daoLoyer.findById(NOM_BIEN_LOC1, "2024-02-02");
+    	
+    	loyerRecup.setMontantLoyer(new BigDecimal("1000.00"));
+    	
+    	daoLoyer.update(loyerRecup);
+    	
+    	loyerRecup = daoLoyer.findById(NOM_BIEN_LOC1, "2024-02-02");
+    	
+    	assertEquals("Le montant du loyer est incorrect.", 0, new BigDecimal("1000.00").compareTo(loyerRecup.getMontantLoyer()));
+    	
+    	supprimerLoyer(loyer);
+    	
+    	
     }
 }

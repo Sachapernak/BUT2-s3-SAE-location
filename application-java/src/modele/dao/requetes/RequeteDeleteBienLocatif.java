@@ -9,7 +9,7 @@ public class RequeteDeleteBienLocatif extends Requete<BienLocatif> {
 
 	@Override
 	public String requete() {
-		return "{call pkg_bien_locatif.supprimer_locataire(?)}";
+		return "{call pkg_bien_locatif.supprimer_bien_locatif(?)}";
 	}
 	
 	@Override

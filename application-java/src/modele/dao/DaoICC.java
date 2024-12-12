@@ -12,7 +12,6 @@ import modele.dao.requetes.RequeteDeleteICC;
 import modele.dao.requetes.RequeteSelectICC;
 import modele.dao.requetes.RequeteSelectICCById;
 import modele.dao.requetes.RequeteUpdateICC;
-import modele.dao.requetes.RequeteSelectICCByIdLogement;
 
 public class DaoICC extends DaoModele<ICC> {
 
@@ -90,10 +89,6 @@ public class DaoICC extends DaoModele<ICC> {
     @Override
     public List<ICC> findAll() throws SQLException, IOException {
         return find(new RequeteSelectICC());
-    }
-    
-    public List<ICC> findByIdLogement(String id) throws SQLException, IOException {
-    	return find(new RequeteSelectICCByIdLogement(), id);
     }
 
 	@Override

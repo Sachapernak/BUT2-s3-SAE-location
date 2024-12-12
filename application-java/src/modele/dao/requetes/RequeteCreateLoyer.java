@@ -16,6 +16,6 @@ public class RequeteCreateLoyer extends Requete<Loyer> {
     public void parametres(PreparedStatement prSt, Loyer donnee) throws SQLException {
         prSt.setString(1, donnee.getIdBien());
         prSt.setDate(2, java.sql.Date.valueOf(donnee.getDateDeChangement()));
-        prSt.setDouble(3, donnee.getMontantLoyer());
+        prSt.setBigDecimal(3, donnee.getMontantLoyer());
     }
 }

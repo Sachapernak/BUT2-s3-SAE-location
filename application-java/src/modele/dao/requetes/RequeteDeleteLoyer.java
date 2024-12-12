@@ -8,7 +8,7 @@ public class RequeteDeleteLoyer extends Requete<Loyer> {
 
     @Override
     public String requete() {
-        return "DELETE FROM SAE_LOYER WHERE IDENTIFIANT_LOGEMENT = ? AND DATE_DE_CHANGEMENT = ?;";
+        return "DELETE FROM SAE_LOYER WHERE IDENTIFIANT_LOGEMENT = ? AND DATE_DE_CHANGEMENT = ?";
     }
 
     @Override

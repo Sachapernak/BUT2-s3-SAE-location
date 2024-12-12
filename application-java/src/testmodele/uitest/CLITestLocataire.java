@@ -1,4 +1,4 @@
-package modeleTest.UITest;
+package testmodele.uitest;
 
 import java.util.List;
 

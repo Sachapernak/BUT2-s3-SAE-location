@@ -1,4 +1,4 @@
-package modeleTest;
+package testmodele;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -41,7 +42,7 @@ public class TestDaoBail {
             TypeDeBien.LOGEMENT,       // type (Enum TypeDeBien)
             45,                        // surface en m²
             2,                         // nombre de pièces
-            650.0f,                    // loyer de base
+            new BigDecimal("650.00"),                    // loyer de base
             batiment                   // bâtiment associé
         );
         
