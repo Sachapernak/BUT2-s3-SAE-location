@@ -66,7 +66,7 @@ public class TestConnexionBD {
 	
 	@Test(expected = IOException.class)
 	public void testGetInstanceMauvaiseConfigFichierException() throws SQLException, IOException {
-    	FichierConfig.changerChemin("src/testmodele/test1.properties");
+    	FichierConfig.changerChemin("src/testmodeledao/test1.properties");
 		ConnexionBD.getInstance();
 		
 	}

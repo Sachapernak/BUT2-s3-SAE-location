@@ -1,4 +1,4 @@
-package testmodele;
+package testmodeledao;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -6,9 +6,6 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({
-    TestFichierConfig.class,    // Configurations d'abord
-    TestConnexionBD.class,      // Connexion à la BD
-    
     TestDaoAdresse.class, 
     TestDaoBatiment.class,      // Entités principales
     TestDaoLocataire.class,
@@ -20,5 +17,5 @@ import org.junit.runners.Suite.SuiteClasses;
     TestDaoICC.class            
 })
 
-public class AllTests {
+public class AllTestsModeleDao {
 }

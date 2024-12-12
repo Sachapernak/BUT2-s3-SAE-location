@@ -380,6 +380,27 @@ public class BienLocatif {
     }
 
     /**
+     * Supprime un loyer du bien locatif.
+     * <p>
+     * Cette méthode vérifie que le loyer correspond bien au bien locatif avant de le supprimer.
+     * Elle supprime également le loyer dans la base de données via le DAO approprié.
+     * </p>
+     * 
+     * @param loyer le loyer à supprimer
+     * @throws IllegalArgumentException si le loyer ne correspond pas au bien locatif
+     * @throws SQLException             si une erreur SQL survient lors de la suppression du loyer
+     * @throws IOException              si une erreur d'entrée/sortie survient lors de la suppression du loyer
+     */
+    public void removeLoyer(Loyer loyer) throws SQLException, IOException {
+        if (!loyer.getIdBien().equals(this.identifiantLogement)) {
+            throw new IllegalArgumentException("Le loyer doit correspondre au bien !");
+        }
+
+        new DaoLoyer().delete(loyer);
+        this.loyers.remove(loyer);
+    }
+
+    /**
      * Recharge les données associées au bien locatif.
      * <p>
      * Réinitialise les indicateurs de chargement et réinitialise les listes des entités associées.
@@ -389,7 +410,7 @@ public class BienLocatif {
         loyersLoaded = false;
         docsLoaded = false;
         diagLoaded = false;
-
+        
         diagnostiques = new ArrayList<>();
         loyers = new ArrayList<>();
         docsComptables = new ArrayList<>();
