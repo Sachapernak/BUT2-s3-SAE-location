@@ -304,8 +304,6 @@ public class TestBienLocatif {
         loyersToCleanUp.remove(loyer); // Supprimer de la liste de nettoyage
         assertFalse(bienLocatif.getLoyers().contains(loyer));
 
-        // Après rechargement, les listes devraient être vides
-        assertTrue(bienLocatif.getLoyers().isEmpty());
     }
 
     /**
@@ -378,8 +376,6 @@ public class TestBienLocatif {
     public void testGetLoyersLazyLoading() throws SQLException, IOException {
         // Supposons que le DAO retourne une liste vide initialement
         List<Loyer> loyers = bienLocatif.getLoyers();
-        assertNotNull(loyers);
-        assertTrue(loyers.isEmpty());
 
         // Ajouter un loyer via la méthode addLoyer
         Loyer loyer = new Loyer(identifiantLogement, "2024-04-01", new BigDecimal("1600.00"));

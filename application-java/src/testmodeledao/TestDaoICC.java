@@ -50,18 +50,18 @@ public class TestDaoICC {
 
     @Test
     public void testDaoICCUpdate() throws SQLException, IOException {
-        ICC iccUpdate = new ICC("2023", "2", 200);
+        ICC iccUpdate = new ICC("2022", "2", 200);
         ajouterICC(iccUpdate);
 
-        iccRecup = daoICC.findById("2023", "2");
+        iccRecup = daoICC.findById("2022", "2");
         assertNotNull("ICC non trouvée après insertion.", iccRecup);
         assertEquals("L'indice initial est incorrect.", 200, iccRecup.getIndiceICC());
 
         // Mise à jour de l'indice
-        iccUpdate = new ICC("2023", "2", 250);
+        iccUpdate = new ICC("2022", "2", 250);
         daoICC.update(iccUpdate);
 
-        iccRecup = daoICC.findById("2023", "2");
+        iccRecup = daoICC.findById("2022", "2");
         assertEquals("L'indice mis à jour est incorrect.", 250, iccRecup.getIndiceICC());
 
         supprimerICC(iccUpdate);

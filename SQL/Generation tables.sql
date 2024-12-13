@@ -97,14 +97,7 @@ CREATE TABLE SAE_document_comptable(
    CONSTRAINT fk_SAE_doc_compta_contrat FOREIGN KEY (numero_de_contrat, annee_du_contrat) REFERENCES SAE_assurance(numero_de_contrat, annee_du_contrat)
 );
 
--- Ajout de la contrainte CHK sur la table SAE_document_comptable
-ALTER TABLE SAE_document_comptable
-ADD CONSTRAINT chk_SAE_doc_compta_type
-CHECK (
-    (Type_de_document != 'quittance' OR SIRET IS NULL)
-    AND
-    (Type_de_document = 'quittance' OR SIRET IS NOT NULL)
-);
+
 
 CREATE TABLE sae_charge_index(
    Date_de_releve DATE,
@@ -228,11 +221,12 @@ CREATE TABLE sae_facture_du_bien(
 
 
 
-
+-- Ajout de la contrainte CHK sur la table SAE_document_comptable
 ALTER TABLE SAE_document_comptable
 ADD CONSTRAINT chk_SAE_doc_compta_type
 CHECK (
-    (Type_de_document!= 'quittance' OR SIRET IS NULL) AND
+    (Type_de_document != 'quittance' OR SIRET IS NULL)
+    AND
     (Type_de_document = 'quittance' OR SIRET IS NOT NULL)
 );
 
