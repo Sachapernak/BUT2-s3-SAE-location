@@ -152,7 +152,7 @@ CREATE TABLE SAE_Document(
 CREATE TABLE SAE_Regularisation(
    Id_bail VARCHAR2(50),
    Date_regu DATE,
-   montant VARCHAR2(50) NOT NULL,
+   montant NUMBER(10,2) NOT NULL,
    CONSTRAINT pk_SAE_Regularisation PRIMARY KEY (Id_bail, Date_regu),
    CONSTRAINT fk_SAE_Regu_Id_bail FOREIGN KEY (Id_bail) REFERENCES SAE_Bail(Id_bail)
 );
@@ -227,6 +227,7 @@ CREATE TABLE sae_facture_du_bien(
 );
 
 
+ALTER TABLE SAE_document_comptable DROP CONSTRAINT chk_SAE_doc_compta_type;
 
 
 ALTER TABLE SAE_document_comptable
