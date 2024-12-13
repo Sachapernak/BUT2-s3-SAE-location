@@ -229,6 +229,7 @@ CREATE TABLE sae_facture_du_bien(
 
 ALTER TABLE SAE_document_comptable DROP CONSTRAINT chk_SAE_doc_compta_type;
 
+
 ALTER TABLE SAE_document_comptable
 ADD CONSTRAINT chk_SAE_doc_compta_type
 CHECK (
