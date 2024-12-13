@@ -13,6 +13,7 @@ import modele.DocumentComptable;
 import modele.FactureBien;
 import modele.dao.requetes.RequeteCreateFactureBien;
 import modele.dao.requetes.RequeteDeleteFactureBien;
+import modele.dao.requetes.RequeteSelectFactureBienById;
 import modele.dao.requetes.RequeteSelectFactureBienByIdBien;
 import modele.dao.requetes.RequeteUpdateFactureBien;
 
@@ -38,7 +39,7 @@ public class DaoFactureBien extends DaoModele<FactureBien> {
 
 	@Override
 	public FactureBien findById(String... id) throws SQLException, IOException {
-		throw new UnsupportedOperationException("Veuillez utiliser findByIdBien");
+		return findById(new RequeteSelectFactureBienById(), id);
 	}
 	
 
@@ -93,7 +94,7 @@ public class DaoFactureBien extends DaoModele<FactureBien> {
 	}
 
 	@Override
-	protected FactureBien createInstance(ResultSet curseur) throws SQLException, IOException {
+	public FactureBien createInstance(ResultSet curseur) throws SQLException, IOException {
 		throw new UnsupportedOperationException("Veuillez utiliser createInstance(ResultSet,BienLocatif");
 	}
 

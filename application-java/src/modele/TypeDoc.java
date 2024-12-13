@@ -4,7 +4,8 @@ public enum TypeDoc {
 	QUITTANCE("quittance"),
 	FACTURE_CHARGE_FIXE("facture cf"),
 	FACTURE_CHARGE_VARIABLE("facture cv"),
-	FACTURE("facture");
+	FACTURE("facture"),
+	DEVIS("devis");
 
 	private String type;
 	

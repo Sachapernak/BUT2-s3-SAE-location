@@ -13,10 +13,7 @@ public class RequeteCreateFactureBien extends Requete<FactureBien> {
 		return "INSERT INTO SAE_FACTURE_DU_BIEN "
 				+ "(IDENTIFIANT_LOGEMENT, NUMERO_DOCUMENT, "
 				+ "DATE_DOCUMENT, PART_DES_CHARGES) "
-				+ "VALUES (IDENTIFIANT_LOGEMENT = ?, "
-				+ "NUMERO_DOCUMENT = ?, "
-				+ "DATE_DOCUMENT = ?, "
-				+ "PART_DES_CHARGES = ?) ";
+				+ "VALUES (?, ?, ?, ?) ";
 	}
 	
 	@Override
