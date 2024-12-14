@@ -12,6 +12,9 @@ import modele.DocumentComptable;
 import modele.Entreprise;
 import modele.Locataire;
 import modele.TypeDoc;
+import modele.ChargeFixe;
+import modele.ChargeIndex;
+
 import modele.dao.requetes.RequeteDeleteDocumentComptable;
 import modele.dao.requetes.RequeteSelectDocumentComptable;
 import modele.dao.requetes.RequeteSelectDocumentComptableById;
@@ -61,6 +64,8 @@ public class DaoDocumentComptable extends DaoModele<DocumentComptable> {
 		DocumentComptable nouveau = new DocumentComptable(numDoc, dateDoc, type, montant, fichier);
 		
 		boolean recupLoc = curseur.getBoolean("recuperable_locataire");
+		nouveau.setRecuperableLoc(recupLoc);
+		
 		
 		String idloc = curseur.getString("identifiant_locataire");
 		if (!(idloc == null || idloc.isEmpty())) {
@@ -89,7 +94,12 @@ public class DaoDocumentComptable extends DaoModele<DocumentComptable> {
 			nouveau.setAssurance(asr);
 		}
 		
-		// TODO : Les charges CF et charges CV
+		ChargeFixe cf = new DaoChargeFixe().findByIdDocumentComptable(numDoc, dateDoc);
+		if (cf != null) nouveau.setChargeFixe(cf);
+		
+		ChargeIndex ci = new DaoChargeIndex().findByIdDocumentComptable(numDoc, dateDoc);
+		if (ci != null) nouveau.setChargeIndex(ci);
+		
 		
 		return nouveau;
 	}

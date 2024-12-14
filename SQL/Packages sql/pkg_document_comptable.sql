@@ -43,8 +43,8 @@ BEGIN
   VALUES ('DOC_TEST', TO_DATE('2024-01-01', 'YYYY-MM-DD'), 'facture', '1500', 'facture_test.pdf', null, 1, 'LOC001', null, 'ENTR001');
 
   -- Insertion dans SAE_Charge_cf
-  INSERT INTO SAE_Charge_cf (Date_de_charge, Type, montant, numero_document, Date_document)
-  VALUES (TO_DATE('2024-01-01', 'YYYY-MM-DD'), 'Eau', '300', 'DOC_TEST', TO_DATE('2024-01-01', 'YYYY-MM-DD'));
+  INSERT INTO SAE_Charge_cf (id_charge_cf,Date_de_charge, Type, montant, numero_document, Date_document)
+  VALUES ('TESTCF',TO_DATE('2024-01-01', 'YYYY-MM-DD'), 'Eau', '300', 'DOC_TEST', TO_DATE('2024-01-01', 'YYYY-MM-DD'));
 
 
   -- Insertion dans sae_facture_du_bien

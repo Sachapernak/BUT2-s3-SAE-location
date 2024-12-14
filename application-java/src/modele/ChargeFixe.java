@@ -1,22 +1,30 @@
 package modele;
 
+import java.math.BigDecimal;
 
 public class ChargeFixe {
-    String idBien;
-    String dateDeCharge;
-    String type;
-    String montant;
+    private String dateDeCharge;
+    private String type;
+    private BigDecimal montant;
+    
+    // en String et pas en classe, car il ne devrait pas etre nécessaire de récuperer
+    // la classe
+    private String numDoc;
+    private String dateDoc;
+	private String id;
+    
 
-    public ChargeFixe(String idBien, String dateDeCharge, String type, String montant) {
-        this.idBien = idBien;
-        this.dateDeCharge = dateDeCharge;
+    public ChargeFixe(String id, String dateDeCharge, String type, BigDecimal montant, String numDoc, String dateDoc) {
+        this.id = id;
+    	
+    	this.dateDeCharge = dateDeCharge;
         this.type = type;
         this.montant = montant;
+        
+        this.numDoc = numDoc;
+        this.dateDoc = dateDoc;
     }
 
-    public String getIdBien() {
-        return idBien;
-    }
 
     public String getDateDeCharge() {
         return dateDeCharge;
@@ -26,7 +34,20 @@ public class ChargeFixe {
         return type;
     }
 
-    public String getMontant() {
+    public BigDecimal getMontant() {
         return montant;
     }
+    
+    public String getNumDoc() {
+    	return numDoc;
+    }
+    
+    public String getDateDoc() {
+    	return dateDoc;
+    }
+
+
+	public String getId() {
+		return id;
+	}
 }

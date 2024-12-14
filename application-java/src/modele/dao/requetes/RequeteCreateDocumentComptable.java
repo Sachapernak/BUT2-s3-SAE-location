@@ -20,7 +20,8 @@ public class RequeteCreateDocumentComptable extends Requete<DocumentComptable> {
     public void parametres(PreparedStatement prSt, DocumentComptable document) throws SQLException {
         prSt.setString(1, document.getNumeroDoc());
         prSt.setDate(2, Date.valueOf(document.getDateDoc()));
-        prSt.setString(3, document.getTypeDoc().name()); // Utilisation de l'enum TypeDoc
+        String type = document.getTypeDoc().name().toLowerCase();
+        prSt.setString(3, type); // Utilisation de l'enum TypeDoc
         prSt.setBigDecimal(4, document.getMontant());
         prSt.setString(5, document.getFichierDoc());
         prSt.setBoolean(6, document.isRecuperableLoc());
@@ -38,7 +39,7 @@ public class RequeteCreateDocumentComptable extends Requete<DocumentComptable> {
             prSt.setNull(8, java.sql.Types.VARCHAR);
         }
 
-        if (document.getEntreprise() != null) {
+        if (!type.equals("quittance") && document.getEntreprise() != null) {
             prSt.setString(9, document.getEntreprise().getSiret());
         } else {
             prSt.setNull(9, java.sql.Types.VARCHAR);
