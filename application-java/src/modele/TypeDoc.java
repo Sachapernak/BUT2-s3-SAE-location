@@ -2,8 +2,8 @@ package modele;
 
 public enum TypeDoc {
 	QUITTANCE("quittance"),
-	FACTURE_CHARGE_FIXE("facture cf"),
-	FACTURE_CHARGE_VARIABLE("facture cv"),
+	FACTURE_CF("facture cf"),
+	FACTURE_CV("facture cv"),
 	FACTURE("facture"),
 	DEVIS("devis");
 
