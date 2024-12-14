@@ -14,7 +14,8 @@ import org.junit.runners.Suite.SuiteClasses;
     TestDaoBail.class,          
     TestDaoLoyer.class,
           
-    TestDaoICC.class            
+    TestDaoICC.class,
+    TestDaoFactureBien.class
 })
 
 public class AllTestsModeleDao {

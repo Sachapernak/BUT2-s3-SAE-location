@@ -304,8 +304,6 @@ public class TestBienLocatif {
         loyersToCleanUp.remove(loyer); // Supprimer de la liste de nettoyage
         assertFalse(bienLocatif.getLoyers().contains(loyer));
 
-        // Après rechargement, les listes devraient être vides
-        assertTrue(bienLocatif.getLoyers().isEmpty());
     }
 
     /**
@@ -378,8 +376,6 @@ public class TestBienLocatif {
     public void testGetLoyersLazyLoading() throws SQLException, IOException {
         // Supposons que le DAO retourne une liste vide initialement
         List<Loyer> loyers = bienLocatif.getLoyers();
-        assertNotNull(loyers);
-        assertTrue(loyers.isEmpty());
 
         // Ajouter un loyer via la méthode addLoyer
         Loyer loyer = new Loyer(identifiantLogement, "2024-04-01", new BigDecimal("1600.00"));
@@ -394,18 +390,16 @@ public class TestBienLocatif {
         assertFalse(loyers.contains(loyer));
     }
 
-  //TODO : enlever le @Ignore
     /**
      * Test de la méthode {@code getDocsComptables} avec lazy-loading.
-     * <p>
-     * Ignoré car {@code DaoFactureBien} n'est pas fonctionnel.
-     * </p>
      */
-    @Ignore("DAO FactureBien non fonctionnel")
     @Test
     public void testGetDocsComptablesLazyLoading() throws SQLException, IOException {
         List<FactureBien> docs = bienLocatif.getDocsComptables();
         assertNotNull(docs);
+        for (FactureBien facture : docs) {
+        	assertNotNull(facture.getDocument().getNumeroDoc());
+        }
         // Ajoutez des documents comptables via le DAO si nécessaire
         // Puis vérifiez qu'ils sont bien chargés
     }

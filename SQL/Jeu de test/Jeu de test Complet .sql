@@ -1,62 +1,3 @@
--- Adresses utilisées par les locataires
-INSERT INTO SAE_Adresse (Id_SAE_Adresse, adresse, Code_postal, ville, Complement_adresse) 
-VALUES ('ADDR001', '10 rue des Lilas', 31000, 'Toulouse', NULL);
-
-INSERT INTO SAE_Adresse (Id_SAE_Adresse, adresse, Code_postal, ville, Complement_adresse) 
-VALUES ('ADDR002', '20 avenue de Paris', 75000, 'Paris', 'Appartement 3B');
-
-INSERT INTO SAE_Adresse (Id_SAE_Adresse, adresse, Code_postal, ville, Complement_adresse) 
-VALUES ('ADDR003', '5 impasse des Érables', 69000, 'Lyon', NULL);
-
--- Adresse non utilisée (pour test d'intégrité)
-INSERT INTO SAE_Adresse (Id_SAE_Adresse, adresse, Code_postal, ville, Complement_adresse) 
-VALUES ('ADDR004', '7 chemin des Pins', 34000, 'Montpellier', NULL);
-
-select * from SAE_Adresse;
-
-INSERT INTO SAE_batiment (identifiant_batiment, Id_SAE_Adresse)
-VALUES ('BAT001', 'ADDR001');
-
-INSERT INTO SAE_batiment (identifiant_batiment, Id_SAE_Adresse)
-VALUES ('BAT002', 'ADDR002');
-
-INSERT INTO SAE_batiment (identifiant_batiment, Id_SAE_Adresse)
-VALUES ('BAT003', 'ADDR003');
-
-select * from SAE_batiment;
-
-INSERT INTO SAE_Bien_locatif (identifiant_logement, Loyer_de_base, identifiant_fiscal, complement_d_adresse, surface, nb_piece, Type_de_bien, identifiant_batiment)
-VALUES ('LOG001', 650.00, 'FISCAL001', 'garage cote rue', 45, 2, 'garage', 'BAT001');
-
-INSERT INTO SAE_Bien_locatif (identifiant_logement, Loyer_de_base, identifiant_fiscal, complement_d_adresse, surface, nb_piece, Type_de_bien, identifiant_batiment)
-VALUES ('LOG002', 1200.00, 'FISCAL002', 'apt 112', 30, 1, 'logement', 'BAT002');
-
-INSERT INTO SAE_Bien_locatif (identifiant_logement, Loyer_de_base, identifiant_fiscal, complement_d_adresse, surface, nb_piece, Type_de_bien, identifiant_batiment)
-VALUES ('LOG003', 950.00, 'FISCAL003', 'logement 2eme etage', 70, 3, 'logement', 'BAT003');
-
-select * from SAE_Bien_locatif;
-
--- Insertion de baux valides, avec identifiant_logement existant
-INSERT INTO SAE_Bail (Id_bail, Date_de_debut, date_de_fin, identifiant_logement)
-VALUES ('BAI01', TO_DATE('2023-01-01', 'YYYY-MM-DD'), TO_DATE('2024-01-01', 'YYYY-MM-DD'), 'LOG001');
-
-INSERT INTO SAE_Bail (Id_bail, Date_de_debut, date_de_fin, identifiant_logement)
-VALUES ('BAI02', TO_DATE('2023-02-01', 'YYYY-MM-DD'), NULL, 'LOG002');
-
-INSERT INTO SAE_Bail (Id_bail, Date_de_debut, date_de_fin, identifiant_logement)
-VALUES ('BAI03', TO_DATE('2023-03-01', 'YYYY-MM-DD'), NULL, 'LOG003');
-
-INSERT INTO SAE_Bail (Id_bail, Date_de_debut, date_de_fin, identifiant_logement)
-VALUES ('BAI04', TO_DATE('2023-04-01', 'YYYY-MM-DD'), TO_DATE('2024-04-01', 'YYYY-MM-DD'), 'LOG001');
-
-INSERT INTO SAE_Bail (Id_bail, Date_de_debut, date_de_fin, identifiant_logement)
-VALUES ('BAI05', TO_DATE('2023-05-01', 'YYYY-MM-DD'), NULL, 'LOG002');
-
-select * from SAE_Bail;
-
-
-
-
 -- -----------------
 
 -- 1. Insertion dans SAE_Adresse
@@ -178,7 +119,7 @@ INSERT INTO SAE_document_comptable (
     montant_devis, recuperable_locataire, identifiant_locataire, identifiant_batiment,
     SIRET, numero_de_contrat, annee_du_contrat
 ) VALUES (
-    'DOC001', TO_DATE('2023-07-05', 'YYYY-MM-DD'), 'quittance', '650.00', 'quittance_juil_2023.pdf',
+    'DOC001', TO_DATE('2023-07-05', 'YYYY-MM-DD'), 'quittance', 650.00, 'quittance_juil_2023.pdf',
     NULL, 1, 'LOC001', 'BAT001', NULL, 'ASSUR001', 2023
 );
 
@@ -187,8 +128,8 @@ INSERT INTO SAE_document_comptable (
     montant_devis, recuperable_locataire, identifiant_locataire, identifiant_batiment,
     SIRET, numero_de_contrat, annee_du_contrat
 ) VALUES (
-    'DOC002', TO_DATE('2023-08-10', 'YYYY-MM-DD'), 'facture', '300.00', 'facture_reparation_082023.pdf',
-    '350.00', 0, 'LOC002', 'BAT002', 'ENTR001', 'ASSUR001', 2023
+    'DOC002', TO_DATE('2023-08-10', 'YYYY-MM-DD'), 'facture', 300.00, 'facture_reparation_082023.pdf',
+    350.00, 0, 'LOC002', 'BAT002', 'ENTR001', 'ASSUR001', 2023
 );
 
 INSERT INTO SAE_document_comptable (
@@ -196,7 +137,7 @@ INSERT INTO SAE_document_comptable (
     montant_devis, recuperable_locataire, identifiant_locataire, identifiant_batiment,
     SIRET, numero_de_contrat, annee_du_contrat
 ) VALUES (
-    'DOC003', TO_DATE('2023-09-05', 'YYYY-MM-DD'), 'quittance', '1200.00', 'quittance_sep_2023.pdf',
+    'DOC003', TO_DATE('2023-09-05', 'YYYY-MM-DD'), 'quittance', 1200.00, 'quittance_sep_2023.pdf',
     NULL, 1, 'LOC002', 'BAT002', NULL, 'ASSUR001', 2023
 );
 
@@ -205,8 +146,8 @@ INSERT INTO SAE_document_comptable (
     montant_devis, recuperable_locataire, identifiant_locataire, identifiant_batiment,
     SIRET, numero_de_contrat, annee_du_contrat
 ) VALUES (
-    'DOC004', TO_DATE('2023-10-01', 'YYYY-MM-DD'), 'devis', '0.00', 'devis_electricite_102023.pdf',
-    '500.00', 0, 'LOC003', 'BAT003', 'ENTR002', 'ASSUR001', 2024
+    'DOC004', TO_DATE('2023-10-01', 'YYYY-MM-DD'), 'devis', 0.00, 'devis_electricite_102023.pdf',
+    500.00, 0, 'LOC003', 'BAT003', 'ENTR002', 'ASSUR001', 2024
 );
 
 
@@ -215,7 +156,7 @@ INSERT INTO sae_charge_index (
     Date_de_releve, Type, valeur, Date_releve_precedent, Cout_variable, Cout_fixe,
     numero_document, Date_document
 ) VALUES (
-    TO_DATE('2023-08-15','YYYY-MM-DD'), 'Eau', 120.50, TO_DATE('2023-07-15','YYYY-MM-DD'), 100.00, 'Forfait mensuel',
+    TO_DATE('2023-08-15','YYYY-MM-DD'), 'Eau', 120.50, TO_DATE('2023-07-15','YYYY-MM-DD'), 100.00, 50.00,
     'DOC002', TO_DATE('2023-08-10','YYYY-MM-DD')
 );
 
@@ -224,7 +165,7 @@ INSERT INTO sae_charge_index (
 INSERT INTO SAE_Charge_cf (
     Date_de_charge, Type, montant, numero_document, Date_document
 ) VALUES (
-    TO_DATE('2023-09-10','YYYY-MM-DD'), 'Forfait internet', '50.00',
+    TO_DATE('2023-09-10','YYYY-MM-DD'), 'Forfait internet', 50.00,
     'DOC003', TO_DATE('2023-09-05','YYYY-MM-DD')
 );
 
@@ -247,7 +188,7 @@ INSERT INTO SAE_Document (
 INSERT INTO SAE_Regularisation (
     Id_bail, Date_regu, montant
 ) VALUES (
-    'BAI01', TO_DATE('2024-01-15','YYYY-MM-DD'), '100.00'
+    'BAI01', TO_DATE('2024-01-15','YYYY-MM-DD'), 100.00
 );
 
 
