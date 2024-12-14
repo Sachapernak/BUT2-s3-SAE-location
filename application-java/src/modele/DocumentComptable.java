@@ -20,13 +20,11 @@ public class DocumentComptable {
 	
 	ChargeIndex chargeIndex;
 	ChargeFixe chargeFixe;
+	
 	Locataire locataire;
 	Entreprise entreprise;
 	Assurance assurance;
 	Batiment batiment;
-	
-
-	
 	
 
 	public DocumentComptable(String numDoc, String dateDoc, TypeDoc type,
@@ -92,6 +90,9 @@ public class DocumentComptable {
 		return typeDoc;
 	}
 
+	public void setFichierDoc(String fic) {
+		this.fichierDoc = fic;
+	}
 
 	public String getFichierDoc() {
 		return fichierDoc;

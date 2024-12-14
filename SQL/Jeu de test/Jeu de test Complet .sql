@@ -153,19 +153,19 @@ INSERT INTO SAE_document_comptable (
 
 -- 11. Insertion dans sae_charge_index
 INSERT INTO sae_charge_index (
-    Date_de_releve, Type, valeur, Date_releve_precedent, Cout_variable, Cout_fixe,
+    id_charge_index,Date_de_releve, Type, valeur, Date_releve_precedent, Cout_variable, Cout_fixe,
     numero_document, Date_document
 ) VALUES (
-    TO_DATE('2023-08-15','YYYY-MM-DD'), 'Eau', 120.50, TO_DATE('2023-07-15','YYYY-MM-DD'), 100.00, 50.00,
+    'CI001',TO_DATE('2023-08-15','YYYY-MM-DD'), 'Eau', 120.50, TO_DATE('2023-07-15','YYYY-MM-DD'), 100.00, 50.00,
     'DOC002', TO_DATE('2023-08-10','YYYY-MM-DD')
 );
 
 
 -- 12. Insertion dans SAE_Charge_cf
 INSERT INTO SAE_Charge_cf (
-    Date_de_charge, Type, montant, numero_document, Date_document
+    id_charge_cf, Date_de_charge, Type, montant, numero_document, Date_document
 ) VALUES (
-    TO_DATE('2023-09-10','YYYY-MM-DD'), 'Forfait internet', 50.00,
+    'CF001',TO_DATE('2023-09-10','YYYY-MM-DD'), 'Reparation', 50.00,
     'DOC003', TO_DATE('2023-09-05','YYYY-MM-DD')
 );
 

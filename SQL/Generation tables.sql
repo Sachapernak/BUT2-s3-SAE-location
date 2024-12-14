@@ -97,29 +97,29 @@ CREATE TABLE SAE_document_comptable(
    CONSTRAINT fk_SAE_doc_compta_contrat FOREIGN KEY (numero_de_contrat, annee_du_contrat) REFERENCES SAE_assurance(numero_de_contrat, annee_du_contrat)
 );
 
-
-
 CREATE TABLE sae_charge_index(
-   Date_de_releve DATE,
-   Type VARCHAR2(50),
-   valeur NUMBER(10,2) NOT NULL,
+   id_charge_index VARCHAR2(50) ,
+   Date_de_releve DATE NOT NULL,
+   Type VARCHAR2(50) ,
+   valeur NUMBER(10,2)   NOT NULL,
    Date_releve_precedent DATE,
-   Cout_variable NUMBER(10,2) NOT NULL,
-   Cout_fixe NUMBER(10,2) ,
-   numero_document VARCHAR2(50) NOT NULL,
+   Cout_variable NUMBER(10,2)   NOT NULL,
+   Cout_fixe NUMBER(10,2)  ,
+   numero_document VARCHAR2(50)  NOT NULL,
    Date_document DATE NOT NULL,
-   CONSTRAINT pk_sae_charge_index PRIMARY KEY (Date_de_releve, Type),
+   CONSTRAINT pk_sae_charge_index PRIMARY KEY (id_charge_index),
    CONSTRAINT uq_sae_charge_i_num_date UNIQUE (numero_document, Date_document),
    CONSTRAINT fk_sae_charge_i_num_date FOREIGN KEY (numero_document, Date_document) REFERENCES SAE_document_comptable(numero_document, Date_document)
 );
 
 CREATE TABLE SAE_Charge_cf(
-   Date_de_charge DATE,
-   Type VARCHAR2(50),
-   montant NUMBER(10,2)  NOT NULL,
+   id_charge_cf VARCHAR2(50) ,
+   Date_de_charge DATE NOT NULL,
+   Type VARCHAR2(50)  NOT NULL,
+   montant NUMBER(10,2)   NOT NULL,
    numero_document VARCHAR2(50) NOT NULL,
    Date_document DATE NOT NULL,
-   CONSTRAINT pk_SAE_Charge_cf PRIMARY KEY (Date_de_charge, Type),
+   CONSTRAINT pk_SAE_Charge_cf PRIMARY KEY (id_charge_cf),
    CONSTRAINT uq_SAE_Charge_cf_num_date UNIQUE (numero_document, Date_document),
    CONSTRAINT fk_SAE_Charge_cf_num_date FOREIGN KEY (numero_document, Date_document) REFERENCES SAE_document_comptable(numero_document, Date_document)
 );

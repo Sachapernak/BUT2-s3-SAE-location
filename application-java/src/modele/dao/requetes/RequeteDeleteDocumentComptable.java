@@ -10,12 +10,12 @@ public class RequeteDeleteDocumentComptable extends Requete<DocumentComptable> {
 
 	@Override
 	public String requete() {
-		return "{ call pkg_document_comptable(?, ?) }";
+		return "{ call pkg_document_comptable.supprimer_document_comptable(?, ?) }";
 	}
 	
 	@Override
 	public void parametres(PreparedStatement prSt, DocumentComptable donnee) throws SQLException {
-		prSt.setString(0, donnee.getNumeroDoc());
+		prSt.setString(1, donnee.getNumeroDoc());
 		prSt.setDate(2, Date.valueOf(donnee.getDateDoc()));
 	}
 
