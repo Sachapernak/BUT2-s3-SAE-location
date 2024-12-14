@@ -390,18 +390,16 @@ public class TestBienLocatif {
         assertFalse(loyers.contains(loyer));
     }
 
-  //TODO : enlever le @Ignore
     /**
      * Test de la méthode {@code getDocsComptables} avec lazy-loading.
-     * <p>
-     * Ignoré car {@code DaoFactureBien} n'est pas fonctionnel.
-     * </p>
      */
-    @Ignore("DAO FactureBien non fonctionnel")
     @Test
     public void testGetDocsComptablesLazyLoading() throws SQLException, IOException {
         List<FactureBien> docs = bienLocatif.getDocsComptables();
         assertNotNull(docs);
+        for (FactureBien facture : docs) {
+        	assertNotNull(facture.getDocument().getNumeroDoc());
+        }
         // Ajoutez des documents comptables via le DAO si nécessaire
         // Puis vérifiez qu'ils sont bien chargés
     }

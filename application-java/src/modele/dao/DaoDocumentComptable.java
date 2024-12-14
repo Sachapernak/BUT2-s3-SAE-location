@@ -12,25 +12,29 @@ import modele.DocumentComptable;
 import modele.Entreprise;
 import modele.Locataire;
 import modele.TypeDoc;
+import modele.dao.requetes.RequeteDeleteDocumentComptable;
+import modele.dao.requetes.RequeteSelectDocumentComptable;
 import modele.dao.requetes.RequeteSelectDocumentComptableById;
+import modele.dao.requetes.RequeteUpdateDocumentComptable;
+import modele.dao.requetes.RequeteCreateDocumentComptable;
 
 public class DaoDocumentComptable extends DaoModele<DocumentComptable> {
 
 	@Override
 	public void create(DocumentComptable donnees) throws SQLException, IOException {
-		// TODO Auto-generated method stub
+		miseAJour(new RequeteCreateDocumentComptable(), donnees);
 		
 	}
 
 	@Override
 	public void update(DocumentComptable donnees) throws SQLException, IOException {
-		// TODO Auto-generated method stub
+		miseAJour(new RequeteUpdateDocumentComptable(), donnees);
 		
 	}
 
 	@Override
 	public void delete(DocumentComptable donnees) throws SQLException, IOException {
-		// TODO Auto-generated method stub
+		miseAJour(new RequeteDeleteDocumentComptable(), donnees);
 		
 	}
 
@@ -41,8 +45,7 @@ public class DaoDocumentComptable extends DaoModele<DocumentComptable> {
 
 	@Override
 	public List<DocumentComptable> findAll() throws SQLException, IOException {
-		// TODO Auto-generated method stub
-		return null;
+		return find(new RequeteSelectDocumentComptable());
 	}
 
 	@Override
