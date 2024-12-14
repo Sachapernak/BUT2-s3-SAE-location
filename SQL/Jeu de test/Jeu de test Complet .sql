@@ -293,3 +293,303 @@ INSERT INTO sae_facture_du_bien (
 ) VALUES (
     'LOG001', 'DOC001', TO_DATE('2023-07-05','YYYY-MM-DD'), 1.00
 );
+
+
+
+
+
+
+
+--------------- jeu supplementaire :
+
+
+
+
+
+-- Ajout d'un document comptable de type facture_cf
+INSERT INTO SAE_document_comptable (
+    numero_document, date_document, type_de_document, montant, fichier_document,
+    montant_devis, recuperable_locataire, identifiant_locataire, identifiant_batiment, SIRET
+) VALUES (
+    'DOC005', TO_DATE('2023-12-10','YYYY-MM-DD'), 'facture_cf', 200.00, 'facture_cf_dec_2023.pdf',
+    NULL, 0, NULL, 'BAT001', 'ENTR002'
+);
+
+
+-- Ajout de la charge à coût fixe liée à DOC005 (même date_document)
+INSERT INTO SAE_Charge_cf (
+    id_charge_cf, Date_de_charge, Type, montant, numero_document, Date_document
+) VALUES (
+    'CF002', TO_DATE('2023-12-10','YYYY-MM-DD'), 'Entretien_Chauffage', 200.00,
+    'DOC005', TO_DATE('2023-12-10','YYYY-MM-DD')
+);
+
+-- Lien entre DOC005 et LOG001 (même date_document)
+INSERT INTO sae_facture_du_bien (
+    identifiant_logement, numero_document, Date_document, part_des_charges
+) VALUES (
+    'LOG001', 'DOC005', TO_DATE('2023-12-10','YYYY-MM-DD'), 1.00
+);
+
+
+-- Ajout d'un document comptable de type facture_cv
+INSERT INTO SAE_document_comptable (
+    numero_document, date_document, type_de_document, montant, fichier_document,
+    montant_devis, recuperable_locataire, identifiant_locataire, identifiant_batiment, SIRET
+) VALUES (
+    'DOC006', TO_DATE('2023-12-15','YYYY-MM-DD'), 'facture_cv', 180.00, 'facture_cv_dec_2023_eau.pdf',
+    NULL, 1, 'LOC002', 'BAT002', 'ENTR001'
+);
+
+-- Ajout de la charge à coût variable liée à DOC006 (même date_document)
+INSERT INTO sae_charge_index (
+    id_charge_index, Date_de_releve, Type, valeur, Date_releve_precedent, Cout_variable, Cout_fixe,
+    numero_document, Date_document
+) VALUES (
+    'CI002', TO_DATE('2023-12-15','YYYY-MM-DD'), 'Eau', 180.00, TO_DATE('2023-11-15','YYYY-MM-DD'), 130.00, 50.00,
+    'DOC006', TO_DATE('2023-12-15','YYYY-MM-DD')
+);
+
+-- Lien entre DOC006 et LOG002 (même date_document)
+INSERT INTO sae_facture_du_bien (
+    identifiant_logement, numero_document, Date_document, part_des_charges
+) VALUES (
+    'LOG002', 'DOC006', TO_DATE('2023-12-15','YYYY-MM-DD'), 1.00
+);
+
+
+-- Ajout d'un document comptable de type facture partagé (DOC007)
+INSERT INTO SAE_document_comptable (
+    numero_document, date_document, type_de_document, montant, fichier_document,
+    montant_devis, recuperable_locataire, identifiant_batiment, SIRET
+) VALUES (
+    'DOC007', TO_DATE('2023-12-20','YYYY-MM-DD'), 'facture', 400.00, 'facture_ascenseur_dec_2023.pdf',
+    450.00, 0, 'BAT003', 'ENTR002'
+);
+
+-- Lien entre DOC007 et LOG002 (part 0.60), même date_document
+INSERT INTO sae_facture_du_bien (
+    identifiant_logement, numero_document, Date_document, part_des_charges
+) VALUES (
+    'LOG002', 'DOC007', TO_DATE('2023-12-20','YYYY-MM-DD'), 0.60
+);
+
+-- Lien entre DOC007 et LOG003 (part 0.40), même date_document
+INSERT INTO sae_facture_du_bien (
+    identifiant_logement, numero_document, Date_document, part_des_charges
+) VALUES (
+    'LOG003', 'DOC007', TO_DATE('2023-12-20','YYYY-MM-DD'), 0.40
+);
+
+
+-- Quittance sur LOG001 (LOyer de base 650), identifiant_locataire lié : LOC001, BAT001
+INSERT INTO SAE_document_comptable (
+    numero_document, date_document, type_de_document, montant, fichier_document,
+    montant_devis, recuperable_locataire, identifiant_locataire, identifiant_batiment,
+    SIRET, numero_de_contrat, annee_du_contrat
+) VALUES (
+    'DOC008', TO_DATE('2023-11-01','YYYY-MM-DD'), 'quittance', 650.00, 'quittance_nov_2023_log001.pdf',
+    NULL, 1, 'LOC001', 'BAT001', NULL, 'ASSUR001', 2023
+);
+
+-- Lien entre DOC008 et LOG001 (quittance)
+INSERT INTO sae_facture_du_bien (
+    identifiant_logement, numero_document, Date_document, part_des_charges
+) VALUES (
+    'LOG001', 'DOC008', TO_DATE('2023-11-01','YYYY-MM-DD'), 1.00
+);
+
+
+-- Quittance sur LOG002 (Loyer 1200), identifiant_locataire : LOC002, BAT002
+INSERT INTO SAE_document_comptable (
+    numero_document, date_document, type_de_document, montant, fichier_document,
+    montant_devis, recuperable_locataire, identifiant_locataire, identifiant_batiment,
+    SIRET, numero_de_contrat, annee_du_contrat
+) VALUES (
+    'DOC009', TO_DATE('2023-11-05','YYYY-MM-DD'), 'quittance', 1200.00, 'quittance_nov_2023_log002.pdf',
+    NULL, 1, 'LOC002', 'BAT002', NULL, 'ASSUR001', 2023
+);
+
+-- Lien entre DOC009 et LOG002 (quittance)
+INSERT INTO sae_facture_du_bien (
+    identifiant_logement, numero_document, Date_document, part_des_charges
+) VALUES (
+    'LOG002', 'DOC009', TO_DATE('2023-11-05','YYYY-MM-DD'), 1.00
+);
+
+
+-- Facture sur LOG003 (BAT003), non récupérable locataire, SIRET requis, par ex ENTR001
+INSERT INTO SAE_document_comptable (
+    numero_document, date_document, type_de_document, montant, fichier_document,
+    montant_devis, recuperable_locataire, identifiant_batiment,
+    SIRET, numero_de_contrat, annee_du_contrat
+) VALUES (
+    'DOC010', TO_DATE('2023-12-25','YYYY-MM-DD'), 'facture', 500.00, 'facture_dec_2023_log003.pdf',
+    550.00, 0, 'BAT003', 'ENTR001', 'ASSUR001', 2023
+);
+
+-- On peut ajouter une charge fixe liée à DOC010 (optionnel)
+INSERT INTO SAE_Charge_cf (
+    id_charge_cf, Date_de_charge, Type, montant, numero_document, Date_document
+) VALUES (
+    'CF003', TO_DATE('2023-12-25','YYYY-MM-DD'), 'Réparation_Ascenseur', 500.00,
+    'DOC010', TO_DATE('2023-12-25','YYYY-MM-DD')
+);
+
+-- Lien entre DOC010 et LOG003
+INSERT INTO sae_facture_du_bien (
+    identifiant_logement, numero_document, Date_document, part_des_charges
+) VALUES (
+    'LOG003', 'DOC010', TO_DATE('2023-12-25','YYYY-MM-DD'), 1.00
+);
+
+
+-- Facture_cv sur LOG003 (coût variable, ex eau, récupérable locataire)
+-- identifiant_locataire = LOC003 (car bail sur LOG003), SIRET=ENTR001
+INSERT INTO SAE_document_comptable (
+    numero_document, date_document, type_de_document, montant, fichier_document,
+    montant_devis, recuperable_locataire, identifiant_locataire, identifiant_batiment,
+    SIRET, numero_de_contrat, annee_du_contrat
+) VALUES (
+    'DOC011', TO_DATE('2023-12-26','YYYY-MM-DD'), 'facture_cv', 250.00, 'facture_eau_dec_2023_log003.pdf',
+    NULL, 1, 'LOC003', 'BAT003', 'ENTR001', 'ASSUR001', 2023
+);
+
+-- Charge à coût variable (index) pour DOC011
+INSERT INTO sae_charge_index (
+    id_charge_index, Date_de_releve, Type, valeur, Date_releve_precedent, Cout_variable, Cout_fixe,
+    numero_document, Date_document
+) VALUES (
+    'CI003', TO_DATE('2023-12-26','YYYY-MM-DD'), 'Eau', 250.00, TO_DATE('2023-11-26','YYYY-MM-DD'), 200.00, 50.00,
+    'DOC011', TO_DATE('2023-12-26','YYYY-MM-DD')
+);
+
+-- Lien entre DOC011 et LOG003
+INSERT INTO sae_facture_du_bien (
+    identifiant_logement, numero_document, Date_document, part_des_charges
+) VALUES (
+    'LOG003', 'DOC011', TO_DATE('2023-12-26','YYYY-MM-DD'), 1.00
+);
+
+
+-- Devis sur LOG003, type devis, SIRET=ENTR002, non récupérable
+INSERT INTO SAE_document_comptable (
+    numero_document, date_document, type_de_document, montant, fichier_document,
+    montant_devis, recuperable_locataire, identifiant_locataire, identifiant_batiment,
+    SIRET, numero_de_contrat, annee_du_contrat
+) VALUES (
+    'DOC012', TO_DATE('2023-12-27','YYYY-MM-DD'), 'devis', 0.00, 'devis_dec_2023_log003.pdf',
+    600.00, 0, 'LOC003', 'BAT003', 'ENTR002', 'ASSUR001', 2024
+);
+
+-- Lien entre DOC012 (devis) et LOG003
+INSERT INTO sae_facture_du_bien (
+    identifiant_logement, numero_document, Date_document, part_des_charges
+) VALUES (
+    'LOG003', 'DOC012', TO_DATE('2023-12-27','YYYY-MM-DD'), 1.00
+);
+
+INSERT INTO SAE_document_comptable (
+    numero_document, date_document, type_de_document, montant, fichier_document,
+    montant_devis, recuperable_locataire, identifiant_locataire, identifiant_batiment,
+    SIRET, numero_de_contrat, annee_du_contrat
+) VALUES (
+    'DOC013', TO_DATE('2024-01-05','YYYY-MM-DD'), 'quittance', 650.00, 'quittance_janv_2024_log001.pdf',
+    NULL, 1, 'LOC001', 'BAT001', NULL, 'ASSUR001', 2024
+);
+
+INSERT INTO sae_facture_du_bien (
+    identifiant_logement, numero_document, Date_document, part_des_charges
+) VALUES (
+    'LOG001', 'DOC013', TO_DATE('2024-01-05','YYYY-MM-DD'), 1.00
+);
+
+
+INSERT INTO SAE_document_comptable (
+    numero_document, date_document, type_de_document, montant, fichier_document,
+    montant_devis, recuperable_locataire, identifiant_locataire, identifiant_batiment,
+    SIRET, numero_de_contrat, annee_du_contrat
+) VALUES (
+    'DOC014', TO_DATE('2024-02-10','YYYY-MM-DD'), 'facture_cf', 200.00, 'facture_cf_fev_2024_log002.pdf',
+    NULL, 0, NULL, 'BAT002', 'ENTR001', 'ASSUR001', 2024
+);
+
+-- Ajout d’une charge à coût fixe liée à DOC014
+INSERT INTO SAE_Charge_cf (
+    id_charge_cf, Date_de_charge, Type, montant, numero_document, Date_document
+) VALUES (
+    'CF004', TO_DATE('2024-02-10','YYYY-MM-DD'), 'Entretien_electricite', 200.00,
+    'DOC014', TO_DATE('2024-02-10','YYYY-MM-DD')
+);
+
+INSERT INTO sae_facture_du_bien (
+    identifiant_logement, numero_document, Date_document, part_des_charges
+) VALUES (
+    'LOG002', 'DOC014', TO_DATE('2024-02-10','YYYY-MM-DD'), 1.00
+);
+
+
+INSERT INTO SAE_document_comptable (
+    numero_document, date_document, type_de_document, montant, fichier_document,
+    montant_devis, recuperable_locataire, identifiant_locataire, identifiant_batiment,
+    SIRET, numero_de_contrat, annee_du_contrat
+) VALUES (
+    'DOC015', TO_DATE('2024-03-20','YYYY-MM-DD'), 'facture_cv', 180.00, 'facture_cv_mar_2024_log003.pdf',
+    NULL, 1, 'LOC003', 'BAT003', 'ENTR002', 'ASSUR001', 2024
+);
+
+-- Ajout d’une charge à coût variable liée à DOC015
+INSERT INTO sae_charge_index (
+    id_charge_index, Date_de_releve, Type, valeur, Date_releve_precedent, Cout_variable, Cout_fixe,
+    numero_document, Date_document
+) VALUES (
+    'CI004', TO_DATE('2024-03-20','YYYY-MM-DD'), 'Eau', 180.00, TO_DATE('2024-02-20','YYYY-MM-DD'), 130.00, 50.00,
+    'DOC015', TO_DATE('2024-03-20','YYYY-MM-DD')
+);
+
+INSERT INTO sae_facture_du_bien (
+    identifiant_logement, numero_document, Date_document, part_des_charges
+) VALUES (
+    'LOG003', 'DOC015', TO_DATE('2024-03-20','YYYY-MM-DD'), 1.00
+);
+
+
+
+INSERT INTO SAE_document_comptable (
+    numero_document, date_document, type_de_document, montant, fichier_document,
+    montant_devis, recuperable_locataire, identifiant_locataire, identifiant_batiment,
+    SIRET, numero_de_contrat, annee_du_contrat
+) VALUES (
+    'DOC016', TO_DATE('2024-04-01','YYYY-MM-DD'), 'devis', 0.00, 'devis_avr_2024_log001.pdf',
+    700.00, 0, 'LOC001', 'BAT001', 'ENTR002', 'ASSUR001', 2024
+);
+
+INSERT INTO sae_facture_du_bien (
+    identifiant_logement, numero_document, Date_document, part_des_charges
+) VALUES (
+    'LOG001', 'DOC016', TO_DATE('2024-04-01','YYYY-MM-DD'), 1.00
+);
+
+
+INSERT INTO SAE_document_comptable (
+    numero_document, date_document, type_de_document, montant, fichier_document,
+    montant_devis, recuperable_locataire, identifiant_locataire, identifiant_batiment,
+    SIRET, numero_de_contrat, annee_du_contrat
+) VALUES (
+    'DOC017', TO_DATE('2024-05-15','YYYY-MM-DD'), 'facture', 350.00, 'facture_mai_2024_log002.pdf',
+    400.00, 0, 'LOC002', 'BAT002', 'ENTR001', 'ASSUR001', 2024
+);
+
+-- Ajout d’une charge à coût fixe liée à DOC017 (optionnel)
+INSERT INTO SAE_Charge_cf (
+    id_charge_cf, Date_de_charge, Type, montant, numero_document, Date_document
+) VALUES (
+    'CF005', TO_DATE('2024-05-15','YYYY-MM-DD'), 'Entretien_Chaudiere', 350.00,
+    'DOC017', TO_DATE('2024-05-15','YYYY-MM-DD')
+);
+
+INSERT INTO sae_facture_du_bien (
+    identifiant_logement, numero_document, Date_document, part_des_charges
+) VALUES (
+    'LOG002', 'DOC017', TO_DATE('2024-05-15','YYYY-MM-DD'), 1.00
+);
