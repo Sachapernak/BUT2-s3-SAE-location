@@ -124,7 +124,6 @@ public class DaoBail extends DaoModele<Bail> implements Dao<Bail> {
 
         // Formatter la date de début
         String dateDeDebut = localDateDebut.format(DateTimeFormatter.ofPattern("yyyy-dd-MM"));
-
         Bail bail = new Bail(idBail, dateDeDebut, bien);
         String dateDeFin = curseur.getString("DATE_DE_FIN");
         if (dateDeFin != null) {

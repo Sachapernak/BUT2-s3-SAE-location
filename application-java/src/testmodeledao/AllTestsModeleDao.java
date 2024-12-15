@@ -13,7 +13,9 @@ import org.junit.runners.Suite.SuiteClasses;
     
     TestDaoBail.class,          
     TestDaoLoyer.class,
-          
+    TestDaoDocument.class,
+    TestDaoRegularisation.class,
+    TestDaoProvisionCharge.class,
     TestDaoICC.class,
     TestDaoFactureBien.class,
     TestDaoDocumentComptable.class

@@ -400,14 +400,15 @@ public class Bail {
     /**
      * Ajoute un document au bail.
      * <p>
-     * Cette méthode vérifie que la régularisation correspond bien au bail avant de l'ajouter.
-     * Elle crée également la régularisation dans la base de données via le DAO approprié.
+     * Cette méthode vérifie que le document à ajouter est bien associé au bail en comparant les identifiants.
+     * En cas de correspondance, le document est ajouté à la liste des documents et inséré dans la base de données
+     * via le DAO approprié.
      * </p>
-     * 
-     * @param regularisation la regularisation à ajouter
-     * @throws IllegalArgumentException si la regularisation ne correspond pas au bail
-     * @throws SQLException             si une erreur SQL survient lors de la création du regularisation
-     * @throws IOException              si une erreur d'entrée/sortie survient lors de la création du regularisation
+     *
+     * @param docu Le document à ajouter.
+     * @throws IllegalArgumentException Si l'identifiant du document ne correspond pas à celui du bail.
+     * @throws SQLException             Si une erreur SQL survient lors de l'insertion du document dans la base de données.
+     * @throws IOException              Si une erreur d'entrée/sortie se produit lors de l'insertion du document.
      */
     public void addDocument(Document docu) throws SQLException, IOException {
         if (!docu.getIdBail().equals(this.idBail)) {
@@ -417,39 +418,44 @@ public class Bail {
         new DaoDocument().create(docu);
         this.documents.add(docu);
     }
+
     
     
     
     /**
      * Supprime un document du bail.
      * <p>
-     * Cette méthode vérifie que le document correspond bien au bail avant de le supprimer.
-     * Elle supprime également le document dans la base de données via le DAO approprié.
+     * Cette méthode vérifie que le document à supprimer est bien associé au bail en comparant les identifiants.
+     * En cas de correspondance, le document est supprimé de la liste des documents et retiré de la base de données
+     * via le DAO approprié.
      * </p>
-     * 
-     * @param document le document à supprimer
-     * @throws IllegalArgumentException si le document ne correspond pas au bail
-     * @throws SQLException             si une erreur SQL survient lors de la suppression du document
-     * @throws IOException              si une erreur d'entrée/sortie survient lors de la suppression du document
+     *
+     * @param docu Le document à supprimer.
+     * @throws IllegalArgumentException Si l'identifiant du document ne correspond pas à celui du bail.
+     * @throws SQLException             Si une erreur SQL survient lors de la suppression du document dans la base de données.
+     * @throws IOException              Si une erreur d'entrée/sortie se produit lors de la suppression du document.
      */
     public void removeDocument(Document docu) throws SQLException, IOException {
         if (!docu.getIdBail().equals(this.idBail)) {
-            throw new IllegalArgumentException("Le document doit correspondre au bien !");
+            throw new IllegalArgumentException("Le document doit correspondre au bail !");
         }
 
         new DaoDocument().delete(docu);
         this.documents.remove(docu);
     }
+
     
     /**
-     * Récupère la map des régularisations associés au bien locatif.
+     * Récupère la liste des documents associés au bail.
      * <p>
      * Cette méthode utilise le chargement paresseux (lazy-loading) pour optimiser les performances.
+     * Les documents sont chargés depuis la base de données uniquement si cela n'a pas déjà été fait.
+     * La liste retournée est non modifiable pour préserver l'intégrité des données.
      * </p>
-     * 
-     * @return une map non modifiable des loyers
-     * @throws SQLException  si une erreur SQL survient lors du chargement des loyers
-     * @throws IOException   si une erreur d'entrée/sortie survient lors du chargement des loyers
+     *
+     * @return Une liste non modifiable des documents associés au bail.
+     * @throws SQLException Si une erreur SQL survient lors du chargement des documents depuis la base de données.
+     * @throws IOException  Si une erreur d'entrée/sortie se produit lors du chargement des documents.
      */
     public List<Document> getDocument() throws SQLException, IOException {
         if (documents.isEmpty() && !docLoaded) {
@@ -458,6 +464,7 @@ public class Bail {
         }
         return Collections.unmodifiableList(documents);
     }
+
     
     
     
