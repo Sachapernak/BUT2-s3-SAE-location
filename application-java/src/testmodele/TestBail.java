@@ -187,16 +187,6 @@ public class TestBail {
     }
     
     /**
-     * Test du setter {@code setDateDeDebut} avec une valeur valide.
-     */
-    @Test
-    public void testSetDateDeDebutValid() {
-        String dateDeDebutValid = "2026-01-01";
-        bail.setDateDeDebut(dateDeDebutValid);
-        assertEquals(dateDeDebutValid, bail.getDateDeDebut());
-    }
-
-    /**
      * Test du setter {@code setDateDeFin} avec une valeur invalide.
      * 
      * @throws IllegalArgumentException attendu lorsque la date de fin est anterieur a celle de debut.

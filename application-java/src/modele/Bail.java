@@ -40,31 +40,31 @@ public class Bail {
     /**
     * Indicateur de chargement des regularisations.
     */
-    private boolean reguLoaded;
+    private boolean reguLoaded = false;
     /**
      * Indicateur de chargement des provisions pour charge.
      */
-    private boolean proviLoaded;
+    private boolean proviLoaded = false;
     
     /**
      * Indicateur de chargement des documents.
      */
     
-    private boolean docLoaded;
+    private boolean docLoaded = false;
     
     /**
      * Liste des regularisations associées au bail.
      */
     
-    private List<Regularisation> regularisations = new ArrayList<>(); 
+    private List<Regularisation> regularisations; 
     /**
      * Liste des provisions poru charge associées au bail.
      */
-    private List<ProvisionCharge> provisioncharges = new ArrayList<>(); 
+    private List<ProvisionCharge> provisioncharges; 
     /**
      * Liste des documents associés au bail.
      */
-    private List<Document> documents = new ArrayList<>(); 
+    private List<Document> documents;
     
     /**
      * Constructeur de la classe Bail.
@@ -82,6 +82,9 @@ public class Bail {
     	this.idBail = idBail;
         this.dateDeDebut = dateDeDebut;
         this.bien = bien;
+        this.regularisations = new ArrayList<>();
+        this.provisioncharges = new ArrayList<>();
+        this.documents = new ArrayList<>();
         
     }
 
@@ -119,7 +122,9 @@ public class Bail {
         this.dateDeDebut = dateDeDebut;
         this.dateDeFin = dateDeFin;
         this.bien = bien;
-        
+        this.regularisations = new ArrayList<>();
+        this.provisioncharges = new ArrayList<>();
+        this.documents = new ArrayList<>();
     }
 
     
@@ -149,15 +154,6 @@ public class Bail {
      */
     public String getDateDeDebut() {
         return dateDeDebut;
-    }
-
-    /**
-     * Modifie la date de début du bail.
-     *
-     * @param date_de_debut La nouvelle date de début du bail.
-     */
-    public void setDateDeDebut(String dateDeDebut) {
-        this.dateDeDebut = dateDeDebut;
     }
 
     /**
