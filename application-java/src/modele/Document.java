@@ -24,12 +24,6 @@ public class Document{
 		return dateDocument;
 	}
 
-	/**
-	 * @param dateDocument le dateDocument du document
-	 */
-	public void setDateDocument(String dateDocument) {
-		this.dateDocument = dateDocument;
-	}
 
 	/**
 	 * @return le typeDocument
@@ -64,13 +58,6 @@ public class Document{
 	 */
 	public String getIdBail() {
 		return idBail;
-	}
-
-	/**
-	 * @param idBail the idBail to set
-	 */
-	public void setIdBail(String idBail) {
-		this.idBail = idBail;
 	}
 
 	@Override

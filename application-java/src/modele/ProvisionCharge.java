@@ -25,13 +25,6 @@ public class ProvisionCharge{
 		}
 
 		/**
-		 * @param dateChangement le dateChangement de provision pour charge
-		 */
-		public void setDateChangement(String dateChangement) {
-			this.dateChangement = dateChangement;
-		}
-
-		/**
 		 * @return le provisionPourCharge
 		 */
 		public BigDecimal getProvisionPourCharge() {
@@ -50,13 +43,6 @@ public class ProvisionCharge{
 		 */
 		public String getIdBail() {
 			return idBail;
-		}
-
-		/**
-		 * @param idBail the idBail to set
-		 */
-		public void setIdBail(String idBail) {
-			this.idBail = idBail;
 		}
 
 		@Override

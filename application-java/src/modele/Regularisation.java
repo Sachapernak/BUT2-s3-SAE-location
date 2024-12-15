@@ -24,12 +24,6 @@ public class Regularisation{
 			return dateRegu;
 		}
 
-		/**
-		 * @param dateRegu the dateRegu du regu
-		 */
-		public void setDateRegu(String dateRegu) {
-			this.dateRegu = dateRegu;
-		}
 
 		/**
 		 * @return le montant
@@ -43,16 +37,6 @@ public class Regularisation{
 		 */
 		public void setMontant(BigDecimal montant) {
 			this.montant = montant;
-		}
-
-		
-		
-
-		/**
-		 * @param idBail the idBail to set
-		 */
-		public void setIdBail(String idBail) {
-			this.idBail = idBail;
 		}
 
 		@Override
