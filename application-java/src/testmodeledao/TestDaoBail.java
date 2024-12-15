@@ -1,6 +1,7 @@
 package testmodeledao;
 
 import static org.junit.Assert.assertEquals;
+
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -79,14 +80,14 @@ public class TestDaoBail {
 
         bailRecup = daoB.findById("TEST02");
         assertNotNull("Bail non trouvé après insertion.", bailRecup);
-        assertEquals("La date de debut du bail est incorrecte.", "2024-01-01", bailRecup.getDateDeDebut());
+        assertEquals("La date de fin du bail est incorrecte.", "2025-01-01", bailRecup.getDateDeFin());
 
         // Modification de l'adresse
-        majBail.setDateDeDebut("2024-10-01");
+        majBail.setDateDeFin("2025-10-01");
         daoB.update(majBail);
 
         bailRecup = daoB.findById("TEST02");
-        assertEquals("La date de debut modifiée est incorrecte.", "2024-10-01", bailRecup.getDateDeDebut());
+        assertEquals("La date de fin modifiée est incorrecte.", "2025-10-01", bailRecup.getDateDeFin());
 
         supprimerBail(majBail);
     }

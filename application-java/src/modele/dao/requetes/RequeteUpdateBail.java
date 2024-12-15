@@ -13,7 +13,7 @@ public class RequeteUpdateBail extends Requete<Bail>{
 	@Override
 	public String requete() {
 		return "UPDATE SAE_Bail "
-				+ "SET DATE_DE_DEBUT = ? , DATE_DE_FIN = ? "
+				+ "SET DATE_DE_DEBUT = ? , DATE_DE_FIN = ? , IDENTIFIANT_LOGEMENT = ? "
 				+ "WHERE ID_BAIL = ? ";
 	}
 	
@@ -35,7 +35,8 @@ public class RequeteUpdateBail extends Requete<Bail>{
         	prSt.setDate(2, Date.valueOf(localDateFin));
         }
 		
-		prSt.setString(3, donnee.getIdBail());
+        prSt.setString(3, donnee.getBien().getIdentifiantLogement());
+		prSt.setString(4, donnee.getIdBail());
 		
 	}
 }

@@ -9,6 +9,7 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({
     TestFichierConfig.class,    // Configurations d'abord
     TestConnexionBD.class,
+    TestBail.class,
     TestBienLocatif.class// Connexion à la BD 
 })
 

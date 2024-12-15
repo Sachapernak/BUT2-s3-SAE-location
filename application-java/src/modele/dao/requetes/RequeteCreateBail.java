@@ -15,8 +15,8 @@ public class RequeteCreateBail extends Requete<Bail>{
 	
 	@Override
 	public String requete() {
-		return "INSERT INTO SAE_BAIL(ID_BAIL,DATE_DE_DEBUT, DATE_DE_FIN) "
-				+ "VALUES ( ? , ? , ? )";
+		return "INSERT INTO SAE_BAIL(ID_BAIL,DATE_DE_DEBUT, DATE_DE_FIN, IDENTIFIANT_LOGEMENT) "
+				+ "VALUES ( ? , ? , ? , ? )";
 	}
 	
 	
@@ -36,7 +36,7 @@ public class RequeteCreateBail extends Requete<Bail>{
         	LocalDate localDateFin = LocalDate.parse(donnee.getDateDeFin(), formatter);
         	prSt.setDate(3, Date.valueOf(localDateFin));
         }
-        
+        prSt.setString(4, donnee.getBien().getIdentifiantLogement());
 
 		
 		
