@@ -2,7 +2,7 @@ CREATE TABLE SAE_assurance(
    numero_de_contrat VARCHAR2(50),
    annee_du_contrat NUMBER(10),
    Type_de_contrat VARCHAR2(50),
-   prime NUMBER(15,2),
+   prime NUMBER(10,2) ,
    quotite_jursiprudence NUMBER(3,2),
    montant_quoitite NUMBER(15,2),
    CONSTRAINT pk_SAE_assurance PRIMARY KEY (numero_de_contrat, annee_du_contrat)
@@ -81,9 +81,9 @@ CREATE TABLE SAE_document_comptable(
    numero_document VARCHAR2(50),
    Date_document DATE,
    Type_de_document VARCHAR2(50) NOT NULL,
-   montant VARCHAR2(50),
+   montant NUMBER(10,2),
    fichier_document VARCHAR2(255),
-   montant_devis VARCHAR2(50),
+   montant_devis NUMBER(10,2),
    recuperable_locataire NUMBER(1),
    identifiant_locataire VARCHAR2(50),
    identifiant_batiment VARCHAR2(50),
@@ -97,36 +97,29 @@ CREATE TABLE SAE_document_comptable(
    CONSTRAINT fk_SAE_doc_compta_contrat FOREIGN KEY (numero_de_contrat, annee_du_contrat) REFERENCES SAE_assurance(numero_de_contrat, annee_du_contrat)
 );
 
--- Ajout de la contrainte CHK sur la table SAE_document_comptable
-ALTER TABLE SAE_document_comptable
-ADD CONSTRAINT chk_SAE_doc_compta_type
-CHECK (
-    (Type_de_document != 'quittance' OR SIRET IS NULL)
-    AND
-    (Type_de_document = 'quittance' OR SIRET IS NOT NULL)
-);
-
 CREATE TABLE sae_charge_index(
-   Date_de_releve DATE,
-   Type VARCHAR2(50),
-   valeur NUMBER(15,2) NOT NULL,
+   id_charge_index VARCHAR2(50) ,
+   Date_de_releve DATE NOT NULL,
+   Type VARCHAR2(50) ,
+   valeur NUMBER(10,2)   NOT NULL,
    Date_releve_precedent DATE,
-   Cout_variable NUMBER(15,2) NOT NULL,
-   Cout_fixe VARCHAR2(50),
-   numero_document VARCHAR2(50) NOT NULL,
+   Cout_variable NUMBER(10,2)   NOT NULL,
+   Cout_fixe NUMBER(10,2)  ,
+   numero_document VARCHAR2(50)  NOT NULL,
    Date_document DATE NOT NULL,
-   CONSTRAINT pk_sae_charge_index PRIMARY KEY (Date_de_releve, Type),
+   CONSTRAINT pk_sae_charge_index PRIMARY KEY (id_charge_index),
    CONSTRAINT uq_sae_charge_i_num_date UNIQUE (numero_document, Date_document),
    CONSTRAINT fk_sae_charge_i_num_date FOREIGN KEY (numero_document, Date_document) REFERENCES SAE_document_comptable(numero_document, Date_document)
 );
 
 CREATE TABLE SAE_Charge_cf(
-   Date_de_charge DATE,
-   Type VARCHAR2(50),
-   montant VARCHAR2(50) NOT NULL,
+   id_charge_cf VARCHAR2(50) ,
+   Date_de_charge DATE NOT NULL,
+   Type VARCHAR2(50)  NOT NULL,
+   montant NUMBER(10,2)   NOT NULL,
    numero_document VARCHAR2(50) NOT NULL,
    Date_document DATE NOT NULL,
-   CONSTRAINT pk_SAE_Charge_cf PRIMARY KEY (Date_de_charge, Type),
+   CONSTRAINT pk_SAE_Charge_cf PRIMARY KEY (id_charge_cf),
    CONSTRAINT uq_SAE_Charge_cf_num_date UNIQUE (numero_document, Date_document),
    CONSTRAINT fk_SAE_Charge_cf_num_date FOREIGN KEY (numero_document, Date_document) REFERENCES SAE_document_comptable(numero_document, Date_document)
 );
@@ -172,7 +165,7 @@ CREATE TABLE SAE_diagnostiques(
 CREATE TABLE sae_loyer(
    identifiant_logement VARCHAR2(50),
    date_de_changement DATE,
-   montant_loyer NUMBER(15,2) NOT NULL,
+   montant_loyer NUMBER(10,2)  NOT NULL,
    CONSTRAINT pk_sae_loyer PRIMARY KEY (identifiant_logement, date_de_changement),
    CONSTRAINT fk_sae_loyer_id_loge FOREIGN KEY (identifiant_logement) REFERENCES SAE_Bien_locatif(identifiant_logement)
 );
@@ -180,7 +173,7 @@ CREATE TABLE sae_loyer(
 CREATE TABLE SAE_Provision_charge(
    Id_bail VARCHAR2(50),
    date_changement DATE,
-   provision_pour_charge NUMBER(15,2) NOT NULL,
+   provision_pour_charge NUMBER(10,2)  NOT NULL,
    CONSTRAINT pk_SAE_Provision_charge PRIMARY KEY (Id_bail, date_changement),
    CONSTRAINT fk_SAE_Prov_charge_Id_bail FOREIGN KEY (Id_bail) REFERENCES SAE_Bail(Id_bail)
 );
@@ -198,7 +191,7 @@ CREATE TABLE sae_etre_lie(
 CREATE TABLE sae_Cautionner(
    Id_Caution NUMBER(10),
    Id_bail VARCHAR2(50),
-   Montant NUMBER(15,2),
+   Montant NUMBER(10,2) ,
    Fichier_caution VARCHAR2(255),
    CONSTRAINT pk_sae_Cautionner PRIMARY KEY (Id_Caution, Id_bail),
    CONSTRAINT fk_sae_Cautionner_Id_Cau FOREIGN KEY (Id_Caution) REFERENCES SAE_Cautionnaire(Id_Caution),
@@ -229,11 +222,10 @@ CREATE TABLE sae_facture_du_bien(
 
 ALTER TABLE SAE_document_comptable DROP CONSTRAINT chk_SAE_doc_compta_type;
 
-
 ALTER TABLE SAE_document_comptable
 ADD CONSTRAINT chk_SAE_doc_compta_type
 CHECK (
-    (Type_de_document!= 'quittance' OR SIRET IS NULL) AND
-    (Type_de_document = 'quittance' OR SIRET IS NOT NULL)
+    (Type_de_document = 'quittance' AND SIRET IS NULL)
+    OR
+    (Type_de_document <> 'quittance' AND SIRET IS NOT NULL)
 );
-

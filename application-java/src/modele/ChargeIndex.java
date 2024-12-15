@@ -1,52 +1,117 @@
 package modele;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class ChargeIndex {
-    String idBien;
-    LocalDate dateDeReleve;
+    String id;
+    String dateDeReleve;
     String type;
-    double valeur;
-    LocalDate dateRelevePrecedent;
-    double coutVariable;
-    String coutFixe;
+    
+    String dateRelevePrecedent;
+    
+    BigDecimal valeur;
+    BigDecimal coutVariable;
+    BigDecimal coutFixe;
+    
+    String numDoc;
+    String dateDoc;
+    
 
-    public ChargeIndex(String idBien, LocalDate dateDeReleve, String type, double valeur, LocalDate dateRelevePrecedent,
-                          double coutVariable, String coutFixe) {
-        this.idBien = idBien;
+    public ChargeIndex(String id, String dateDeReleve, String type,
+    					BigDecimal valeur, BigDecimal coutVariable, BigDecimal coutFixe, 
+                        String numDoc, String dateDoc) {
+        this.id = id;
         this.dateDeReleve = dateDeReleve;
         this.type = type;
+        
         this.valeur = valeur;
-        this.dateRelevePrecedent = dateRelevePrecedent;
         this.coutVariable = coutVariable;
         this.coutFixe = coutFixe;
+        
+        this.numDoc = numDoc;
+        this.dateDoc = dateDoc;
     }
 
-    public String getIdBien() {
-        return idBien;
-    }
 
-    public LocalDate getDateDeReleve() {
-        return dateDeReleve;
-    }
+	public String getDateDeReleve() {
+		return dateDeReleve;
+	}
 
-    public String getType() {
-        return type;
-    }
 
-    public double getValeur() {
-        return valeur;
-    }
+	public void setDateDeReleve(String dateDeReleve) {
+		this.dateDeReleve = dateDeReleve;
+	}
 
-    public LocalDate getDateRelevePrecedent() {
-        return dateRelevePrecedent;
-    }
 
-    public double getCoutVariable() {
-        return coutVariable;
-    }
+	public String getType() {
+		return type;
+	}
 
-    public String getCoutFixe() {
-        return coutFixe;
-    }
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+
+	public String getDateRelevePrecedent() {
+		return dateRelevePrecedent;
+	}
+
+
+	public void setDateRelevePrecedent(String dateRelevePrecedent) {
+		this.dateRelevePrecedent = dateRelevePrecedent;
+	}
+
+
+	public BigDecimal getValeur() {
+		return valeur;
+	}
+
+
+	public void setValeur(BigDecimal valeur) {
+		this.valeur = valeur;
+	}
+
+
+	public BigDecimal getCoutVariable() {
+		return coutVariable;
+	}
+
+
+	public void setCoutVariable(BigDecimal coutVariable) {
+		this.coutVariable = coutVariable;
+	}
+
+
+	public BigDecimal getCoutFixe() {
+		return coutFixe;
+	}
+
+
+	public void setCoutFixe(BigDecimal coutFixe) {
+		this.coutFixe = coutFixe;
+	}
+
+
+	public String getId() {
+		return id;
+	}
+
+
+	public String getNumDoc() {
+		return numDoc;
+	}
+
+
+	public String getDateDoc() {
+		return dateDoc;
+	}
+    
+    
+    
+    
+
+    
+   
 }
