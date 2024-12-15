@@ -13,9 +13,16 @@ CREATE OR REPLACE PACKAGE BODY pkg_Bail AS
     
   BEGIN
    
-
     -- Supprimer les regularisations associes au bail
     DELETE FROM sae_regularisation
+    WHERE id_bail = p_id_bail;
+
+    -- Supprimer les regularisations associes au bail
+    DELETE FROM sae_provision_charge
+    WHERE id_bail = p_id_bail;
+
+    -- Supprimer les regularisations associes au bail
+    DELETE FROM sae_document
     WHERE id_bail = p_id_bail;
 
     -- Supprimer le bail
