@@ -125,7 +125,10 @@ public class GestionAjouterCautionnaire implements ActionListener{
 				       Batiment bat=  new Batiment("Test", adresseLocataire);
 				       BienLocatif bien = new BienLocatif("Test",TypeDeBien.LOGEMENT,20,2,new BigDecimal(200), bat);
 				       bail = new Bail(idBail, dateDebut, bien);
-				       bail.setDateDeFin(dateFin);
+				       if (dateFin.length()>= 1) {
+				    	   bail.setDateDeFin(dateFin);
+				       }
+				       
 				        
 				    } 
 				    else if (this.fen_ajouter_bail.getRdbtnBailExistant().isSelected()) {

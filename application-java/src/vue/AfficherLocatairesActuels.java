@@ -17,7 +17,6 @@ import controleur.GestionChampsLocataireActuel;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 import javax.swing.JList;
-import javax.swing.AbstractListModel;
 import javax.swing.DefaultListModel;
 import javax.swing.border.EtchedBorder;
 import java.awt.Color;
