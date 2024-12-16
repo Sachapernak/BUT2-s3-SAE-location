@@ -27,6 +27,7 @@ import javax.swing.table.TableColumnModel;
 import java.awt.Font;
 import java.awt.Color;
 import javax.swing.JSeparator;
+import javax.swing.ListSelectionModel;
 
 
 public class FenetrePrincipale extends JFrame {
@@ -41,6 +42,10 @@ public class FenetrePrincipale extends JFrame {
 
 	public JTable getTableBiensLoc() {
 		return this.tableBiensLoc;
+	}
+	
+	public JTable getTableBatiment() {
+		return this.tableBatiment;
 	}
 	
 	/**
@@ -208,6 +213,7 @@ public class FenetrePrincipale extends JFrame {
 		panel_bien.add(scrollPaneBatiment);
 		
 		tableBatiment = new JTable();
+		tableBatiment.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tableBatiment.setModel(new DefaultTableModel(
 			new Object[][] {
 				{null, null, null},
@@ -227,6 +233,7 @@ public class FenetrePrincipale extends JFrame {
 		columnModel.getColumn(2).setPreferredWidth(120); 
 		tableBatiment.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
 		this.gestionTable.remplirBatiments(tableBatiment);
+		tableBatiment.getSelectionModel().addListSelectionListener(this.gestionTable);
 		scrollPaneBatiment.setViewportView(tableBatiment);
 		
 		JButton btnAjoutBien = new JButton("Ajouter un bien");
