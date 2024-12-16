@@ -64,20 +64,4 @@ public class DaoBatiment extends DaoModele<Batiment> {
 				+ "pas changer)");
 	}
 	
-	public int countBiens(Batiment donnees) throws SQLException, IOException{
-		Connection cn = ConnexionBD.getInstance().getConnexion();
-		RequeteCountNbLogementsBatiment req = new RequeteCountNbLogementsBatiment();
-        PreparedStatement prSt = cn.prepareStatement(req.requete());
-        req.parametres(prSt, donnees);
-        ResultSet rs = prSt.executeQuery();
-        int res = 0;
-        if (rs.next()) {
-        	 res = rs.getInt(2);
-        }
-
-        rs.close();
-        prSt.close();
-
-        return res;
-	}
 }

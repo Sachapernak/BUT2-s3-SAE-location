@@ -7,7 +7,7 @@ import modele.Batiment;
 import modele.BienLocatif;
 
 
-public class RequeteCountNbLogementsBatiment extends Requete<Batiment>{
+public class RequeteCountNbLogementsBatiment extends Requete<BienLocatif>{
 
 	@Override
 	public String requete() {
@@ -15,8 +15,8 @@ public class RequeteCountNbLogementsBatiment extends Requete<Batiment>{
 	}
 	
 
-	public void parametres(PreparedStatement prSt, Batiment donnee) throws SQLException {
-		prSt.setString(1, donnee.getIdBat());
+	public void parametres(PreparedStatement prSt, String... id) throws SQLException {
+		prSt.setString(1, id[0]);
 	}
 
 }

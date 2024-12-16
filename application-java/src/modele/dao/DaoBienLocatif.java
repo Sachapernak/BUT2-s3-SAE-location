@@ -69,4 +69,20 @@ public class DaoBienLocatif extends DaoModele<BienLocatif> {
 		return find(new RequeteSelectBiensByIdBatiment(),id);
 	}
 	
+	public int countBiens(String... id) throws SQLException, IOException{
+		Connection cn = ConnexionBD.getInstance().getConnexion();
+		RequeteCountNbLogementsBatiment req = new RequeteCountNbLogementsBatiment();
+        PreparedStatement prSt = cn.prepareStatement(req.requete());
+        req.parametres(prSt, id);
+        ResultSet rs = prSt.executeQuery();
+        int res = 0;
+        if (rs.next()) {
+        	 res = rs.getInt(2);
+        }
+
+        rs.close();
+        prSt.close();
+
+        return res;
+	}
 }

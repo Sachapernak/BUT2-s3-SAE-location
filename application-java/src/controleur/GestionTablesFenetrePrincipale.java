@@ -24,6 +24,7 @@ public class GestionTablesFenetrePrincipale implements ListSelectionListener{
 	public GestionTablesFenetrePrincipale(FenetrePrincipale fp) {
 		this.fen_principale = fp;
 		this.daoBatiment = new DaoBatiment();
+		this.daoBienLocatif = new DaoBienLocatif();
 	}
 	
 	@Override
@@ -52,7 +53,7 @@ public class GestionTablesFenetrePrincipale implements ListSelectionListener{
 				DefaultTableModel model = (DefaultTableModel) tableBatiments.getModel();
 				model.setRowCount(0);
 		        for (Batiment batiment : batiments) {
-		        	nbLogements = daoBatiment.countBiens(batiment);
+		        	nbLogements = daoBienLocatif.countBiens(batiment.getIdBat());
 		            model.addRow(new Object[] { batiment.getIdBat(), batiment.getAdresse().getAdressePostale(),nbLogements});
 		        }
 			} catch (SQLException e) {
@@ -64,7 +65,8 @@ public class GestionTablesFenetrePrincipale implements ListSelectionListener{
     
     public void remplirBiensLoc (JTable tableBiensLoc, String idBatiment) {
     	try {
-			List<BienLocatif> biens = daoBienLocatif.findAll();
+			List<BienLocatif> biens = daoBienLocatif.findByIdBatiment(idBatiment);
+			
 						
 		} catch (SQLException e) {
 			e.printStackTrace();
