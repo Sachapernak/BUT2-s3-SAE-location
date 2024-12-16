@@ -9,6 +9,7 @@ import java.util.List;
 
 import modele.Adresse;
 import modele.Batiment;
+import modele.BienLocatif;
 import modele.ConnexionBD;
 import modele.dao.requetes.RequeteCountNbLogementsBatiment;
 import modele.dao.requetes.RequeteCreateBatiment;
@@ -41,22 +42,6 @@ public class DaoBatiment extends DaoModele<Batiment> {
 		return find(new RequeteSelectBatiment());
 	}
 	
-	public int countBiens(Batiment donnees) throws SQLException, IOException{
-		Connection cn = ConnexionBD.getInstance().getConnexion();
-		RequeteCountNbLogementsBatiment req = new RequeteCountNbLogementsBatiment();
-        PreparedStatement prSt = cn.prepareStatement(req.requete());
-        req.parametres(prSt, donnees);
-        ResultSet rs = prSt.executeQuery();
-        int res = 0;
-        if (rs.next()) {
-        	 res = rs.getInt(2);
-        }
-
-        rs.close();
-        prSt.close();
-
-        return res;
-	}
 
 	@Override
 	protected Batiment createInstance(ResultSet curseur) throws SQLException, IOException {
@@ -75,8 +60,23 @@ public class DaoBatiment extends DaoModele<Batiment> {
 		throw new UnsupportedOperationException("Le batiment ne peut etre modifié : "
 				+ "Il n'y aucun attribut a modifier (hormis l'adresse, qui ne devrait "
 				+ "pas changer)");
-		
-		
+	}
+	
+	public int countBiens(Batiment donnees) throws SQLException, IOException{
+		Connection cn = ConnexionBD.getInstance().getConnexion();
+		RequeteCountNbLogementsBatiment req = new RequeteCountNbLogementsBatiment();
+        PreparedStatement prSt = cn.prepareStatement(req.requete());
+        req.parametres(prSt, donnees);
+        ResultSet rs = prSt.executeQuery();
+        int res = 0;
+        if (rs.next()) {
+        	 res = rs.getInt(2);
+        }
+
+        rs.close();
+        prSt.close();
+
+        return res;
 	}
 
 }

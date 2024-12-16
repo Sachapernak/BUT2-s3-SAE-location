@@ -117,9 +117,9 @@ public class TestDaoBatiment {
          ajouterBatiment(batiment);
          
          BienLocatif bien1 = new BienLocatif("BIENTEST01",TypeDeBien.LOGEMENT, 20, 2, new BigDecimal(150),batiment);
-         BienLocatif bien2 = new BienLocatif("BIENTEST01",TypeDeBien.LOGEMENT, 20, 2, new BigDecimal(150),batiment);
+         BienLocatif bien2 = new BienLocatif("BIENTEST02",TypeDeBien.LOGEMENT, 20, 2, new BigDecimal(150),batiment);
          daoBien.create(bien1);
-         //daoBien.create(bien2);
+         daoBien.create(bien2);
          
          int nbLogements = daoBat.countBiens(batiment);
          
