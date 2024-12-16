@@ -13,10 +13,12 @@ import javax.swing.plaf.synth.SynthOptionPaneUI;
 
 import modele.Adresse;
 import modele.Bail;
+import modele.Batiment;
 import modele.BienLocatif;
 import modele.Cautionnaire;
 import modele.Cautionner;
 import modele.Locataire;
+import modele.TypeDeBien;
 import modele.dao.DaoAdresse;
 import modele.dao.DaoBail;
 import modele.dao.DaoCautionnaire;
@@ -120,10 +122,10 @@ public class GestionAjouterCautionnaire implements ActionListener{
 				        String dateDebut = this.fen_ajouter_bail.getTextFieldDateDebut().getText();
 				        String dateFin = this.fen_ajouter_bail.getTextFieldDateFin().getText();
 				        
-				        
-				        
-				       //bail = new Bail(idBail, dateDebut,);
-				       //bail.setDateDeFin(dateFin);
+				       Batiment bat=  new Batiment("Test", adresseLocataire);
+				       BienLocatif bien = new BienLocatif("Test",TypeDeBien.LOGEMENT,20,2,new BigDecimal(200), bat);
+				       bail = new Bail(idBail, dateDebut, bien);
+				       bail.setDateDeFin(dateFin);
 				        
 				    } 
 				    else if (this.fen_ajouter_bail.getRdbtnBailExistant().isSelected()) {
