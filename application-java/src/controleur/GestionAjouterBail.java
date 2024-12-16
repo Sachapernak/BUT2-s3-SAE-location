@@ -3,8 +3,11 @@ package controleur;
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -13,6 +16,8 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
+import modele.Batiment;
+import modele.dao.DaoBatiment;
 import vue.AfficherLocatairesActuels;
 import vue.AjouterBail;
 import vue.AjouterCautionnaire;
@@ -23,11 +28,13 @@ public class GestionAjouterBail implements ActionListener{
 	private AjouterBail fen_ajouter_bail;
 	private AfficherLocatairesActuels fen_afficher_locataires;
 	private AjouterLocataire fen_ajouter_locataire;
+	private DaoBatiment daoBatiment;
 	
 	public GestionAjouterBail(AjouterBail ab, AjouterLocataire al, AfficherLocatairesActuels afl) {
 		this.fen_ajouter_bail = ab;
 		this.fen_ajouter_locataire = al;
 		this.fen_afficher_locataires = afl;
+		this.daoBatiment = new DaoBatiment();
 	}
 	
 	
@@ -81,8 +88,17 @@ public class GestionAjouterBail implements ActionListener{
         textFieldDateDebut.setText(formattedDate);
     }
 	
-	public void remplirJComboBoxBiens(JComboBox comboBoxBiensLoc) {
-		
+	public void remplirJComboBoxBatiment(JComboBox<String> comboBoxBatiment) {
+		try {
+			List<Batiment> batiments = daoBatiment.findAll();
+			for (Batiment batiment : batiments) {
+	            comboBoxBatiment.addItem(batiment.getIdBat());
+	        }
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

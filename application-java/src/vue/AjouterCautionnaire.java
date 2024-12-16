@@ -40,7 +40,6 @@ public class AjouterCautionnaire extends JInternalFrame {
     private JTextField textFieldIdentifiantCautionnaire;
     
     
-    
     public JTextField getTextFieldMontant() {
 		return textFieldMontant;
 	}
@@ -61,8 +60,6 @@ public class AjouterCautionnaire extends JInternalFrame {
 		return textFieldNomOuOrga;
 	}
 	
-	
-    
     public JTextField getTextFieldAdr() {
 		return textFieldAdr;
 	}

@@ -5,9 +5,11 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JList;
 import javax.swing.plaf.synth.SynthOptionPaneUI;
 
@@ -21,6 +23,7 @@ import modele.Locataire;
 import modele.TypeDeBien;
 import modele.dao.DaoAdresse;
 import modele.dao.DaoBail;
+import modele.dao.DaoBatiment;
 import modele.dao.DaoCautionnaire;
 import modele.dao.DaoCautionner;
 import modele.dao.DaoLocataire;
