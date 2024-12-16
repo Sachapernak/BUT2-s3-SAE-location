@@ -10,6 +10,7 @@ import org.junit.runners.Suite.SuiteClasses;
     TestDaoBatiment.class,      // Entités principales
     TestDaoLocataire.class,
     TestDaoBienLocatif.class,
+    TestDaoCautionnaire.class,
     
     TestDaoBail.class,          
     TestDaoLoyer.class,

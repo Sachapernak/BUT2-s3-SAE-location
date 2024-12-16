@@ -68,13 +68,13 @@ public class TestDaoCautionnaire {
     
     @Test
     public void testDaoCautionnaireCreate() throws SQLException, IOException {
-        Cautionnaire createCautionnaire = new Cautionnaire(1,"NomTest","PrenomTest", "DescriptionTest", adresseTest);
+        Cautionnaire createCautionnaire = new Cautionnaire(9,"NomTest","PrenomTest", "DescriptionTest", adresseTest);
         
         ajouterCautionnaire(createCautionnaire);
-        cautionnaireRecup = daoC.findById("1");
+        cautionnaireRecup = daoC.findById("9");
 
         assertNotNull("Cautionnaire non trouvé après insertion.", cautionnaireRecup);
-        assertEquals("L'ID du cautionnaire est incorrect.", 1, cautionnaireRecup.getIdCautionnaire());
+        assertEquals("L'ID du cautionnaire est incorrect.", 9, cautionnaireRecup.getIdCautionnaire());
         assertEquals("Le nom du cautionnaire est incorrect.", "NomTest", cautionnaireRecup.getNomOuOrganisme());
         assertEquals("La description du cautionnaire est incorrecte.", "DescriptionTest", cautionnaireRecup.getDescription());
         supprimerCautionnaire(createCautionnaire);
@@ -82,32 +82,32 @@ public class TestDaoCautionnaire {
     
     @Test
     public void testDaoCautionnaireModify() throws SQLException, IOException {
-        Cautionnaire majCautionnaire = new Cautionnaire(2, "NomTest", "PrenomTest", "DescriptionTest", adresseTest);
+        Cautionnaire majCautionnaire = new Cautionnaire(9, "NomTest", "PrenomTest", "DescriptionTest", adresseTest);
 
         ajouterCautionnaire(majCautionnaire);
 
-        cautionnaireRecup = daoC.findById("2");
+        cautionnaireRecup = daoC.findById("9");
         assertNotNull("Cautionnaire non trouvé après insertion.", cautionnaireRecup);
         assertEquals("Le nom du cautionnaire est incorrect.", "NomTest", cautionnaireRecup.getNomOuOrganisme());
 
         majCautionnaire.setNomOuOrganisme("NomModifie");
         daoC.update(majCautionnaire);
 
-        cautionnaireRecup = daoC.findById("2");
+        cautionnaireRecup = daoC.findById("9");
         assertEquals("Le nom modifié est incorrect.", "NomModifie", cautionnaireRecup.getNomOuOrganisme());
         supprimerCautionnaire(majCautionnaire);
     }
     
     @Test
     public void testDaoSuppressionDeuxFois() throws SQLException, IOException {
-        Cautionnaire testCautionnaire = new Cautionnaire(3, "NomTest", "PrenomTest", "DescriptionTest", adresseTest);
+        Cautionnaire testCautionnaire = new Cautionnaire(9, "NomTest", "PrenomTest", "DescriptionTest", adresseTest);
         ajouterCautionnaire(testCautionnaire);
 
-        cautionnaireRecup = daoC.findById("3");
+        cautionnaireRecup = daoC.findById("9");
         assertNotNull("Cautionnaire non trouvé après insertion.", cautionnaireRecup);
 
         supprimerCautionnaire(testCautionnaire);
-        cautionnaireRecup = daoC.findById("3");
+        cautionnaireRecup = daoC.findById("9");
         assertNull("Le cautionnaire n'a pas été correctement supprimé.", cautionnaireRecup);
 
         // Deuxième suppression pour vérifier qu'il n'y a pas d'erreur
@@ -116,13 +116,13 @@ public class TestDaoCautionnaire {
     
     @Test
     public void testDaoFindAll() throws SQLException, IOException {
-        Cautionnaire findAllCautionnaire = new Cautionnaire(3, "NomTest", "PrenomTest", "DescriptionTest", adresseTest);
+        Cautionnaire findAllCautionnaire = new Cautionnaire(9, "NomTest", "PrenomTest", "DescriptionTest", adresseTest);
         ajouterCautionnaire(findAllCautionnaire);
 
         List<Cautionnaire> list = daoC.findAll();
 
         boolean contientId = list.stream()
-                                 .anyMatch(cautionnaire -> 3 == cautionnaire.getIdCautionnaire());
+                                 .anyMatch(cautionnaire -> 9 == cautionnaire.getIdCautionnaire());
 
         assertTrue("Le cautionnaire inséré n'est pas présent dans la liste récupérée.", contientId);
 
@@ -131,7 +131,7 @@ public class TestDaoCautionnaire {
 
     @Test
     public void testFindByIdInvalid() throws SQLException, IOException {
-        Cautionnaire cautionnaire = daoC.findById("0");
+        Cautionnaire cautionnaire = daoC.findById("100");
         assertNull("La méthode findById devrait retourner null pour un ID inexistant.", cautionnaire);
     }
 
