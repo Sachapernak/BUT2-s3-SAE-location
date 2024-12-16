@@ -19,6 +19,8 @@ import controleur.GestionAjouterBail;
 import java.awt.CardLayout;
 import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
 
 public class AjouterBail extends JInternalFrame {
 
@@ -218,7 +220,7 @@ public class AjouterBail extends JInternalFrame {
         
         JPanel panelNouveauBail_champs = new JPanel();
         panelNouveauBail_champs.setBorder(new TitledBorder(null, "Nouveau Bail", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-        panelNouveauBail_champs.setBounds(181, 26, 256, 200);
+        panelNouveauBail_champs.setBounds(181, 49, 256, 200);
         panelNouveauBail.add(panelNouveauBail_champs);
                 panelNouveauBail_champs.setLayout(null);
         
@@ -254,6 +256,16 @@ public class AjouterBail extends JInternalFrame {
                                                         JButton btnVider = new JButton("Vider");
                                                         btnVider.setBounds(161, 158, 74, 20);
                                                         panelNouveauBail_champs.add(btnVider);
+                                                        
+                                                        JComboBox comboBoxBiensLoc = new JComboBox();
+                                                        comboBoxBiensLoc.setModel(new DefaultComboBoxModel(new String[] {"Bat 1", "Bat 2"}));
+                                                        comboBoxBiensLoc.setBounds(302, 10, 123, 21);
+                                                        panelNouveauBail.add(comboBoxBiensLoc);
+                                                        
+                                                        JLabel lblBiensLoc = new JLabel("Bien locatif : ");
+                                                        lblBiensLoc.setLabelFor(comboBoxBiensLoc);
+                                                        lblBiensLoc.setBounds(192, 14, 117, 13);
+                                                        panelNouveauBail.add(lblBiensLoc);
                                                         btnVider.addActionListener(this.gestionFen);
         
         JPanel panelBoutons = new JPanel();

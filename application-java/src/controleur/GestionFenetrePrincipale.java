@@ -2,12 +2,17 @@ package controleur;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLayeredPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import modele.Batiment;
+import modele.dao.DaoBatiment;
 import vue.AfficherCharges;
 import vue.FenetrePrincipale;
 import vue.RevalorisationLoyer;
@@ -15,9 +20,11 @@ import vue.RevalorisationLoyer;
 public class GestionFenetrePrincipale implements ActionListener{
 
 	private FenetrePrincipale fen_principale;
+	private DaoBatiment daoBatiment;
 	
 	public GestionFenetrePrincipale(FenetrePrincipale fp) {
 		this.fen_principale = fp;
+		this.daoBatiment = new DaoBatiment();
 	}
 	
 	@Override
@@ -54,6 +61,25 @@ public class GestionFenetrePrincipale implements ActionListener{
                 model.setValueAt(null, row, col); 
             }
         }
+    }
+    
+    public void remplirBatiments (JTable tableBatiments) {
+    	int nbLogements = 0;
+    		try {
+				List<Batiment> batiments = daoBatiment.findAll();
+				DefaultTableModel model = (DefaultTableModel) tableBatiments.getModel();
+				model.setRowCount(0);
+		        for (Batiment batiment : batiments) {
+		        	nbLogements = daoBatiment.countBiens(batiment);
+		            model.addRow(new Object[] { batiment.getIdBat(), batiment.getAdresse(),nbLogements});
+		        }
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+    		
+    	
     }
 
 

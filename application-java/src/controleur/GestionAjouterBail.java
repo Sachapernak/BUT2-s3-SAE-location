@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -79,5 +80,9 @@ public class GestionAjouterBail implements ActionListener{
         String formattedDate = dateActelle.format(formatter);
         textFieldDateDebut.setText(formattedDate);
     }
+	
+	public void remplirJComboBoxBiens(JComboBox comboBoxBiensLoc) {
+		
+	}
 
 }

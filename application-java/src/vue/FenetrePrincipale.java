@@ -216,6 +216,7 @@ public class FenetrePrincipale extends JFrame {
 				"Identifiant", "Adresse", "Nb de logements"
 			}
 		));
+		this.gestionClic.remplirBatiments(tableBatiment);
 		scrollPaneBatiment.setViewportView(tableBatiment);
 		
 		JButton btnAjoutBien = new JButton("Ajouter un bien");
