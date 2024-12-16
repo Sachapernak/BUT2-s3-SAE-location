@@ -14,9 +14,13 @@ import javax.swing.JComboBox;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 
+import modele.Bail;
 import modele.Batiment;
+import modele.dao.DaoBail;
 import modele.dao.DaoBatiment;
 import vue.AfficherLocatairesActuels;
 import vue.AjouterBail;
@@ -100,5 +104,30 @@ public class GestionAjouterBail implements ActionListener{
 			e.printStackTrace();
 		}
 	}
+	
+	public void remplirTableBauxExistant(JTable tableBauxExistant) {
+		List<Bail> baux;
+		try {
+			DaoBail daoBail = new DaoBail();
+			baux = daoBail.findAll();
+		
+		DefaultTableModel model = (DefaultTableModel) tableBauxExistant.getModel();
+		model.setRowCount(0);
+        for (Bail bail : baux) {
+        	String complement = bail.getBien().getBat().getAdresse().getComplementAdresse();
+        	String adresse = bail.getBien().getBat().getAdresse().getAdressePostale();
+            model.addRow(new Object[] {complement, adresse, bail.getDateDeDebut(), bail.getDateDeFin()});
+        }
+        
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+					
+	}
+	
 
 }

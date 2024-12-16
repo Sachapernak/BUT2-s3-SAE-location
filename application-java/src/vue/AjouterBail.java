@@ -136,7 +136,7 @@ public class AjouterBail extends JInternalFrame {
 
         // Tableau des baux actuels
         JScrollPane scrollPaneBauxActuels = new JScrollPane();
-        scrollPaneBauxActuels.setBounds(10, 46, 323, 89);
+        scrollPaneBauxActuels.setBounds(10, 46, 579, 74);
         panelBauxExistants.add(scrollPaneBauxActuels);
 
         tableBauxActuels = new JTable();
@@ -153,11 +153,12 @@ public class AjouterBail extends JInternalFrame {
         		"Compl\u00E9ment", "Adresse", "Date de d\u00E9but", "Date de fin"
         	}
         ));
+        this.gestionFen.remplirTableBauxExistant(tableBauxActuels);
         scrollPaneBauxActuels.setViewportView(tableBauxActuels);
 
         // Tableau des parts de loyer
         JScrollPane scrollPanePartsLoyer = new JScrollPane();
-        scrollPanePartsLoyer.setBounds(356, 46, 250, 74);
+        scrollPanePartsLoyer.setBounds(10, 162, 250, 74);
         panelBauxExistants.add(scrollPanePartsLoyer);
 
         tablePartsLoyer = new JTable();
@@ -196,16 +197,16 @@ public class AjouterBail extends JInternalFrame {
         
         
         JLabel lblDateArrivee = new JLabel("Date d'arrivée :");
-        lblDateArrivee.setBounds(10, 157, 119, 20);
+        lblDateArrivee.setBounds(316, 162, 119, 20);
         panelBauxExistants.add(lblDateArrivee);
                 
         textFieldDateArrivee = new JTextField();
-        textFieldDateArrivee.setBounds(109, 157, 100, 20);
+        textFieldDateArrivee.setBounds(415, 162, 100, 20);
         panelBauxExistants.add(textFieldDateArrivee);
         textFieldDateArrivee.setColumns(10);
         
         JLabel lblListeLocataire = new JLabel("Liste des locataires associés au bail");
-        lblListeLocataire.setBounds(356, 23, 323, 13);
+        lblListeLocataire.setBounds(10, 139, 323, 13);
         panelBauxExistants.add(lblListeLocataire);
         
         JLabel lblListeBaux = new JLabel("Liste des baux");
@@ -222,51 +223,51 @@ public class AjouterBail extends JInternalFrame {
         panelNouveauBail_champs.setBorder(new TitledBorder(null, "Nouveau Bail", TitledBorder.LEADING, TitledBorder.TOP, null, null));
         panelNouveauBail_champs.setBounds(181, 49, 256, 200);
         panelNouveauBail.add(panelNouveauBail_champs);
-                panelNouveauBail_champs.setLayout(null);
+        panelNouveauBail_champs.setLayout(null);
         
-                // Champs de saisie pour Nouveau Bail
-                JLabel lblIdBail = new JLabel("ID Bail :");
-                lblIdBail.setBounds(10, 25, 58, 13);
-                panelNouveauBail_champs.add(lblIdBail);
+        // Champs de saisie pour Nouveau Bail
+        JLabel lblIdBail = new JLabel("ID Bail :");
+        lblIdBail.setBounds(10, 25, 58, 13);
+        panelNouveauBail_champs.add(lblIdBail);
                 
-                        textFieldIdBail = new JTextField();
-                        textFieldIdBail.setBounds(135, 22, 100, 20);
-                        panelNouveauBail_champs.add(textFieldIdBail);
-                        textFieldIdBail.setColumns(10);
-                        
-                                JLabel lblDateDebut = new JLabel("Date de début :");
-                                lblDateDebut.setBounds(10, 65, 100, 20);
-                                panelNouveauBail_champs.add(lblDateDebut);
-                                
-                                        textFieldDateDebut = new JTextField();
-                                        textFieldDateDebut.setBounds(135, 66, 100, 20);
-                                        panelNouveauBail_champs.add(textFieldDateDebut);
-                                        textFieldDateDebut.setColumns(10);
-                                        this.gestionFen.initialiserDateDebut(textFieldDateDebut);
+        textFieldIdBail = new JTextField();
+        textFieldIdBail.setBounds(135, 22, 100, 20);
+        panelNouveauBail_champs.add(textFieldIdBail);
+        textFieldIdBail.setColumns(10);
+                       
+        JLabel lblDateDebut = new JLabel("Date de début :");
+        lblDateDebut.setBounds(10, 65, 100, 20);
+        panelNouveauBail_champs.add(lblDateDebut);
+                               
+        textFieldDateDebut = new JTextField();
+        textFieldDateDebut.setBounds(135, 66, 100, 20);
+        panelNouveauBail_champs.add(textFieldDateDebut);
+        textFieldDateDebut.setColumns(10);
+        this.gestionFen.initialiserDateDebut(textFieldDateDebut);
                                         
-                                                JLabel lblDateFin = new JLabel("Date de fin :");
-                                                lblDateFin.setBounds(10, 111, 100, 20);
-                                                panelNouveauBail_champs.add(lblDateFin);
+        JLabel lblDateFin = new JLabel("Date de fin :");
+        lblDateFin.setBounds(10, 111, 100, 20);
+        panelNouveauBail_champs.add(lblDateFin);
                                                 
-                                                        textFieldDateFin = new JTextField();
-                                                        textFieldDateFin.setBounds(135, 112, 100, 20);
-                                                        panelNouveauBail_champs.add(textFieldDateFin);
-                                                        textFieldDateFin.setColumns(10);
-                                                        
-                                                        JButton btnVider = new JButton("Vider");
-                                                        btnVider.setBounds(161, 158, 74, 20);
-                                                        panelNouveauBail_champs.add(btnVider);
-                                                        
-                                                        JComboBox comboBoxBiensLoc = new JComboBox();
-                                                        comboBoxBiensLoc.setModel(new DefaultComboBoxModel(new String[] {"Bat 1", "Bat 2"}));
-                                                        comboBoxBiensLoc.setBounds(302, 10, 123, 21);
-                                                        panelNouveauBail.add(comboBoxBiensLoc);
-                                                        
-                                                        JLabel lblBiensLoc = new JLabel("Bien locatif : ");
-                                                        lblBiensLoc.setLabelFor(comboBoxBiensLoc);
-                                                        lblBiensLoc.setBounds(192, 14, 117, 13);
-                                                        panelNouveauBail.add(lblBiensLoc);
-                                                        btnVider.addActionListener(this.gestionFen);
+        textFieldDateFin = new JTextField();
+        textFieldDateFin.setBounds(135, 112, 100, 20);
+        panelNouveauBail_champs.add(textFieldDateFin);
+        textFieldDateFin.setColumns(10);
+                                                       
+        JButton btnVider = new JButton("Vider");
+        btnVider.setBounds(161, 158, 74, 20);
+        panelNouveauBail_champs.add(btnVider);
+                                                       
+        JComboBox<String> comboBoxBiensLoc = new JComboBox<String>();
+        comboBoxBiensLoc.setModel(new DefaultComboBoxModel<String>(new String[] {"Bat 1", "Bat 2"}));
+        comboBoxBiensLoc.setBounds(302, 10, 123, 21);
+        panelNouveauBail.add(comboBoxBiensLoc);
+                                            
+        JLabel lblBiensLoc = new JLabel("Bien locatif : ");
+        lblBiensLoc.setLabelFor(comboBoxBiensLoc);
+        lblBiensLoc.setBounds(192, 14, 117, 13);
+        panelNouveauBail.add(lblBiensLoc);
+        btnVider.addActionListener(this.gestionFen);
         
         JPanel panelBoutons = new JPanel();
         panelBoutons.setBounds(0, 371, 658, 37);

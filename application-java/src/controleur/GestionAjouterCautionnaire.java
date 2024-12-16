@@ -11,7 +11,9 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JList;
+import javax.swing.JTable;
 import javax.swing.plaf.synth.SynthOptionPaneUI;
+import javax.swing.table.DefaultTableModel;
 
 import modele.Adresse;
 import modele.Bail;
@@ -20,6 +22,7 @@ import modele.BienLocatif;
 import modele.Cautionnaire;
 import modele.Cautionner;
 import modele.Locataire;
+import modele.Loyer;
 import modele.TypeDeBien;
 import modele.dao.DaoAdresse;
 import modele.dao.DaoBail;
@@ -210,6 +213,4 @@ public class GestionAjouterCautionnaire implements ActionListener{
 		return Integer.parseInt(str); 
 	}
 	
-
-
 }
