@@ -2,9 +2,6 @@ CREATE TABLE SAE_assurance(
    numero_de_contrat VARCHAR2(50),
    annee_du_contrat NUMBER(10),
    Type_de_contrat VARCHAR2(50),
-   prime NUMBER(10,2) ,
-   quotite_jursiprudence NUMBER(3,2),
-   montant_quoitite NUMBER(15,2),
    CONSTRAINT pk_SAE_assurance PRIMARY KEY (numero_de_contrat, annee_du_contrat)
 );
 
@@ -32,7 +29,6 @@ CREATE TABLE SAE_Locataire(
    telephone_locataire VARCHAR2(50),
    date_naissance DATE NOT NULL,
    Lieu_de_naissance VARCHAR2(50),
-   Acte_de_caution VARCHAR2(255),
    Id_SAE_Adresse VARCHAR2(20),
    CONSTRAINT pk_SAE_Locataire PRIMARY KEY (identifiant_locataire),
    CONSTRAINT fk_SAE_Loc_Id_SAE_Adr FOREIGN KEY (Id_SAE_Adresse) REFERENCES SAE_Adresse(Id_SAE_Adresse)
@@ -97,20 +93,31 @@ CREATE TABLE SAE_document_comptable(
    CONSTRAINT fk_SAE_doc_compta_contrat FOREIGN KEY (numero_de_contrat, annee_du_contrat) REFERENCES SAE_assurance(numero_de_contrat, annee_du_contrat)
 );
 
-CREATE TABLE sae_charge_index(
-   id_charge_index VARCHAR2(50) ,
+
+CREATE TABLE sae_charge_index (
+   id_charge_index VARCHAR2(50),
    Date_de_releve DATE NOT NULL,
-   Type VARCHAR2(50) ,
-   valeur NUMBER(10,2)   NOT NULL,
-   Date_releve_precedent DATE,
-   Cout_variable NUMBER(10,2)   NOT NULL,
-   Cout_fixe NUMBER(10,2)  ,
-   numero_document VARCHAR2(50)  NOT NULL,
+   Type VARCHAR2(50),
+   Valeur_compteur NUMBER(15,3) NOT NULL,
+   Cout_variable_unitaire NUMBER(15,5) NOT NULL,
+   Cout_fixe NUMBER(10,2),
+
+   numero_document VARCHAR2(50) NOT NULL,
    Date_document DATE NOT NULL,
+
+   Date_releve_precedent DATE,
+   id_charge_index_preced VARCHAR2(50),
+
    CONSTRAINT pk_sae_charge_index PRIMARY KEY (id_charge_index),
    CONSTRAINT uq_sae_charge_i_num_date UNIQUE (numero_document, Date_document),
-   CONSTRAINT fk_sae_charge_i_num_date FOREIGN KEY (numero_document, Date_document) REFERENCES SAE_document_comptable(numero_document, Date_document)
+   CONSTRAINT uq_sae_charge_preced UNIQUE (id_charge_index_preced, Date_releve_precedent),
+   CONSTRAINT uq_sae_charge_index_releve UNIQUE (id_charge_index, Date_de_releve),
+   CONSTRAINT fk_sae_charge_i_num_date FOREIGN KEY (numero_document, Date_document) REFERENCES SAE_document_comptable(numero_document, Date_document),
+   CONSTRAINT fk_SAE_charge_preced FOREIGN KEY (id_charge_index_preced, Date_releve_precedent) REFERENCES sae_charge_index(id_charge_index, Date_de_releve)
 );
+
+
+
 
 CREATE TABLE SAE_Charge_cf(
    id_charge_cf VARCHAR2(50) ,
@@ -218,9 +225,6 @@ CREATE TABLE sae_facture_du_bien(
    CONSTRAINT fk_sae_facture_id_loc FOREIGN KEY (identifiant_logement) REFERENCES SAE_Bien_locatif(identifiant_logement),
    CONSTRAINT fk_sae_facture_num_date FOREIGN KEY (numero_document, Date_document) REFERENCES SAE_document_comptable(numero_document, Date_document)
 );
-
-
-ALTER TABLE SAE_document_comptable DROP CONSTRAINT chk_SAE_doc_compta_type;
 
 ALTER TABLE SAE_document_comptable
 ADD CONSTRAINT chk_SAE_doc_compta_type

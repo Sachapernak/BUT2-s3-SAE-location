@@ -14,20 +14,12 @@ import modele.Adresse;
 import modele.Bail;
 import modele.Batiment;
 import modele.BienLocatif;
-import modele.Diagnostiques;
 import modele.Document;
-import modele.FactureBien;
-import modele.Loyer;
 import modele.ProvisionCharge;
 import modele.Regularisation;
 import modele.TypeDeBien;
-import modele.dao.DaoFactureBien;
-import modele.dao.DaoDiagnostique;
-import modele.dao.DaoLoyer;
-
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**

@@ -73,11 +73,11 @@ public class UITestLocataire {
 				new Object[][] {
 				},
 				new String[] {
-					"Id", "Nom", "Prenom", "Email", "Telephone", "Date Naissance", "Lieu", "Fic. Caution"
+					"Id", "Nom", "Prenom", "Email", "Telephone", "Date Naissance", "Lieu"
 				}
 			) {
 				Class[] columnTypes = new Class[] {
-					String.class, String.class, String.class, String.class, String.class, String.class, String.class, String.class
+					String.class, String.class, String.class, String.class, String.class, String.class, String.class
 				};
 				public Class getColumnClass(int columnIndex) {
 					return columnTypes[columnIndex];
@@ -157,7 +157,7 @@ public class UITestLocataire {
 		
 		for (Locataire l : locataires) {
 			Object[] nouvelleLigne = {l.getIdLocataire(), l.getNom(), l.getPrenom(), l.getEmail(), l.getTelephone(),
-									l.getDateNaissance(), l.getLieuDeNaissance(), l.getActeDeCaution()};
+									l.getDateNaissance(), l.getLieuDeNaissance()};
 			model.addRow(nouvelleLigne);
 		}
 	}

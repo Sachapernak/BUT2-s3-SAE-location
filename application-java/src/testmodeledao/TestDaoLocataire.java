@@ -71,7 +71,7 @@ public class TestDaoLocataire {
         locataire.setTelephone("0600000000");
         locataire.setAdresse(adresseTest);
         locataire.setLieuDeNaissance("TestVille");
-        locataire.setActeDeCaution("CautionTest");
+
         
         return locataire;
     }
@@ -321,9 +321,8 @@ public class TestDaoLocataire {
         Contracter contrat = new Contracter(locataire, bailInexistant, "2021-10-10", 1f);
         locataire.getContrats().add(contrat);
 
-        SQLException exception = assertThrows(SQLException.class, () -> {
-            ajouterLocataire(locataire);
-        });
+        SQLException exception = assertThrows(SQLException.class, () -> 
+            ajouterLocataire(locataire));
         assertTrue("L'erreur attendue n'est pas retournée.", 
             exception.getMessage().contains("ORA-"));
 

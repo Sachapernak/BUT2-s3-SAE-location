@@ -131,7 +131,6 @@ public class DaoLocataire extends DaoModele<Locataire> {
         String telephone = curseur.getString("TELEPHONE_LOCATAIRE");
         String dateNaissance = curseur.getDate("DATE_NAISSANCE").toString();
         String lieuNaissance = curseur.getString("LIEU_DE_NAISSANCE");
-        String acteCaution = curseur.getString("ACTE_DE_CAUTION");
         
         String idAdresse = curseur.getString("ID_SAE_ADRESSE");
         
@@ -149,10 +148,6 @@ public class DaoLocataire extends DaoModele<Locataire> {
         
         if (lieuNaissance != null) {
             locataire.setLieuDeNaissance(lieuNaissance);
-        }
-        
-        if (acteCaution != null) {
-            locataire.setActeDeCaution(acteCaution);
         }
         
         if (email != null) {
