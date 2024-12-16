@@ -1,7 +1,7 @@
 CREATE TABLE SAE_assurance(
    numero_de_contrat VARCHAR2(50),
    annee_du_contrat NUMBER(10),
-   Type_de_contrat VARCHAR2(50),
+   type_de_contrat VARCHAR2(50),
    prime NUMBER(10,2) ,
    quotite_jursiprudence NUMBER(3,2),
    montant_quoitite NUMBER(15,2),
