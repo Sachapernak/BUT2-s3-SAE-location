@@ -17,6 +17,7 @@ import modele.dao.requetes.RequeteCountNbLogementsBatiment;
 import modele.dao.requetes.RequeteCreateBienLocatif;
 import modele.dao.requetes.RequeteDeleteBienLocatif;
 import modele.dao.requetes.RequeteUpdateBienLocatif;
+import modele.dao.requetes.RequeteSelectBiensByIdBatiment;
 import modele.TypeDeBien;
 
 public class DaoBienLocatif extends DaoModele<BienLocatif> {
@@ -62,5 +63,10 @@ public class DaoBienLocatif extends DaoModele<BienLocatif> {
 		
 		return new BienLocatif(idLogement, type , surface, nbPiece, loyerBase, bat);
 	}
-		
+	
+	
+	public List<BienLocatif> findByIdBatiment(String... id) throws SQLException, IOException{
+		return find(new RequeteSelectBiensByIdBatiment(),id);
+	}
+	
 }

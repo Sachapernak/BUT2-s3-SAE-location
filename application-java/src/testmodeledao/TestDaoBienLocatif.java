@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.After;
@@ -131,6 +132,27 @@ public class TestDaoBienLocatif {
         }
     }
     
+    @Test 
+    public void testDaoBienLocatifFindByIdBatiment() throws SQLException, IOException{
+
+	     Batiment batiment = new Batiment("BAT_TEST4", adresse);
+	     daoBatiment.create(batiment);
+	     
+	     BienLocatif bien1 = new BienLocatif("BIEN_TEST01",TypeDeBien.LOGEMENT, 20, 2, new BigDecimal(150),batiment);
+	     BienLocatif bien2 = new BienLocatif("BIEN_TEST02",TypeDeBien.LOGEMENT, 20, 2, new BigDecimal(150),batiment);
+	     daoBien.create(bien1);
+	     daoBien.create(bien2);
+	     
+	     List<BienLocatif> expected = new ArrayList<>();
+	     expected.add(bien2);
+	     expected.add(bien1); 
+	     	     
+	     List<BienLocatif> resultat = daoBien.findByIdBatiment(batiment.getIdBat());
+	     assertEquals("La liste des biens n'est pas celle attendue",expected, resultat);
+	     daoBien.delete(bien1);
+	     daoBien.delete(bien2);
+    }
+    
     public void deleteTestData() throws SQLException, IOException {
         String deleteBien = "delete from sae_bien_locatif where identifiant_logement like '%TEST%'";
         String deleteBat = "delete from sae_batiment where identifiant_batiment like '%TEST%'";
@@ -150,5 +172,6 @@ public class TestDaoBienLocatif {
             cn.commit();
         }
     }
+    
 }
 

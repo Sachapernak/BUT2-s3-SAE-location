@@ -10,6 +10,7 @@ import javax.swing.border.EmptyBorder;
 
 import controleur.GestionFenetrePrincipale;
 import controleur.GestionMenu;
+import controleur.GestionTablesFenetrePrincipale;
 
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -33,6 +34,7 @@ public class FenetrePrincipale extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private GestionFenetrePrincipale gestionClic;
+	private GestionTablesFenetrePrincipale gestionTable;
 	private GestionMenu gestionMenu;
 	private JTable tableBiensLoc;
 	private JTable tableBatiment;
@@ -64,6 +66,7 @@ public class FenetrePrincipale extends JFrame {
 		
 		this.gestionClic = new GestionFenetrePrincipale(this);
 		this.gestionMenu = new GestionMenu(this);
+		this.gestionTable = new GestionTablesFenetrePrincipale(this);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 750, 600);
@@ -223,7 +226,7 @@ public class FenetrePrincipale extends JFrame {
 		columnModel.getColumn(1).setPreferredWidth(250); 
 		columnModel.getColumn(2).setPreferredWidth(120); 
 		tableBatiment.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
-		this.gestionClic.remplirBatiments(tableBatiment);
+		this.gestionTable.remplirBatiments(tableBatiment);
 		scrollPaneBatiment.setViewportView(tableBatiment);
 		
 		JButton btnAjoutBien = new JButton("Ajouter un bien");
