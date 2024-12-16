@@ -127,7 +127,7 @@ public class FenetrePrincipale extends JFrame {
 		
 		menuBar.add(Box.createHorizontalGlue());
 		JMenu configurationConnexion = new JMenu(" ");
-		ImageIcon originalIcon = new ImageIcon("C:\\Users\\d_eri\\Documents\\Cours\\BUT_2A\\SAE_3.01\\SAE\\images\\iconeEngrenage.png");
+		ImageIcon originalIcon = new ImageIcon("images/iconeEngrenage.png");
 		Image ImageRedim = originalIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
 		ImageIcon IconeRedim = new ImageIcon(ImageRedim);
 		configurationConnexion.setIcon(IconeRedim);
