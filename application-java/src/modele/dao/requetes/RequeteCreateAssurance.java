@@ -9,7 +9,7 @@ public class RequeteCreateAssurance extends Requete<Assurance> {
 
 	@Override
 	public String requete() {
-		return "INSERT INTO SAE_Assurance (numeroContrat, anneeContrat, typeContrat) "
+		return "INSERT INTO SAE_Assurance (numero_de_Contrat, annee_du_Contrat, type_de_Contrat) "
 				+ "VALUES (?, ?, ?)";
 	}
 	

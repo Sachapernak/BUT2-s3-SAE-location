@@ -7,20 +7,14 @@ import modele.Assurance;
 
 public class RequeteDeleteAssurance extends Requete<Assurance> {
 
-	@Override
-	public String requete() {
-		return "Delete from SAE_Assurance "
-				+ "where numeroContrat = ?, anneeContrat = ?";
-	}
-	
-	
-	@Override
-	public void parametres(PreparedStatement prSt,Assurance donnee) throws SQLException {
-		prSt.setString(1, donnee.getTypeContrat());
-		prSt.setString(2, donnee.getNumeroContrat());
-		prSt.setInt(3, donnee.getAnneeContrat());
-		
-		
-	}
+    @Override
+    public String requete() {
+        return "DELETE FROM SAE_Assurance WHERE numero_de_Contrat = ? AND annee_du_Contrat = ?";
+    }
 
+    @Override
+    public void parametres(PreparedStatement prSt, Assurance donnee) throws SQLException {
+        prSt.setString(1, donnee.getNumeroContrat());
+        prSt.setInt(2, donnee.getAnneeContrat());
+    }
 }
