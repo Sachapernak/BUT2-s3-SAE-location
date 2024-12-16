@@ -12,7 +12,9 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import modele.Batiment;
+import modele.BienLocatif;
 import modele.dao.DaoBatiment;
+import modele.dao.DaoBienLocatif;
 import vue.AfficherCharges;
 import vue.FenetrePrincipale;
 import vue.RevalorisationLoyer;
@@ -21,6 +23,7 @@ public class GestionFenetrePrincipale implements ActionListener{
 
 	private FenetrePrincipale fen_principale;
 	private DaoBatiment daoBatiment;
+	private DaoBienLocatif daoBienLocatif;
 	
 	public GestionFenetrePrincipale(FenetrePrincipale fp) {
 		this.fen_principale = fp;
@@ -71,14 +74,23 @@ public class GestionFenetrePrincipale implements ActionListener{
 				model.setRowCount(0);
 		        for (Batiment batiment : batiments) {
 		        	nbLogements = daoBatiment.countBiens(batiment);
-		            model.addRow(new Object[] { batiment.getIdBat(), batiment.getAdresse(),nbLogements});
+		            model.addRow(new Object[] { batiment.getIdBat(), batiment.getAdresse().getAdressePostale(),nbLogements});
 		        }
 			} catch (SQLException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-    		
+    }
+    
+    public void remplirBiensLoc (JTable tableBiensLoc) {
+    	try {
+			List<BienLocatif> biens = daoBienLocatif.findAll();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
     	
     }
 

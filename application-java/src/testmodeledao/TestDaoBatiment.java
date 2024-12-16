@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -14,28 +15,40 @@ import org.junit.Test;
 
 import modele.Adresse;
 import modele.Batiment;
+import modele.BienLocatif;
+import modele.TypeDeBien;
 import modele.dao.DaoAdresse;
 import modele.dao.DaoBatiment;
+import modele.dao.DaoBienLocatif;
 
 public class TestDaoBatiment {
 
     private DaoBatiment daoBat;
     private DaoAdresse daoAdresse;
+    private DaoBienLocatif daoBien;
     Batiment batimentRecup;
 
     @Before
     public void setUp() {
         this.daoBat = new DaoBatiment();
         this.daoAdresse = new DaoAdresse();
+        this.daoBien = new DaoBienLocatif();
     }
 
     private void ajouterBatiment(Batiment batiment) throws SQLException, IOException {
         daoBat.create(batiment);
     }
+    
 
     private void supprimerBatiment(Batiment batiment) throws SQLException, IOException {
         daoBat.delete(batiment);
     }
+    
+    private void supprimerBien(BienLocatif bien) throws SQLException, IOException {
+        daoBien.delete(bien);
+    }
+    
+    
 
     @Test
     public void testDaoBatimentCreate() throws SQLException, IOException {
@@ -93,6 +106,28 @@ public class TestDaoBatiment {
 
         supprimerBatiment(batiment);
         daoAdresse.delete(adresse);
+    }
+    
+    @Test 
+    public void testDaoCountNbLogement() throws SQLException, IOException {
+    	 Adresse adresse = new Adresse("ADDRTEST04", "4 rue du test", 65432, "TestVille4");
+         daoAdresse.create(adresse);
+
+         Batiment batiment = new Batiment("BATTEST04", adresse);
+         ajouterBatiment(batiment);
+         
+         BienLocatif bien1 = new BienLocatif("BIENTEST01",TypeDeBien.LOGEMENT, 20, 2, new BigDecimal(150),batiment);
+         BienLocatif bien2 = new BienLocatif("BIENTEST01",TypeDeBien.LOGEMENT, 20, 2, new BigDecimal(150),batiment);
+         daoBien.create(bien1);
+         //daoBien.create(bien2);
+         
+         int nbLogements = daoBat.countBiens(batiment);
+         
+         assertEquals("Probleme de compte des biens locatifs",2, nbLogements);
+         supprimerBien(bien1);
+         supprimerBien(bien2);
+         supprimerBatiment(batiment);
+         daoAdresse.delete(adresse);
     }
     
     @Test (expected = UnsupportedOperationException.class)

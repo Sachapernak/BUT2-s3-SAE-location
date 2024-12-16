@@ -21,6 +21,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
+
 import java.awt.Font;
 import java.awt.Color;
 import javax.swing.JSeparator;
@@ -140,13 +142,13 @@ public class FenetrePrincipale extends JFrame {
 		contentPane.add(panel_biensLocatifs);
 		panel_biensLocatifs.setLayout(null);
 		
-		JLabel lblBiensLoc = new JLabel("Liste des logements :");
+		JLabel lblBiensLoc = new JLabel("Liste des biens locatifs :");
 		lblBiensLoc.setForeground(new Color(0, 0, 0));
 		lblBiensLoc.setBounds(0, 10, 700, 13);
 		panel_biensLocatifs.add(lblBiensLoc);
 		
 		JScrollPane scrollPaneBiensLoc = new JScrollPane();
-		scrollPaneBiensLoc.setBounds(10, 39, 586, 154);
+		scrollPaneBiensLoc.setBounds(0, 39, 596, 154);
 		panel_biensLocatifs.add(scrollPaneBiensLoc);
 		
 		tableBiensLoc = new JTable();
@@ -194,12 +196,12 @@ public class FenetrePrincipale extends JFrame {
 		contentPane.add(panel_bien);
 		panel_bien.setLayout(null);
 		
-		JLabel lblBatiment = new JLabel("Liste des biens :");
-		lblBatiment.setBounds(0, 10, 127, 13);
+		JLabel lblBatiment = new JLabel("Liste des batiments :");
+		lblBatiment.setBounds(0, 10, 147, 13);
 		panel_bien.add(lblBatiment);
 		
 		JScrollPane scrollPaneBatiment = new JScrollPane();
-		scrollPaneBatiment.setBounds(10, 33, 444, 88);
+		scrollPaneBatiment.setBounds(0, 33, 454, 88);
 		panel_bien.add(scrollPaneBatiment);
 		
 		tableBatiment = new JTable();
@@ -213,9 +215,14 @@ public class FenetrePrincipale extends JFrame {
 				{null, null, null},
 			},
 			new String[] {
-				"Identifiant", "Adresse", "Nb de logements"
+				"Identifiant", "Adresse", "Nb de biens locatifs"
 			}
 		));
+		TableColumnModel columnModel = tableBatiment.getColumnModel();
+		columnModel.getColumn(0).setPreferredWidth(100); 
+		columnModel.getColumn(1).setPreferredWidth(250); 
+		columnModel.getColumn(2).setPreferredWidth(120); 
+		tableBatiment.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
 		this.gestionClic.remplirBatiments(tableBatiment);
 		scrollPaneBatiment.setViewportView(tableBatiment);
 		

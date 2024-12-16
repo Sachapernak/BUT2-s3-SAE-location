@@ -49,7 +49,7 @@ public class DaoBatiment extends DaoModele<Batiment> {
         ResultSet rs = prSt.executeQuery();
         int res = 0;
         if (rs.next()) {
-        	 res = rs.getInt(2); // Récupérer la valeur comme chaîne
+        	 res = rs.getInt(2);
         }
 
         rs.close();
