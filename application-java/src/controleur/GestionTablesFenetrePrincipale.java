@@ -56,6 +56,7 @@ public class GestionTablesFenetrePrincipale implements ListSelectionListener{
     }
     
     public void remplirBatiments (JTable tableBatiments) {
+    	viderTable(tableBatiments);
     	int nbLogements = 0;
     		try {
 				List<Batiment> batiments = daoBatiment.findAll();
@@ -73,6 +74,7 @@ public class GestionTablesFenetrePrincipale implements ListSelectionListener{
     }
     
     public void remplirBiensLoc (JTable tableBiensLoc, String idBatiment) {
+    	viderTable(tableBiensLoc);
     	try {
 			List<BienLocatif> biens = daoBienLocatif.findByIdBatiment(idBatiment);
 			DefaultTableModel model = (DefaultTableModel) tableBiensLoc.getModel();

@@ -11,12 +11,12 @@ import javax.swing.JButton;
 import javax.swing.JLayeredPane;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
 
 import modele.Locataire;
 import modele.dao.DaoLocataire;
 import vue.AfficherLocatairesActuels;
 import vue.AjouterLocataire;
+import vue.ModifierLocataireActuel;
 
 public class GestionAfficherLocataire implements ActionListener {
 	
@@ -38,6 +38,11 @@ public class GestionAfficherLocataire implements ActionListener {
 				this.fen_afficher_locataires_actuels.dispose();
 				break;
 			case "Modifier" :
+				ModifierLocataireActuel mla = new ModifierLocataireActuel(this.fen_afficher_locataires_actuels);
+				JLayeredPane layeredPaneModifLoc = this.fen_afficher_locataires_actuels.getLayeredPane();
+				layeredPaneModifLoc.add(mla, JLayeredPane.PALETTE_LAYER);
+				mla.setVisible(true);
+				/*
 				JList<String> listeLoc = this.fen_afficher_locataires_actuels.getListLocatairesActuels();
 			    int ligneSelect = listeLoc.getSelectedIndex();
 			    
@@ -62,7 +67,7 @@ public class GestionAfficherLocataire implements ActionListener {
 					} catch (SQLException e1) {
 						e1.printStackTrace();
 					}	
-			    }   
+			    }  */ 
 				break;
 				
 			case "Ajouter" : 
@@ -94,10 +99,8 @@ public class GestionAfficherLocataire implements ActionListener {
 
 		    listeLoc.setModel(listModel);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -137,7 +140,6 @@ public class GestionAfficherLocataire implements ActionListener {
         if (parts.length < 2) {
             throw new IllegalArgumentException("Impossible de séparer : " + ligneSelec);
         }
-
         return parts; // Retourne les parties séparées
     }
 

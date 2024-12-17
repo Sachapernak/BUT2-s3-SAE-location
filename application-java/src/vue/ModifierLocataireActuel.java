@@ -9,6 +9,7 @@ import java.awt.Font;
 import java.awt.FlowLayout;
 import javax.swing.JTextField;
 import java.awt.GridLayout;
+
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
@@ -32,7 +33,6 @@ public class ModifierLocataireActuel extends JInternalFrame {
 	
 	private GestionModifierLocataireActuel gestionClic;
 
-	
 
 	public JTextField getTextFieldNom() {
 		return textFieldNom;
@@ -139,7 +139,7 @@ public class ModifierLocataireActuel extends JInternalFrame {
 	 */
 	public ModifierLocataireActuel(AfficherLocatairesActuels al) {
 		
-		this.gestionClic = new GestionModifierLocataireActuel(this);
+		this.gestionClic = new GestionModifierLocataireActuel(this, al);
 		
 		setBounds(0, 0, 620, 420);
 		contentPane = new JPanel();
@@ -363,6 +363,8 @@ public class ModifierLocataireActuel extends JInternalFrame {
 		JButton btnAnnuler = new JButton("Annuler");
 		btnAnnuler.addActionListener(this.gestionClic);
 		p_sud.add(btnAnnuler);
+		
+		this.gestionClic.remplirChampsModification();
 		
 	}
 
