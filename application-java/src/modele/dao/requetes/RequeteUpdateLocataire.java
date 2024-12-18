@@ -17,7 +17,7 @@ public class RequeteUpdateLocataire extends Requete<Locataire> {
 
     @Override
     public String requete() {
-        return "{ call pkg_locataire.update_locataire(?, ?, ?, ?, ?, ?, ?, ?, ?, ?) }";
+        return "{ call pkg_locataire.update_locataire(?, ?, ?, ?, ?, ?, ?, ?, ?) }";
     }
     
 
@@ -30,8 +30,7 @@ public class RequeteUpdateLocataire extends Requete<Locataire> {
         prSt.setString(5, donnee.getTelephone());
         prSt.setDate(6,   Date.valueOf(donnee.getDateNaissance())); 
         prSt.setString(7, donnee.getLieuDeNaissance());
-        prSt.setString(8, donnee.getActeDeCaution());
-        prSt.setString(9, donnee.getAdresse() == null ? null : donnee.getAdresse().getIdAdresse());
+        prSt.setString(8, donnee.getAdresse() == null ? null : donnee.getAdresse().getIdAdresse());
         
         // envoie de la liste de contrats
         
@@ -55,9 +54,9 @@ public class RequeteUpdateLocataire extends Requete<Locataire> {
 			cn = ConnexionBD.getInstance().getConnexion();
 			OracleConnection oracleCon = cn.unwrap(OracleConnection.class);
 			Array array = oracleCon.createOracleArray("CONTRACT_ARRAY", tabContrat.toArray());
-			prSt.setArray(10, array);
+			prSt.setArray(9, array);
 		} catch (IOException e) {
-			prSt.setArray(10, null);
+			prSt.setArray(9, null);
 		} 
 
     }
