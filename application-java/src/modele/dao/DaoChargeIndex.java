@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.List;
 
 import modele.ChargeIndex;
@@ -49,8 +48,8 @@ public class DaoChargeIndex extends DaoModele<ChargeIndex>{
 		String dateDeReleve = curseur.getDate("date_de_releve").toString(); 
 		String type = curseur.getString("type");
 		
-		BigDecimal valeur = curseur.getBigDecimal("valeur");
-		BigDecimal coutVariable = curseur.getBigDecimal("cout_variable");
+		BigDecimal valeur = curseur.getBigDecimal("valeur_compteur");
+		BigDecimal coutVariable = curseur.getBigDecimal("cout_variable_unitaire");
 		BigDecimal coutFixe = curseur.getBigDecimal("cout_fixe");
 		
         String numDoc = curseur.getString("numero_document") ;
@@ -59,9 +58,11 @@ public class DaoChargeIndex extends DaoModele<ChargeIndex>{
 		ChargeIndex nouveau = new ChargeIndex(id, dateDeReleve, type, valeur, coutVariable, 
 				coutFixe, numDoc, dateDoc);
 		
-		String dateRelevePreced = curseur.getDate("date_releve_precedent").toString();
+		String dateRelevePreced = curseur.getDate("date_releve_precedent") != null ? curseur.getDate("date_releve_precedent").toString() : null;
 		
 		if (!(dateRelevePreced == null || dateRelevePreced.isEmpty())) {
+			ChargeIndex ci = new DaoChargeIndex().findById(id, dateRelevePreced);
+			if (ci == null) throw new SQLException("Releve precedent introuvable !");
 			nouveau.setDateRelevePrecedent(dateRelevePreced);
 		}
 		return nouveau;

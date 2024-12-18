@@ -15,10 +15,6 @@ import modele.Diagnostiques;
 import modele.FactureBien;
 import modele.Loyer;
 import modele.TypeDeBien;
-import modele.dao.DaoFactureBien;
-import modele.dao.DaoDiagnostique;
-import modele.dao.DaoLoyer;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;

@@ -46,11 +46,6 @@ public class Locataire {
     private String lieuDeNaissance;
     
     /**
-     * Lien vers l'acte de caution du locataire.
-     */
-    private String acteDeCaution;
-    
-    /**
      * Adresse de contact du locataire.
      */
     private Adresse adresse;
@@ -139,14 +134,6 @@ public class Locataire {
         return lieuDeNaissance;
     }
 
-    /**
-     * Retourne le lien vers l'acte de caution du locataire.
-     *
-     * @return Le lien vers l'acte de caution.
-     */
-    public String getActeDeCaution() {
-        return acteDeCaution;
-    }
 
     /**
      * Retourne l'adresse de contact du locataire.
@@ -229,14 +216,6 @@ public class Locataire {
         this.adresse = adresse;
     }
 
-    /**
-     * Modifie le lien vers l'acte de caution du locataire.
-     *
-     * @param acteDeCaution Le nouveau lien vers l'acte de caution.
-     */
-    public void setActeDeCaution(String acteDeCaution) {
-        this.acteDeCaution = acteDeCaution;
-    }
 
     /**
      * Retourne une représentation textuelle du locataire.
@@ -254,7 +233,6 @@ public class Locataire {
            .append(", ").append(telephone != null ? telephone : absent)
            .append("\n    Naissance : ").append(dateNaissance)
            .append(" à ").append(lieuDeNaissance != null ? lieuDeNaissance : absent)
-           .append("\n    Lien acte de caution : ").append(acteDeCaution != null ? acteDeCaution : absent)
            .append("\n    Adresse : ").append(adresse != null ? adresse.toString() : absent)
            .append("\n    Baux : [");
 
