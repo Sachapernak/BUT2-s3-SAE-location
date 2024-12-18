@@ -27,6 +27,7 @@ import modele.TypeDeBien;
 import modele.dao.DaoAdresse;
 import modele.dao.DaoBail;
 import modele.dao.DaoBatiment;
+import modele.dao.DaoBienLocatif;
 import modele.dao.DaoCautionnaire;
 import modele.dao.DaoCautionner;
 import modele.dao.DaoLocataire;
@@ -47,6 +48,7 @@ public class GestionAjouterCautionnaire implements ActionListener{
 	private DaoCautionner daoCautionner;
 	private DaoAdresse daoAdresse;
 	private DaoBail daoBail;
+	private DaoBienLocatif daoBien;
 	
 	public GestionAjouterCautionnaire(AjouterCautionnaire ac, AjouterLocataire al, AfficherLocatairesActuels afl, AjouterBail ab) {
 		this.fen_ajouter_cautionnaire = ac;
@@ -55,6 +57,7 @@ public class GestionAjouterCautionnaire implements ActionListener{
 		this.fen_ajouter_bail = ab;
 		
 		this.daoBail = new DaoBail();
+		this.daoBien = new DaoBienLocatif();
 		this.daoCautionnaire = new DaoCautionnaire();
 		this.daoCautionner = new DaoCautionner();
 		this.daoLocataire = new DaoLocataire();
@@ -123,18 +126,22 @@ public class GestionAjouterCautionnaire implements ActionListener{
 					
 					//Recup bail
 				    if (this.fen_ajouter_bail.getRdbtnNouveauBail().isSelected()) {
-				    	System.out.println("je passe bien ici l18 GestionAjouterLoc");
+			
 				        String idBail = this.fen_ajouter_bail.getTextFieldIdBail().getText();
 				        String dateDebut = this.fen_ajouter_bail.getTextFieldDateDebut().getText();
 				        String dateFin = this.fen_ajouter_bail.getTextFieldDateFin().getText();
 				        
-				       Batiment bat=  new Batiment("Test", adresseLocataire);
-				       BienLocatif bien = new BienLocatif("Test",TypeDeBien.LOGEMENT,20,2,new BigDecimal(200), bat);
-				       bail = new Bail(idBail, dateDebut, bien);
-				       if (dateFin.length()>= 1) {
-				    	   bail.setDateDeFin(dateFin);
-				       }
 				       
+				       BienLocatif bien;
+					try {
+						bien = daoBien.findById((String) this.fen_ajouter_bail.getComboBoxBiensLoc().getSelectedItem());
+						bail = new Bail(idBail, dateDebut, bien);
+					    if (dateFin.length()>= 1) {
+					    	bail.setDateDeFin(dateFin);
+					    }
+					} catch (SQLException | IOException e1) {
+						e1.printStackTrace();
+					}      
 				        
 				    } 
 				    else if (this.fen_ajouter_bail.getRdbtnBailExistant().isSelected()) {
@@ -150,14 +157,10 @@ public class GestionAjouterCautionnaire implements ActionListener{
 				             */
 							try {
 								bail = daoBail.findById(bailSelectionne);
-							} catch (SQLException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							} catch (IOException e1) {
+							} catch (SQLException | IOException e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							}
-							
 				        } 
 				    }
 									    
@@ -192,6 +195,7 @@ public class GestionAjouterCautionnaire implements ActionListener{
 						
 						daoLocataire.create(nouveauLocataire);
 						daoCautionnaire.create(cautionnaire);
+						daoCautionner.create(cautionner);
 						
 					} catch (SQLException | IOException e1) {
 						e1.printStackTrace();

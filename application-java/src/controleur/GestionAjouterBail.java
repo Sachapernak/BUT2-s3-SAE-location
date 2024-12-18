@@ -20,8 +20,10 @@ import javax.swing.table.DefaultTableModel;
 
 import modele.Bail;
 import modele.Batiment;
+import modele.BienLocatif;
 import modele.dao.DaoBail;
 import modele.dao.DaoBatiment;
+import modele.dao.DaoBienLocatif;
 import vue.AfficherLocatairesActuels;
 import vue.AjouterBail;
 import vue.AjouterCautionnaire;
@@ -32,13 +34,13 @@ public class GestionAjouterBail implements ActionListener{
 	private AjouterBail fen_ajouter_bail;
 	private AfficherLocatairesActuels fen_afficher_locataires;
 	private AjouterLocataire fen_ajouter_locataire;
-	private DaoBatiment daoBatiment;
+	private DaoBienLocatif daoBien;
 	
 	public GestionAjouterBail(AjouterBail ab, AjouterLocataire al, AfficherLocatairesActuels afl) {
 		this.fen_ajouter_bail = ab;
 		this.fen_ajouter_locataire = al;
 		this.fen_afficher_locataires = afl;
-		this.daoBatiment = new DaoBatiment();
+		this.daoBien = new DaoBienLocatif();
 	}
 	
 	
@@ -92,11 +94,11 @@ public class GestionAjouterBail implements ActionListener{
         textFieldDateDebut.setText(formattedDate);
     }
 	
-	public void remplirJComboBoxBatiment(JComboBox<String> comboBoxBatiment) {
+	public void remplirJComboBoxBatiment(JComboBox<String> comboBoxBiens) {
 		try {
-			List<Batiment> batiments = daoBatiment.findAll();
-			for (Batiment batiment : batiments) {
-	            comboBoxBatiment.addItem(batiment.getIdBat());
+			List<BienLocatif> biens = daoBien.findAll();
+			for (BienLocatif bien : biens) {
+	            comboBoxBiens.addItem(bien.getIdentifiantLogement());
 	        }
 		} catch (SQLException e) {
 			e.printStackTrace();

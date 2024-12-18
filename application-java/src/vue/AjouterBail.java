@@ -43,6 +43,7 @@ public class AjouterBail extends JInternalFrame {
     private final ButtonGroup buttonGroup = new ButtonGroup();
   	private JRadioButton rdbtnNouveauBail;
     private JRadioButton rdbtnBailExistant;
+    private JComboBox<String> comboBoxBiensLoc;
     
     public CardLayout getCardLayout() {
     	return this.cardLayout;
@@ -91,6 +92,11 @@ public class AjouterBail extends JInternalFrame {
 	
 	public JTextField getTextFieldDateArrivee() {
 		return textFieldDateArrivee;
+	}
+	
+	
+	public JComboBox<String> getComboBoxBiensLoc() {
+		return comboBoxBiensLoc;
 	}
 
 	/**
@@ -258,9 +264,9 @@ public class AjouterBail extends JInternalFrame {
         btnVider.setBounds(161, 158, 74, 20);
         panelNouveauBail_champs.add(btnVider);
                                                        
-        JComboBox<String> comboBoxBiensLoc = new JComboBox<String>();
-        comboBoxBiensLoc.setModel(new DefaultComboBoxModel<String>(new String[] {"Bat 1", "Bat 2"}));
+        comboBoxBiensLoc = new JComboBox<String>();
         comboBoxBiensLoc.setBounds(302, 10, 123, 21);
+        this.gestionFen.remplirJComboBoxBatiment(comboBoxBiensLoc);
         panelNouveauBail.add(comboBoxBiensLoc);
                                             
         JLabel lblBiensLoc = new JLabel("Bien locatif : ");
