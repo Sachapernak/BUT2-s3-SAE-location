@@ -88,7 +88,7 @@ public class GestionAjouterCautionnaire implements ActionListener{
 				break;
 			case "Valider" : 
 				
-					JList<String> listeLoc = this.fen_afficher_locataires.getListLocatairesActuels();
+					JTable tableLoc = this.fen_afficher_locataires.getTableLocatairesActuels();
 					Locataire nouveauLocataire;
 					Cautionnaire cautionnaire;
 					Cautionner cautionner;
@@ -197,8 +197,8 @@ public class GestionAjouterCautionnaire implements ActionListener{
 						e1.printStackTrace();
 					}
 					
-					DefaultListModel<String> modelListeLoc = (DefaultListModel<String>) listeLoc.getModel();
-					modelListeLoc.addElement(nouveauLocataire.getIdLocataire().toString() + "   " + nouveauLocataire.getNom().toString() + "   " + nouveauLocataire.getPrenom());
+					DefaultTableModel modelTableLoc = (DefaultTableModel) tableLoc.getModel();
+					modelTableLoc.addRow(new String[] { nouveauLocataire.getIdLocataire(), nouveauLocataire.getNom(), nouveauLocataire.getPrenom()});
 					
 					this.fen_ajouter_cautionnaire.dispose();
 					this.fen_ajouter_cautionnaire.getFenPrecedente().dispose();	

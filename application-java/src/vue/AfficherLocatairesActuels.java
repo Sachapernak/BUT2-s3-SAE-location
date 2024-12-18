@@ -40,17 +40,20 @@ public class AfficherLocatairesActuels extends JInternalFrame{
 	private JTextField textFieldMontantPaye;
 	private JTextField textFieldMontantRestantDu;
 	private JTextField textFieldCaution;
-	private JList<String> listLocatairesActuels;
 	private JTextField textFieldMail;
+	private JTable tableLocatairesActuels;
 	
-	public JList<String> getListLocatairesActuels() {
-		return listLocatairesActuels;
+	
+	public JTable getTableLocatairesActuels() {
+		return tableLocatairesActuels;
 	}
 
-	public void setListLocatairesActuels(JList<String> listLocatairesActuels) {
-		this.listLocatairesActuels = listLocatairesActuels;
+	public void setTableLocatairesActuels(JTable tableLocatairesActuels) {
+		this.tableLocatairesActuels = tableLocatairesActuels;
 	}
 	
+	
+
 	public JTextField getTextFieldDateDeNaissance() {
 		return textFieldDateDeNaissance;
 	}
@@ -145,12 +148,29 @@ public class AfficherLocatairesActuels extends JInternalFrame{
 		JScrollPane scrollPaneLocatairesActuels = new JScrollPane();
 		panel_locataires.add(scrollPaneLocatairesActuels, BorderLayout.CENTER);
 		
-		listLocatairesActuels = new JList<String>();
-		listLocatairesActuels.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		listLocatairesActuels.setModel(new DefaultListModel<String>());
-		this.gestionClic.remplirListeLoc();
-		this.listLocatairesActuels.getSelectionModel().addListSelectionListener(this.gestionChampsLoc);
-		scrollPaneLocatairesActuels.setViewportView(listLocatairesActuels);
+		tableLocatairesActuels = new JTable();
+		tableLocatairesActuels.setModel(new DefaultTableModel(
+			new String[][] {
+				{null, null, null},
+				{null, null, null},
+				{null, null, null},
+				{null, null, null},
+				{null, null, null},
+			},
+			new String[] {
+				"Identifiant", "Nom", "Pr\u00E9nom"
+			}
+		) {
+			Class[] columnTypes = new Class[] {
+				String.class, String.class, String.class
+			};
+			public Class getColumnClass(int columnIndex) {
+				return columnTypes[columnIndex];
+			}
+		});
+		scrollPaneLocatairesActuels.setViewportView(tableLocatairesActuels);
+		this.gestionChampsLoc.remplirTableLocatairesActuels();
+		tableLocatairesActuels.getSelectionModel().addListSelectionListener(this.gestionChampsLoc);
 		
 		JPanel p_boutons = new JPanel();
 		p_boutons.setBounds(8, 226, 304, 31);

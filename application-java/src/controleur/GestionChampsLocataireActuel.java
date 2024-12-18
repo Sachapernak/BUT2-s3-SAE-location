@@ -23,24 +23,22 @@ import vue.AfficherLocatairesActuels;
 public class GestionChampsLocataireActuel implements ListSelectionListener {
 	
 	private AfficherLocatairesActuels fen_afficher_locataires_actuels;
-	private GestionAfficherLocataire gestionAfficherLoc;
 	private DaoLocataire daoLocataire;
 	
 	public GestionChampsLocataireActuel(AfficherLocatairesActuels afl)  {
 		this.fen_afficher_locataires_actuels = afl;
 		this.daoLocataire = new DaoLocataire();
-		this.gestionAfficherLoc = new GestionAfficherLocataire(afl);
 	}
 
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
-		JList<String> listeLoc = this.fen_afficher_locataires_actuels.getListLocatairesActuels();
+		JTable tableLoc = this.fen_afficher_locataires_actuels.getTableLocatairesActuels();
 		JTextField dateNaissance = this.fen_afficher_locataires_actuels.getTextFieldDateDeNaissance();
 		JTextField adresse = this.fen_afficher_locataires_actuels.getTextFieldAdressePerso();
 		JTextField tel = this.fen_afficher_locataires_actuels.getTextFieldTel();
 		JTextField mail = this.fen_afficher_locataires_actuels.getTextFieldMail();
 		
-		int index = listeLoc.getSelectedIndex();
+		int index = tableLoc.getSelectedRow();
 		
 		if (index == -1) { 
 	        viderChamps();
@@ -48,21 +46,16 @@ public class GestionChampsLocataireActuel implements ListSelectionListener {
 	        return; 
 	    }
 		
-		try {
-			Locataire locSelect = this.gestionAfficherLoc.lireLigneListe(index);
-			dateNaissance.setText(locSelect.getDateNaissance().toString());
-			Adresse adr = locSelect.getAdresse();
-			if (adr != null) {
-				adresse.setText(adr.getAdressePostale());
-			}
-			tel.setText(locSelect.getTelephone());
-			mail.setText(locSelect.getEmail());
-			
-			remplirTableLocation(this.fen_afficher_locataires_actuels.getTableBiensLoues(), locSelect);
-			
-		} catch (SQLException e1) {
-			e1.printStackTrace();
+		Locataire locSelect = lireLigneTable(this.fen_afficher_locataires_actuels.getTableLocatairesActuels());
+		dateNaissance.setText(locSelect.getDateNaissance().toString());
+		Adresse adr = locSelect.getAdresse();
+		if (adr != null) {
+			adresse.setText(adr.getAdressePostale());
 		}
+		tel.setText(locSelect.getTelephone());
+		mail.setText(locSelect.getEmail());
+		
+		remplirTableLocation(this.fen_afficher_locataires_actuels.getTableBiensLoues(), locSelect);
 	}
 	
 	public void remplirTableLocation(JTable tableLocations, Locataire locSelect) {
@@ -122,8 +115,43 @@ public class GestionChampsLocataireActuel implements ListSelectionListener {
             model.removeRow(0);
         }
     }
-
-
+    
+	public void remplirTableLocatairesActuels() {
+	    JTable tableLocataires = this.fen_afficher_locataires_actuels.getTableLocatairesActuels();
+	    
+	    viderTable(tableLocataires);
+	    try {
+			List<Locataire> locataires = daoLocataire.findAll();
+			DefaultTableModel model = (DefaultTableModel) tableLocataires.getModel();
+			model.setRowCount(0);
+	        for (Locataire locataire : locataires) {
+	            model.addRow(new String[] { locataire.getIdLocataire(), locataire.getNom(), locataire.getPrenom()});
+	        }
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public Locataire lireLigneTable(JTable tableLocatairesActuels) {
+		Locataire loc = null;
+		JTable tableLocataires = this.fen_afficher_locataires_actuels.getTableLocatairesActuels();
+		int index = tableLocataires.getSelectedRow();
+		 
+		String idLoc = (String) tableLocataires.getValueAt(index, 0);
+		
+		try {
+			loc = daoLocataire.findById(idLoc);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return loc;		 
+		 
+	}
 	
 	
 }
