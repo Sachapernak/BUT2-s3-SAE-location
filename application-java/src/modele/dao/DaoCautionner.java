@@ -13,10 +13,61 @@ import modele.ConnexionBD;
 import modele.Cautionner;
 import modele.Bail;
 import modele.dao.requetes.Requete;
+import modele.dao.requetes.RequeteCreateCautionner;
+import modele.dao.requetes.RequeteUpdateCautionner;
+import modele.dao.requetes.RequeteDeleteCautionner;
 import modele.dao.requetes.RequeteSelectCautionByIdBail;
+import modele.dao.requetes.RequeteSelectCautionById;
+import modele.dao.requetes.RequeteSelectCaution;
 
-public class DaoCautionner {
+public class DaoCautionner extends DaoModele<Cautionner> implements Dao<Cautionner> {
+	
+	
+	@Override
+	public void create(Cautionner donnees) throws SQLException, IOException {
+		miseAJour(new RequeteCreateCautionner(), donnees);
+	}
 
+
+	@Override
+	public void update(Cautionner donnees) throws SQLException, IOException {
+		miseAJour(new RequeteUpdateCautionner(), donnees);
+		
+	}
+
+
+	@Override
+	public void delete(Cautionner donnees) throws SQLException, IOException {
+		miseAJour(new RequeteDeleteCautionner(), donnees);
+		
+	}
+
+
+	@Override
+	public Cautionner findById(String... id) throws SQLException, IOException {
+		return findById(new RequeteSelectCautionById(), id);
+	}
+
+
+	@Override
+	public List<Cautionner> findAll() throws SQLException, IOException {
+		return find(new RequeteSelectCaution());
+	}
+
+
+	@Override
+	protected Cautionner createInstance(ResultSet curseur) throws SQLException, IOException {
+        String idCautionnaire = curseur.getString("id_caution");
+        String idBail = curseur.getString("id_bail");
+        String fichierCaution = curseur.getString("fichier_caution");
+        BigDecimal montant = curseur.getBigDecimal("montant");        
+        Cautionner caution = new Cautionner(montant,fichierCaution ,new DaoBail().findById(idBail), new DaoCautionnaire().findById(idCautionnaire));
+
+
+        return caution;
+	}
+	
+	
     /**
      * Crée une instance de l'objet Cautionner à partir d'un ResultSet.
      * 

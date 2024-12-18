@@ -19,11 +19,12 @@ public class GestionModifierLocataireActuel implements ActionListener{
 	private ModifierLocataireActuel fen_modifier_locataire;
 	private AfficherLocatairesActuels fen_afficher_locataires_actuels ;
 	private DaoLocataire daoLocataire;
-	
+		
 	public GestionModifierLocataireActuel(ModifierLocataireActuel mla, AfficherLocatairesActuels al) {
 		this.fen_modifier_locataire = mla;
 		this.fen_afficher_locataires_actuels = al;
 		this.daoLocataire = new DaoLocataire();
+		
 	}
 	
 	@Override
@@ -36,11 +37,61 @@ public class GestionModifierLocataireActuel implements ActionListener{
 				this.fen_modifier_locataire.dispose();
 				break;
 			case "Valider" : 
-				this.fen_modifier_locataire.dispose();
-				JOptionPane.showMessageDialog(this.fen_modifier_locataire,"Modification effectuée","Modifier le locataire", JOptionPane.INFORMATION_MESSAGE);
-				break;
+				
+	             try {
+	                    //modifierLocataire();
+	                    JOptionPane.showMessageDialog(this.fen_modifier_locataire, 
+	                        "Modification effectuée avec succès.", 
+	                        "Modifier le locataire", 
+	                        JOptionPane.INFORMATION_MESSAGE);
+	                } catch (Exception ex) {
+	                    JOptionPane.showMessageDialog(this.fen_modifier_locataire, 
+	                        "Erreur lors de la modification : " + ex.getMessage(), 
+	                        "Erreur", 
+	                        JOptionPane.ERROR_MESSAGE);
+	                    ex.printStackTrace();
+	                }
+	                this.fen_modifier_locataire.dispose();
+	                break;
 		}
 	}
+	
+    public void modifierLocataire() throws SQLException, IOException {
+        // Récupérer le locataire sélectionné
+        JList<String> listeLoc = this.fen_afficher_locataires_actuels.getListLocatairesActuels();
+        int ligneSelect = listeLoc.getSelectedIndex();
+        if (ligneSelect < 0) {
+            throw new IllegalStateException("Aucun locataire sélectionné.");
+        }
+        
+        // Obtenir l'ID du locataire
+        String[] infos = GestionAfficherLocataire.separerInfosLoc(listeLoc, ligneSelect);
+        String locataireId = infos[0];
+        Locataire locataire = daoLocataire.findById(locataireId);
+
+        // Mettre à jour les informations à partir des champs de l'interface
+        locataire.setNom(this.fen_modifier_locataire.getTextFieldNom().getText());
+        locataire.setPrenom(this.fen_modifier_locataire.getTextFieldPrenom().getText());
+        locataire.setEmail(this.fen_modifier_locataire.getTextFieldEmail().getText());
+        locataire.setTelephone(this.fen_modifier_locataire.getTextFieldTel().getText());
+        locataire.setDateNaissance(this.fen_modifier_locataire.getTextFieldDateNaissance().getText());
+        locataire.setLieuDeNaissance(this.fen_modifier_locataire.getTextFieldLieuNaissance().getText());
+        
+        // Mise à jour de l'adresse
+        if (locataire.getAdresse() != null) {
+            locataire.getAdresse().setAdresse(this.fen_modifier_locataire.getTextFieldAdr().getText());
+            locataire.getAdresse().setComplementAdresse(this.fen_modifier_locataire.getTextFieldComplement().getText());
+            locataire.getAdresse().setCodePostal(Integer.parseInt(this.fen_modifier_locataire.getTextFieldCodePostal().getText()));
+            locataire.getAdresse().setVille(this.fen_modifier_locataire.getTextFieldVille().getText());
+        }
+        
+        // Enregistrer les modifications dans la base de données
+        daoLocataire.update(locataire);
+        
+        // Mettre à jour la liste des locataires affichés
+        GestionAfficherLocataire gestionAfficher = new GestionAfficherLocataire(fen_afficher_locataires_actuels);
+        gestionAfficher.remplirListeLoc();
+    }
 	
 	public Locataire recupererInfosLocataire() {
 		JList<String> listeLoc = this.fen_afficher_locataires_actuels.getListLocatairesActuels();

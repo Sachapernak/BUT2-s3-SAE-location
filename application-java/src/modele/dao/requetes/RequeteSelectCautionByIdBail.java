@@ -8,7 +8,7 @@ public class RequeteSelectCautionByIdBail extends Requete<Cautionner> {
 
 	@Override
 	public String requete() {
-		return "select * from sae_caution "
+		return "select * from sae_cautionner "
 				+ "where id_bail = ?";
 	}
 

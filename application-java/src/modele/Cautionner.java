@@ -1,7 +1,6 @@
 package modele;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -39,6 +38,7 @@ public class Cautionner {
 	public Cautionner(BigDecimal montant, String fichierCaution, Bail bail, Cautionnaire... cautionnaires) {
 		this.montant = montant;
 		this.fichierCaution = fichierCaution;
+		this.bail = bail;
 		this.cautionnaires = Arrays.asList(cautionnaires);
 	}
 
@@ -77,6 +77,25 @@ public class Cautionner {
 	public List<Cautionnaire> getCautionnaire() {
 		return cautionnaires;
 	}
+	
+    /**
+     * Retourne lla liste du ou des cautionnaires associé à la caution.
+     *
+     * @return La liste contenant les instances de la classe Cautionnaire.
+     */
+	public Cautionnaire getLastCautionnaire() {
+		return cautionnaires.get(cautionnaires.size()-1);
+	}
+
+	public void setMontant(BigDecimal montant) {
+		this.montant = montant;
+		
+	}
+	
+	public void setFichierCaution(String fichier) {
+		this.fichierCaution = fichier;
+	}
+	
 	
 	
 }

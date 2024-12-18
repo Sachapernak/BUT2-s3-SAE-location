@@ -11,7 +11,11 @@ import javax.swing.JButton;
 import javax.swing.JLayeredPane;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
+import modele.Bail;
+import modele.Contracter;
 import modele.Locataire;
 import modele.dao.DaoLocataire;
 import vue.AfficherLocatairesActuels;
@@ -22,6 +26,7 @@ public class GestionAfficherLocataire implements ActionListener {
 	
 	private AfficherLocatairesActuels fen_afficher_locataires_actuels;
 	private DaoLocataire daoLocataire;
+	
 	
 	public GestionAfficherLocataire(AfficherLocatairesActuels afl)  {
 		this.fen_afficher_locataires_actuels = afl;
@@ -41,6 +46,7 @@ public class GestionAfficherLocataire implements ActionListener {
 				ModifierLocataireActuel mla = new ModifierLocataireActuel(this.fen_afficher_locataires_actuels);
 				JLayeredPane layeredPaneModifLoc = this.fen_afficher_locataires_actuels.getLayeredPane();
 				layeredPaneModifLoc.add(mla, JLayeredPane.PALETTE_LAYER);
+				
 				mla.setVisible(true);
 				/*
 				JList<String> listeLoc = this.fen_afficher_locataires_actuels.getListLocatairesActuels();
@@ -85,6 +91,9 @@ public class GestionAfficherLocataire implements ActionListener {
 	public void remplirListeLoc() {
 	    JList<String> listeLoc = this.fen_afficher_locataires_actuels.getListLocatairesActuels();
 	    List<Locataire> locataires;
+	    
+	    int selectedIndex = listeLoc.getSelectedIndex(); 
+	    
 		try {
 			locataires = this.daoLocataire.findAll();
 			if (locataires == null || locataires.isEmpty()) {
@@ -98,6 +107,7 @@ public class GestionAfficherLocataire implements ActionListener {
 		    }
 
 		    listeLoc.setModel(listModel);
+		    
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -112,8 +122,6 @@ public class GestionAfficherLocataire implements ActionListener {
 	    if (indexLigne < 0 || indexLigne >= listLocataires.getModel().getSize()) {
 	        throw new IllegalArgumentException("Index invalide : " + indexLigne);
 	    }
-
-	    String ligneSelec = listLocataires.getModel().getElementAt(indexLigne);
 
 	    String[] ligneSeparee = separerInfosLoc(listLocataires, indexLigne); 
 	    String locataireId = ligneSeparee[0]; 
@@ -142,7 +150,6 @@ public class GestionAfficherLocataire implements ActionListener {
         }
         return parts; // Retourne les parties séparées
     }
-
-	
+       
 	
 }

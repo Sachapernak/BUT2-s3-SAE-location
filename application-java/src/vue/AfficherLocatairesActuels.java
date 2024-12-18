@@ -160,13 +160,13 @@ public class AfficherLocatairesActuels extends JInternalFrame{
 		btnModifier.addActionListener(this.gestionClic);
 		p_boutons.add(btnModifier);
 		
-		JButton btnAjouter = new JButton("Ajouter");
-		btnAjouter.addActionListener(this.gestionClic);
-		p_boutons.add(btnAjouter);
-		
 		JButton btnResilierBail = new JButton("Résilier le bail");
 		btnResilierBail.addActionListener(this.gestionClic);
 		p_boutons.add(btnResilierBail);
+		
+		JButton btnAjouter = new JButton("Ajouter");
+		btnAjouter.addActionListener(this.gestionClic);
+		p_boutons.add(btnAjouter);
 		
 		JPanel panel_retour = new JPanel();
 		panel_retour.setBounds(559, 420, 89, 31);
