@@ -3,14 +3,14 @@ package modele.dao.requetes;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import modele.ChargeFixe;
+import modele.ChargeIndex;
 
-public class RequeteSelectChargeFixeById extends Requete<ChargeFixe> {
+public class RequeteSelectChargeIndexSameId extends Requete<ChargeIndex> {
 
 	@Override
 	public String requete() {
-		return "select * from sae_charge_cf where "
-				+ "id_charge_cf = ?";
+		return "Select * from sae_charge_index "
+				+ "where id_charge_index = ?";
 	}
 	
 	@Override

@@ -38,12 +38,7 @@ public class ChargeIndex {
 		return dateDeReleve;
 	}
 
-
-	public void setDateDeReleve(String dateDeReleve) {
-		this.dateDeReleve = dateDeReleve;
-	}
-
-
+	
 	public String getType() {
 		return type;
 	}

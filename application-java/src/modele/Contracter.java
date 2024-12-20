@@ -77,19 +77,6 @@ public class Contracter {
     }
 
     /**
-     * Modifie la date d'entrée dans le contrat.
-     *
-     * @param dateEntree La nouvelle date d'entrée (format "YYYY-MM-DD").
-     * @throws IllegalArgumentException Si la date d'entrée est postérieure à la date de sortie existante.
-     */
-    public void ajouterDateEntree(String dateEntree) {
-        if (dateSortie != null && Date.valueOf(dateSortie).before(Date.valueOf(dateEntree))) {
-            throw new IllegalArgumentException("La date de fin ne peut etre inferieure a la date de début !");
-        }
-        this.dateEntree = dateEntree;
-    }
-
-    /**
      * Retourne la date de sortie du contrat.
      *
      * @return La date de sortie (format "YYYY-MM-DD").
