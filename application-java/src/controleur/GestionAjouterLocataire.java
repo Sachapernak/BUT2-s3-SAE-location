@@ -35,25 +35,38 @@ public class GestionAjouterLocataire implements ActionListener{
 				this.fen_ajouter_locataire.dispose();
 				break;
 			case "Continuer" : 
-				DaoLocataire daoLocataire = new DaoLocataire();
-				try {
-					Locataire loc = daoLocataire.findById(this.fen_ajouter_locataire.getTextFieldId().getText());
-					if (loc == null) {
-						AjouterBail ab = new AjouterBail(this.fen_ajouter_locataire, this.fen_afficher_locataires) ;
-						JLayeredPane layeredPaneAjoutBail = this.fen_afficher_locataires.getLayeredPane();
-						layeredPaneAjoutBail.add(ab, JLayeredPane.PALETTE_LAYER);
-						ab.setVisible(true);
-					}else {
-					       JOptionPane.showMessageDialog(this.fen_ajouter_locataire,"Le locataire existe déjà","Locataire existant", JOptionPane.ERROR_MESSAGE);
+				if (!champsObligatoiresRemplis()) {
+					 JOptionPane.showMessageDialog(this.fen_ajouter_locataire,"Il est nécessaire de remplir les champs obligatoires","Formulaire incomplet", JOptionPane.ERROR_MESSAGE);
+				} else {
+					DaoLocataire daoLocataire = new DaoLocataire();
+					try {
+						Locataire loc = daoLocataire.findById(this.fen_ajouter_locataire.getTextFieldId().getText());
+						if (loc == null) {
+							AjouterBail ab = new AjouterBail(this.fen_ajouter_locataire, this.fen_afficher_locataires) ;
+							JLayeredPane layeredPaneAjoutBail = this.fen_afficher_locataires.getLayeredPane();
+							layeredPaneAjoutBail.add(ab, JLayeredPane.PALETTE_LAYER);
+							ab.setVisible(true);
+						}else {
+						       JOptionPane.showMessageDialog(this.fen_ajouter_locataire,"Le locataire existe déjà","Locataire existant", JOptionPane.ERROR_MESSAGE);
+						}
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					} catch (IOException e1) {
+						e1.printStackTrace();
 					}
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				} catch (IOException e1) {
-					e1.printStackTrace();
 				}
-			
+						
 				break;
 		}
 	}
+	
+	public boolean champsObligatoiresRemplis() {
+	    return (!this.fen_ajouter_locataire.getTextFieldId().getText().isEmpty()
+	            && !this.fen_ajouter_locataire.getTextFieldNom().getText().isEmpty()
+	            && !this.fen_ajouter_locataire.getTextFieldPrenom().getText().isEmpty()
+	            && !this.fen_ajouter_locataire.getTextFieldDateNaissance().getText().isEmpty()
+	            && !this.fen_ajouter_locataire.getTextFieldLieuNaissance().getText().isEmpty());
+	}
+
 	
 }

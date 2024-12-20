@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-import javax.swing.JList;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
@@ -64,7 +63,7 @@ public class GestionChampsLocataireActuel implements ListSelectionListener {
 		try {
 			List<Contracter> contrats = locSelect.getContrats();
 			String loyerActuel = "";
-			String dateRegularisation = "";
+			String dateDerniereRegularisation = "";
 			
 			for (Contracter contrat : contrats) {
 				String dateEntree = contrat.getDateEntree();
@@ -74,7 +73,7 @@ public class GestionChampsLocataireActuel implements ListSelectionListener {
 				List<Regularisation> regularisations = bail.getRegularisation();
 				int tailleListeRegu = regularisations.size();
 				if (tailleListeRegu>0) {
-					String dateDerniereRegu = regularisations.get(tailleListeRegu-1).getDateRegu();
+					dateDerniereRegularisation = regularisations.get(tailleListeRegu-1).getDateRegu();
 				}
 				
 				String batiment = bail.getBien().getBat().getIdBat();
@@ -88,7 +87,7 @@ public class GestionChampsLocataireActuel implements ListSelectionListener {
 				String type = bail.getBien().getType().getValeur();
 				
 				DefaultTableModel model = (DefaultTableModel) tableLocations.getModel();
-				model.addRow(new Object[] {dateEntree, type, batiment, complementAdr, loyerActuel, partLoyer, dateRegularisation});
+				model.addRow(new Object[] {dateEntree, type, batiment, complementAdr, loyerActuel, partLoyer, dateDerniereRegularisation});
 			}
 			
 		} catch (SQLException | IOException e) {

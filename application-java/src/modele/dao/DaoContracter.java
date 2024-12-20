@@ -8,11 +8,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import modele.Bail;
 import modele.ConnexionBD;
 import modele.Contracter;
 import modele.Locataire;
 import modele.dao.requetes.Requete;
 import modele.dao.requetes.RequeteSelectContratByIdLocataire;
+import modele.dao.requetes.RequeteSelectContratByIdBail;
 
 /**
  * Classe DaoContracter qui gère l'accès aux données relatives aux contrats (contracter) dans la base de données.
@@ -53,7 +55,40 @@ public class DaoContracter {
         
         return contrat;
     }
-
+    
+    /**
+     * Crée une instance de l'objet Contracter à partir d'un ResultSet.
+     * 
+     * Cette méthode extrait les informations d'un contrat à partir d'un `ResultSet` et retourne une instance de `Contracter`
+     * associée au bail spécifié. Elle gère la conversion des dates et la récupération des informations du ou des locataires liés.
+     * 
+     * @param curseur Le `ResultSet` contenant les données du contrat.
+     * @param Bail Le bail associé au contrat.
+     * @return L'instance de `Contracter` correspondant aux données extraites du `ResultSet`.
+     * @throws SQLException Si une erreur survient lors de l'accès aux données du `ResultSet`.
+     * @throws IllegalArgumentException Si les données du contrat sont invalides.
+     * @throws IOException Si une erreur d'entrée/sortie se produit.
+     */
+    protected Contracter createInstance(ResultSet curseur, Bail bail) throws SQLException, IllegalArgumentException, IOException {
+        String idLocataire = curseur.getString("identifiant_locataire");
+        String dateEntre = curseur.getDate("Date_d_entree").toString();
+        String dateSortie;
+        dateSortie = curseur.getDate("Date_de_sortie") == null ?  null : curseur.getDate("Date_de_sortie").toString();
+        float partLoyer = curseur.getFloat("PART_DE_LOYER");
+        
+        Contracter contrat = new Contracter(new DaoLocataire().findById(idLocataire),
+                                            bail,
+                                            dateEntre,
+                                            partLoyer);
+        
+        if (dateSortie != null) {
+            contrat.ajouterDateSortie(dateSortie);
+        }
+        
+        return contrat;
+    }
+    
+    
     /**
      * Récupère la liste des contrats associés à un locataire.
      * 
@@ -92,4 +127,33 @@ public class DaoContracter {
         prSt.close();
         return res;
     }
+    
+    public List<Contracter> getContrats(Bail donnees)  throws SQLException, IOException{
+        if (donnees == null) {
+            return new ArrayList<Contracter>();
+        }
+        
+        Requete<Contracter> req = new RequeteSelectContratByIdBail();
+        
+        String id = donnees.getIdBail();
+        
+        List<Contracter> res = new ArrayList<>();
+        
+        Connection cn = ConnexionBD.getInstance().getConnexion();
+        
+        PreparedStatement prSt = cn.prepareStatement(req.requete());
+        
+        req.parametres(prSt, id);
+        
+        ResultSet rs = prSt.executeQuery();
+        
+        while (rs.next()) {
+            res.add(createInstance(rs, donnees));
+        }
+        
+        rs.close();
+        prSt.close();
+        return res;
+    }
+    
 }

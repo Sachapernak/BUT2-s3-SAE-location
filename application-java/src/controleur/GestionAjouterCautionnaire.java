@@ -31,6 +31,7 @@ import modele.dao.DaoBatiment;
 import modele.dao.DaoBienLocatif;
 import modele.dao.DaoCautionnaire;
 import modele.dao.DaoCautionner;
+import modele.dao.DaoContracter;
 import modele.dao.DaoLocataire;
 import vue.AfficherLocatairesActuels;
 import vue.AjouterBail;
@@ -50,6 +51,7 @@ public class GestionAjouterCautionnaire implements ActionListener{
 	private DaoAdresse daoAdresse;
 	private DaoBail daoBail;
 	private DaoBienLocatif daoBien;
+	private DaoContracter daoContracter;
 	
 	public GestionAjouterCautionnaire(AjouterCautionnaire ac, AjouterLocataire al, AfficherLocatairesActuels afl, AjouterBail ab) {
 		this.fen_ajouter_cautionnaire = ac;
@@ -63,6 +65,7 @@ public class GestionAjouterCautionnaire implements ActionListener{
 		this.daoCautionner = new DaoCautionner();
 		this.daoLocataire = new DaoLocataire();
 		this.daoAdresse = new DaoAdresse();
+		this.daoContracter = new DaoContracter();
 	}
 	
 	@Override
@@ -99,6 +102,7 @@ public class GestionAjouterCautionnaire implements ActionListener{
 					Adresse adresseCautionnaire;
 					Bail bail = null; 
 					String dateDebut = null;
+					float partLoyer = 1F;
 					
 					//Recup infos locataire
 					String idLoc = this.fen_ajouter_locataire.getTextFieldId().getText();
@@ -140,11 +144,8 @@ public class GestionAjouterCautionnaire implements ActionListener{
 			
 				        String idBail = this.fen_ajouter_bail.getTextFieldIdBail().getText();
 				        dateDebut = this.fen_ajouter_bail.getTextFieldDateDebut().getText();
-				        System.out.println(dateDebut);
 				        String dateFin = this.fen_ajouter_bail.getTextFieldDateFin().getText();
-				        
-				       
-				       BienLocatif bien;
+				        BienLocatif bien;
 					try {
 						bien = daoBien.findById((String) this.fen_ajouter_bail.getComboBoxBiensLoc().getSelectedItem());
 						bail = new Bail(idBail, dateDebut, bien);
@@ -162,8 +163,8 @@ public class GestionAjouterCautionnaire implements ActionListener{
 				        if (selectedRow != -1) {
 				            // Récupérez les informations à partir de la ligne sélectionnée
 				            String bailSelectionne = (String) this.fen_ajouter_bail.getTableBauxActuels().getValueAt(selectedRow, 0);
-				            String dateArrivee = this.fen_ajouter_bail.getTextFieldDateArrivee().getText();  
-				            
+				            dateDebut = this.fen_ajouter_bail.getTextFieldDateArrivee().getText();
+				            		            			            
 				            /* A GERER / 
 				             * ...
 				             */
@@ -195,22 +196,19 @@ public class GestionAjouterCautionnaire implements ActionListener{
 					
 					cautionner = new Cautionner(montant, lienActeCaution, bail, cautionnaire);
 					
-					System.out.println(dateDebut);
-					Contracter ctr = new Contracter(nouveauLocataire, bail, dateDebut, 1f);
+					Contracter ctr = new Contracter(nouveauLocataire, bail, dateDebut, partLoyer);
 					nouveauLocataire.getContrats().add(ctr);
 					
 					try {
 						if (adresse != null) {
-							System.out.println(adresseLocataire);
 							daoAdresse.create(adresseLocataire);
 							if (daoAdresse.findById(adresseLocataire.getIdAdresse())==null) {
-								System.out.println("YOUHOUUTBEZIHFZ");
 								daoAdresse.create(adresseCautionnaire);
 							}
 						}
 						
 						daoBail.create(bail);
-						System.out.println("nouv loc : " + nouveauLocataire.getContrats().get(0).getDateEntree());
+						daoLocataire.create(nouveauLocataire);
 						daoCautionnaire.create(cautionnaire);
 						daoCautionner.create(cautionner);
 						

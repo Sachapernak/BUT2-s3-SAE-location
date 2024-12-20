@@ -16,19 +16,25 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
 import controleur.GestionAjouterBail;
+import controleur.GestionTablesAjouterBail;
+
 import java.awt.CardLayout;
 import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
+import javax.swing.ListSelectionModel;
+import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
+import java.awt.Color;
 
-public class AjouterBail extends JInternalFrame {
+public class AjouterBail extends JInternalFrame  {
 
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
     private JPanel panelAssocierBail;
     private JTable tableBauxActuels;
     private JTable tablePartsLoyer;
+    private JTable tableTotal;
     public JTextField textFieldIdBail;
     public JTextField textFieldDateDebut;
     public JTextField textFieldDateFin;
@@ -37,13 +43,14 @@ public class AjouterBail extends JInternalFrame {
     private CardLayout cardLayout;
 
     private GestionAjouterBail gestionFen;
+    private GestionTablesAjouterBail gestionTableAjoutBail;
     
     private AjouterLocataire fenPrecedente;
-    private JTable tableTotal;
-    private final ButtonGroup buttonGroup = new ButtonGroup();
+    	private final ButtonGroup buttonGroup = new ButtonGroup();
   	private JRadioButton rdbtnNouveauBail;
     private JRadioButton rdbtnBailExistant;
     private JComboBox<String> comboBoxBiensLoc;
+    private JLabel lblMessageErreur;
     
     public CardLayout getCardLayout() {
     	return this.cardLayout;
@@ -60,6 +67,7 @@ public class AjouterBail extends JInternalFrame {
 	public JRadioButton getRdbtnBailExistant() {
 		return rdbtnBailExistant;
 	}
+	
 	
 	public JTextField getTextFieldIdBail() {
 		return textFieldIdBail;
@@ -98,6 +106,15 @@ public class AjouterBail extends JInternalFrame {
 	public JComboBox<String> getComboBoxBiensLoc() {
 		return comboBoxBiensLoc;
 	}
+	
+    public JTable getTableTotal() {
+		return tableTotal;
+	}
+
+        
+	public JLabel getLblMessageErreur() {
+		return lblMessageErreur;
+	}
 
 	/**
      * Create the frame.
@@ -105,6 +122,7 @@ public class AjouterBail extends JInternalFrame {
     public AjouterBail(AjouterLocataire al, AfficherLocatairesActuels afl) {
     	
     	this.gestionFen = new GestionAjouterBail(this,al, afl);
+    	this.gestionTableAjoutBail = new GestionTablesAjouterBail(this, al);
     	this.fenPrecedente = al;
     	
     	
@@ -128,7 +146,7 @@ public class AjouterBail extends JInternalFrame {
         contentPane.add(lblSousTitre);
         
         this.panelAssocierBail = new JPanel();
-        panelAssocierBail.setBounds(20, 102, 616, 249);
+        panelAssocierBail.setBounds(20, 102, 616, 259);
         contentPane.add(panelAssocierBail);
         cardLayout = new CardLayout();
         panelAssocierBail.setLayout(cardLayout);
@@ -146,20 +164,22 @@ public class AjouterBail extends JInternalFrame {
         panelBauxExistants.add(scrollPaneBauxActuels);
 
         tableBauxActuels = new JTable();
+        tableBauxActuels.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tableBauxActuels.setModel(new DefaultTableModel(
         	new Object[][] {
-        		{null, null, null, null},
-        		{null, null, null, null},
-        		{null, null, null, null},
-        		{null, null, null, null},
-        		{null, null, null, null},
-        		{null, null, null, null},
+        		{null, null, null, null, null},
+        		{null, null, null, null, null},
+        		{null, null, null, null, null},
+        		{null, null, null, null, null},
+        		{null, null, null, null, null},
+        		{null, null, null, null, null},
         	},
         	new String[] {
-        		"Compl\u00E9ment", "Adresse", "Date de d\u00E9but", "Date de fin"
+        		"Identifiant bail", "Compl\u00E9ment", "Adresse", "Date de d\u00E9but", "Date de fin"
         	}
         ));
-        this.gestionFen.remplirTableBauxExistant(tableBauxActuels);
+        this.gestionTableAjoutBail.remplirTableBauxExistant(tableBauxActuels);
+        tableBauxActuels.getSelectionModel().addListSelectionListener(this.gestionTableAjoutBail);
         scrollPaneBauxActuels.setViewportView(tableBauxActuels);
 
         // Tableau des parts de loyer
@@ -168,18 +188,29 @@ public class AjouterBail extends JInternalFrame {
         panelBauxExistants.add(scrollPanePartsLoyer);
 
         tablePartsLoyer = new JTable();
+        tablePartsLoyer.addKeyListener(this.gestionTableAjoutBail);
+        tablePartsLoyer.setToolTipText("Veuillez mettre à jour les parts de loyer");
         tablePartsLoyer.setModel(new DefaultTableModel(
         	new Object[][] {
-        		{null, null},
-        		{null, null},
-        		{null, null},
-        		{null, null},
         		{null, null},
         	},
         	new String[] {
         		"Locataire", "Part de loyer en %"
         	}
-        ));
+        ) {
+        	Class[] columnTypes = new Class[] {
+        		Object.class, Float.class
+        	};
+        	public Class getColumnClass(int columnIndex) {
+        		return columnTypes[columnIndex];
+        	}
+        	boolean[] columnEditables = new boolean[] {
+        		false, true
+        	};
+        	public boolean isCellEditable(int row, int column) {
+        		return columnEditables[column];
+        	}
+        });
         tablePartsLoyer.getColumnModel().getColumn(0).setPreferredWidth(150);
         tablePartsLoyer.getColumnModel().getColumn(1).setPreferredWidth(150);
         scrollPanePartsLoyer.setViewportView(tablePartsLoyer);
@@ -187,16 +218,14 @@ public class AjouterBail extends JInternalFrame {
         tableTotal = new JTable();
         tableTotal.setModel(new DefaultTableModel(
         	new Object[][] {
-        		{null},
-        		{null},
-        		{"Total"},
+        		{""},
         	},
         	new String[] {
         		""
         	}
         ));
-        scrollPanePartsLoyer.setRowHeaderView(tableTotal);
         tableTotal.getColumnModel().getColumn(0).setResizable(false);
+        scrollPanePartsLoyer.setRowHeaderView(tableTotal);
 		tableTotal.setRowSelectionAllowed(false);
 		tableTotal.setPreferredScrollableViewportSize(new Dimension(40, 0));
 		tableTotal.setEnabled(false);
@@ -218,6 +247,12 @@ public class AjouterBail extends JInternalFrame {
         JLabel lblListeBaux = new JLabel("Liste des baux");
         lblListeBaux.setBounds(10, 23, 162, 13);
         panelBauxExistants.add(lblListeBaux);
+        
+        lblMessageErreur = new JLabel(" ");
+        lblMessageErreur.setForeground(Color.RED);
+        lblMessageErreur.setHorizontalAlignment(SwingConstants.LEFT);
+        lblMessageErreur.setBounds(9, 240, 390, 13);
+        panelBauxExistants.add(lblMessageErreur);
 
         // Panel Encadré Nouveau Bail
         JPanel panelNouveauBail = new JPanel();
@@ -312,4 +347,6 @@ public class AjouterBail extends JInternalFrame {
 	public AjouterLocataire getFenPrecedente() {
 		return fenPrecedente;
 	}
+	
+	
 }
