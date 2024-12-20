@@ -186,7 +186,7 @@ public class AjouterCautionnaire extends JInternalFrame {
         panelAdresse.add(textFieldVille);
         textFieldVille.setColumns(10);
         
-        JLabel lblIdCautionnaire = new JLabel("Indentifiant : ");
+        JLabel lblIdCautionnaire = new JLabel("Identifiant : ");
         lblIdCautionnaire.setBounds(10, 35, 100, 13);
         panelCautionnaire.add(lblIdCautionnaire);
         

@@ -21,6 +21,7 @@ import modele.Batiment;
 import modele.BienLocatif;
 import modele.Cautionnaire;
 import modele.Cautionner;
+import modele.Contracter;
 import modele.Locataire;
 import modele.Loyer;
 import modele.TypeDeBien;
@@ -78,19 +79,18 @@ public class GestionAjouterCautionnaire implements ActionListener{
 				String prenomL = this.fen_ajouter_locataire.getTextFieldPrenom().getText();
 				String adresseL = this.fen_ajouter_locataire.getTextFieldAdr().getText();
 				String complementL = this.fen_ajouter_locataire.getTextFieldComplement().getText();
-				String codePosalL = this.fen_ajouter_locataire.getTextFieldCodePostal().getText();
+				String codePostalL = this.fen_ajouter_locataire.getTextFieldCodePostal().getText();
 				String villeL = this.fen_ajouter_locataire.getTextFieldVille().getText();
 				
 				this.fen_ajouter_cautionnaire.getTextFieldNomOuOrga().setText(nomL);
 				this.fen_ajouter_cautionnaire.getTextFieldPrenom().setText(prenomL);
 				this.fen_ajouter_cautionnaire.getTextFieldAdr().setText(adresseL);
 				this.fen_ajouter_cautionnaire.getTextFieldComplement().setText(complementL);
-				this.fen_ajouter_cautionnaire.getTextFieldCodePostal().setText(codePosalL);
+				this.fen_ajouter_cautionnaire.getTextFieldCodePostal().setText(codePostalL);
 				this.fen_ajouter_cautionnaire.getTextFieldVille().setText(villeL);
 				
 				break;
 			case "Valider" : 
-				
 					JTable tableLoc = this.fen_afficher_locataires.getTableLocatairesActuels();
 					Locataire nouveauLocataire;
 					Cautionnaire cautionnaire;
@@ -98,14 +98,17 @@ public class GestionAjouterCautionnaire implements ActionListener{
 					Adresse adresseLocataire;
 					Adresse adresseCautionnaire;
 					Bail bail = null; 
-					
+					String dateDebut = null;
 					
 					//Recup infos locataire
 					String idLoc = this.fen_ajouter_locataire.getTextFieldId().getText();
 					String nom = this.fen_ajouter_locataire.getTextFieldNom().getText();
 					String prenom = this.fen_ajouter_locataire.getTextFieldPrenom().getText();
+					
 					String email = this.fen_ajouter_locataire.getTextFieldEmail().getText();
 					String tel = this.fen_ajouter_locataire.getTextFieldTel().getText();
+					email = email.isEmpty() ? null : email;
+					tel = tel.isEmpty() ? null : tel;					
 					String date_naissance = this.fen_ajouter_locataire.getTextFieldDateNaissance().getText();
 					String lieu_naissance = this.fen_ajouter_locataire.getTextFieldLieuNaissance().getText();
 					String acte_caution = "a supprimer";
@@ -113,22 +116,31 @@ public class GestionAjouterCautionnaire implements ActionListener{
 					//Recup adresse
 					String adresse = this.fen_ajouter_locataire.getTextFieldAdr().getText();
 					String complement = this.fen_ajouter_locataire.getTextFieldComplement().getText();
-					int codePostal = convertirStrToInt(this.fen_ajouter_locataire.getTextFieldCodePostal().getText());
+					String codePostalStr = this.fen_ajouter_locataire.getTextFieldCodePostal().getText();
 					String ville = this.fen_ajouter_locataire.getTextFieldVille().getText();
 					
-					adresseLocataire = new Adresse(adresse+codePostal+ville, adresse, codePostal, ville, complement);										
+					adresse = (adresse.isEmpty()) ? null : adresse;
+					complement = (complement.isEmpty()) ? null : complement;
+					ville = (ville.isEmpty()) ? null : ville;
+					int codePostal = (codePostalStr.isEmpty()) ? 0 : convertirStrToInt(codePostalStr);
+										
 					nouveauLocataire = new Locataire(idLoc, nom, prenom, date_naissance);
 					nouveauLocataire.setActeDeCaution(acte_caution);
 					nouveauLocataire.setEmail(email);
 					nouveauLocataire.setTelephone(tel);
 					nouveauLocataire.setLieuDeNaissance(lieu_naissance);
-					nouveauLocataire.setAdresse(adresseLocataire);
-					
+					adresseLocataire = null;
+					if (adresse != null) {	
+						adresseLocataire = new Adresse(adresse+codePostal+ville, adresse, codePostal, ville, complement);
+						nouveauLocataire.setAdresse(adresseLocataire);
+					}	
+						
 					//Recup bail
 				    if (this.fen_ajouter_bail.getRdbtnNouveauBail().isSelected()) {
 			
 				        String idBail = this.fen_ajouter_bail.getTextFieldIdBail().getText();
-				        String dateDebut = this.fen_ajouter_bail.getTextFieldDateDebut().getText();
+				        dateDebut = this.fen_ajouter_bail.getTextFieldDateDebut().getText();
+				        System.out.println(dateDebut);
 				        String dateFin = this.fen_ajouter_bail.getTextFieldDateFin().getText();
 				        
 				       
@@ -158,12 +170,11 @@ public class GestionAjouterCautionnaire implements ActionListener{
 							try {
 								bail = daoBail.findById(bailSelectionne);
 							} catch (SQLException | IOException e1) {
-								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							}
 				        } 
 				    }
-									    
+					   
 				    //Recup cautionnaire
 				    int idC = convertirStrToInt(this.fen_ajouter_cautionnaire.getTextFieldIdentifiantCautionnaire().getText());
 				    String nomOuOrgaC = this.fen_ajouter_cautionnaire.getTextFieldNomOuOrga().getText();
@@ -184,16 +195,22 @@ public class GestionAjouterCautionnaire implements ActionListener{
 					
 					cautionner = new Cautionner(montant, lienActeCaution, bail, cautionnaire);
 					
+					System.out.println(dateDebut);
+					Contracter ctr = new Contracter(nouveauLocataire, bail, dateDebut, 1f);
+					nouveauLocataire.getContrats().add(ctr);
+					
 					try {
-						
-						daoAdresse.create(adresseLocataire);
-						daoBail.create(bail);
-						
-						if (daoAdresse.findById(adresseLocataire.getIdAdresse())==null) {
-							daoAdresse.create(adresseCautionnaire);
+						if (adresse != null) {
+							System.out.println(adresseLocataire);
+							daoAdresse.create(adresseLocataire);
+							if (daoAdresse.findById(adresseLocataire.getIdAdresse())==null) {
+								System.out.println("YOUHOUUTBEZIHFZ");
+								daoAdresse.create(adresseCautionnaire);
+							}
 						}
 						
-						daoLocataire.create(nouveauLocataire);
+						daoBail.create(bail);
+						System.out.println("nouv loc : " + nouveauLocataire.getContrats().get(0).getDateEntree());
 						daoCautionnaire.create(cautionnaire);
 						daoCautionner.create(cautionner);
 						
@@ -203,6 +220,8 @@ public class GestionAjouterCautionnaire implements ActionListener{
 					
 					DefaultTableModel modelTableLoc = (DefaultTableModel) tableLoc.getModel();
 					modelTableLoc.addRow(new String[] { nouveauLocataire.getIdLocataire(), nouveauLocataire.getNom(), nouveauLocataire.getPrenom()});
+					
+					System.out.println(nouveauLocataire.getContrats());
 					
 					this.fen_ajouter_cautionnaire.dispose();
 					this.fen_ajouter_cautionnaire.getFenPrecedente().dispose();	

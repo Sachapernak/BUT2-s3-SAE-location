@@ -89,7 +89,7 @@ public class GestionAjouterBail implements ActionListener{
 	
 	public void initialiserDateDebut(JTextField textFieldDateDebut) {
         LocalDate dateActelle = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-dd-MM");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String formattedDate = dateActelle.format(formatter);
         textFieldDateDebut.setText(formattedDate);
     }
