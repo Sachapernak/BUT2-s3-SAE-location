@@ -10,7 +10,8 @@ public class RequeteSelectAssuranceById extends Requete<Assurance> {
 	@Override
 	public String requete() {
 		return "select * from SAE_Assurance "
-				+ "where numero_de_Contrat = ?, annee_du_Contrat = ?";
+				+ "where numero_de_Contrat = ?"
+				+ "and annee_du_Contrat = ?";
 	}
 	
 	

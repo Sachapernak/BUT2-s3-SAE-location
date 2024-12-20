@@ -10,7 +10,7 @@ public class RequeteUpdateAssurance extends Requete<Assurance> {
 	@Override
 	public String requete() {
 		return "UPDATE SAE_Assurance SET type_de_Contrat = ? "
-				+ "WHERE numero_de_Contrat = ?, annee_du_Contrat = ?";
+				+ "WHERE numero_de_Contrat = ? and annee_du_Contrat = ?";
 	}
 	
 	

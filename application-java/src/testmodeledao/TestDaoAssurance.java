@@ -102,7 +102,7 @@ public class TestDaoAssurance {
 
     @Test
     public void testFindByIdInvalid() throws SQLException, IOException {
-        Assurance assurance = daoA.findById("INVALID_ID");
+        Assurance assurance = daoA.findById("INVALID_ID", "000000");
         assertNull("La méthode findById devrait retourner null pour un ID inexistant.", assurance);
     }
 

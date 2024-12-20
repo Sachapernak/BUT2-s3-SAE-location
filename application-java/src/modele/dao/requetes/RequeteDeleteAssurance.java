@@ -9,7 +9,8 @@ public class RequeteDeleteAssurance extends Requete<Assurance> {
 
     @Override
     public String requete() {
-        return "DELETE FROM SAE_Assurance WHERE numero_de_Contrat = ? AND annee_du_Contrat = ?";
+        return "DELETE FROM SAE_Assurance WHERE numero_de_Contrat = ? "
+        		+ "AND annee_du_Contrat = ?";
     }
 
     @Override

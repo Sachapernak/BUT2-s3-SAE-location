@@ -96,7 +96,8 @@ CREATE TABLE SAE_document_comptable(
 
 CREATE TABLE sae_charge_index (
    id_charge_index VARCHAR2(50),
-   Date_de_releve DATE NOT NULL,
+   Date_de_releve DATE,
+   
    Type VARCHAR2(50),
    Valeur_compteur NUMBER(15,3) NOT NULL,
    Cout_variable_unitaire NUMBER(15,5) NOT NULL,
@@ -108,10 +109,9 @@ CREATE TABLE sae_charge_index (
    Date_releve_precedent DATE,
    id_charge_index_preced VARCHAR2(50),
 
-   CONSTRAINT pk_sae_charge_index PRIMARY KEY (id_charge_index),
+   CONSTRAINT pk_sae_charge_index PRIMARY KEY (id_charge_index, date_de_releve),
    CONSTRAINT uq_sae_charge_i_num_date UNIQUE (numero_document, Date_document),
    CONSTRAINT uq_sae_charge_preced UNIQUE (id_charge_index_preced, Date_releve_precedent),
-   CONSTRAINT uq_sae_charge_index_releve UNIQUE (id_charge_index, Date_de_releve),
    CONSTRAINT fk_sae_charge_i_num_date FOREIGN KEY (numero_document, Date_document) REFERENCES SAE_document_comptable(numero_document, Date_document),
    CONSTRAINT fk_SAE_charge_preced FOREIGN KEY (id_charge_index_preced, Date_releve_precedent) REFERENCES sae_charge_index(id_charge_index, Date_de_releve)
 );
