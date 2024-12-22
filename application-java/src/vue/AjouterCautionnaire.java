@@ -116,8 +116,8 @@ public class AjouterCautionnaire extends JInternalFrame {
         panelCautionnaire.setLayout(null);
 
         // Champs de saisie pour Nouveau Bail
-        JLabel lblNomOuOrga = new JLabel("Nom ou organisme :");
-        lblNomOuOrga.setBounds(10, 58, 100, 20);
+        JLabel lblNomOuOrga = new JLabel("Nom ou organisme : *");
+        lblNomOuOrga.setBounds(10, 58, 111, 20);
         panelCautionnaire.add(lblNomOuOrga);
 
         textFieldNomOuOrga = new JTextField();
@@ -125,7 +125,7 @@ public class AjouterCautionnaire extends JInternalFrame {
         panelCautionnaire.add(textFieldNomOuOrga);
         textFieldNomOuOrga.setColumns(10);
 
-        JLabel lblPrenom = new JLabel("Prénom :");
+        JLabel lblPrenom = new JLabel("Prénom : ");
         lblPrenom.setBounds(10, 88, 100, 20);
         panelCautionnaire.add(lblPrenom);
 
@@ -136,7 +136,7 @@ public class AjouterCautionnaire extends JInternalFrame {
         
         JButton btnLocataireEstCautionnaire = new JButton("Remplir avec le locataire");
         btnLocataireEstCautionnaire.addActionListener(this.gestionFen);
-        btnLocataireEstCautionnaire.setBounds(359, 183, 193, 20);
+        btnLocataireEstCautionnaire.setBounds(359, 181, 193, 22);
         panelCautionnaire.add(btnLocataireEstCautionnaire);
         
         textFieldPrenom = new JTextField();
@@ -150,7 +150,7 @@ public class AjouterCautionnaire extends JInternalFrame {
         panelCautionnaire.add(panelAdresse);
         panelAdresse.setLayout(null);
         
-        JLabel lblAdr = new JLabel("Adresse :");
+        JLabel lblAdr = new JLabel("Adresse : *");
         lblAdr.setBounds(0, 10, 75, 13);
         panelAdresse.add(lblAdr);
         
@@ -159,7 +159,7 @@ public class AjouterCautionnaire extends JInternalFrame {
         panelAdresse.add(textFieldAdr);
         textFieldAdr.setColumns(10);
         
-        JLabel lblComplement = new JLabel("Complément :");
+        JLabel lblComplement = new JLabel("Complément : *");
         lblComplement.setBounds(0, 39, 96, 13);
         panelAdresse.add(lblComplement);
         
@@ -168,7 +168,7 @@ public class AjouterCautionnaire extends JInternalFrame {
         panelAdresse.add(textFieldComplement);
         textFieldComplement.setColumns(10);
         
-        JLabel lblCodePostal = new JLabel("Code postal :");
+        JLabel lblCodePostal = new JLabel("Code postal : *");
         lblCodePostal.setBounds(0, 68, 96, 13);
         panelAdresse.add(lblCodePostal);
         
@@ -177,7 +177,7 @@ public class AjouterCautionnaire extends JInternalFrame {
         panelAdresse.add(textFieldCodePostal);
         textFieldCodePostal.setColumns(10);
         
-        JLabel lblVille = new JLabel("Ville :");
+        JLabel lblVille = new JLabel("Ville : *");
         lblVille.setBounds(0, 95, 45, 13);
         panelAdresse.add(lblVille);
         
@@ -186,7 +186,7 @@ public class AjouterCautionnaire extends JInternalFrame {
         panelAdresse.add(textFieldVille);
         textFieldVille.setColumns(10);
         
-        JLabel lblIdCautionnaire = new JLabel("Identifiant : ");
+        JLabel lblIdCautionnaire = new JLabel("Identifiant : *");
         lblIdCautionnaire.setBounds(10, 35, 100, 13);
         panelCautionnaire.add(lblIdCautionnaire);
         
@@ -224,7 +224,7 @@ public class AjouterCautionnaire extends JInternalFrame {
         panel_acteCaution.add(textFieldMontant);
         textFieldMontant.setColumns(10);
         
-        JLabel lblMontant = new JLabel("Montant :");
+        JLabel lblMontant = new JLabel("Montant : *");
         lblMontant.setLabelFor(textFieldMontant);
         lblMontant.setBounds(10, 23, 69, 13);
         panel_acteCaution.add(lblMontant);
@@ -234,7 +234,7 @@ public class AjouterCautionnaire extends JInternalFrame {
         panel_acteCaution.add(textFieldLienActeCaution);
         textFieldLienActeCaution.setColumns(10);
         
-        JLabel lblLienActeCaution = new JLabel("Lien vers l'acte de caution :");
+        JLabel lblLienActeCaution = new JLabel("Lien vers l'acte de caution : *");
         lblLienActeCaution.setBounds(10, 63, 169, 13);
         panel_acteCaution.add(lblLienActeCaution);
         

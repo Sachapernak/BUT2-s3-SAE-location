@@ -152,6 +152,7 @@ public class GestionAjouterCautionnaire implements ActionListener{
 					    if (dateFin.length()>= 1) {
 					    	bail.setDateDeFin(dateFin);
 					    }
+						daoBail.create(bail);
 					} catch (SQLException | IOException e1) {
 						e1.printStackTrace();
 					}      
@@ -164,15 +165,14 @@ public class GestionAjouterCautionnaire implements ActionListener{
 				            // Récupérez les informations à partir de la ligne sélectionnée
 				            String bailSelectionne = (String) this.fen_ajouter_bail.getTableBauxActuels().getValueAt(selectedRow, 0);
 				            dateDebut = this.fen_ajouter_bail.getTextFieldDateArrivee().getText();
-				            		            			            
-				            /* A GERER / 
-				             * ...
-				             */
+				            JTable tableParts = this.fen_ajouter_bail.getTablePartsLoyer();
+				            partLoyer = (float) tableParts.getValueAt(tableParts.getRowCount()-2,1);				            		            			            
 							try {
 								bail = daoBail.findById(bailSelectionne);
 							} catch (SQLException | IOException e1) {
 								e1.printStackTrace();
 							}
+							actualiserPartsLoyer(this.fen_ajouter_bail.getTablePartsLoyer(),bail);
 				        } 
 				    }
 					   
@@ -183,8 +183,13 @@ public class GestionAjouterCautionnaire implements ActionListener{
 					String descriptionC = this.fen_ajouter_cautionnaire.getTextFieldDescription().getText();
 					String adrC = this.fen_ajouter_cautionnaire.getTextFieldAdr().getText();
 					String complementC = this.fen_ajouter_cautionnaire.getTextFieldComplement().getText();
-					int codePostalC = convertirStrToInt(this.fen_ajouter_cautionnaire.getTextFieldCodePostal().getText());
+					String codePostalStrC = this.fen_ajouter_cautionnaire.getTextFieldCodePostal().getText();
 					String villeC = this.fen_ajouter_cautionnaire.getTextFieldVille().getText();
+					
+					adrC = (adrC.isEmpty()) ? null : adrC;
+					complementC = (complementC.isEmpty()) ? null : complementC;
+					villeC = (villeC.isEmpty()) ? null : villeC;
+					int codePostalC = (codePostalStrC.isEmpty()) ? 0 : convertirStrToInt(codePostalStr);
 					
 					adresseCautionnaire = new Adresse(adrC+codePostalC+villeC, adrC, codePostalC, villeC, complementC);
 					cautionnaire = new Cautionnaire(idC, nomOuOrgaC,prenomC, descriptionC, adresseCautionnaire);
@@ -201,26 +206,24 @@ public class GestionAjouterCautionnaire implements ActionListener{
 					
 					try {
 						if (adresse != null) {
-							daoAdresse.create(adresseLocataire);
-							if (daoAdresse.findById(adresseLocataire.getIdAdresse())==null) {
-								daoAdresse.create(adresseCautionnaire);
+							if (!estAdresseExistante(adresseLocataire)) {
+								daoAdresse.create(adresseLocataire);
 							}
 						}
+						if (!estAdresseExistante(adresseCautionnaire)) {
+							daoAdresse.create(adresseCautionnaire);
+						}
 						
-						daoBail.create(bail);
 						daoLocataire.create(nouveauLocataire);
 						daoCautionnaire.create(cautionnaire);
 						daoCautionner.create(cautionner);
 						
 					} catch (SQLException | IOException e1) {
 						e1.printStackTrace();
-					}
-					
+					}					
 					DefaultTableModel modelTableLoc = (DefaultTableModel) tableLoc.getModel();
 					modelTableLoc.addRow(new String[] { nouveauLocataire.getIdLocataire(), nouveauLocataire.getNom(), nouveauLocataire.getPrenom()});
-					
-					System.out.println(nouveauLocataire.getContrats());
-					
+										
 					this.fen_ajouter_cautionnaire.dispose();
 					this.fen_ajouter_cautionnaire.getFenPrecedente().dispose();	
 					this.fen_ajouter_bail.getFenPrecedente().dispose();
@@ -231,7 +234,39 @@ public class GestionAjouterCautionnaire implements ActionListener{
 	}
 	
 	private int convertirStrToInt(String str) {
-		return Integer.parseInt(str); 
+		if (!str.isEmpty() && !str.isBlank() && str!=null) {
+			return Integer.parseInt(str); 
+		}
+		return 0;
+	}
+	
+	private boolean estAdresseExistante(Adresse adresse) {
+		boolean res = false;
+		try {
+			res = daoAdresse.findById(adresse.getIdAdresse())!= null;
+		} catch (SQLException | IOException e) {
+			e.printStackTrace();
+		}
+		return res;
+	}
+	
+	private void actualiserPartsLoyer(JTable tablePartsLoyer, Bail bail) {
+		
+		for (int i = 0; i < tablePartsLoyer.getRowCount()-2; i++) {
+			try {
+				Locataire loc = daoLocataire.findById((String) tablePartsLoyer.getValueAt(i, 0));
+				List<Contracter> contrats = loc.getContrats(); 
+				for (Contracter contrat : contrats) {
+					if (contrat.getBail().getIdBail().equals(bail.getIdBail())) {
+						contrat.modifierPartLoyer((float) tablePartsLoyer.getValueAt(i, 1));
+						daoLocataire.update(loc);
+					}
+				}
+				System.out.println(loc.getContrats());
+			} catch (SQLException | IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 }
