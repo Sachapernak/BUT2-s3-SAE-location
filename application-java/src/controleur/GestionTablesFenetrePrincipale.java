@@ -42,21 +42,9 @@ public class GestionTablesFenetrePrincipale implements ListSelectionListener{
 		
 	}
 	
-	public static void viderTable(JTable table) {
-        DefaultTableModel model = (DefaultTableModel) table.getModel();
-        
-        int rowCount = model.getRowCount();
-        int columnCount = model.getColumnCount();
-        
-        for (int row = 0; row < rowCount; row++) {
-            for (int col = 0; col < columnCount; col++) {
-                model.setValueAt(null, row, col); 
-            }
-        }
-    }
     
     public void remplirBatiments (JTable tableBatiments) {
-    	viderTable(tableBatiments);
+    	UtilitaireTable.viderTable(tableBatiments);
     	int nbLogements = 0;
     		try {
 				List<Batiment> batiments = daoBatiment.findAll();
@@ -74,7 +62,7 @@ public class GestionTablesFenetrePrincipale implements ListSelectionListener{
     }
     
     public void remplirBiensLoc (JTable tableBiensLoc, String idBatiment) {
-    	viderTable(tableBiensLoc);
+    	UtilitaireTable.viderTable(tableBiensLoc);
     	try {
 			List<BienLocatif> biens = daoBienLocatif.findByIdBatiment(idBatiment);
 			DefaultTableModel model = (DefaultTableModel) tableBiensLoc.getModel();

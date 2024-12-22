@@ -77,7 +77,7 @@ public class GestionTablesAjouterBail implements ListSelectionListener, KeyListe
 		DefaultTableModel modelTableParts = (DefaultTableModel) tablePartsLoyer.getModel();
 		DefaultTableModel modelTotal = (DefaultTableModel) tableTotal.getModel();
 				
-		modelTableParts.setRowCount(0);
+		UtilitaireTable.viderTable(tableTotal);
 		try {
 			List<Contracter> contrats = this.daoContracter.getContrats(bail);
 			for (Contracter contrat : contrats) {
@@ -101,7 +101,6 @@ public class GestionTablesAjouterBail implements ListSelectionListener, KeyListe
 		for (int i = 0; i < tablePartsLoyer.getRowCount()-1; i ++) {
 			float valeur = (float) tablePartsLoyer.getValueAt(i, 1);
 			somme += valeur;
-			System.out.println(somme);
 		}
 		return somme;
 	}

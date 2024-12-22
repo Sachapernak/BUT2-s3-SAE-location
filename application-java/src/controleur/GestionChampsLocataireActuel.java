@@ -41,7 +41,7 @@ public class GestionChampsLocataireActuel implements ListSelectionListener {
 		
 		if (index == -1) { 
 	        viderChamps();
-	        viderTable(this.fen_afficher_locataires_actuels.getTableBiensLoues());
+	        UtilitaireTable.viderTable(this.fen_afficher_locataires_actuels.getTableBiensLoues());
 	        return; 
 	    }
 		
@@ -58,7 +58,7 @@ public class GestionChampsLocataireActuel implements ListSelectionListener {
 	}
 	
 	public void remplirTableLocation(JTable tableLocations, Locataire locSelect) {
-		viderTable(tableLocations);
+		UtilitaireTable.viderTable(tableLocations);
 		
 		try {
 			List<Contracter> contrats = locSelect.getContrats();
@@ -107,18 +107,12 @@ public class GestionChampsLocataireActuel implements ListSelectionListener {
 	    mail.setText("");
 	}
     
-    public void viderTable(JTable table) {
-        DefaultTableModel model = (DefaultTableModel) table.getModel();
-        
-        while (model.getRowCount() > 0) {
-            model.removeRow(0);
-        }
-    }
+
     
 	public void remplirTableLocatairesActuels() {
 	    JTable tableLocataires = this.fen_afficher_locataires_actuels.getTableLocatairesActuels();
 	    
-	    viderTable(tableLocataires);
+	    UtilitaireTable.viderTable(tableLocataires);
 	    try {
 			List<Locataire> locataires = daoLocataire.findAll();
 			DefaultTableModel model = (DefaultTableModel) tableLocataires.getModel();

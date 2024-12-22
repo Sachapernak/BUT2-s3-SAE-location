@@ -115,7 +115,6 @@ public class GestionAjouterCautionnaire implements ActionListener{
 					tel = tel.isEmpty() ? null : tel;					
 					String date_naissance = this.fen_ajouter_locataire.getTextFieldDateNaissance().getText();
 					String lieu_naissance = this.fen_ajouter_locataire.getTextFieldLieuNaissance().getText();
-					String acte_caution = "a supprimer";
 					
 					//Recup adresse
 					String adresse = this.fen_ajouter_locataire.getTextFieldAdr().getText();
@@ -129,12 +128,11 @@ public class GestionAjouterCautionnaire implements ActionListener{
 					int codePostal = (codePostalStr.isEmpty()) ? 0 : convertirStrToInt(codePostalStr);
 										
 					nouveauLocataire = new Locataire(idLoc, nom, prenom, date_naissance);
-					nouveauLocataire.setActeDeCaution(acte_caution);
 					nouveauLocataire.setEmail(email);
 					nouveauLocataire.setTelephone(tel);
 					nouveauLocataire.setLieuDeNaissance(lieu_naissance);
 					adresseLocataire = null;
-					if (adresse != null) {	
+					if (estAdresseSaisie()) {	
 						adresseLocataire = new Adresse(adresse+codePostal+ville, adresse, codePostal, ville, complement);
 						nouveauLocataire.setAdresse(adresseLocataire);
 					}	
@@ -250,6 +248,17 @@ public class GestionAjouterCautionnaire implements ActionListener{
 		return res;
 	}
 	
+    private boolean estAdresseSaisie() {
+    	String adresse = this.fen_ajouter_locataire.getTextFieldAdr().getText();
+        String codePostalStr = this.fen_ajouter_locataire.getTextFieldCodePostal().getText();
+        String ville = this.fen_ajouter_locataire.getTextFieldVille().getText();
+        
+        return !(adresse.isBlank() || adresse.isEmpty()) && 
+                !(codePostalStr.isBlank() || codePostalStr.isEmpty()) && 
+                !(ville.isBlank() || ville.isEmpty());
+    	
+    }
+	
 	private void actualiserPartsLoyer(JTable tablePartsLoyer, Bail bail) {
 		
 		for (int i = 0; i < tablePartsLoyer.getRowCount()-2; i++) {
@@ -262,7 +271,6 @@ public class GestionAjouterCautionnaire implements ActionListener{
 						daoLocataire.update(loc);
 					}
 				}
-				System.out.println(loc.getContrats());
 			} catch (SQLException | IOException e) {
 				e.printStackTrace();
 			}
