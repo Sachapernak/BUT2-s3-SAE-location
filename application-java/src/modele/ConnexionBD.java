@@ -2,7 +2,10 @@ package modele;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 
 import oracle.jdbc.pool.OracleDataSource;
 
@@ -134,4 +137,54 @@ public class ConnexionBD {
         fermerConnexion();
         initierBD();
     }
+    
+    public Optional<Long> latenceRequeteBD() {
+    		
+            String requeteTest = "SELECT 1 FROM DUAL";
+            long finRequete;
+            long debutRequete;
+
+            try (PreparedStatement prst = getConnexion().prepareStatement(requeteTest)) {
+            	
+            	debutRequete = System.currentTimeMillis();
+            	ResultSet rs = prst.executeQuery();
+            	finRequete = System.currentTimeMillis();
+
+                if (rs.next()) {
+                	return Optional.of(finRequete - debutRequete);
+                }
+                rs.close();
+            } catch (SQLException e) {
+            	return Optional.empty();
+
+            }
+    	return Optional.empty();
+        
+    	
+    }
+        
+    public Optional<Long> latenceConnexionBD() {
+
+        long finRequete;
+        long debutRequete;
+       
+        try {
+        	this.fermerConnexion();
+        	
+        	debutRequete = System.currentTimeMillis();
+        	this.getConnexion();
+        	finRequete = System.currentTimeMillis();
+        	
+        	return Optional.of(finRequete - debutRequete);
+        	
+        } catch (SQLException e) {
+        	return Optional.empty();
+        }
+        
+    }
+    
+    public boolean isConnexionOk() {
+    	return (latenceConnexionBD().isPresent() && latenceRequeteBD().isPresent());
+    }
+
 }
