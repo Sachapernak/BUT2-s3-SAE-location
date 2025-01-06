@@ -2,8 +2,6 @@ package modele.dao.requetes;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-
-import modele.Batiment;
 import modele.BienLocatif;
 
 

@@ -14,18 +14,10 @@ import javax.swing.JComboBox;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
 
-import modele.Bail;
-import modele.Batiment;
 import modele.BienLocatif;
-import modele.Contracter;
-import modele.dao.DaoBail;
-import modele.dao.DaoBatiment;
 import modele.dao.DaoBienLocatif;
-import modele.dao.DaoContracter;
 import vue.AfficherLocatairesActuels;
 import vue.AjouterBail;
 import vue.AjouterCautionnaire;

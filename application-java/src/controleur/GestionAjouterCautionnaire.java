@@ -7,31 +7,22 @@ import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.List;
 
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JList;
 import javax.swing.JTable;
-import javax.swing.plaf.synth.SynthOptionPaneUI;
 import javax.swing.table.DefaultTableModel;
 
 import modele.Adresse;
 import modele.Bail;
-import modele.Batiment;
 import modele.BienLocatif;
 import modele.Cautionnaire;
 import modele.Cautionner;
 import modele.Contracter;
 import modele.Locataire;
-import modele.Loyer;
-import modele.TypeDeBien;
 import modele.dao.DaoAdresse;
 import modele.dao.DaoBail;
-import modele.dao.DaoBatiment;
 import modele.dao.DaoBienLocatif;
 import modele.dao.DaoCautionnaire;
 import modele.dao.DaoCautionner;
-import modele.dao.DaoContracter;
 import modele.dao.DaoLocataire;
 import vue.AfficherLocatairesActuels;
 import vue.AjouterBail;
@@ -51,7 +42,6 @@ public class GestionAjouterCautionnaire implements ActionListener{
 	private DaoAdresse daoAdresse;
 	private DaoBail daoBail;
 	private DaoBienLocatif daoBien;
-	private DaoContracter daoContracter;
 	
 	public GestionAjouterCautionnaire(AjouterCautionnaire ac, AjouterLocataire al, AfficherLocatairesActuels afl, AjouterBail ab) {
 		this.fen_ajouter_cautionnaire = ac;
@@ -65,7 +55,6 @@ public class GestionAjouterCautionnaire implements ActionListener{
 		this.daoCautionner = new DaoCautionner();
 		this.daoLocataire = new DaoLocataire();
 		this.daoAdresse = new DaoAdresse();
-		this.daoContracter = new DaoContracter();
 	}
 	
 	@Override
