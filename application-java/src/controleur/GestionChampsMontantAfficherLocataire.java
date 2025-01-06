@@ -44,11 +44,12 @@ public class GestionChampsMontantAfficherLocataire implements ListSelectionListe
 			try {
 				List<ProvisionCharge> provisions = this.daoProvision.findByIdBail(bailSelectionne.getIdBail());
 				if (provisions.size() > 0) {
-					provisions.get(0).getProvisionPourCharge();
+					provision = provisions.get(0).getProvisionPourCharge();
 				}
 				Cautionner cautionner = this.daoCautionner.findByIdBail(bailSelectionne.getIdBail());
+			
 				if (cautionner != null) {
-					cautionner.getMontant();
+					caution = cautionner.getMontant();
 				}
 			} catch (SQLException | IOException e1) {
 				e1.printStackTrace();

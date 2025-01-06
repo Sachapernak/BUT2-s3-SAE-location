@@ -47,6 +47,11 @@ public class DaoCautionner extends DaoModele<Cautionner> implements Dao<Cautionn
 	public Cautionner findById(String... id) throws SQLException, IOException {
 		return findById(new RequeteSelectCautionById(), id);
 	}
+	
+	public Cautionner findByIdBail(String... id) throws SQLException, IOException {
+		return findById(new RequeteSelectCautionByIdBail(), id);
+	}
+
 
 
 	@Override
