@@ -199,20 +199,7 @@ public class GestionAjouterCautionnaire implements ActionListener{
 						}
 						if (!estAdresseExistante(adresseCautionnaire)) {
 							daoAdresse.create(adresseCautionnaire);
-						}
-						
-						System.out.println("L204 GestionAjouterCautionnaire : ");
-						System.out.println(nouveauLocataire.getIdLocataire());
-						System.out.println(nouveauLocataire.getNom());
-						System.out.println(nouveauLocataire.getPrenom());
-						System.out.println(nouveauLocataire.getEmail());
-						System.out.println(nouveauLocataire.getTelephone());
-						System.out.println(nouveauLocataire.getDateNaissance());
-						System.out.println(nouveauLocataire.getLieuDeNaissance());
-						System.out.println(nouveauLocataire.getAdresse().getIdAdresse());
-						System.out.println(nouveauLocataire.getContrats());
-						
-						
+						}						
 						daoLocataire.create(nouveauLocataire);
 						daoCautionnaire.create(cautionnaire);
 						daoCautionner.create(cautionner);
