@@ -243,5 +243,10 @@ public class FenetrePrincipale extends JFrame {
 		JSeparator separator = new JSeparator();
 		separator.setBounds(25, 253, 679, 2);
 		contentPane.add(separator);
+		
+		JLabel lblLogo = new JLabel("");
+		lblLogo.setIcon(new ImageIcon("images/logo-immeuble.png"));
+		lblLogo.setBounds(265, 42, 55, 47);
+		contentPane.add(lblLogo);
 	}
 }

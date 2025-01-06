@@ -32,20 +32,23 @@ public class GestionChampsLocataireActuel implements ListSelectionListener {
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
 		JTable tableLoc = this.fen_afficher_locataires_actuels.getTableLocatairesActuels();
+		JTable tableBiens = this.fen_afficher_locataires_actuels.getTableBiensLoues();
 		JTextField dateNaissance = this.fen_afficher_locataires_actuels.getTextFieldDateDeNaissance();
 		JTextField adresse = this.fen_afficher_locataires_actuels.getTextFieldAdressePerso();
 		JTextField tel = this.fen_afficher_locataires_actuels.getTextFieldTel();
 		JTextField mail = this.fen_afficher_locataires_actuels.getTextFieldMail();
-		
+				
 		int index = tableLoc.getSelectedRow();
 		
 		if (index == -1) { 
 	        viderChamps();
-	        UtilitaireTable.viderTable(this.fen_afficher_locataires_actuels.getTableBiensLoues());
+	        tableBiens.clearSelection();
+	        UtilitaireTable.viderTable(tableBiens);
 	        return; 
 	    }
 		
-		Locataire locSelect = lireLigneTable(this.fen_afficher_locataires_actuels.getTableLocatairesActuels());
+        viderChamps();
+		Locataire locSelect = lireLigneTable(tableLoc);
 		dateNaissance.setText(locSelect.getDateNaissance().toString());
 		Adresse adr = locSelect.getAdresse();
 		if (adr != null) {
@@ -54,7 +57,11 @@ public class GestionChampsLocataireActuel implements ListSelectionListener {
 		tel.setText(locSelect.getTelephone());
 		mail.setText(locSelect.getEmail());
 		
-		remplirTableLocation(this.fen_afficher_locataires_actuels.getTableBiensLoues(), locSelect);
+		tableBiens.clearSelection();
+		UtilitaireTable.viderTable(tableBiens);
+
+		
+		remplirTableLocation(tableBiens, locSelect);
 	}
 	
 	public void remplirTableLocation(JTable tableLocations, Locataire locSelect) {
@@ -69,6 +76,7 @@ public class GestionChampsLocataireActuel implements ListSelectionListener {
 				String dateEntree = contrat.getDateEntree();
 				String partLoyer = String.valueOf(contrat.getPartLoyer());
 				Bail bail = contrat.getBail();
+				String idBail = bail.getIdBail();
 				
 				List<Regularisation> regularisations = bail.getRegularisation();
 				int tailleListeRegu = regularisations.size();
@@ -87,7 +95,7 @@ public class GestionChampsLocataireActuel implements ListSelectionListener {
 				String type = bail.getBien().getType().getValeur();
 				
 				DefaultTableModel model = (DefaultTableModel) tableLocations.getModel();
-				model.addRow(new Object[] {dateEntree, type, batiment, complementAdr, loyerActuel, partLoyer, dateDerniereRegularisation});
+				model.addRow(new Object[] {idBail, dateEntree, type, batiment, complementAdr, loyerActuel, partLoyer, dateDerniereRegularisation});
 			}
 			
 		} catch (SQLException | IOException e) {
@@ -100,11 +108,15 @@ public class GestionChampsLocataireActuel implements ListSelectionListener {
 	    JTextField adresse = this.fen_afficher_locataires_actuels.getTextFieldAdressePerso();
 	    JTextField tel = this.fen_afficher_locataires_actuels.getTextFieldTel();
 	    JTextField mail = this.fen_afficher_locataires_actuels.getTextFieldMail();
+	    JTextField provision = this.fen_afficher_locataires_actuels.getTextFieldProvisionPourCharge();
+	    JTextField caution = this.fen_afficher_locataires_actuels.getTextFieldCaution();
 
 	    dateNaissance.setText("");
 	    adresse.setText("");
 	    tel.setText("");
 	    mail.setText("");
+	    provision.setText("");
+	    caution.setText("");
 	}
     
 
@@ -129,10 +141,9 @@ public class GestionChampsLocataireActuel implements ListSelectionListener {
 	
 	public Locataire lireLigneTable(JTable tableLocatairesActuels) {
 		Locataire loc = null;
-		JTable tableLocataires = this.fen_afficher_locataires_actuels.getTableLocatairesActuels();
-		int index = tableLocataires.getSelectedRow();
+		int index = tableLocatairesActuels.getSelectedRow();
 		 
-		String idLoc = (String) tableLocataires.getValueAt(index, 0);
+		String idLoc = (String) tableLocatairesActuels.getValueAt(index, 0);
 		
 		try {
 			loc = daoLocataire.findById(idLoc);
@@ -143,7 +154,6 @@ public class GestionChampsLocataireActuel implements ListSelectionListener {
 		}
 		
 		return loc;		 
-		 
 	}
 	
 	

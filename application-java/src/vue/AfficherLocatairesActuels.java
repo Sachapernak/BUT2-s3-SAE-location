@@ -13,6 +13,7 @@ import javax.swing.table.DefaultTableModel;
 
 import controleur.GestionAfficherLocataire;
 import controleur.GestionChampsLocataireActuel;
+import controleur.GestionChampsMontantAfficherLocataire;
 
 import javax.swing.SwingConstants;
 import java.awt.Font;
@@ -31,6 +32,7 @@ public class AfficherLocatairesActuels extends JInternalFrame{
 	
 	private GestionAfficherLocataire gestionClic;
 	private GestionChampsLocataireActuel gestionChampsLoc;
+	private GestionChampsMontantAfficherLocataire gestionChampsMontant;
 	
 	private JTextField textFieldDateDeNaissance;
 	private JTextField textFieldAdressePerso;
@@ -135,6 +137,7 @@ public class AfficherLocatairesActuels extends JInternalFrame{
 		
 		this.gestionClic = new GestionAfficherLocataire(this);
 		this.gestionChampsLoc = new GestionChampsLocataireActuel(this);
+		this.gestionChampsMontant = new GestionChampsMontantAfficherLocataire(this);
 		
 		setBounds(25, 25, 670, 490);
 		getContentPane().setLayout(null);
@@ -261,14 +264,29 @@ public class AfficherLocatairesActuels extends JInternalFrame{
 		panel_informationsBatiments.add(scrollPaneBiensLoues, BorderLayout.CENTER);
 		
 		tableBiensLoues = new JTable();
+		tableBiensLoues.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tableBiensLoues.setModel(new DefaultTableModel(
 			new Object[][] {
-				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null},
 			},
 			new String[] {
-				"Date d'entr\u00E9e", "Type ", "Batiment", "Adresse compl\u00E8te", "Loyer", "Parts de loyer","Derni\u00E8re r\u00E9gularisation"
+				"Bail", "Date d'entr\u00E9e", "Type ", "Batiment", "Adresse compl\u00E8te", "Loyer", "Parts de loyer", "Derni\u00E8re r\u00E9gularisation"
 			}
-		));
+		) {
+			Class[] columnTypes = new Class[] {
+				String.class, Object.class, String.class, String.class, String.class, Object.class, Object.class, Object.class
+			};
+			public Class getColumnClass(int columnIndex) {
+				return columnTypes[columnIndex];
+			}
+			boolean[] columnEditables = new boolean[] {
+				false, false, false, false, false, false, false, false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		tableBiensLoues.getSelectionModel().addListSelectionListener(this.gestionChampsMontant);
 		scrollPaneBiensLoues.setViewportView(tableBiensLoues);
 		
 		JPanel panel_infosPaiement = new JPanel();
