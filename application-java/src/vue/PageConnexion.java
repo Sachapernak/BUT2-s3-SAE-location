@@ -5,34 +5,24 @@ import javax.swing.JInternalFrame;
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import java.awt.GridLayout;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.Optional;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.FlowLayout;
 import java.awt.Color;
-import javax.swing.SwingWorker;
-
-import modele.ConnexionBD;
-import modele.FichierConfig;
-
+import controleur.GestionPageConnexion;
 import java.awt.Rectangle;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
-import javax.swing.BoxLayout;
 import javax.swing.JPasswordField;
 import java.awt.Font;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class PageConnexion extends JInternalFrame {
 
     private static final long serialVersionUID = 1L;
-    private JLabel lblSatutText;
+
+	private JLabel lblSatutText;
     private JLabel lblms1;
     private JLabel lblms2;
     private JLabel lblLatReqVal;
@@ -40,6 +30,9 @@ public class PageConnexion extends JInternalFrame {
     private JTextField textFieldLien;
     private JTextField textFieldID;
     private JPasswordField passwordField;
+    
+    private GestionPageConnexion gest;
+    
 
     /**
      * Launch the application.
@@ -61,6 +54,9 @@ public class PageConnexion extends JInternalFrame {
      * Create the frame.
      */
     public PageConnexion() {
+    	
+    	this.gest = new GestionPageConnexion(this);
+    	
     	getContentPane().setBounds(new Rectangle(0, 0, 400, 400));
 
         setBounds(100, 100, 400, 300);
@@ -74,7 +70,7 @@ public class PageConnexion extends JInternalFrame {
         getContentPane().add(panelBot, BorderLayout.SOUTH);
         panelBot.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
         
-        JButton btnQuitter = new JButton("Annuler");
+        JButton btnQuitter = new JButton("Quitter");
 
         panelBot.add(btnQuitter);
         
@@ -202,205 +198,50 @@ public class PageConnexion extends JInternalFrame {
         lblms1.setVisible(false);
         lblms2.setVisible(false);
         
-        gestionSourisQuitter(btnQuitter);
         
-        chargerInfoConnexion();
+        gest.gestionSourisQuitter(btnQuitter);
         
-        gestionSourisRecharger(btnRefresh);
-        gestionSourisConfirmer(btnConfirmer);
-
-      
+        gest.chargerInfoConnexion();
+        
+        
+        gest.gestionSourisRecharger(btnRefresh);
+        gest.gestionSourisConfirmer(btnConfirmer, passwordField);
 
         // Utiliser SwingWorker pour exécuter les tâches en arrière-plan
-        getInformationBD();
+        gest.getInformationBD();
     }
 
-	private void gestionSourisQuitter(JButton btnQuitter) {
-		btnQuitter.addMouseListener(new MouseAdapter() {
-        	@Override
-        	public void mouseClicked(MouseEvent e) {
-        		dispose();
-        	}
-        });
-	}
-
-	private void gestionSourisConfirmer(JButton btnConfirmer) {
-		btnConfirmer.addMouseListener(new MouseAdapter() {
-        	@Override
-        	public void mouseClicked(MouseEvent e) {
-        		String lien = textFieldLien.getText();
-        		String user = textFieldID.getText();
-        		
-
-        		
-        		try {
-        			FichierConfig fc = FichierConfig.getInstance();
-        			if (lien.length() > 0) {
-        				fc.enregistrer("DB_LINK", lien);
-        			}
-        			
-        			if (user.length() > 0) {
-        				fc.enregistrer("DB_USER", user);
-        			}
-        			
-        			if (passwordField.getPassword().length > 0) {
-        				fc.enregistrerMdp(new String(passwordField.getPassword()));
-        			}
-        			
-            		ConnexionBD bd = ConnexionBD.getInstance();
-            		bd.updateBDLink();
-            		
-            		recharger();
-            		
-        			
-        		} catch (Exception e1) {
-        			e1.printStackTrace();
-        		}
-        	}
-        });
-	}
-
-	private void getInformationBD() {
-		new SwingWorker<Void, Void>() {
-            @Override
-            protected Void doInBackground() throws Exception {
-                setConnexion();
-                setValLatCo();
-                setValLatReq();
-                return null;
-            }
-        }.execute();
-	}
-
-	private void gestionSourisRecharger(JButton btnRefresh) {
-		btnRefresh.addMouseListener(new MouseAdapter() {
-        	@Override
-        	public void mouseClicked(MouseEvent e) {
-        		
-                recharger();
-        	}
-
-
-        });
-	}
-	
-	private void recharger() {
-		lblSatutText.setText("Chargement...");
-        lblSatutText.setForeground(new Color(255, 128, 0));
-        
-        lblLatCoVal.setText("Chargement...");
-        lblLatCoVal.setForeground(new Color(255, 128, 0));
-        
-        lblLatReqVal.setText("Chargement...");
-        lblLatReqVal.setForeground(new Color(255, 128, 0));
-        
-        getInformationBD();
-        chargerInfoConnexion();
-	}
-
-	private void chargerInfoConnexion() {
-		FichierConfig fc = FichierConfig.getInstance();
-        
-        try {
-			String link = fc.lire("DB_LINK");
-			String user = fc.lire("DB_USER");
-			
-			textFieldLien.setText(link);
-			textFieldID.setText(user);
-			
-			
-		} catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Erreur de lecture de config.properties",
-                    "Erreur de lecture", JOptionPane.ERROR_MESSAGE);
-			e.printStackTrace();
-			
-		}
-	}
-    
-    private void setConnexion() {
-        try {
-            if (ConnexionBD.getInstance().isConnexionOk()) {
-                this.lblSatutText.setText("Connexion OK");
-                this.lblSatutText.setForeground(new Color(0, 128, 0));
-            } else {
-                this.lblSatutText.setText("Pas de connexion");
-                this.lblSatutText.setForeground(Color.RED);
-            }
-        } catch (SQLException | IOException e) {
-            this.lblSatutText.setText("Pas de connexion");
-            this.lblSatutText.setForeground(Color.RED);
-        }
+    public void afficherMessageErreur(String message) {
+        JOptionPane.showMessageDialog(this, "Erreur de lecture : \n" + message, "Erreur", JOptionPane.ERROR_MESSAGE);
     }
     
-    private void setValLatCo() {
-        
-        final long GOOD_PING = 500;
-        final long BAD_PING = 1000;
-        
-        try {
-            Optional<Long> val = ConnexionBD.getInstance().latenceConnexionBD();
-            
-            if (val.isPresent()) {
-                this.lblLatCoVal.setText(val.get().toString());
-                lblms1.setVisible(true);
-                
-                if (val.get() < GOOD_PING) {
-                    this.lblLatCoVal.setForeground(new Color(0, 128, 0));
-                } else if (val.get() < BAD_PING){
-                    this.lblLatCoVal.setForeground(new Color(255, 128, 0));
-                } else {
-                    this.lblLatCoVal.setForeground(Color.RED);
-                }
-                
-            } else {
-            	this.lblSatutText.setText("Pas de connexion");
-                this.lblSatutText.setForeground(Color.RED);
-            	
-                this.lblLatCoVal.setText("N/A");
-                this.lblLatCoVal.setForeground(Color.RED);
-            }
-        } catch (SQLException | IOException e) {
-            this.lblSatutText.setText("Pas de connexion");
-            this.lblSatutText.setForeground(Color.RED);
-            
-            this.lblLatCoVal.setText("N/A");
-            this.lblLatCoVal.setForeground(Color.RED);
-            
-        }
-    }
     
-    private void setValLatReq() {
-        
-        final long GOOD_PING = 50;
-        final long BAD_PING = 100;
-        
-        try {
-            Optional<Long> val = ConnexionBD.getInstance().latenceRequeteBD();
-            
-            if (val.isPresent()) {
-                this.lblLatReqVal.setText(val.get().toString());
-                lblms2.setVisible(true);
-                
-                if (val.get() < GOOD_PING) {
-                    this.lblLatReqVal.setForeground(new Color(0, 128, 0));
-                } else if (val.get() < BAD_PING){
-                    this.lblLatReqVal.setForeground(new Color(255, 128, 0));
-                } else {
-                    this.lblLatReqVal.setForeground(Color.RED);
-                }
-            } else {
-            	this.lblSatutText.setText("Pas de connexion");
-                this.lblSatutText.setForeground(Color.RED);
-                
-                this.lblLatReqVal.setText("N/A");
-                this.lblLatReqVal.setForeground(Color.RED);
-            }
-        } catch (SQLException | IOException e) {
-            this.lblSatutText.setText("Pas de connexion");
-            this.lblSatutText.setForeground(Color.RED);
-            
-            this.lblLatReqVal.setText("N/A");
-            this.lblLatReqVal.setForeground(Color.RED);
-        }
-    }
+    public JLabel getLblSatutText() {
+		return lblSatutText;
+	}
+
+	public JLabel getLblms1() {
+		return lblms1;
+	}
+
+	public JLabel getLblms2() {
+		return lblms2;
+	}
+
+	public JLabel getLblLatReqVal() {
+		return lblLatReqVal;
+	}
+
+	public JLabel getLblLatCoVal() {
+		return lblLatCoVal;
+	}
+
+	public JTextField getTextFieldLien() {
+		return textFieldLien;
+	}
+
+	public JTextField getTextFieldID() {
+		return textFieldID;
+	}
+
 }
