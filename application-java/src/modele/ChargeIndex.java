@@ -1,31 +1,31 @@
 package modele;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 public class ChargeIndex {
-    String id;
-    String dateDeReleve;
-    String type;
+    private String id;
+    private String dateDeReleve;
+    private String type;
     
-    String dateRelevePrecedent;
+    // L'id du releve precedent est le meme.
+    private String dateRelevePrecedent;
     
-    BigDecimal valeur;
-    BigDecimal coutVariable;
-    BigDecimal coutFixe;
+    private BigDecimal valeurCompteur;
+    private BigDecimal coutVariable;
+    private BigDecimal coutFixe;
     
-    String numDoc;
-    String dateDoc;
+    private String numDoc;
+    private String dateDoc;
     
 
     public ChargeIndex(String id, String dateDeReleve, String type,
-    					BigDecimal valeur, BigDecimal coutVariable, BigDecimal coutFixe, 
-                        String numDoc, String dateDoc) {
+    					BigDecimal valeurCompteur, BigDecimal coutVariable, BigDecimal coutFixe, 
+    					String numDoc, String dateDoc) {
         this.id = id;
         this.dateDeReleve = dateDeReleve;
         this.type = type;
         
-        this.valeur = valeur;
+        this.valeurCompteur = valeurCompteur;
         this.coutVariable = coutVariable;
         this.coutFixe = coutFixe;
         
@@ -38,12 +38,7 @@ public class ChargeIndex {
 		return dateDeReleve;
 	}
 
-
-	public void setDateDeReleve(String dateDeReleve) {
-		this.dateDeReleve = dateDeReleve;
-	}
-
-
+	
 	public String getType() {
 		return type;
 	}
@@ -64,13 +59,13 @@ public class ChargeIndex {
 	}
 
 
-	public BigDecimal getValeur() {
-		return valeur;
+	public BigDecimal getValeurCompteur() {
+		return valeurCompteur;
 	}
 
 
-	public void setValeur(BigDecimal valeur) {
-		this.valeur = valeur;
+	public void setValeurCompteur(BigDecimal valeur) {
+		this.valeurCompteur = valeur;
 	}
 
 
@@ -108,10 +103,5 @@ public class ChargeIndex {
 		return dateDoc;
 	}
     
-    
-    
-    
 
-    
-   
 }

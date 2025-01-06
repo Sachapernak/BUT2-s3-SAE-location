@@ -3,14 +3,14 @@ package modele.dao.requetes;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import modele.ChargeFixe;
+import modele.Entreprise;
 
-public class RequeteSelectChargeFixeById extends Requete<ChargeFixe> {
+public class RequeteSelectEntrepriseById extends Requete<Entreprise> {
 
 	@Override
 	public String requete() {
-		return "select * from sae_charge_cf where "
-				+ "id_charge_cf = ?";
+		return "Select * from sae_entreprise "
+				+ "where siret = ?";
 	}
 	
 	@Override

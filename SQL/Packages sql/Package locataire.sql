@@ -41,7 +41,6 @@ CREATE OR REPLACE PACKAGE pkg_locataire AS
         p_telephone_locataire IN SAE_LOCATAIRE.telephone_locataire%type,
         p_date_naissance IN SAE_LOCATAIRE.date_naissance%type,
         p_lieu_de_naissance IN SAE_LOCATAIRE.lieu_de_naissance%type,
-        p_acte_de_caution IN SAE_LOCATAIRE.acte_de_caution%type,
         p_id_sae_adresse IN SAE_LOCATAIRE.id_sae_adresse%type,
         p_contrats in contract_array);
         
@@ -53,7 +52,6 @@ CREATE OR REPLACE PACKAGE pkg_locataire AS
         p_telephone_locataire IN SAE_LOCATAIRE.telephone_locataire%type,
         p_date_naissance IN SAE_LOCATAIRE.date_naissance%type,
         p_lieu_de_naissance IN SAE_LOCATAIRE.lieu_de_naissance%type,
-        p_acte_de_caution IN SAE_LOCATAIRE.acte_de_caution%type,
         p_id_sae_adresse IN SAE_LOCATAIRE.id_sae_adresse%type,
         p_contrats in contract_array);
         
@@ -113,7 +111,6 @@ CREATE OR REPLACE PACKAGE BODY pkg_locataire AS
         p_telephone_locataire IN SAE_LOCATAIRE.telephone_locataire%type,
         p_date_naissance IN SAE_LOCATAIRE.date_naissance%type,
         p_lieu_de_naissance IN SAE_LOCATAIRE.lieu_de_naissance%type,
-        p_acte_de_caution IN SAE_LOCATAIRE.acte_de_caution%type,
         p_id_sae_adresse IN SAE_LOCATAIRE.id_sae_adresse%type,
         p_contrats in contract_array) 
     AS
@@ -127,7 +124,6 @@ CREATE OR REPLACE PACKAGE BODY pkg_locataire AS
             TELEPHONE_LOCATAIRE,
             DATE_NAISSANCE,
             LIEU_DE_NAISSANCE,
-            ACTE_DE_CAUTION,
             ID_SAE_ADRESSE)
         VALUES( 
             p_identifiant_locataire,
@@ -137,7 +133,6 @@ CREATE OR REPLACE PACKAGE BODY pkg_locataire AS
             p_telephone_locataire,
             p_date_naissance,
             p_lieu_de_naissance,
-            p_acte_de_caution,
             p_id_sae_adresse
         );
         
@@ -160,7 +155,6 @@ CREATE OR REPLACE PACKAGE BODY pkg_locataire AS
         p_telephone_locataire IN SAE_LOCATAIRE.telephone_locataire%type,
         p_date_naissance IN SAE_LOCATAIRE.date_naissance%type,
         p_lieu_de_naissance IN SAE_LOCATAIRE.lieu_de_naissance%type,
-        p_acte_de_caution IN SAE_LOCATAIRE.acte_de_caution%type,
         p_id_sae_adresse IN SAE_LOCATAIRE.id_sae_adresse%type,
         p_contrats in contract_array) 
     AS
@@ -174,7 +168,6 @@ CREATE OR REPLACE PACKAGE BODY pkg_locataire AS
             telephone_locataire = p_telephone_locataire,
             date_naissance = p_date_naissance,
             Lieu_de_naissance = p_lieu_de_naissance,
-            Acte_de_caution = p_acte_de_caution,
             Id_SAE_Adresse = p_id_sae_adresse
         WHERE identifiant_locataire = p_identifiant_locataire;
         

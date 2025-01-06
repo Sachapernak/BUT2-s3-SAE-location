@@ -38,6 +38,10 @@ public class ChargeFixe {
         return montant;
     }
     
+    public void setMontant(BigDecimal montant) {
+    	this.montant = montant;
+    }
+    
     public String getNumDoc() {
     	return numDoc;
     }

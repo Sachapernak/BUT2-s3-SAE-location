@@ -25,7 +25,6 @@ public class ProcedureCreateLocataire extends Procedure<Locataire> {
         		+ " p_telephone_locataire => ?, "
         		+ " p_date_naissance => ?, "
         		+ " p_lieu_de_naissance => ?, "
-        		+ " p_acte_de_caution => ?, "
         		+ "   p_id_sae_adresse => ?, "
         		+ "        p_contrats => ? )}";
     }
@@ -42,8 +41,7 @@ public class ProcedureCreateLocataire extends Procedure<Locataire> {
         prSt.setString(5, donnee.getTelephone());
         prSt.setDate(6,   Date.valueOf(donnee.getDateNaissance())); 
         prSt.setString(7, donnee.getLieuDeNaissance());
-        prSt.setString(8, donnee.getActeDeCaution());
-        prSt.setString(9, donnee.getAdresse() == null ? null : donnee.getAdresse().getIdAdresse());
+        prSt.setString(8, donnee.getAdresse() == null ? null : donnee.getAdresse().getIdAdresse());
          
         // Ajout des contrats
         ArrayList<Object[]> tabContrat = new ArrayList<>();
@@ -68,7 +66,7 @@ public class ProcedureCreateLocataire extends Procedure<Locataire> {
 			cn = ConnexionBD.getInstance().getConnexion();
 			OracleConnection oracleCon = cn.unwrap(OracleConnection.class);
 			Array array = oracleCon.createOracleArray("CONTRACT_ARRAY", tabContrat.toArray());
-			prSt.setArray(10, array);
+			prSt.setArray(9, array);
 		} catch (IOException e) {
 			e.printStackTrace();
 			prSt.setArray(10, null);

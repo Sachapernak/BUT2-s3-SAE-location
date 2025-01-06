@@ -19,7 +19,11 @@ import org.junit.runners.Suite.SuiteClasses;
     TestDaoProvisionCharge.class,
     TestDaoICC.class,
     TestDaoFactureBien.class,
-    TestDaoDocumentComptable.class
+    TestDaoDocumentComptable.class,
+    TestDaoEntreprise.class,
+    TestDaoAssurance.class,
+    TestDaoChargeIndex.class,
+    TestDaoChargeFixe.class
 })
 
 public class AllTestsModeleDao {

@@ -27,12 +27,12 @@ public class Bail {
     private String idBail;
 
     /**
-     * Date de début du bail au format "yyyy-dd-MM".
+     * Date de début du bail au format "yyyy-MM-dd".
      */
     private String dateDeDebut;
 
     /**
-     * Date de fin du bail au format "yyyy-dd-MM".
+     * Date de fin du bail au format "yyyy-MM-dd".
      */
     private String dateDeFin;
     
@@ -70,7 +70,7 @@ public class Bail {
      * Constructeur de la classe Bail.
      *
      * @param idBail      Identifiant unique du bail.
-     * @param dateDeDebut Date de début du bail au format "yyyy-dd-MM".
+     * @param dateDeDebut Date de début du bail au format "yyyy-MM-dd".
      * @param bien 		  Le bien dans lequel le bail se trouve.
      */
     public Bail(String idBail, String dateDeDebut, BienLocatif bien) throws IllegalArgumentException{
@@ -95,26 +95,18 @@ public class Bail {
      * Il valide que la date de début est strictement antérieure à la date de fin, et que les dates respectent le format "yyyy-dd-MM".
      *
      * @param idBail      Identifiant unique du bail.
-     * @param dateDeDebut Date de début du bail au format "yyyy-dd-MM".
-     * @param dateDeFin   Date de fin du bail au format "yyyy-dd-MM".
+     * @param dateDeDebut Date de début du bail au format "yyyy-MM-dd".
+     * @param dateDeFin   Date de fin du bail au format "yyyy-MM-dd".
      * @throws IllegalArgumentException Si la date de début n'est pas strictement antérieure à la date de fin
      *                                  ou si le format des dates est incorrect.
      */
     public Bail(String idBail, String dateDeDebut, String dateDeFin, BienLocatif bien) throws IllegalArgumentException {
     	if (idBail == null || dateDeDebut == null || bien == null) {
             throw new IllegalArgumentException("idBail, dateDeDebut et bien ne doivent pas etre null");
-        }
-    	
-    	// Définir le format attendu pour les dates
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-dd-MM");
-
-        // Convertir les chaînes en objets LocalDate
-        LocalDate date1 = LocalDate.parse(dateDeDebut, formatter);
-        LocalDate date2 = LocalDate.parse(dateDeFin, formatter);
-
-        // Vérifier que la date de début est strictement antérieure à la date de fin
-        if (date1.isAfter(date2) || date1.isEqual(date2)) {
-            throw new IllegalArgumentException("La date de début doit être avant celle de la fin.");
+    	}
+        
+        if (dateDeFin.compareTo(dateDeDebut) <= 0) {
+        	throw new IllegalArgumentException("La date de début doit être avant celle de la fin.");
         }
 
         // Initialiser les attributs de l'objet
@@ -173,16 +165,8 @@ public class Bail {
      * @throws IllegalArgumentException Si la date de fin est antérieure ou égale à la date de début, ou si le format est invalide.
      */
     public void setDateDeFin(String dateDeFin) throws IllegalArgumentException {
-        // Définir le format attendu pour les dates
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-dd-MM");
-
-        // Convertir les dates en objets LocalDate
-        LocalDate date1 = LocalDate.parse(this.dateDeDebut, formatter); // Date de début actuelle
-        LocalDate date2 = LocalDate.parse(dateDeFin, formatter);       // Nouvelle date de fin
-
-        // Vérifier que la nouvelle date de fin est postérieure à la date de début
-        if (date1.isAfter(date2) || date1.isEqual(date2)) {
-            throw new IllegalArgumentException("La date de début doit être avant celle de la fin");
+        if (dateDeFin.compareTo(this.dateDeDebut) <= 0) {
+        	throw new IllegalArgumentException("La date de début doit être avant celle de la fin.");
         }
 
         this.dateDeFin = dateDeFin;

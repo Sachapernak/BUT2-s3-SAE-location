@@ -55,32 +55,30 @@ VALUES ('BAI05', TO_DATE('2023-05-01', 'YYYY-MM-DD'), NULL, 'LOG002');
 
 
 -- 5. Insertion dans SAE_Locataire
-INSERT INTO SAE_Locataire (identifiant_locataire, Nom_locataire, Prenom_locataire, email_locataire, telephone_locataire, date_naissance, Lieu_de_naissance, Acte_de_caution, Id_SAE_Adresse)
-VALUES ('LOC001', 'Durand', 'Alice', 'alice.durand@example.com', '0612345678', TO_DATE('1990-04-15', 'YYYY-MM-DD'), 'Toulouse', 'Acte_123.pdf', 'ADDR001');
+INSERT INTO SAE_Locataire (identifiant_locataire, Nom_locataire, Prenom_locataire, email_locataire, telephone_locataire, date_naissance, Lieu_de_naissance, Id_SAE_Adresse)
+VALUES ('LOC001', 'Durand', 'Alice', 'alice.durand@example.com', '0612345678', TO_DATE('1990-04-15', 'YYYY-MM-DD'), 'Toulouse',  'ADDR001');
 
-INSERT INTO SAE_Locataire (identifiant_locataire, Nom_locataire, Prenom_locataire, email_locataire, telephone_locataire, date_naissance, Lieu_de_naissance, Acte_de_caution, Id_SAE_Adresse)
-VALUES ('LOC002', 'Martin', 'Bob', NULL, '0712345678', TO_DATE('1985-07-20', 'YYYY-MM-DD'), 'Paris', 'Acte_456.pdf', 'ADDR002');
+INSERT INTO SAE_Locataire (identifiant_locataire, Nom_locataire, Prenom_locataire, email_locataire, telephone_locataire, date_naissance, Lieu_de_naissance,  Id_SAE_Adresse)
+VALUES ('LOC002', 'Martin', 'Bob', NULL, '0712345678', TO_DATE('1985-07-20', 'YYYY-MM-DD'), 'Paris', 'ADDR002');
 
-INSERT INTO SAE_Locataire (identifiant_locataire, Nom_locataire, Prenom_locataire, email_locataire, telephone_locataire, date_naissance, Lieu_de_naissance, Acte_de_caution, Id_SAE_Adresse)
-VALUES ('LOC003', 'Lemoine', 'Claire', 'claire.lemoine@example.com', NULL, TO_DATE('1995-12-01', 'YYYY-MM-DD'), 'Lyon', NULL, 'ADDR003');
+INSERT INTO SAE_Locataire (identifiant_locataire, Nom_locataire, Prenom_locataire, email_locataire, telephone_locataire, date_naissance, Lieu_de_naissance, Id_SAE_Adresse)
+VALUES ('LOC003', 'Lemoine', 'Claire', 'claire.lemoine@example.com', NULL, TO_DATE('1995-12-01', 'YYYY-MM-DD'), 'Lyon', 'ADDR003');
 
-INSERT INTO SAE_Locataire (identifiant_locataire, Nom_locataire, Prenom_locataire, email_locataire, telephone_locataire, date_naissance, Lieu_de_naissance, Acte_de_caution, Id_SAE_Adresse)
-VALUES ('LOC004', 'Petit', 'Denis', 'denis.petit@example.com', '0812345678', TO_DATE('1980-02-28', 'YYYY-MM-DD'), 'Marseille', NULL, NULL);
+INSERT INTO SAE_Locataire (identifiant_locataire, Nom_locataire, Prenom_locataire, email_locataire, telephone_locataire, date_naissance, Lieu_de_naissance, Id_SAE_Adresse)
+VALUES ('LOC004', 'Petit', 'Denis', 'denis.petit@example.com', '0812345678', TO_DATE('1980-02-28', 'YYYY-MM-DD'), 'Marseille', NULL);
 
-INSERT INTO SAE_Locataire (identifiant_locataire, Nom_locataire, Prenom_locataire, email_locataire, telephone_locataire, date_naissance, Lieu_de_naissance, Acte_de_caution, Id_SAE_Adresse)
-VALUES ('LOC005', 'Roche', 'Eve', NULL, NULL, TO_DATE('2000-06-15', 'YYYY-MM-DD'), 'Bordeaux', NULL, 'ADDR001');
+INSERT INTO SAE_Locataire (identifiant_locataire, Nom_locataire, Prenom_locataire, email_locataire, telephone_locataire, date_naissance, Lieu_de_naissance, Id_SAE_Adresse)
+VALUES ('LOC005', 'Roche', 'Eve', NULL, NULL, TO_DATE('2000-06-15', 'YYYY-MM-DD'), 'Bordeaux', 'ADDR001');
 
 
 -- 6. Insertion dans SAE_assurance
 INSERT INTO SAE_assurance (
-  numero_de_contrat, annee_du_contrat, Type_de_contrat, prime,
-  quotite_jursiprudence, montant_quoitite
-) VALUES ('ASSUR001', 2023, 'Habitation', 1200.00, 1.00, 1200.00);
+  numero_de_contrat, annee_du_contrat, Type_de_contrat
+) VALUES ('ASSUR001', 2023, 'Habitation');
 
 INSERT INTO SAE_assurance (
-  numero_de_contrat, annee_du_contrat, Type_de_contrat, prime,
-  quotite_jursiprudence, montant_quoitite
-) VALUES ('ASSUR001', 2024, 'Habitation', 1250.00, 1.05, 1312.50);
+  numero_de_contrat, annee_du_contrat, Type_de_contrat
+) VALUES ('ASSUR001', 2024, 'Habitation');
 
 
 -- 7. Insertion dans SAE_ICC
@@ -153,11 +151,11 @@ INSERT INTO SAE_document_comptable (
 
 -- 11. Insertion dans sae_charge_index
 INSERT INTO sae_charge_index (
-    id_charge_index,Date_de_releve, Type, valeur, Date_releve_precedent, Cout_variable, Cout_fixe,
-    numero_document, Date_document
+    id_charge_index, Date_de_releve, Type, Valeur_compteur, Cout_variable_unitaire, Cout_fixe,
+    numero_document, Date_document, Date_releve_precedent, id_charge_index_preced
 ) VALUES (
-    'CI001',TO_DATE('2023-08-15','YYYY-MM-DD'), 'Eau', 120.50, TO_DATE('2023-07-15','YYYY-MM-DD'), 100.00, 50.00,
-    'DOC002', TO_DATE('2023-08-10','YYYY-MM-DD')
+    'CI001', TO_DATE('2023-08-15','YYYY-MM-DD'), 'Eau', 120.500, 0.83000, 50.00,
+    'DOC002', TO_DATE('2023-08-10','YYYY-MM-DD'), NULL, NULL
 );
 
 
@@ -343,11 +341,11 @@ INSERT INTO SAE_document_comptable (
 
 -- Ajout de la charge à coût variable liée à DOC006 (même date_document)
 INSERT INTO sae_charge_index (
-    id_charge_index, Date_de_releve, Type, valeur, Date_releve_precedent, Cout_variable, Cout_fixe,
-    numero_document, Date_document
+    id_charge_index, Date_de_releve, Type, Valeur_compteur, Cout_variable_unitaire, Cout_fixe,
+    numero_document, Date_document, Date_releve_precedent, id_charge_index_preced
 ) VALUES (
-    'CI002', TO_DATE('2023-12-15','YYYY-MM-DD'), 'Eau', 180.00, TO_DATE('2023-11-15','YYYY-MM-DD'), 130.00, 50.00,
-    'DOC006', TO_DATE('2023-12-15','YYYY-MM-DD')
+    'CI002', TO_DATE('2023-12-15','YYYY-MM-DD'), 'Eau', 180.000, 1.00000, 50.00,
+    'DOC006', TO_DATE('2023-12-15','YYYY-MM-DD'), NULL, NULL
 );
 
 -- Lien entre DOC006 et LOG002 (même date_document)
@@ -457,11 +455,11 @@ INSERT INTO SAE_document_comptable (
 
 -- Charge à coût variable (index) pour DOC011
 INSERT INTO sae_charge_index (
-    id_charge_index, Date_de_releve, Type, valeur, Date_releve_precedent, Cout_variable, Cout_fixe,
-    numero_document, Date_document
+    id_charge_index, Date_de_releve, Type, Valeur_compteur, Cout_variable_unitaire, Cout_fixe,
+    numero_document, Date_document, Date_releve_precedent, id_charge_index_preced
 ) VALUES (
-    'CI003', TO_DATE('2023-12-26','YYYY-MM-DD'), 'Eau', 250.00, TO_DATE('2023-11-26','YYYY-MM-DD'), 200.00, 50.00,
-    'DOC011', TO_DATE('2023-12-26','YYYY-MM-DD')
+    'CI003', TO_DATE('2023-12-26','YYYY-MM-DD'), 'Eau', 250.000, 1.20000, 50.00,
+    'DOC011', TO_DATE('2023-12-26','YYYY-MM-DD'), NULL, NULL
 );
 
 -- Lien entre DOC011 et LOG003
@@ -540,11 +538,11 @@ INSERT INTO SAE_document_comptable (
 
 -- Ajout d’une charge à coût variable liée à DOC015
 INSERT INTO sae_charge_index (
-    id_charge_index, Date_de_releve, Type, valeur, Date_releve_precedent, Cout_variable, Cout_fixe,
-    numero_document, Date_document
+    id_charge_index, Date_de_releve, Type, Valeur_compteur, Cout_variable_unitaire, Cout_fixe,
+    numero_document, Date_document, Date_releve_precedent, id_charge_index_preced
 ) VALUES (
-    'CI004', TO_DATE('2024-03-20','YYYY-MM-DD'), 'Eau', 180.00, TO_DATE('2024-02-20','YYYY-MM-DD'), 130.00, 50.00,
-    'DOC015', TO_DATE('2024-03-20','YYYY-MM-DD')
+    'CI004', TO_DATE('2024-03-20','YYYY-MM-DD'), 'Eau', 180.000, 1.10000, 50.00,
+    'DOC015', TO_DATE('2024-03-20','YYYY-MM-DD'), NULL, NULL
 );
 
 INSERT INTO sae_facture_du_bien (
