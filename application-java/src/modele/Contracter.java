@@ -120,4 +120,14 @@ public class Contracter {
     public Locataire getLocataire() {
         return locataire;
     }
+
+	public void setDateSortie(String dateSortie) {
+		this.dateSortie = dateSortie;
+	}
+
+	public void setPartLoyer(float partLoyer) {
+		this.partLoyer = partLoyer;
+	}
+    
+    
 }

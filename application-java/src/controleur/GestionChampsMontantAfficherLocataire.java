@@ -35,7 +35,7 @@ public class GestionChampsMontantAfficherLocataire implements ListSelectionListe
 		JTable tableBiens = this.fen_afficher_locataires_actuels.getTableBiensLoues();
 		int index = tableBiens.getSelectedRow();
 		if (index != -1) {
-			Bail bailSelectionne = recupererBail(tableBiens, index);
+			Bail bailSelectionne = recupererBail(this.daoBail,tableBiens, index);
 			BigDecimal provision = null;
 			BigDecimal caution = null;
 			try {
@@ -57,16 +57,15 @@ public class GestionChampsMontantAfficherLocataire implements ListSelectionListe
 		}		
 	}
 	
-	public Bail recupererBail(JTable tableBiens, int index) {
+	public static Bail recupererBail(DaoBail daoBail, JTable tableBiens, int index) {
 		Bail bail = null;
 		String idBail = (String) tableBiens.getValueAt(index, 0);
 		try {
-			bail = this.daoBail.findById(idBail);
+			bail = daoBail.findById(idBail);
 		} catch (SQLException | IOException e) {
 			e.printStackTrace();
 		}
 		return bail;
-		
 	}
 	
 }

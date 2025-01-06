@@ -77,7 +77,7 @@ public class GestionTablesAjouterBail implements ListSelectionListener, KeyListe
 		DefaultTableModel modelTableParts = (DefaultTableModel) tablePartsLoyer.getModel();
 		DefaultTableModel modelTotal = (DefaultTableModel) tableTotal.getModel();
 				
-		UtilitaireTable.viderTable(tableTotal);
+		UtilitaireTable.viderTable(tablePartsLoyer);
 		try {
 			List<Contracter> contrats = this.daoContracter.getContrats(bail);
 			for (Contracter contrat : contrats) {
@@ -94,7 +94,6 @@ public class GestionTablesAjouterBail implements ListSelectionListener, KeyListe
 			e.printStackTrace();
 		} 
 	}
-	
 	
 	public float calculerPartsTotal(JTable tablePartsLoyer) {
 		float somme = 0;

@@ -11,14 +11,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import controleur.GestionAfficherLocataire;
+import controleur.GestionAfficherLocataireActuel;
 import controleur.GestionChampsLocataireActuel;
 import controleur.GestionChampsMontantAfficherLocataire;
 
 import javax.swing.SwingConstants;
 import java.awt.Font;
-import javax.swing.JList;
-import javax.swing.DefaultListModel;
 import javax.swing.border.EtchedBorder;
 import java.awt.Color;
 import javax.swing.JTextField;
@@ -30,7 +28,7 @@ public class AfficherLocatairesActuels extends JInternalFrame{
 
 	private static final long serialVersionUID = 1L;
 	
-	private GestionAfficherLocataire gestionClic;
+	private GestionAfficherLocataireActuel gestionClic;
 	private GestionChampsLocataireActuel gestionChampsLoc;
 	private GestionChampsMontantAfficherLocataire gestionChampsMontant;
 	
@@ -135,7 +133,7 @@ public class AfficherLocatairesActuels extends JInternalFrame{
 	 */
 	public AfficherLocatairesActuels() {
 		
-		this.gestionClic = new GestionAfficherLocataire(this);
+		this.gestionClic = new GestionAfficherLocataireActuel(this);
 		this.gestionChampsLoc = new GestionChampsLocataireActuel(this);
 		this.gestionChampsMontant = new GestionChampsMontantAfficherLocataire(this);
 		
