@@ -210,15 +210,15 @@ public class GestionAfficherCharge {
             switch (selectedType) {
                 case "Charges":
                     // Filtrer les types commençant par "facture"
-                    filters.add(RowFilter.regexFilter("^facture.*", 1)); // Supposant que "Type" est la colonne d'indice 1
+                    filters.add(RowFilter.regexFilter("^FACTURE*", 1)); 
                     break;
                 case "Devis":
                     // Filtrer les types commençant par "devis"
-                    filters.add(RowFilter.regexFilter("^devis.*", 1));
+                    filters.add(RowFilter.regexFilter("^DEVIS*", 1));
                     break;
                 case "Quittance":
-                    // Filtrer les types exactement égaux à "quittance"
-                    filters.add(RowFilter.regexFilter("^quittance$", 1));
+                    // Filtrer les types commencant par "quittance"
+                    filters.add(RowFilter.regexFilter("^QUITTANCE*", 1));
                     break;
                 default:
                     break;
