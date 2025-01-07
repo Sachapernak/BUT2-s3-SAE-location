@@ -10,7 +10,7 @@ public class RequeteSelectBienLocatifById extends Requete<BienLocatif> {
 	@Override
 	public String requete() {
 		return "select * from sae_bien_locatif "
-				+ "where identifiant_batiment = ?";
+				+ "where identifiant_logement = ?";
 	}
 	
 	@Override

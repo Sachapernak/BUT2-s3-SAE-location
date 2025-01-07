@@ -119,8 +119,9 @@ public class DaoBail extends DaoModele<Bail> implements Dao<Bail> {
         String idBail = curseur.getString("ID_BAIL");
         
         String idBien = curseur.getString("IDENTIFIANT_LOGEMENT");
-        
         BienLocatif bien = new DaoBienLocatif().findById(idBien);
+        
+
 
         // Formatter la date de début
         String dateDeDebut = localDateDebut.format(DateTimeFormatter.ofPattern("yyyy-dd-MM"));
