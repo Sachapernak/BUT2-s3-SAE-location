@@ -380,6 +380,8 @@ public class DetailLocataire extends JDialog {
         buttonPane.add(cancelButton);
                     
         gest.chargerLocataireDansFenetre(this, locataire);
+        
+        //TODO : lier vers "DetailBail" quand on clique sur la liste
     }
     
     // Méthode pour charger une liste de baux dans le JList
