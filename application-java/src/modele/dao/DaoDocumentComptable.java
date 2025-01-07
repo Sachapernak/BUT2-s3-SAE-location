@@ -18,6 +18,7 @@ import modele.ChargeIndex;
 import modele.dao.requetes.RequeteDeleteDocumentComptable;
 import modele.dao.requetes.RequeteSelectDocumentComptable;
 import modele.dao.requetes.RequeteSelectDocumentComptableById;
+import modele.dao.requetes.RequeteSelectDocumentComptableByIdLog;
 import modele.dao.requetes.RequeteUpdateDocumentComptable;
 import modele.dao.requetes.RequeteCreateDocumentComptable;
 
@@ -44,6 +45,10 @@ public class DaoDocumentComptable extends DaoModele<DocumentComptable> {
 	@Override
 	public DocumentComptable findById(String... id) throws SQLException, IOException {
 		return findById(new RequeteSelectDocumentComptableById(), id);
+	}
+	
+	public List<DocumentComptable> findByIdLogement(String id) throws SQLException, IOException {
+		return find(new RequeteSelectDocumentComptableByIdLog(), id);
 	}
 
 	@Override

@@ -5,7 +5,7 @@ import java.sql.SQLException;
 
 import modele.BienLocatif;
 
-public class RequeteSelectBienLocatifById extends Requete<BienLocatif> {
+public class RequeteSelectBienLocatifByIdBat extends Requete<BienLocatif> {
 
 	@Override
 	public String requete() {

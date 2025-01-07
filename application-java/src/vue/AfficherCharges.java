@@ -9,15 +9,22 @@ import java.awt.GridBagLayout;
 import java.awt.Color;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableModel;
+
+import controleur.GestionAfficherCharge;
+
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
 import javax.swing.DefaultComboBoxModel;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
 
 public class AfficherCharges extends JFrame {
 
@@ -30,13 +37,17 @@ public class AfficherCharges extends JFrame {
     private JTable tableCharges;
     private JButton btnQuitter;
     private JTextField txtRecherche;
+   
+    private GestionAfficherCharge gest;
     
     public static void main(String[] args) {
         SwingUtilities.invokeLater(AfficherCharges::new);
     }
 
     public AfficherCharges() {
-        super("Gestion des Charges");
+    	super("Gestion des Charges");
+    	
+    	this.gest = new GestionAfficherCharge(this);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Panneau principal en GridBagLayout
@@ -59,7 +70,8 @@ public class AfficherCharges extends JFrame {
         mainPanel.add(lblBatiment, gbc1);
 
         // Combo Bâtiment
-        comboBatiment = new JComboBox<>(new String[]{"Bâtiment A", "Bâtiment B", "Bâtiment C"});
+        comboBatiment = new JComboBox<>(new String[]{"Chargement..."});
+
         GridBagConstraints gbc2 = new GridBagConstraints();
         gbc2.gridx = 1;
         gbc2.gridy = 0;
@@ -106,34 +118,35 @@ public class AfficherCharges extends JFrame {
         // ---------------------------------------------------------------------
         // LIGNE 2 : Table avec la liste des Charges (dans un JScrollPane)
         // ---------------------------------------------------------------------
-        String[] columnNames = {"ID", "Description", "Montant", "Date"};
+        String[] columnNames = {"ID", "Type", "Montant", "Date"};
         Object[][] data = {
             {1, "Loyer",        700.0, "2025-01-01"},
             {2, "Eau",          30.0,  "2025-01-02"},
             {3, "Électricité",  60.0,  "2025-01-03"}
         };
                 
-                        // ---------------------------------------------------------------------
-                        // LIGNE 1 : Barre de recherche
-                        // ---------------------------------------------------------------------
-                        JLabel lblRecherche = new JLabel("Recherche :");
-                        GridBagConstraints gbc7 = new GridBagConstraints();
-                        gbc7.gridx = 0;
-                        gbc7.gridy = 1;
-                        gbc7.insets = new Insets(5, 5, 5, 5);
-                        gbc7.anchor = GridBagConstraints.LINE_END;
-                        mainPanel.add(lblRecherche, gbc7);
+	    // ---------------------------------------------------------------------
+	    // LIGNE 1 : Barre de recherche
+	    // ---------------------------------------------------------------------
+	    JLabel lblRecherche = new JLabel("Recherche :");
+	    GridBagConstraints gbc7 = new GridBagConstraints();
+	    gbc7.gridx = 0;
+	    gbc7.gridy = 1;
+	    gbc7.insets = new Insets(5, 5, 5, 5);
+	    gbc7.anchor = GridBagConstraints.LINE_END;
+	    mainPanel.add(lblRecherche, gbc7);
         
-                // Champ de texte pour la recherche
-                txtRecherche = new JTextField(15);
-                GridBagConstraints gbc8 = new GridBagConstraints();
-                gbc8.gridx = 1;
-                gbc8.gridy = 1;
-                gbc8.gridwidth = 5;   // s'étend sur 5 colonnes (de 1 à 5)
-                gbc8.fill = GridBagConstraints.HORIZONTAL;
-                gbc8.weightx = 1.0;
-                gbc8.insets = new Insets(5, 5, 5, 5);
-                mainPanel.add(txtRecherche, gbc8);
+        // Champ de texte pour la recherche
+        txtRecherche = new JTextField(15);
+        GridBagConstraints gbc8 = new GridBagConstraints();
+        gbc8.gridx = 1;
+        gbc8.gridy = 1;
+        gbc8.gridwidth = 5;   // s'étend sur 5 colonnes (de 1 à 5)
+        gbc8.fill = GridBagConstraints.HORIZONTAL;
+        gbc8.weightx = 1.0;
+        gbc8.insets = new Insets(5, 5, 5, 5);
+        mainPanel.add(txtRecherche, gbc8);
+        
         tableCharges = new JTable(data, columnNames);
 
         JScrollPane scrollPane = new JScrollPane(tableCharges);
@@ -152,28 +165,35 @@ public class AfficherCharges extends JFrame {
         // ---------------------------------------------------------------------
         setContentPane(mainPanel);
                                         
-                                                // ---------------------------------------------------------------------
-                                                // LIGNE 3 : Bouton Quitter
-                                                // ---------------------------------------------------------------------
-                                                btnQuitter = new JButton("Quitter");
-                                                GridBagConstraints gbc10 = new GridBagConstraints();
-                                                gbc10.gridx = 5;
-                                                gbc10.gridy = 3;
-                                                gbc10.fill = GridBagConstraints.NONE;
-                                                gbc10.weightx = 0;
-                                                gbc10.weighty = 0;
-                                                gbc10.anchor = GridBagConstraints.EAST;
-                                                gbc10.insets = new Insets(5, 5, 10, 5);
-                                                mainPanel.add(btnQuitter, gbc10);
+        // ---------------------------------------------------------------------
+        // LIGNE 3 : Bouton Quitter
+        // ---------------------------------------------------------------------
+        btnQuitter = new JButton("Quitter");
+        GridBagConstraints gbc10 = new GridBagConstraints();
+        gbc10.gridx = 5;
+        gbc10.gridy = 3;
+        gbc10.fill = GridBagConstraints.NONE;
+        gbc10.weightx = 0;
+        gbc10.weighty = 0;
+        gbc10.anchor = GridBagConstraints.EAST;
+        gbc10.insets = new Insets(5, 5, 10, 5);
+        mainPanel.add(btnQuitter, gbc10);
         setSize(630, 572);
         setLocationRelativeTo(null); // Centre la fenêtre
         setVisible(true);
 
         this.comboLogement.setEnabled(false);
+                
+        gest.chargerComboBoxBatiment();
         
-        setListBatiment(new ArrayList<>(Arrays.asList("test1", "test2")));
+        gest.gestionActionComboBat(comboBatiment);
+        
+        gest.gestionActionComboLog(comboLogement);
+        
         
     }
+
+
 
     public void setListBatiment(List<String> batiments) {
     	this.comboBatiment.setModel(new DefaultComboBoxModel(batiments.toArray()));
@@ -186,6 +206,7 @@ public class AfficherCharges extends JFrame {
     
     public void setListLogement(List<String> logements) {
     	this.comboLogement.setModel(new DefaultComboBoxModel(logements.toArray()));
+    	this.comboLogement.setEnabled(true);
     	
     }
     
@@ -205,5 +226,33 @@ public class AfficherCharges extends JFrame {
     	return this.txtRecherche.getText();
     }
     
+    public void quitter() {
+    	dispose();
+    }
+    
+    public void chargerTable(List<Object[]> liste) {
+    	
+    	DefaultTableModel model = new DefaultTableModel();
+    	
+    	for (Object[] ligne : liste) {
+    		model.addRow(ligne);
+    	}
+    	
+    	this.tableCharges.setModel(model);
+    }
+    
+    public Object getValueAt(int ligne, int col) {
+    	return this.tableCharges.getValueAt(ligne, col);
+    }
+    
+    public void deleteLigneAt(int ligne) {
+    	this.tableCharges.remove(ligne);
+    }
+    
+    // Méthodes utilitaires 
+    public void afficherMessageErreur(String message) {
+        JOptionPane.showMessageDialog(this, "Erreur : \n" + message, 
+                                      "Erreur", JOptionPane.ERROR_MESSAGE);
+    }
     
 }

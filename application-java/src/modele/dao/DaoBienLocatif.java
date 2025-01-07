@@ -10,6 +10,7 @@ import modele.Batiment;
 import modele.BienLocatif;
 import modele.dao.requetes.RequeteSelectBienLocatif;
 import modele.dao.requetes.RequeteSelectBienLocatifById;
+import modele.dao.requetes.RequeteSelectBienLocatifByIdBat;
 import modele.dao.requetes.RequeteCreateBienLocatif;
 import modele.dao.requetes.RequeteDeleteBienLocatif;
 import modele.dao.requetes.RequeteUpdateBienLocatif;
@@ -42,6 +43,10 @@ public class DaoBienLocatif extends DaoModele<BienLocatif> {
 	@Override
 	public List<BienLocatif> findAll() throws SQLException, IOException {
 		return find(new RequeteSelectBienLocatif());
+	}
+	
+	public List<BienLocatif> findByIdBat(String batiment) throws SQLException, IOException {
+		return find(new RequeteSelectBienLocatifByIdBat(), batiment);
 	}
 
 	@Override
