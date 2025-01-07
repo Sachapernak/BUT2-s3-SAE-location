@@ -14,7 +14,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 import controleur.GestionAfficherCharge;
 
@@ -22,6 +25,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
+import javax.swing.RowFilter;
 import javax.swing.DefaultComboBoxModel;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
@@ -98,7 +102,7 @@ public class AfficherCharges extends JFrame {
         mainPanel.add(comboLogement, gbc4);
 
         // Label "Type de charge :"
-        JLabel lblCharge = new JLabel("Type de charge :");
+        JLabel lblCharge = new JLabel("Type de document :");
         GridBagConstraints gbc5 = new GridBagConstraints();
         gbc5.gridx = 4;
         gbc5.gridy = 0;
@@ -107,7 +111,8 @@ public class AfficherCharges extends JFrame {
         mainPanel.add(lblCharge, gbc5);
 
         // Combo Type de Charge
-        comboTypeCharge = new JComboBox<>(new String[]{});
+        String[] typeOptions = {"Tous", "Charges", "Devis", "Quittance"};
+        comboTypeCharge = new JComboBox<>(typeOptions);
         GridBagConstraints gbc6 = new GridBagConstraints();
         gbc6.anchor = GridBagConstraints.WEST;
         gbc6.gridx = 5;
@@ -118,12 +123,17 @@ public class AfficherCharges extends JFrame {
         // ---------------------------------------------------------------------
         // LIGNE 2 : Table avec la liste des Charges (dans un JScrollPane)
         // ---------------------------------------------------------------------
-        String[] columnNames = {"ID", "Type", "Montant", "Date"};
+        String[] columnNames = {"ID", "Type", "Montant au prorata", "Date"};
         Object[][] data = {
-            {1, "Loyer",        700.0, "2025-01-01"},
-            {2, "Eau",          30.0,  "2025-01-02"},
-            {3, "Électricité",  60.0,  "2025-01-03"}
+            {0, "Chargement...", 0, "N/A"}
         };
+        
+        tableCharges = new JTable(data, columnNames);
+        
+        DefaultTableModel initialModel = new DefaultTableModel(data, columnNames);
+        tableCharges.setModel(initialModel);
+        
+
                 
 	    // ---------------------------------------------------------------------
 	    // LIGNE 1 : Barre de recherche
@@ -147,7 +157,7 @@ public class AfficherCharges extends JFrame {
         gbc8.insets = new Insets(5, 5, 5, 5);
         mainPanel.add(txtRecherche, gbc8);
         
-        tableCharges = new JTable(data, columnNames);
+
 
         JScrollPane scrollPane = new JScrollPane(tableCharges);
         GridBagConstraints gbc9 = new GridBagConstraints();
@@ -181,6 +191,15 @@ public class AfficherCharges extends JFrame {
         setSize(630, 572);
         setLocationRelativeTo(null); // Centre la fenêtre
         setVisible(true);
+        
+        // TableRowSorter au modèle de la table
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>((DefaultTableModel) tableCharges.getModel());
+        tableCharges.setRowSorter(sorter);
+
+        // Ajout de l'ecoute
+        gest.gestionEcouteChampRecherche(sorter, txtRecherche);
+        
+        
 
         this.comboLogement.setEnabled(false);
                 
@@ -190,8 +209,23 @@ public class AfficherCharges extends JFrame {
         
         gest.gestionActionComboLog(comboLogement);
         
+        gest.gestionEcouteFiltreType(sorter, comboTypeCharge, txtRecherche);
+        
         
     }
+
+
+	
+	public void filtrerTable(TableRowSorter<DefaultTableModel> sorter) {
+	    String text = txtRecherche.getText();
+	    if (text.trim().length() == 0) {
+	        sorter.setRowFilter(null);  // Aucun filtre
+	    } else {
+	        // Filtre : recherche le texte dans toutes les colonnes (sensible à la casse par défaut)
+	        sorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
+	    }
+	}
+
 
 
 
@@ -231,15 +265,39 @@ public class AfficherCharges extends JFrame {
     }
     
     public void chargerTable(List<Object[]> liste) {
-    	
-    	DefaultTableModel model = new DefaultTableModel();
-    	
-    	for (Object[] ligne : liste) {
-    		model.addRow(ligne);
-    	}
-    	
-    	this.tableCharges.setModel(model);
+        String[] nomsColonnes = {"Numéro", "Type", "Montant au prorata", "Date"};
+        DefaultTableModel model = new DefaultTableModel(nomsColonnes, 0);
+        
+        for (Object[] ligne : liste) {
+            model.addRow(ligne);
+        }
+        
+        this.tableCharges.setModel(model);
+        
+        // Réassocier un nouveau TableRowSorter après la mise à jour du modèle
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        this.tableCharges.setRowSorter(sorter);
+        
+        // Réassocier le listener pour la recherche
+        txtRecherche.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                filtrerTable(sorter);
+            }
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                filtrerTable(sorter);
+            }
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                filtrerTable(sorter);
+            }
+        });
+        
+        this.tableCharges.revalidate();
+        this.tableCharges.repaint();
     }
+
     
     public Object getValueAt(int ligne, int col) {
     	return this.tableCharges.getValueAt(ligne, col);
