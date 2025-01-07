@@ -18,6 +18,7 @@ public class RequeteSelectDocumentComptableById extends Requete<DocumentComptabl
 	
 	@Override
 	public void parametres(PreparedStatement prSt, String...id) throws SQLException {
+		System.out.println(id.length);
 		prSt.setString(1, id[0]);
 		prSt.setDate(2, Date.valueOf(id[1]));
 	}
