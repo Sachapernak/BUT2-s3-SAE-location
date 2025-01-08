@@ -39,6 +39,7 @@ public class FenetrePrincipale extends JFrame {
 	private GestionMenu gestionMenu;
 	private JTable tableBiensLoc;
 	private JTable tableBatiment;
+	private JLabel lblEtatConnexion;
 
 	public JTable getTableBiensLoc() {
 		return this.tableBiensLoc;
@@ -46,6 +47,10 @@ public class FenetrePrincipale extends JFrame {
 	
 	public JTable getTableBatiment() {
 		return this.tableBatiment;
+	}
+	
+	public void setEtatConnexion(Color couleur) {
+		this.lblEtatConnexion.setForeground(couleur);
 	}
 	
 	/**
@@ -248,5 +253,11 @@ public class FenetrePrincipale extends JFrame {
 		lblLogo.setIcon(new ImageIcon("images/logo-immeuble.png"));
 		lblLogo.setBounds(265, 42, 55, 47);
 		contentPane.add(lblLogo);
+		
+		lblEtatConnexion = new JLabel("⬤");
+		//lblEtatConnexion.setForeground(new Color(0, 128, 0));
+		this.gestionClic.afficherEtaConnexion();
+		lblEtatConnexion.setBounds(10, 31, 19, 13);
+		contentPane.add(lblEtatConnexion);
 	}
 }
