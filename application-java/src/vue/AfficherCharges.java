@@ -13,8 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
+import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
@@ -25,8 +24,6 @@ import javax.swing.JFrame;
 import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.DefaultComboBoxModel;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import javax.swing.ScrollPaneConstants;
 
 public class AfficherCharges extends JFrame {
@@ -50,7 +47,7 @@ public class AfficherCharges extends JFrame {
     public AfficherCharges() {
         super("Gestion des Charges");
         this.gest = new GestionAfficherCharge(this);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         // Configuration du layout principal
         GridBagLayout gbl_mainPanel = new GridBagLayout();
