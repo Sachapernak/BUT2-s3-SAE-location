@@ -52,14 +52,13 @@ public class DetailLocataire extends JDialog {
 
     private JList<String> list;
     
-    DefaultListModel listModel;
+    DefaultListModel<String> listModel;
 
     /**
      * Launch the application (pour test).
      */
     public static void main(String[] args) {
         try {
-        	System.out.println("Chargement de la fenetre...");
             Locataire l = new DaoLocataire().findById("LOC001");
             DetailLocataire dialog = new DetailLocataire(l);
             dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -353,7 +352,7 @@ public class DetailLocataire extends JDialog {
     
         list = new JList<>();
         
-        listModel = new DefaultListModel();
+        listModel = new DefaultListModel<String>();
         
         listModel.addElement("Chargement...");
         
