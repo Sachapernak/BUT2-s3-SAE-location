@@ -144,7 +144,7 @@ public class TestDaoBienLocatif {
 	     daoBien.create(bien2);
 	    
 	     	     
-	     List<BienLocatif> biens = daoBien.findByIdBatiment(batiment.getIdBat());
+	     List<BienLocatif> biens = daoBien.findByIdBat(batiment.getIdBat());
 	     
 	     boolean contientTest005 = biens.stream()
                  .anyMatch(bien -> "BIEN_TEST05".equals(bien.getIdentifiantLogement()));

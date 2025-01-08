@@ -68,7 +68,8 @@ public class TestDaoCautionnaire {
     
     @Test
     public void testDaoCautionnaireCreate() throws SQLException, IOException {
-        Cautionnaire createCautionnaire = new Cautionnaire(9,"NomTest","PrenomTest", "DescriptionTest", adresseTest);
+        Cautionnaire createCautionnaire = new Cautionnaire(9,"NomTest","PrenomTest", "DescriptionTest");
+        createCautionnaire.setAdresse(adresseTest);
         
         ajouterCautionnaire(createCautionnaire);
         cautionnaireRecup = daoC.findById("9");
@@ -82,8 +83,8 @@ public class TestDaoCautionnaire {
     
     @Test
     public void testDaoCautionnaireModify() throws SQLException, IOException {
-        Cautionnaire majCautionnaire = new Cautionnaire(9, "NomTest", "PrenomTest", "DescriptionTest", adresseTest);
-
+        Cautionnaire majCautionnaire = new Cautionnaire(9, "NomTest", "PrenomTest", "DescriptionTest");
+        majCautionnaire.setAdresse(adresseTest);
         ajouterCautionnaire(majCautionnaire);
 
         cautionnaireRecup = daoC.findById("9");
@@ -100,7 +101,8 @@ public class TestDaoCautionnaire {
     
     @Test
     public void testDaoSuppressionDeuxFois() throws SQLException, IOException {
-        Cautionnaire testCautionnaire = new Cautionnaire(9, "NomTest", "PrenomTest", "DescriptionTest", adresseTest);
+        Cautionnaire testCautionnaire = new Cautionnaire(9, "NomTest", "PrenomTest", "DescriptionTest");
+        testCautionnaire.setAdresse(adresseTest);
         ajouterCautionnaire(testCautionnaire);
 
         cautionnaireRecup = daoC.findById("9");
@@ -116,7 +118,8 @@ public class TestDaoCautionnaire {
     
     @Test
     public void testDaoFindAll() throws SQLException, IOException {
-        Cautionnaire findAllCautionnaire = new Cautionnaire(9, "NomTest", "PrenomTest", "DescriptionTest", adresseTest);
+        Cautionnaire findAllCautionnaire = new Cautionnaire(9, "NomTest", "PrenomTest", "DescriptionTest");
+        findAllCautionnaire.setAdresse(adresseTest);
         ajouterCautionnaire(findAllCautionnaire);
 
         List<Cautionnaire> list = daoC.findAll();
@@ -137,7 +140,8 @@ public class TestDaoCautionnaire {
 
     @Test
     public void testDeleteNonExistent() throws SQLException, IOException, IllegalArgumentException {
-        Cautionnaire fakeCautionnaire = new Cautionnaire(9999, "FauxNom", "FauxPrenom", "DescriptionFausse", adresseTest);
+        Cautionnaire fakeCautionnaire = new Cautionnaire(9999, "FauxNom", "FauxPrenom", "DescriptionFausse");
+        fakeCautionnaire.setAdresse(adresseTest);
         daoC.delete(fakeCautionnaire);
         Cautionnaire cautionnaire = daoC.findById("9999");
         assertNull("La suppression d'un cautionnaire inexistant ne devrait pas lever une erreur.", cautionnaire);

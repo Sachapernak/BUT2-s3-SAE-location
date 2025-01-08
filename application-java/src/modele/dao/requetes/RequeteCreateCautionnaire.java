@@ -28,7 +28,11 @@ public class RequeteCreateCautionnaire extends Requete<Cautionnaire>{
 		prSt.setString(2, donnee.getNomOuOrganisme());
 		prSt.setString(3, donnee.getPrenom());
 		prSt.setString(4, donnee.getDescription());
-		prSt.setString(5, donnee.getAdresse().getIdAdresse());
+		if (donnee.getAdresse()!=null) {
+			prSt.setString(5, donnee.getAdresse().getIdAdresse());
+		}else {
+			prSt.setString(5, null);
+		}
 	
 	}
 

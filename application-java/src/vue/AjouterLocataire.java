@@ -5,10 +5,15 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.FlowLayout;
 import javax.swing.JTextField;
 import java.awt.GridLayout;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
@@ -20,7 +25,7 @@ public class AjouterLocataire extends JInternalFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 
-	private JTextField textFieldId;
+	private JTextField textFieldIdLocataire;
 	private JTextField textFieldNom;
 	private JTextField textFieldPrenom;
 	private JTextField textFieldEmail;
@@ -31,119 +36,172 @@ public class AjouterLocataire extends JInternalFrame {
 	private JTextField textComplement;
 	private JTextField textFieldAdr;
 	private JTextField textFieldTel;
+	private JTextField textFieldIdAdr;
 	
 	private GestionAjouterLocataire gestionClic;
 
-	
-	public JTextField getTextFieldId() {
-		return textFieldId;
-	}
-
-
-	public void setTextFieldId(JTextField textFieldId) {
-		this.textFieldId = textFieldId;
-	}
-
-
-	public JTextField getTextFieldNom() {
-		return textFieldNom;
-	}
-
-
-	public void setTextFieldNom(JTextField textFieldNom) {
-		this.textFieldNom = textFieldNom;
-	}
-
-
-	public JTextField getTextFieldPrenom() {
-		return textFieldPrenom;
-	}
-
-
-	public void setTextFieldPrenom(JTextField textFieldPrenom) {
-		this.textFieldPrenom = textFieldPrenom;
-	}
-
-
-	public JTextField getTextFieldEmail() {
-		return textFieldEmail;
-	}
-
-
-	public void setTextFieldEmail(JTextField textFieldEmail) {
-		this.textFieldEmail = textFieldEmail;
-	}
-
-
-	public JTextField getTextFieldDateNaissance() {
-		return textFieldDateNaissance;
-	}
-
-
-	public void setTextFieldDateNaissance(JTextField textFieldDateNaissance) {
-		this.textFieldDateNaissance = textFieldDateNaissance;
-	}
-
-
-	public JTextField getTextFieldLieuNaissance() {
-		return textFieldLieuNaissance;
-	}
-
-
-	public void setTextFieldLieuNaissance(JTextField textFieldLieuNaissance) {
-		this.textFieldLieuNaissance = textFieldLieuNaissance;
-	}
-
-
-	public JTextField getTextFieldVille() {
-		return textFieldVille;
-	}
-
-
-	public void setTextFieldVille(JTextField textFieldVille) {
-		this.textFieldVille = textFieldVille;
-	}
-
-
-	public JTextField getTextFieldCodePostal() {
-		return textFieldCodePostal;
-	}
-
-
-	public void setTextFieldCodePostal(JTextField textFieldCodePostal) {
-		this.textFieldCodePostal = textFieldCodePostal;
-	}
-
-
-	public JTextField getTextFieldComplement() {
-		return textComplement;
-	}
-
-
-	public void setTextComplement(JTextField textComplement) {
-		this.textComplement = textComplement;
-	}
-
-
-	public JTextField getTextFieldAdr() {
-		return textFieldAdr;
-	}
-
-
-	public void setTextFieldAdr(JTextField textFieldAdr) {
-		this.textFieldAdr = textFieldAdr;
-	}
-
-
-	public JTextField getTextFieldTel() {
-		return textFieldTel;
-	}
-
-
-	public void setTextFieldTel(JTextField textFieldTel) {
-		this.textFieldTel = textFieldTel;
+	public List<String> getChampsObligatoires(){
+		List<String> res = new ArrayList<>();
+		res.add(getTextFieldIdLocataire());
+		res.add(getTextFieldNom());
+		res.add(getTextFieldPrenom());
+		res.add(getTextFieldDateNaissance());
+		return res;
 	}
 	
+	public List<String> getChampsObligatoiresAdresse(){
+		List<String> res = new ArrayList<>();
+		res.add(getTextFieldIdAdr());
+		res.add(getTextFieldAdr());
+		res.add(getTextFieldCodePostal());
+		res.add(getTextFieldVille());
+		return res;
+	}
+	
+
+	public String getTextFieldIdLocataire() {
+		return textFieldIdLocataire.getText();
+	}
+
+
+
+	public String getTextFieldNom() {
+		return textFieldNom.getText();
+	}
+
+
+
+	public String getTextFieldPrenom() {
+		return textFieldPrenom.getText();
+	}
+
+
+
+	public String getTextFieldEmail() {
+		return textFieldEmail.getText();
+	}
+
+
+
+	public String getTextFieldDateNaissance() {
+		return textFieldDateNaissance.getText();
+	}
+
+
+
+	public String getTextFieldLieuNaissance() {
+		return textFieldLieuNaissance.getText();
+	}
+
+
+
+	public String getTextFieldVille() {
+		return textFieldVille.getText();
+	}
+
+
+
+	public String getTextFieldCodePostal() {
+		return textFieldCodePostal.getText();
+	}
+
+
+
+	public String getTextComplement() {
+		return textComplement.getText();
+	}
+
+
+
+	public String getTextFieldAdr() {
+		return textFieldAdr.getText();
+	}
+
+
+
+	public String getTextFieldTel() {
+		return textFieldTel.getText();
+	}
+
+
+
+	public String getTextFieldIdAdr() {
+		return textFieldIdAdr.getText();
+	}
+
+
+
+	public void setTextFieldIdLocataire(String texte) {
+		this.textFieldIdLocataire.setText(texte);;
+	}
+
+
+
+	public void setTextFieldNom(String texte) {
+		this.textFieldNom.setText(texte);;
+	}
+
+
+
+	public void setTextFieldPrenom(String texte) {
+		this.textFieldPrenom.setText(texte);;
+	}
+
+
+
+	public void setTextFieldEmail(String texte) {
+		this.textFieldEmail.setText(texte);
+	}
+
+
+
+	public void setTextFieldDateNaissance(String texte) {
+		this.textFieldDateNaissance.setText(texte);
+	}
+
+
+
+	public void setTextFieldLieuNaissance(String texte) {
+		this.textFieldLieuNaissance.setText(texte);
+	}
+
+
+
+	public void setTextFieldVille(String texte) {
+		this.textFieldVille.setText(texte);
+	}
+
+
+
+	public void setTextFieldCodePostal(String texte) {
+		this.textFieldCodePostal.setText(texte);;
+	}
+
+
+
+	public void setTextComplement(String texte) {
+		this.textComplement.setText(texte);
+	}
+
+
+
+	public void setTextFieldAdr(String texte) {
+		this.textFieldAdr.setText(texte);
+	}
+
+
+
+	public void setTextFieldTel(String texte) {
+		this.textFieldTel.setText(texte);
+	}
+
+
+
+	public void setTextFieldIdAdr(String texte) {
+		this.textFieldIdAdr.setText(texte);
+	}
+
+
 
 	/**
 	 * Create the frame.
@@ -192,9 +250,9 @@ public class AjouterLocataire extends JInternalFrame {
 		JPanel p_txtId = new JPanel();
 		p_gauche.add(p_txtId);
 		
-		textFieldId = new JTextField();
-		p_txtId.add(textFieldId);
-		textFieldId.setColumns(10);
+		textFieldIdLocataire = new JTextField();
+		p_txtId.add(textFieldIdLocataire);
+		textFieldIdLocataire.setColumns(10);
 		
 		JPanel p_lblNom = new JPanel();
 		FlowLayout flowLayout_1 = (FlowLayout) p_lblNom.getLayout();
@@ -279,7 +337,7 @@ public class AjouterLocataire extends JInternalFrame {
 		flowLayout_5.setAlignment(FlowLayout.RIGHT);
 		p_gauche.add(p_lblLieuNaissance);
 		
-		JLabel lblLieuNaissance = new JLabel("Lieu de naissance* :");
+		JLabel lblLieuNaissance = new JLabel("Lieu de naissance  :");
 		p_lblLieuNaissance.add(lblLieuNaissance);
 		
 		JPanel p_txtLieuNaissance = new JPanel();
@@ -296,13 +354,29 @@ public class AjouterLocataire extends JInternalFrame {
 		JPanel p_adresse = new JPanel();
 		p_adresse.setBorder(new TitledBorder(null, "Adresse : ", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		p_droite.add(p_adresse, BorderLayout.CENTER);
-		p_adresse.setLayout(new GridLayout(6, 2, 0, 0));
+		p_adresse.setLayout(new GridLayout(7, 2, 0, 0));
 		
 		JPanel panelVideHautGauche = new JPanel();
 		p_adresse.add(panelVideHautGauche);
 		
 		JPanel panelVideHautDroite = new JPanel();
 		p_adresse.add(panelVideHautDroite);
+		
+		JPanel p_lblIdAdresse = new JPanel();
+		FlowLayout flowLayout_10 = (FlowLayout) p_lblIdAdresse.getLayout();
+		flowLayout_10.setAlignment(FlowLayout.RIGHT);
+		p_adresse.add(p_lblIdAdresse);
+		
+		JLabel lblIdAdresse = new JLabel("Identifiant :");
+		lblIdAdresse.setHorizontalAlignment(SwingConstants.CENTER);
+		p_lblIdAdresse.add(lblIdAdresse);
+		
+		JPanel p_txtIdAdresse = new JPanel();
+		p_adresse.add(p_txtIdAdresse);
+		
+		textFieldIdAdr = new JTextField();
+		p_txtIdAdresse.add(textFieldIdAdr);
+		textFieldIdAdr.setColumns(10);
 		
 		JPanel p_lblAdr = new JPanel();
 		FlowLayout flowLayout_6 = (FlowLayout) p_lblAdr.getLayout();
@@ -391,6 +465,11 @@ public class AjouterLocataire extends JInternalFrame {
 		btnAnnuler.addActionListener(this.gestionClic);
 		p_sud.add(btnAnnuler);
 		
+	}
+
+
+	public void afficherMessageChampsIncomplets() {
+		JOptionPane.showMessageDialog(this,"Il est nécessaire de remplir les champs obligatoires","Formulaire incomplet", JOptionPane.ERROR_MESSAGE);
 	}
 
 }

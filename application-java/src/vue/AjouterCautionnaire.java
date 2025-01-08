@@ -1,10 +1,13 @@
 package vue;
 
 import java.awt.Font;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -17,6 +20,7 @@ import javax.swing.JTextPane;
 import javax.swing.border.EtchedBorder;
 import java.awt.Color;
 import javax.swing.JScrollPane;
+import java.awt.GridLayout;
 
 public class AjouterCautionnaire extends JInternalFrame {
 
@@ -38,47 +42,117 @@ public class AjouterCautionnaire extends JInternalFrame {
     private JTextField textFieldVille;
     private JTextPane textPaneDescription;
     private JTextField textFieldIdentifiantCautionnaire;
+    private JTextField textFieldIdentifiantAdresse;
     
     
-    public JTextField getTextFieldMontant() {
-		return textFieldMontant;
+    public String getTextFieldMontant() {
+		return textFieldMontant.getText();
 	}
 
-	public JTextField getTextFieldLienActeCaution() {
-		return textFieldLienActeCaution;
+	public String getTextFieldLienActeCaution() {
+		return textFieldLienActeCaution.getText();
 	}
 
-	public JTextField getTextFieldIdentifiantCautionnaire() {
-		return textFieldIdentifiantCautionnaire;
+	public String getTextFieldIdentifiantCautionnaire() {
+		return textFieldIdentifiantCautionnaire.getText();
 	}
 
-	public JTextField getTextFieldPrenom() {
-		return textFieldPrenom;
+	public String getTextFieldPrenom() {
+		return textFieldPrenom.getText();
 	}
 
-	public JTextField getTextFieldNomOuOrga() {
-		return textFieldNomOuOrga;
+	public String getTextFieldNomOuOrga() {
+		return textFieldNomOuOrga.getText();
 	}
 	
-    public JTextField getTextFieldAdr() {
-		return textFieldAdr;
+    public String getTextFieldIdAdr() {
+		return textFieldIdentifiantAdresse.getText();
+	}
+    
+    public String getTextFieldAdr() {
+		return textFieldAdr.getText();
 	}
 
-	public JTextField getTextFieldComplement() {
-		return textFieldComplement;
+	public String getTextFieldComplement() {
+		return textFieldComplement.getText();
 	}
 
-	public JTextField getTextFieldCodePostal() {
-		return textFieldCodePostal;
+	public String getTextFieldCodePostal() {
+		return textFieldCodePostal.getText();
 	}
 
-	public JTextField getTextFieldVille() {
-		return textFieldVille;
+	public String getTextFieldVille() {
+		return textFieldVille.getText();
 	}
 	
-	public JTextPane getTextFieldDescription() {
-		return textPaneDescription;
+	 public List<String> getChampsObligatoires(){
+	    List<String> res = new ArrayList<>();
+	    res.add(getTextFieldIdentifiantCautionnaire());
+	    res.add(getTextFieldNomOuOrga());
+	    res.add(getTextFieldLienActeCaution());
+	    res.add(getTextFieldMontant());
+	   
+	    return res;
 	}
+	 
+	 public List<String> getChampsObligatoiresAdresse(){
+		 List<String> res = new ArrayList<>(); 
+		 res.add(getTextFieldIdAdr());
+		 res.add(getTextFieldAdr());
+		 res.add(getTextFieldCodePostal());
+		 res.add(getTextFieldVille());
+		 return res;
+	 }
+	
+	public void setTextFieldMontant(String texte) {
+		this.textFieldMontant.setText(texte);
+	}
+
+	public void setTextFieldLienActeCaution(String texte) {
+		this.textFieldLienActeCaution.setText(texte);
+	}
+
+	public void setTextFieldPrenom(String texte) {
+		this.textFieldPrenom.setText(texte);;
+	}
+
+	public void setTextFieldNomOuOrga(String texte) {
+		this.textFieldNomOuOrga.setText(texte);
+	}
+
+	public void setTextFieldDateDebut(String texte) {
+		this.textFieldDateDebut.setText(texte);
+	}
+
+	public void setTextFieldAdr(String texte) {
+		this.textFieldAdr.setText(texte);
+	}
+
+	public void setTextFieldComplement(String texte) {
+		this.textFieldComplement.setText(texte);
+	}
+
+	public void setTextFieldCodePostal(String texte) {
+		this.textFieldCodePostal.setText(texte);
+	}
+
+	public void setTextFieldVille(String texte) {
+		this.textFieldVille.setText(texte);
+	}
+
+	public void setTextPaneDescription(JTextPane textPaneDescription) {
+		this.textPaneDescription = textPaneDescription;
+	}
+
+	public void setTextFieldIdentifiantCautionnaire(JTextField textFieldIdentifiantCautionnaire) {
+		this.textFieldIdentifiantCautionnaire = textFieldIdentifiantCautionnaire;
+	}
+
+	public String getTextFieldDescription() {
+		return textPaneDescription.getText();
+	}
+	
+	
 
 	/**
      * Create the frame.
@@ -146,44 +220,58 @@ public class AjouterCautionnaire extends JInternalFrame {
         
         
         JPanel panelAdresse = new JPanel();
-        panelAdresse.setBounds(323, 25, 229, 134);
+        panelAdresse.setBounds(324, 10, 229, 161);
         panelCautionnaire.add(panelAdresse);
-        panelAdresse.setLayout(null);
+        panelAdresse.setLayout(new GridLayout(0, 2, 0, 0));
         
-        JLabel lblAdr = new JLabel("Adresse : *");
-        lblAdr.setBounds(0, 10, 75, 13);
+        JLabel lblIdAdresse = new JLabel("Identifiant :");
+        panelAdresse.add(lblIdAdresse);
+        
+        JPanel panelTxtIdAdr = new JPanel();
+        panelAdresse.add(panelTxtIdAdr);
+        
+        textFieldIdentifiantAdresse = new JTextField();
+        panelTxtIdAdr.add(textFieldIdentifiantAdresse);
+        textFieldIdentifiantAdresse.setColumns(10);
+        
+        JLabel lblAdr = new JLabel("Adresse : ");
         panelAdresse.add(lblAdr);
         
+        JPanel panelTxtAdr = new JPanel();
+        panelAdresse.add(panelTxtAdr);
+        
         textFieldAdr = new JTextField();
-        textFieldAdr.setBounds(112, 7, 96, 19);
-        panelAdresse.add(textFieldAdr);
+        panelTxtAdr.add(textFieldAdr);
         textFieldAdr.setColumns(10);
         
-        JLabel lblComplement = new JLabel("Complément : *");
-        lblComplement.setBounds(0, 39, 96, 13);
+        JLabel lblComplement = new JLabel("Complément : ");
         panelAdresse.add(lblComplement);
         
+        JPanel panelTxtComplement = new JPanel();
+        panelAdresse.add(panelTxtComplement);
+        
         textFieldComplement = new JTextField();
-        textFieldComplement.setBounds(112, 36, 96, 19);
-        panelAdresse.add(textFieldComplement);
+        panelTxtComplement.add(textFieldComplement);
         textFieldComplement.setColumns(10);
         
-        JLabel lblCodePostal = new JLabel("Code postal : *");
-        lblCodePostal.setBounds(0, 68, 96, 13);
+        JLabel lblCodePostal = new JLabel("Code postal : ");
         panelAdresse.add(lblCodePostal);
         
+        JPanel panelTxtCodePostal = new JPanel();
+        panelAdresse.add(panelTxtCodePostal);
+        
         textFieldCodePostal = new JTextField();
-        textFieldCodePostal.setBounds(112, 65, 96, 19);
-        panelAdresse.add(textFieldCodePostal);
+        panelTxtCodePostal.add(textFieldCodePostal);
         textFieldCodePostal.setColumns(10);
         
-        JLabel lblVille = new JLabel("Ville : *");
-        lblVille.setBounds(0, 95, 45, 13);
+        JLabel lblVille = new JLabel("Ville : ");
         panelAdresse.add(lblVille);
         
+        JPanel panelTxtVille = new JPanel();
+        panelAdresse.add(panelTxtVille);
+        
         textFieldVille = new JTextField();
-        textFieldVille.setBounds(112, 94, 96, 19);
-        panelAdresse.add(textFieldVille);
+        panelTxtVille.add(textFieldVille);
         textFieldVille.setColumns(10);
         
         JLabel lblIdCautionnaire = new JLabel("Identifiant : *");
@@ -244,5 +332,9 @@ public class AjouterCautionnaire extends JInternalFrame {
 
 	public AjouterBail getFenPrecedente() {
 		return fenPrecedente;
+	}
+
+	public void afficherMessageChampsIncomplets() {
+        JOptionPane.showMessageDialog(null, "Tous les champs obligatoires ne sont pas remplis. \n Les champs obligatoires sont indiqués par *","Erreur", JOptionPane.ERROR_MESSAGE); 
 	}
 }

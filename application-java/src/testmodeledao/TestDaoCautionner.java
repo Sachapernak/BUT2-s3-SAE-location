@@ -44,7 +44,8 @@ public class TestDaoCautionner {
         this.adresseTest = new Adresse("TESTADDR", "10 rue du Test", 12345, "TestVille");
         DaoAdresse daoA = new DaoAdresse();
         
-        this.cautionnaireTest = new Cautionnaire(9, "NomTest", "PrenomTest", "DescriptionTest", adresseTest);
+        this.cautionnaireTest = new Cautionnaire(9, "NomTest", "PrenomTest", "DescriptionTest");
+        this.cautionnaireTest.setAdresse(adresseTest);
         DaoCautionnaire daoCautionnaire = new DaoCautionnaire();
                 
         this.batimentTest = new Batiment("TESTBAT", adresseTest);

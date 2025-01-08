@@ -21,13 +21,13 @@ import vue.AjouterLocataire;
 public class GestionTablesAjouterBail implements ListSelectionListener, KeyListener{
 
 	private AjouterBail fen_ajouter_bail;
-	private AjouterLocataire fen_ajouter_locataire;
+	private AjouterLocataire fenAjouterLocataire;
 	private DaoBail daoBail;
 	private DaoContracter daoContracter;
 	
-	public GestionTablesAjouterBail(AjouterBail fen_ajouter_bail, AjouterLocataire fen_ajouter_locataire)  {
+	public GestionTablesAjouterBail(AjouterBail fen_ajouter_bail, AjouterLocataire fenAjouterLocataire)  {
 		this.fen_ajouter_bail = fen_ajouter_bail;
-		this.fen_ajouter_locataire = fen_ajouter_locataire;
+		this.fenAjouterLocataire = fenAjouterLocataire;
 		this.daoBail= new DaoBail();
 		this.daoContracter= new DaoContracter();
 	}
@@ -83,7 +83,7 @@ public class GestionTablesAjouterBail implements ListSelectionListener, KeyListe
 			for (Contracter contrat : contrats) {
 				modelTableParts.addRow(new Object[] {contrat.getLocataire().getIdLocataire(), contrat.getPartLoyer()});
 			}
-			String id_new_loc = this.fen_ajouter_locataire.getTextFieldId().getText();
+			String id_new_loc = this.fenAjouterLocataire.getTextFieldIdLocataire();
 			modelTableParts.addRow(new Object[] {id_new_loc, 0F});
 						
 			modelTableParts.addRow(new Object[] {" ",calculerPartsTotal(tablePartsLoyer)});

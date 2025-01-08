@@ -64,7 +64,7 @@ public class GestionTablesFenetrePrincipale implements ListSelectionListener{
     public void remplirBiensLoc (JTable tableBiensLoc, String idBatiment) {
     	UtilitaireTable.viderTable(tableBiensLoc);
     	try {
-			List<BienLocatif> biens = daoBienLocatif.findByIdBatiment(idBatiment);
+			List<BienLocatif> biens = daoBienLocatif.findByIdBat(idBatiment);
 			DefaultTableModel model = (DefaultTableModel) tableBiensLoc.getModel();
 			model.setRowCount(0);
 	        for (BienLocatif bien : biens) {
