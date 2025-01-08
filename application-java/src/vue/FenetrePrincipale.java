@@ -112,8 +112,13 @@ public class FenetrePrincipale extends JFrame {
 		
 		JMenuItem mntmLocatairesActuels = new JMenuItem("Liste des locataires actuels");
 		mntmLocatairesActuels.addActionListener(this.gestionMenu);
+		
+		
+		JMenuItem mntmQuittanceLoyer = new JMenuItem("Quittance de loyer des locataires");
+		mntmQuittanceLoyer.addActionListener(this.gestionMenu);
 		locataires.add(mntmLocatairesActuels);
 		locataires.add(mntmAnciensLocataires);
+		locataires.add(mntmQuittanceLoyer);
 		
 		JMenu archives = new JMenu("Archives");
 		archives.setForeground(new Color(255, 255, 255));

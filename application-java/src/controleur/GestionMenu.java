@@ -11,6 +11,7 @@ import vue.AfficherLocatairesActuels;
 import vue.ArchiverDocuments;
 import vue.ConfigurationConnexion;
 import vue.FenetrePrincipale;
+import vue.QuittanceLoyerPrincipal;
 import vue.ReglesMetier;
 
 public class GestionMenu implements ActionListener{
@@ -41,6 +42,12 @@ public class GestionMenu implements ActionListener{
 				JLayeredPane layeredPaneAfficherLocActuels = this.fen_principale.getLayeredPane();
 				layeredPaneAfficherLocActuels.add(al, JLayeredPane.PALETTE_LAYER);
 				al.setVisible(true);
+				break;
+			case "Quittance de loyer des locataires" :
+				QuittanceLoyerPrincipal QLP = new QuittanceLoyerPrincipal();
+				JLayeredPane layeredPaneAfficherQuittance = this.fen_principale.getLayeredPane();
+				layeredPaneAfficherQuittance.add(QLP, JLayeredPane.PALETTE_LAYER);
+				QLP.setVisible(true);
 				break;
 			case "Configurer la connexion" :
 				ConfigurationConnexion cc = new ConfigurationConnexion() ;
