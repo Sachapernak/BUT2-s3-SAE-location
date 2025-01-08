@@ -13,6 +13,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.RowFilter;
@@ -27,6 +28,7 @@ import modele.dao.DaoBatiment;
 import modele.dao.DaoBienLocatif;
 import modele.dao.DaoDocumentComptable;
 import vue.AfficherCharges;
+import vue.AjouterCharge;
 import vue.DetailChargeDialog;
 
 public class GestionAfficherCharge {
@@ -238,11 +240,9 @@ public class GestionAfficherCharge {
      * Méthode invoquée lors du clic sur le bouton "Ajouter Charge".
      */
     public void ajouterNouvelleCharge() {
-        JOptionPane.showMessageDialog(frame, 
-            "Logique pour ajouter une nouvelle charge (à implémenter).",
-            "Ajouter Charge", JOptionPane.INFORMATION_MESSAGE);
-        // Exemple :
-        // new FenetreAjoutCharge().setVisible(true);
+        AjouterCharge dialog = new AjouterCharge();
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        dialog.setVisible(true);
     }
 
     /**
