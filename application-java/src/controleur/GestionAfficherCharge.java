@@ -236,7 +236,6 @@ public class GestionAfficherCharge {
 
     /**
      * Méthode invoquée lors du clic sur le bouton "Ajouter Charge".
-     * Vous pouvez personnaliser l'action (ouvrir une fenêtre de création, etc.).
      */
     public void ajouterNouvelleCharge() {
         JOptionPane.showMessageDialog(frame, 

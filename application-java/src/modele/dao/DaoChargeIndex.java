@@ -2,15 +2,19 @@ package modele.dao;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import modele.ChargeIndex;
+import modele.ConnexionBD;
 import modele.dao.requetes.RequeteCreateChargeIndex;
 import modele.dao.requetes.RequeteDeleteChargeIndex;
 import modele.dao.requetes.RequeteSelectChargeIndex;
 import modele.dao.requetes.RequeteSelectChargeIndexById;
+import modele.dao.requetes.RequeteSelectChargeIndexDistinctId;
 import modele.dao.requetes.RequeteSelectChargeIndexSameId;
 import modele.dao.requetes.RequeteSelectCiByIdDocComptable;
 import modele.dao.requetes.RequeteUpdateChargeIndex;
@@ -42,6 +46,22 @@ public class DaoChargeIndex extends DaoModele<ChargeIndex>{
 	
 	public List<ChargeIndex> findAllSameId(String...id) throws SQLException, IOException {
 		return find(new RequeteSelectChargeIndexSameId(), id);
+	}
+	
+	public List<String> findAllDistinctId() throws SQLException, IOException {
+		
+		List<String> res = new ArrayList<>();
+		
+		String requete = "select distinct id_charge_index from sae_charge_index";
+		
+		PreparedStatement prSt = ConnexionBD.getInstance().getConnexion().prepareStatement(requete);
+		
+		ResultSet rs = prSt.executeQuery();
+		
+		while (rs.next()) {
+			res.add(rs.getString(1));
+		}
+		return res;
 	}
 
 	@Override
