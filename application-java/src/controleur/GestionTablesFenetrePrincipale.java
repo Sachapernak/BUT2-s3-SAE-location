@@ -37,7 +37,12 @@ public class GestionTablesFenetrePrincipale implements ListSelectionListener{
 		int ligneSelect = tableBatiments.getSelectedRow();
 		if (ligneSelect > -1) {
 			String idBat = (String) tableBatiments.getValueAt(ligneSelect, 0);
-			remplirBiensLoc(tableBiensLoc,idBat);
+			try {
+				remplirBiensLoc(tableBiensLoc,idBat);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 		
 	}
@@ -61,25 +66,45 @@ public class GestionTablesFenetrePrincipale implements ListSelectionListener{
 			}
     }
     
-    public void remplirBiensLoc (JTable tableBiensLoc, String idBatiment) {
+    public void remplirBiensLoc(JTable tableBiensLoc, String idBatiment) throws InterruptedException {
     	UtilitaireTable.viderTable(tableBiensLoc);
-    	try {
-			List<BienLocatif> biens = daoBienLocatif.findByIdBatiment(idBatiment);
-			DefaultTableModel model = (DefaultTableModel) tableBiensLoc.getModel();
-			model.setRowCount(0);
-	        for (BienLocatif bien : biens) {
-	        	List<Loyer> loyers = bien.getLoyers();
-	        	BigDecimal dernierLoyer = loyers.get(loyers.size()-1).getMontantLoyer();
-	            model.addRow(new Object[] { bien.getIdentifiantLogement(),bien.getNbPiece(), bien.getSurface(), bien.getType(), 
-	            		bien.getComplementAdresse(), bien.getLoyerBase(), dernierLoyer});
-	        }
-						
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-    	
+        try {
+            List<BienLocatif> biens = daoBienLocatif.findByIdBatiment(idBatiment);
+            DefaultTableModel model = (DefaultTableModel) tableBiensLoc.getModel();
+            model.setRowCount(0);
+
+            for (BienLocatif bien : biens) {
+                if (Thread.currentThread().isInterrupted()) {
+                    throw new InterruptedException("Chargement annulé");
+                }
+
+                List<Loyer> loyers = bien.getLoyers();
+                if (loyers.size() == 0) {
+                    model.addRow(new Object[] {
+                        bien.getIdentifiantLogement(), 
+                        bien.getNbPiece(), 
+                        bien.getSurface(), 
+                        bien.getType(), 
+                        bien.getComplementAdresse(), 
+                        bien.getLoyerBase(), 
+                        bien.getLoyerBase()
+                    });
+                } else {
+                    BigDecimal dernierLoyer = loyers.get(loyers.size() - 1).getMontantLoyer();
+                    model.addRow(new Object[] {
+                        bien.getIdentifiantLogement(), 
+                        bien.getNbPiece(), 
+                        bien.getSurface(), 
+                        bien.getType(), 
+                        bien.getComplementAdresse(), 
+                        bien.getLoyerBase(), 
+                        dernierLoyer
+                    });
+                }
+            }
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

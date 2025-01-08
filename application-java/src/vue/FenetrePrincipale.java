@@ -73,10 +73,13 @@ public class FenetrePrincipale extends JFrame {
 	 * Create the frame.
 	 */
 	public FenetrePrincipale() {
-		
-		this.gestionClic = new GestionFenetrePrincipale(this);
-		this.gestionMenu = new GestionMenu(this);
+		tableBiensLoc = new JTable();
+		tableBatiment = new JTable();
+		JButton btnAjoutBien = new JButton("Ajouter un bien");
 		this.gestionTable = new GestionTablesFenetrePrincipale(this);
+		this.gestionClic = new GestionFenetrePrincipale(this, btnAjoutBien,gestionTable);
+		this.gestionMenu = new GestionMenu(this);
+		
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 750, 600);
@@ -164,7 +167,7 @@ public class FenetrePrincipale extends JFrame {
 		scrollPaneBiensLoc.setBounds(0, 39, 596, 154);
 		panel_biensLocatifs.add(scrollPaneBiensLoc);
 		
-		tableBiensLoc = new JTable();
+		
 		tableBiensLoc.setModel(new DefaultTableModel(
 			new Object[][] {
 				{null, null, null, null, null, null, null},
@@ -217,7 +220,7 @@ public class FenetrePrincipale extends JFrame {
 		scrollPaneBatiment.setBounds(0, 33, 454, 88);
 		panel_bien.add(scrollPaneBatiment);
 		
-		tableBatiment = new JTable();
+		
 		tableBatiment.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tableBatiment.setModel(new DefaultTableModel(
 			new Object[][] {
@@ -241,7 +244,7 @@ public class FenetrePrincipale extends JFrame {
 		tableBatiment.getSelectionModel().addListSelectionListener(this.gestionTable);
 		scrollPaneBatiment.setViewportView(tableBatiment);
 		
-		JButton btnAjoutBien = new JButton("Ajouter un bien");
+		btnAjoutBien.addActionListener(this.gestionClic);
 		btnAjoutBien.setBounds(488, 36, 165, 21);
 		panel_bien.add(btnAjoutBien);
 		
