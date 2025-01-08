@@ -69,16 +69,20 @@ public class AjouterBail extends JInternalFrame  {
 	}
 	
 	
-	public JTextField getTextFieldIdBail() {
-		return textFieldIdBail;
+	public String getTextFieldIdBail() {
+		return textFieldIdBail.getText();
 	}
 
-	public JTextField getTextFieldDateDebut() {
-		return textFieldDateDebut;
+	public String getTextFieldDateDebut() {
+		return textFieldDateDebut.getText();
 	}
 
-	public JTextField getTextFieldDateFin() {
-		return textFieldDateFin;
+	public String getTextFieldDateFin() {
+		return textFieldDateFin.getText();
+	}
+	
+	public String getTextFieldDateArrivee() {
+		return textFieldDateArrivee.getText();
 	}
 
     
@@ -96,10 +100,6 @@ public class AjouterBail extends JInternalFrame  {
 
 	public void setTablePartsLoyer(JTable tablePartsLoyer) {
 		this.tablePartsLoyer = tablePartsLoyer;
-	}
-	
-	public JTextField getTextFieldDateArrivee() {
-		return textFieldDateArrivee;
 	}
 	
 	

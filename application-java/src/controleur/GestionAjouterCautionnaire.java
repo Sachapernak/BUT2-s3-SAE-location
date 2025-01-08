@@ -73,7 +73,7 @@ public class GestionAjouterCautionnaire implements ActionListener{
 				break;
 			case "Valider" : 
 				
-				if(! champsRemplis(this.fenAjouterCautionnaire.getChampsObligatoires())) {
+				if(!champsRemplis(this.fenAjouterCautionnaire.getChampsObligatoires())) {
 					this.fenAjouterCautionnaire.afficherMessageChampsIncomplets();
 				} else {
 					JTable tableLoc = this.fenAfficherLocataires.getTableLocatairesActuels();
@@ -93,9 +93,9 @@ public class GestionAjouterCautionnaire implements ActionListener{
 					//Recup bail
 				    if (this.fenAjouterBail.getRdbtnNouveauBail().isSelected()) {
 			
-					        String idBail = this.fenAjouterBail.getTextFieldIdBail().getText();
-					        dateDebut = this.fenAjouterBail.getTextFieldDateDebut().getText();
-					        String dateFin = this.fenAjouterBail.getTextFieldDateFin().getText();
+					        String idBail = this.fenAjouterBail.getTextFieldIdBail();
+					        dateDebut = this.fenAjouterBail.getTextFieldDateDebut();
+					        String dateFin = this.fenAjouterBail.getTextFieldDateFin();
 					        BienLocatif bien;
 						try {
 							bien = daoBien.findById((String) this.fenAjouterBail.getComboBoxBiensLoc().getSelectedItem());
@@ -115,7 +115,7 @@ public class GestionAjouterCautionnaire implements ActionListener{
 				        if (selectedRow != -1) {
 				            // Récupérez les informations à partir de la ligne sélectionnée
 				            String bailSelectionne = (String) this.fenAjouterBail.getTableBauxActuels().getValueAt(selectedRow, 0);
-				            dateDebut = this.fenAjouterBail.getTextFieldDateArrivee().getText();
+				            dateDebut = this.fenAjouterBail.getTextFieldDateArrivee();
 				            JTable tableParts = this.fenAjouterBail.getTablePartsLoyer();
 				            partLoyer = (float) tableParts.getValueAt(tableParts.getRowCount()-2,1);				            		            			            
 							try {
@@ -129,15 +129,10 @@ public class GestionAjouterCautionnaire implements ActionListener{
 					   
 				    //Recup cautionnaire
 				    cautionnaire = recupInfosCautionnaire();
-				    System.out.println("L132 gestionAjoutCautionnaire : adresse est nulle ? "+ cautionnaire.getAdresse() == null);
 					adresseCautionnaire = cautionnaire.getAdresse();
 					
 					//Recup cautionner 
-					String montantStr = this.fenAjouterCautionnaire.getTextFieldMontant();
-					BigDecimal montant = new BigDecimal(montantStr);
-					String lienActeCaution = this.fenAjouterCautionnaire.getTextFieldLienActeCaution();
-					
-					cautionner = new Cautionner(montant, lienActeCaution, bail, cautionnaire);
+					cautionner = recupererInfosCautionner(bail,cautionnaire);
 					
 					Contracter ctr = new Contracter(nouveauLocataire, bail, dateDebut, partLoyer);
 					nouveauLocataire.getContrats().add(ctr);
@@ -280,10 +275,19 @@ public class GestionAjouterCautionnaire implements ActionListener{
 		return adresseComplete;
 	}
 	
+	private Cautionner recupererInfosCautionner(Bail bail, Cautionnaire cautionnaire) {
+		String montantStr = this.fenAjouterCautionnaire.getTextFieldMontant();
+		BigDecimal montant = new BigDecimal(montantStr);
+		String lienActeCaution = this.fenAjouterCautionnaire.getTextFieldLienActeCaution();
+		
+		return new Cautionner(montant, lienActeCaution, bail, cautionnaire);
+		
+	}
+
 	
-	
-	
-	
+	/*---------------------------------------------------------------------
+								Autre
+	-----------------------------------------------------------------------*/
 	
 	
 	private void remplirAdresseAvecLocataire() {
@@ -319,24 +323,6 @@ public class GestionAjouterCautionnaire implements ActionListener{
 		return res;
 	}
 	
-    private boolean estAdresseSaisie() {
-    	/*
-    	String adresse = this.fenAjouterLocataire.getTextFieldAdr().getText();
-        String codePostalStr = this.fenAjouterLocataire.getTextFieldCodePostal().getText();
-        String ville = this.fenAjouterLocataire.getTextFieldVille().getText();
-        
-        return !(adresse.isBlank() || adresse.isEmpty()) && 
-                !(codePostalStr.isBlank() || codePostalStr.isEmpty()) && 
-                !(ville.isBlank() || ville.isEmpty());*/
-    	boolean adresseSaisie = true;
-    	List<String> champsAdresse = this.fenAjouterCautionnaire.getChampsObligatoiresAdresse();
-    	for (String champ : champsAdresse) {
-    	
-    	}
-    	return adresseSaisie;
-    	
-    	
-    }
     	
 	private void actualiserPartsLoyer(JTable tablePartsLoyer, Bail bail) {
 		
