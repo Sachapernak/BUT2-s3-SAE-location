@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
@@ -23,6 +24,9 @@ import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
+import controleur.GestionAjouterCharge;
+
 import java.awt.Dimension;
 import javax.swing.JCheckBox;
 import java.awt.Font;
@@ -54,6 +58,8 @@ public class AjouterCharge extends JDialog {
 	private JSpinner spinnerNouveauIndex;
 	private JComboBox<String> comboBoxLocataire;
 	private JComboBox<String> comboBoxAssu;
+	
+	private GestionAjouterCharge gest;
 
 	/**
 	 * Launch the application.
@@ -72,7 +78,10 @@ public class AjouterCharge extends JDialog {
 	 * Create the dialog.
 	 */
 	public AjouterCharge() {
-		setBounds(100, 100, 520, 507);
+		
+		this.gest = new GestionAjouterCharge(this);
+		
+		setBounds(100, 100, 548, 620);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -433,6 +442,8 @@ public class AjouterCharge extends JDialog {
 		buttonPane.add(cancelButton);
 		
 		addRowListenerToTable();
+		
+		gest.chargerComboBox();
 			
 		
 	}
@@ -542,6 +553,13 @@ public class AjouterCharge extends JDialog {
 	        comboBoxBat.addItem(batiment);
 	    }
 	}
+	
+	public void setComboIDCharge(List<String> charges) {
+	    comboBoxChoixCharge.removeAllItems();
+	    for(String ch : charges) {
+	    	comboBoxChoixCharge.addItem(ch);
+	    }
+	}
 
 	// 4. Table : ajouter un listener qui ajoute une ligne à chaque fois que la dernière n'est pas vide
 	public void addRowListenerToTable() {
@@ -593,6 +611,11 @@ public class AjouterCharge extends JDialog {
 	        comboBoxAssu.addItem(assu);
 	    }
 	}
+	
+    public void afficherMessageErreur(String message) {
+        JOptionPane.showMessageDialog(this, "Erreur : \n" + message, 
+                                      "Erreur", JOptionPane.ERROR_MESSAGE);
+    }
 }
 
 
