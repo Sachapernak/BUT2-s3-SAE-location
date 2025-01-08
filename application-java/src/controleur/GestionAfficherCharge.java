@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -12,9 +14,11 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.SwingWorker;
@@ -261,4 +265,69 @@ public class GestionAfficherCharge {
             frame.afficherMessageErreur("Erreur lors du chargement : " + e.getMessage());
         }
     }
+    
+    public void initDoubleClickListener(JTable table) {
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2 && table.getSelectedRow() != -1) {
+                    int rowIndex = table.getSelectedRow();
+                    int modelIndex = table.convertRowIndexToModel(rowIndex);
+                    Object numeroDoc = table.getModel().getValueAt(modelIndex, 0);
+                    Object dateDoc = table.getModel().getValueAt(modelIndex, 3);
+                    afficherChargeDetail((String) numeroDoc, (String) dateDoc);
+                }
+            }
+        });
+    }
+
+	public void recharger() {
+		chargerTable();
+	}
+
+	public void gestionBoutonSupprimer(JButton btnSupprCharge, JTable table) {
+	    btnSupprCharge.addActionListener(new ActionListener() {
+	        @Override
+	        public void actionPerformed(ActionEvent e) {
+	            int viewRow = table.getSelectedRow();
+	            if(viewRow == -1) {
+	                frame.afficherMessageErreur("Aucune ligne sélectionnée pour suppression.");
+	                return;
+	            }
+	            
+	            // Demander confirmation à l'utilisateur
+	            int result = JOptionPane.showConfirmDialog(
+	                frame,
+	                "Êtes-vous sûr de vouloir supprimer cette charge ?",
+	                "Confirmation de suppression",
+	                JOptionPane.YES_NO_OPTION
+	            );
+	            if(result != JOptionPane.YES_OPTION) {
+	                // Si l'utilisateur ne confirme pas, on annule la suppression
+	                return;
+	            }
+	            
+	            int modelRow = table.convertRowIndexToModel(viewRow);
+	            String numDoc = (String) table.getModel().getValueAt(modelRow, 0);
+	            String dateDoc = (String) table.getModel().getValueAt(modelRow, 3);
+	            try {
+	                DaoDocumentComptable dc = new DaoDocumentComptable();
+	                // Récupère le DocumentComptable à supprimer via findById
+	                DocumentComptable doc = dc.findById(numDoc, dateDoc);
+	                if(doc != null) {
+	                    dc.delete(doc);
+	                    recharger();
+	                } else {
+	                    frame.afficherMessageErreur("Document introuvable pour la suppression.");
+	                }
+	            } catch (SQLException | IOException ex) {
+	                frame.afficherMessageErreur("Erreur lors de la suppression : " + ex.getMessage());
+	            }
+	        }
+	    });
+	}
+
+
+	
+	
 }
