@@ -10,7 +10,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.SwingWorker;
 import modele.Batiment;
 import modele.ChargeIndex;
@@ -372,4 +374,17 @@ public class GestionAjouterCharge {
         workerIDCharge.execute();
         
     }
+    
+    public void gestionBoutonParcourir(JButton buttonParcourir, JFileChooser fileChooser) {
+        buttonParcourir.addActionListener(e -> {
+            int returnValue = fileChooser.showOpenDialog(fen);
+            if (returnValue == JFileChooser.APPROVE_OPTION) {
+                // Met à jour le champ texte du fichier sélectionné via la vue
+                fen.setLienFichier(fileChooser.getSelectedFile().getAbsolutePath());
+            }
+        });
+    }
+
+
+
 }
