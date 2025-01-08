@@ -334,7 +334,7 @@ public class AjouterCautionnaire extends JInternalFrame {
 		return fenPrecedente;
 	}
 
-	public void afficherMessageChampsIncomplets() {
-        JOptionPane.showMessageDialog(null, "Tous les champs obligatoires ne sont pas remplis. \n Les champs obligatoires sont indiqués par *","Erreur", JOptionPane.ERROR_MESSAGE); 
+	public void afficherMessageErreur(String message) {
+        JOptionPane.showMessageDialog(this, message,"Erreur", JOptionPane.ERROR_MESSAGE); 
 	}
 }

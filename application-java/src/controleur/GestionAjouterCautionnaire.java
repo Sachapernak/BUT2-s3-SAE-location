@@ -43,6 +43,8 @@ public class GestionAjouterCautionnaire implements ActionListener{
 	private DaoBail daoBail;
 	private DaoBienLocatif daoBien;
 	
+	private VerificationFormatChamps formatCorrect;
+	
 	public GestionAjouterCautionnaire(AjouterCautionnaire ac, AjouterLocataire al, AfficherLocatairesActuels afl, AjouterBail ab) {
 		this.fenAjouterCautionnaire = ac;
 		this.fenAjouterLocataire = al;
@@ -55,6 +57,8 @@ public class GestionAjouterCautionnaire implements ActionListener{
 		this.daoCautionner = new DaoCautionner();
 		this.daoLocataire = new DaoLocataire();
 		this.daoAdresse = new DaoAdresse();
+		
+		this.formatCorrect= new VerificationFormatChamps();
 	}
 	
 	@Override
@@ -72,10 +76,28 @@ public class GestionAjouterCautionnaire implements ActionListener{
 				
 				break;
 			case "Valider" : 
-				
 				if(!champsRemplis(this.fenAjouterCautionnaire.getChampsObligatoires())) {
-					this.fenAjouterCautionnaire.afficherMessageChampsIncomplets();
+					this.fenAjouterCautionnaire.afficherMessageErreur("Tous les champs obligatoires ne sont pas remplis. \n Les champs obligatoires sont indiqués par *");
 				} else {
+					//verifier champs cautionnaire
+					String idCautionnaire = this.fenAjouterCautionnaire.getTextFieldIdentifiantCautionnaire();
+					String montantStr = this.fenAjouterCautionnaire.getTextFieldMontant();
+					String codePostalStr = this.fenAjouterCautionnaire.getTextFieldCodePostal();
+					if (!this.formatCorrect.validerInteger(idCautionnaire)) {
+						this.fenAjouterCautionnaire.afficherMessageErreur("L'identifiant du cuationnaire doit être un entier");
+						break;
+					}
+					if (!this.formatCorrect.validerMontant(montantStr)) {
+						this.fenAjouterCautionnaire.afficherMessageErreur("Le montant de la caution doit être positif");
+						break;
+					}
+					if (!codePostalStr.equals("")) {
+						if (!this.formatCorrect.validerCodePostal(codePostalStr)){
+							this.fenAjouterCautionnaire.afficherMessageErreur("Le code postal doit être composé de 5 entiers");
+							break;
+						}
+					}
+					
 					JTable tableLoc = this.fenAfficherLocataires.getTableLocatairesActuels();
 					Locataire nouveauLocataire;
 					Cautionnaire cautionnaire;
@@ -85,6 +107,7 @@ public class GestionAjouterCautionnaire implements ActionListener{
 					Bail bail = null; 
 					String dateDebut = null;
 					float partLoyer = 1F;
+					
 					
 					//Recup infos locataire
 					nouveauLocataire = recupererInfosLocataire();
@@ -96,6 +119,11 @@ public class GestionAjouterCautionnaire implements ActionListener{
 					        String idBail = this.fenAjouterBail.getTextFieldIdBail();
 					        dateDebut = this.fenAjouterBail.getTextFieldDateDebut();
 					        String dateFin = this.fenAjouterBail.getTextFieldDateFin();
+					        
+					        if (!formatCorrect.validerDate(dateDebut)||!formatCorrect.validerDate(dateFin)) {
+					        	this.fenAjouterCautionnaire.afficherMessageErreur("Les dates doivent être au format YYYY-MM-dd");
+					        }
+					        
 					        BienLocatif bien;
 						try {
 							bien = daoBien.findById((String) this.fenAjouterBail.getComboBoxBiensLoc().getSelectedItem());
@@ -116,6 +144,11 @@ public class GestionAjouterCautionnaire implements ActionListener{
 				            // Récupérez les informations à partir de la ligne sélectionnée
 				            String bailSelectionne = (String) this.fenAjouterBail.getTableBauxActuels().getValueAt(selectedRow, 0);
 				            dateDebut = this.fenAjouterBail.getTextFieldDateArrivee();
+
+				            if (!formatCorrect.validerDate(dateDebut)) {
+					        	this.fenAjouterCautionnaire.afficherMessageErreur("Les dates doivent être au format YYYY-MM-dd");
+					        }
+				            
 				            JTable tableParts = this.fenAjouterBail.getTablePartsLoyer();
 				            partLoyer = (float) tableParts.getValueAt(tableParts.getRowCount()-2,1);				            		            			            
 							try {
@@ -175,9 +208,7 @@ public class GestionAjouterCautionnaire implements ActionListener{
 	public boolean champsRemplis(List<String> champs) {
 		boolean champsNonVides = true;
 		for (String champ : champs) {
-			System.out.println(champ+ " -> " +champ.equals(""));
 			if (champ.equals("")) {
-				System.out.println("coucou l.335 gestionAjouterCautionnaire");
 				return false;
 			}
 		}
@@ -221,7 +252,6 @@ public class GestionAjouterCautionnaire implements ActionListener{
 	}
 	
 	private Adresse recupererInfosAdresseLocataire() {
-		System.out.println("l222 gestionAjouterCautionnaire: recupererInfosAdresseLocataire :" + champsRemplis(this.fenAjouterLocataire.getChampsObligatoiresAdresse()));
 		Adresse adresseComplete = null;
 		if (champsRemplis(this.fenAjouterLocataire.getChampsObligatoiresAdresse())) {
 			String idAdresse = this.fenAjouterLocataire.getTextFieldAdr();
@@ -267,6 +297,10 @@ public class GestionAjouterCautionnaire implements ActionListener{
 			String adrC = this.fenAjouterCautionnaire.getTextFieldAdr();
 			String complementC = this.fenAjouterCautionnaire.getTextFieldComplement();
 			String codePostalStrC = this.fenAjouterCautionnaire.getTextFieldCodePostal();
+			
+			//ICI
+		
+			
 			int codePostalC = convertirStrToInt(codePostalStrC);
 			String villeC = this.fenAjouterCautionnaire.getTextFieldVille();	
 			
@@ -277,6 +311,7 @@ public class GestionAjouterCautionnaire implements ActionListener{
 	
 	private Cautionner recupererInfosCautionner(Bail bail, Cautionnaire cautionnaire) {
 		String montantStr = this.fenAjouterCautionnaire.getTextFieldMontant();
+		//ICI
 		BigDecimal montant = new BigDecimal(montantStr);
 		String lienActeCaution = this.fenAjouterCautionnaire.getTextFieldLienActeCaution();
 		
@@ -308,7 +343,7 @@ public class GestionAjouterCautionnaire implements ActionListener{
 	
 	private int convertirStrToInt(String str) {
 		if (!str.isEmpty() && !str.isBlank() && str!=null) {
-			return Integer.parseInt(str); 
+			return Integer.parseInt(str); 	
 		}
 		return 0;
 	}

@@ -6,6 +6,7 @@ import java.awt.Font;
 import javax.swing.JButton;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -24,6 +25,8 @@ import javax.swing.ButtonGroup;
 import javax.swing.JComboBox;
 import javax.swing.ListSelectionModel;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.event.KeyEvent;
 import java.awt.Color;
 
@@ -46,7 +49,7 @@ public class AjouterBail extends JInternalFrame  {
     private GestionTablesAjouterBail gestionTableAjoutBail;
     
     private AjouterLocataire fenPrecedente;
-    	private final ButtonGroup buttonGroup = new ButtonGroup();
+    private final ButtonGroup buttonGroup = new ButtonGroup();
   	private JRadioButton rdbtnNouveauBail;
     private JRadioButton rdbtnBailExistant;
     private JComboBox<String> comboBoxBiensLoc;
@@ -68,6 +71,20 @@ public class AjouterBail extends JInternalFrame  {
 		return rdbtnBailExistant;
 	}
 	
+	public List<String> getChampsObligatoiresNouveauBail(){
+		List<String> res = new ArrayList<>();
+		res.add(getTextFieldIdBail());
+		res.add(getTextFieldDateDebut());
+		return res;
+	}
+	
+	public List<String> getChampsDate(){
+		List<String> res = new ArrayList<>();
+		res.add(getTextFieldDateArrivee());
+		res.add(getTextFieldDateDebut());
+		res.add(getTextFieldDateFin());
+		return res;
+	}
 	
 	public String getTextFieldIdBail() {
 		return textFieldIdBail.getText();
@@ -231,7 +248,7 @@ public class AjouterBail extends JInternalFrame  {
 		tableTotal.setEnabled(false);
         
         
-        JLabel lblDateArrivee = new JLabel("Date d'arrivée :");
+        JLabel lblDateArrivee = new JLabel("Date d'arrivée* :");
         lblDateArrivee.setBounds(316, 162, 119, 20);
         panelBauxExistants.add(lblDateArrivee);
                 
@@ -267,7 +284,7 @@ public class AjouterBail extends JInternalFrame  {
         panelNouveauBail_champs.setLayout(null);
         
         // Champs de saisie pour Nouveau Bail
-        JLabel lblIdBail = new JLabel("ID Bail :");
+        JLabel lblIdBail = new JLabel("ID Bail* :");
         lblIdBail.setBounds(10, 25, 58, 13);
         panelNouveauBail_champs.add(lblIdBail);
                 
@@ -276,7 +293,7 @@ public class AjouterBail extends JInternalFrame  {
         panelNouveauBail_champs.add(textFieldIdBail);
         textFieldIdBail.setColumns(10);
                        
-        JLabel lblDateDebut = new JLabel("Date de début :");
+        JLabel lblDateDebut = new JLabel("Date de début* :");
         lblDateDebut.setBounds(10, 65, 100, 20);
         panelNouveauBail_champs.add(lblDateDebut);
                                
@@ -346,6 +363,10 @@ public class AjouterBail extends JInternalFrame  {
 
 	public AjouterLocataire getFenPrecedente() {
 		return fenPrecedente;
+	}
+
+	public void afficherMessageErreur(String message) {
+		JOptionPane.showMessageDialog(this, message, "Erreur",JOptionPane.ERROR_MESSAGE);
 	}
 	
 	

@@ -19,11 +19,15 @@ import vue.AfficherLocatairesActuels;
 public class GestionAjouterLocataire implements ActionListener{
 	
 	private AjouterLocataire fenAjouterLocataire;
-	private AfficherLocatairesActuels fen_afficher_locataires;
+	private AfficherLocatairesActuels fenAfficherLocataires;
+	
+	private VerificationFormatChamps formatCorrect;
 	
 	public GestionAjouterLocataire(AjouterLocataire al, AfficherLocatairesActuels afl) {
 		this.fenAjouterLocataire = al;
-		this.fen_afficher_locataires = afl;
+		this.fenAfficherLocataires = afl;
+		
+		this.formatCorrect = new VerificationFormatChamps();
 	}
 	
 	@Override
@@ -37,18 +41,25 @@ public class GestionAjouterLocataire implements ActionListener{
 				break;
 			case "Continuer" : 
 				if (!champsRemplis(this.fenAjouterLocataire.getChampsObligatoires())) {
-					this.fenAjouterLocataire.afficherMessageChampsIncomplets();
+					this.fenAjouterLocataire.afficherMessageErreur("Il est nécessaire de remplir les champs obligatoires");
+				} 
+				
+				String dateNaissance = this.fenAjouterLocataire.getTextFieldDateNaissance();
+				String tel = this.fenAjouterLocataire.getTextFieldTel();
+				
+				if (!this.formatCorrect.validerDate(dateNaissance)) {
+					this.fenAjouterLocataire.afficherMessageErreur("Les dates doivent être au format YYYY-MM-dd");
 				} else {
 					DaoLocataire daoLocataire = new DaoLocataire();
 					try {
 						Locataire loc = daoLocataire.findById(this.fenAjouterLocataire.getTextFieldIdLocataire());
 						if (loc == null) {
-							AjouterBail ab = new AjouterBail(this.fenAjouterLocataire, this.fen_afficher_locataires) ;
-							JLayeredPane layeredPaneAjoutBail = this.fen_afficher_locataires.getLayeredPane();
+							AjouterBail ab = new AjouterBail(this.fenAjouterLocataire, this.fenAfficherLocataires) ;
+							JLayeredPane layeredPaneAjoutBail = this.fenAfficherLocataires.getLayeredPane();
 							layeredPaneAjoutBail.add(ab, JLayeredPane.PALETTE_LAYER);
 							ab.setVisible(true);
 						}else {
-						       JOptionPane.showMessageDialog(this.fenAjouterLocataire,"Le locataire existe déjà","Locataire existant", JOptionPane.ERROR_MESSAGE);
+							this.fenAjouterLocataire.afficherMessageErreur("Le locataire existe déjà");
 						}
 					} catch (SQLException e1) {
 						e1.printStackTrace();

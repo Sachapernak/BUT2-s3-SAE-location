@@ -14,6 +14,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 
 import modele.BienLocatif;
@@ -25,16 +26,20 @@ import vue.AjouterLocataire;
 
 public class GestionAjouterBail implements ActionListener{
 	
-	private AjouterBail fen_ajouter_bail;
-	private AfficherLocatairesActuels fen_afficher_locataires;
-	private AjouterLocataire fen_ajouter_locataire;
+	private AjouterBail fenAjouterBail;
+	private AfficherLocatairesActuels fenAfficherLocataires;
+	private AjouterLocataire fenAjouterLocataire;
 	private DaoBienLocatif daoBien;
 	
+	private VerificationFormatChamps formatCorrect;
+	
 	public GestionAjouterBail(AjouterBail ab, AjouterLocataire al, AfficherLocatairesActuels afl) {
-		this.fen_ajouter_bail = ab;
-		this.fen_ajouter_locataire = al;
-		this.fen_afficher_locataires = afl;
+		this.fenAjouterBail = ab;
+		this.fenAjouterLocataire = al;
+		this.fenAfficherLocataires = afl;
 		this.daoBien = new DaoBienLocatif();
+		
+		this.formatCorrect = new VerificationFormatChamps();
 	}
 	
 	
@@ -45,8 +50,8 @@ public class GestionAjouterBail implements ActionListener{
 		if (btn instanceof JRadioButton) {
 	    	JRadioButton rdBtnActif = (JRadioButton) e.getSource();
 	        String rdBtnLibelle = rdBtnActif.getText();
-			CardLayout cd = this.fen_ajouter_bail.getCardLayout();
-			JPanel p = this.fen_ajouter_bail.getPanelAssocierBail();
+			CardLayout cd = this.fenAjouterBail.getCardLayout();
+			JPanel p = this.fenAjouterBail.getPanelAssocierBail();
 			switch (rdBtnLibelle) {
 				case "Créer un nouveau bail" :
 					cd.show(p, "nouveauBail");
@@ -62,23 +67,49 @@ public class GestionAjouterBail implements ActionListener{
 			
 			switch (btnLibelle) {
 				case "Annuler" :
-					this.fen_ajouter_bail.dispose();
+					this.fenAjouterBail.dispose();
 					break;
 				case "Continuer" : 
-					AjouterCautionnaire ac = new AjouterCautionnaire(this.fen_ajouter_bail, this.fen_ajouter_locataire, this.fen_afficher_locataires) ;
-					JLayeredPane layeredPaneAjoutCautionnaire = this.fen_afficher_locataires.getLayeredPane();
-					layeredPaneAjoutCautionnaire.add(ac, JLayeredPane.PALETTE_LAYER);
-					ac.setVisible(true);
+					
+					if (!verifierDates()) {
+						this.fenAjouterBail.afficherMessageErreur("Les dates doivent être au format YYYY-MM-dd");
+					} else if (this.fenAjouterBail.getRdbtnBailExistant().isSelected()) {
+						
+						if (this.fenAjouterBail.getTextFieldDateArrivee().equals("")) {
+							this.fenAjouterBail.afficherMessageErreur("Les champs obligatoires (dotés d'une étoile) doivent être renseignés");
+							break;
+						}
+						if(!totalPartEgalAUn()) {
+							this.fenAjouterBail.afficherMessageErreur("Le total des parts n'est pas égal à 1");
+						}else {
+							ouvrirFenAjoutCautionnaire();
+						}
+					}else if(this.fenAjouterBail.getRdbtnNouveauBail().isSelected()) {
+						if (!champsRemplis(this.fenAjouterBail.getChampsObligatoiresNouveauBail())){
+							this.fenAjouterBail.afficherMessageErreur("Les champs obligatoires (dotés d'une étoile) doivent être renseignés");
+						} else {
+							ouvrirFenAjoutCautionnaire();
+						}
+					}
+				
 					break;
 				case "Vider" : 
-					this.fen_ajouter_bail.textFieldIdBail.setText("");
-					this.fen_ajouter_bail.textFieldDateDebut.setText("");
-					this.fen_ajouter_bail.textFieldDateFin.setText("");		
+					this.fenAjouterBail.textFieldIdBail.setText("");
+					this.fenAjouterBail.textFieldDateDebut.setText("");
+					this.fenAjouterBail.textFieldDateFin.setText("");		
 					break;
 			}
 		}
 		
 
+	}
+
+
+	private void ouvrirFenAjoutCautionnaire() {
+		AjouterCautionnaire ac = new AjouterCautionnaire(this.fenAjouterBail, this.fenAjouterLocataire, this.fenAfficherLocataires) ;
+		JLayeredPane layeredPaneAjoutCautionnaire = this.fenAfficherLocataires.getLayeredPane();
+		layeredPaneAjoutCautionnaire.add(ac, JLayeredPane.PALETTE_LAYER);
+		ac.setVisible(true);
 	}
 	
 	public void initialiserDateDebut(JTextField textFieldDateDebut) {
@@ -99,5 +130,34 @@ public class GestionAjouterBail implements ActionListener{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public boolean verifierDates() {
+		List<String> champsDate = this.fenAjouterBail.getChampsDate();
+		for (String champ : champsDate) {
+			if (!champ.equals("")&&!this.formatCorrect.validerDate(champ)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public boolean totalPartEgalAUn() {
+		JTable tableParts = this.fenAjouterBail.getTablePartsLoyer();
+		int indexLastLigne = tableParts.getRowCount() - 1; 
+		float totalParts = (float) tableParts.getValueAt(indexLastLigne,1);
+		
+		return totalParts == 1F;
+	}
+	
+	public boolean champsRemplis(List<String> champs) {
+		boolean champsNonVides = true;
+		for (String champ : champs) {
+			System.out.println(champ);
+			if (champ.equals("")) {
+				champsNonVides = false;
+			}
+		}
+		return champsNonVides;
 	}
 }

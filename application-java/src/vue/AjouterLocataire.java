@@ -468,8 +468,8 @@ public class AjouterLocataire extends JInternalFrame {
 	}
 
 
-	public void afficherMessageChampsIncomplets() {
-		JOptionPane.showMessageDialog(this,"Il est nécessaire de remplir les champs obligatoires","Formulaire incomplet", JOptionPane.ERROR_MESSAGE);
+	public void afficherMessageErreur(String message) {
+		JOptionPane.showMessageDialog(this,message, "Erreur",JOptionPane.ERROR_MESSAGE);
 	}
 
 }
