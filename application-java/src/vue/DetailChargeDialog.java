@@ -19,6 +19,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 
 import modele.DocumentComptable;
@@ -99,11 +100,13 @@ public class DetailChargeDialog extends JDialog {
             // On place le bouton dans un panel FlowLayout aligné à gauche
             JPanel panelLoc = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
             JButton btnVoirLoc = new JButton(doc.getIdLocataire());
+            
             panelLoc.add(btnVoirLoc);
             adder.addRow("Locataire :", panelLoc);
         }
 
         if (!"quittance".equalsIgnoreCase(doc.getTypeDoc().toString())) {
+        	
             JPanel panelEntreprise = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
             JButton btnVoirEntreprise = new JButton(doc.getIdEntreprise());
             panelEntreprise.add(btnVoirEntreprise);
@@ -157,24 +160,12 @@ public class DetailChargeDialog extends JDialog {
         textAreaLink.setForeground(Color.BLUE);
         textAreaLink.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-        textAreaLink.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent e) {
-                if (Desktop.isDesktopSupported() && chemin != null) {
-                    try {
-                        Desktop.getDesktop().open(new File(chemin));
-                    } catch (Exception ex) {
-                        JOptionPane.showMessageDialog(DetailChargeDialog.this, 
-                            "Impossible d'ouvrir le fichier.", "Erreur", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
-            }
-        });
+        gestionCliqueFichier(chemin, textAreaLink);
 
         JScrollPane scrollPaneLink = new JScrollPane(
             textAreaLink,
-            JScrollPane.VERTICAL_SCROLLBAR_NEVER,
-            JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED
+            ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
+            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED
         );
         scrollPaneLink.setBorder(null);
 
@@ -196,6 +187,22 @@ public class DetailChargeDialog extends JDialog {
         setLocationRelativeTo(parent);
         setVisible(true);
     }
+
+	private void gestionCliqueFichier(String chemin, JTextArea textAreaLink) {
+		textAreaLink.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                if (Desktop.isDesktopSupported() && chemin != null) {
+                    try {
+                        Desktop.getDesktop().open(new File(chemin));
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(DetailChargeDialog.this, 
+                            "Impossible d'ouvrir le fichier.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+        });
+	}
 
     /**
      * Ajoute une ligne vide pour séparer visuellement les sections.

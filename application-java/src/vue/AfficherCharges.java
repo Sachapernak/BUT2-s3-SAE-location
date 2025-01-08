@@ -4,9 +4,6 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.util.List;
 import java.awt.GridBagLayout;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -25,8 +22,6 @@ import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ScrollPaneConstants;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class AfficherCharges extends JFrame {
 
