@@ -84,6 +84,8 @@ public class AjouterCharge extends JDialog {
     private JButton annulerButton; // renommé depuis 'cancelButton'
     
     private GestionAjouterCharge gest;
+    private JLabel lblNomTypeCharge;
+    private JTextField textFieldTypeNomCharge;
 
     /**
      * Launch the application (test).
@@ -136,9 +138,9 @@ public class AjouterCharge extends JDialog {
         contentPanel.add(panelLeft, gbc_panelLeft);
         GridBagLayout gbl_panelLeft = new GridBagLayout();
         gbl_panelLeft.columnWidths = new int[]{155, 160, 0, 160, 0, 0};
-        gbl_panelLeft.rowHeights = new int[]{30, 0, 0, 0, 0, 0, 0, 100, 16, 0, 0, 0, 0, 0, 0, 0, 0};
+        gbl_panelLeft.rowHeights = new int[]{30, 0, 0, 0, 0, 0, 0, 100, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0};
         gbl_panelLeft.columnWeights = new double[]{0.0, 1.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
-        gbl_panelLeft.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+        gbl_panelLeft.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
         panelLeft.setLayout(gbl_panelLeft);
         
         // ---------------------
@@ -405,6 +407,23 @@ public class AjouterCharge extends JDialog {
         gbc_comboBoxChoixCharge.gridy = 10;
         panelLeft.add(comboBoxChoixCharge, gbc_comboBoxChoixCharge);
         
+        lblNomTypeCharge = new JLabel("Nom / Type :");
+        GridBagConstraints gbc_lblNomTypeCharge = new GridBagConstraints();
+        gbc_lblNomTypeCharge.anchor = GridBagConstraints.EAST;
+        gbc_lblNomTypeCharge.insets = new Insets(0, 0, 5, 5);
+        gbc_lblNomTypeCharge.gridx = 0;
+        gbc_lblNomTypeCharge.gridy = 11;
+        panelLeft.add(lblNomTypeCharge, gbc_lblNomTypeCharge);
+        
+        textFieldTypeNomCharge = new JTextField();
+        GridBagConstraints gbc_textFieldTypeNomCharge = new GridBagConstraints();
+        gbc_textFieldTypeNomCharge.insets = new Insets(0, 0, 5, 5);
+        gbc_textFieldTypeNomCharge.fill = GridBagConstraints.HORIZONTAL;
+        gbc_textFieldTypeNomCharge.gridx = 1;
+        gbc_textFieldTypeNomCharge.gridy = 11;
+        panelLeft.add(textFieldTypeNomCharge, gbc_textFieldTypeNomCharge);
+        textFieldTypeNomCharge.setColumns(10);
+        
         // ---------------------
         // Ligne : Coût unitaire | abonnement
         // ---------------------
@@ -414,7 +433,7 @@ public class AjouterCharge extends JDialog {
         gbc_lblCout.anchor = GridBagConstraints.EAST;
         gbc_lblCout.insets = new Insets(0, 0, 5, 5);
         gbc_lblCout.gridx = 0;
-        gbc_lblCout.gridy = 11;
+        gbc_lblCout.gridy = 12;
         panelLeft.add(lblCout, gbc_lblCout);
         
         spinnerCoutVarUnit = new JSpinner();
@@ -423,7 +442,7 @@ public class AjouterCharge extends JDialog {
         gbc_spinnerCoutVarUnit.fill = GridBagConstraints.HORIZONTAL;
         gbc_spinnerCoutVarUnit.insets = new Insets(0, 0, 5, 5);
         gbc_spinnerCoutVarUnit.gridx = 1;
-        gbc_spinnerCoutVarUnit.gridy = 11;
+        gbc_spinnerCoutVarUnit.gridy = 12;
         panelLeft.add(spinnerCoutVarUnit, gbc_spinnerCoutVarUnit);
         
         spinnerCoutVarAbon = new JSpinner();
@@ -432,7 +451,7 @@ public class AjouterCharge extends JDialog {
         gbc_spinnerCoutVarAbon.fill = GridBagConstraints.HORIZONTAL;
         gbc_spinnerCoutVarAbon.insets = new Insets(0, 0, 5, 5);
         gbc_spinnerCoutVarAbon.gridx = 3;
-        gbc_spinnerCoutVarAbon.gridy = 11;
+        gbc_spinnerCoutVarAbon.gridy = 12;
         panelLeft.add(spinnerCoutVarAbon, gbc_spinnerCoutVarAbon);
         
         // ---------------------
@@ -443,7 +462,7 @@ public class AjouterCharge extends JDialog {
         gbc_lblValIndex.anchor = GridBagConstraints.EAST;
         gbc_lblValIndex.insets = new Insets(0, 0, 5, 5);
         gbc_lblValIndex.gridx = 0;
-        gbc_lblValIndex.gridy = 12;
+        gbc_lblValIndex.gridy = 13;
         panelLeft.add(lblValIndex, gbc_lblValIndex);
         
         spinnerNouveauIndex = new JSpinner();
@@ -452,7 +471,7 @@ public class AjouterCharge extends JDialog {
         gbc_spinnerNouveauIndex.fill = GridBagConstraints.HORIZONTAL;
         gbc_spinnerNouveauIndex.insets = new Insets(0, 0, 5, 5);
         gbc_spinnerNouveauIndex.gridx = 1;
-        gbc_spinnerNouveauIndex.gridy = 12;
+        gbc_spinnerNouveauIndex.gridy = 13;
         panelLeft.add(spinnerNouveauIndex, gbc_spinnerNouveauIndex);
         
         textFieldValeurAncienIndex = new JTextField();
@@ -461,7 +480,7 @@ public class AjouterCharge extends JDialog {
         gbc_textFieldValeurAncienIndex.insets = new Insets(0, 0, 5, 5);
         gbc_textFieldValeurAncienIndex.fill = GridBagConstraints.HORIZONTAL;
         gbc_textFieldValeurAncienIndex.gridx = 3;
-        gbc_textFieldValeurAncienIndex.gridy = 12;
+        gbc_textFieldValeurAncienIndex.gridy = 13;
         panelLeft.add(textFieldValeurAncienIndex, gbc_textFieldValeurAncienIndex);
         textFieldValeurAncienIndex.setColumns(10);
         
@@ -473,7 +492,7 @@ public class AjouterCharge extends JDialog {
         gbc_lblLocataire.anchor = GridBagConstraints.EAST;
         gbc_lblLocataire.insets = new Insets(0, 0, 5, 5);
         gbc_lblLocataire.gridx = 0;
-        gbc_lblLocataire.gridy = 14;
+        gbc_lblLocataire.gridy = 15;
         panelLeft.add(lblLocataire, gbc_lblLocataire);
         
         comboBoxLocataire = new JComboBox<>();
@@ -482,7 +501,7 @@ public class AjouterCharge extends JDialog {
         gbc_comboBoxLocataire.insets = new Insets(0, 0, 5, 5);
         gbc_comboBoxLocataire.fill = GridBagConstraints.HORIZONTAL;
         gbc_comboBoxLocataire.gridx = 1;
-        gbc_comboBoxLocataire.gridy = 14;
+        gbc_comboBoxLocataire.gridy = 15;
         panelLeft.add(comboBoxLocataire, gbc_comboBoxLocataire);
         
         // ---------------------
@@ -494,7 +513,7 @@ public class AjouterCharge extends JDialog {
         gbc_lblAssu.anchor = GridBagConstraints.EAST;
         gbc_lblAssu.insets = new Insets(0, 0, 0, 5);
         gbc_lblAssu.gridx = 0;
-        gbc_lblAssu.gridy = 15;
+        gbc_lblAssu.gridy = 16;
         panelLeft.add(lblAssu, gbc_lblAssu);
         
         comboBoxAssu = new JComboBox<>();
@@ -503,7 +522,7 @@ public class AjouterCharge extends JDialog {
         gbc_comboBoxAssu.insets = new Insets(0, 0, 0, 5);
         gbc_comboBoxAssu.fill = GridBagConstraints.HORIZONTAL;
         gbc_comboBoxAssu.gridx = 1;
-        gbc_comboBoxAssu.gridy = 15;
+        gbc_comboBoxAssu.gridy = 16;
         panelLeft.add(comboBoxAssu, gbc_comboBoxAssu);
     
         // --------------------------------------------------------------------
@@ -653,6 +672,11 @@ public class AjouterCharge extends JDialog {
         return BigDecimal.valueOf((double) this.spinnerNouveauIndex.getValue());
     }
     
+    public BigDecimal getAncienIndex() {
+        return BigDecimal.valueOf(Float.valueOf(this.textFieldValeurAncienIndex.getText().isEmpty() ? 
+        										"0.0" : this.textFieldValeurAncienIndex.getText()));
+    }
+    
     public String getIDLocataire() {
         return String.valueOf(this.comboBoxLocataire.getSelectedItem());
     }
@@ -660,6 +684,12 @@ public class AjouterCharge extends JDialog {
     public String getIDAssu() {
         return String.valueOf(this.comboBoxAssu.getSelectedItem());
     }
+    
+    public String getNomTypeCharge() {
+    	return this.textFieldTypeNomCharge.getText();
+    }
+    
+    
     
     // ------------- Setters combos -------------
     // 1. Types de la combo box
@@ -757,12 +787,21 @@ public class AjouterCharge extends JDialog {
         textFieldValeurAncienIndex.setText(val);
     }
     
+    public void clearTextIdCharge() {
+    	this.textFieldIDCharge.setText("");
+    }
+    
+    
     public void setValSpinnerUnit(Float val) {
         spinnerCoutVarUnit.setValue(val);
     }
     
     public void setValSpinnerAbonn(Float val) {
         spinnerCoutVarAbon.setValue(val);
+    }
+    
+    public void setNomTypeCharge(String type) {
+    	this.textFieldTypeNomCharge.setText(type);
     }
     
     // -----------------------------------------------------------------------
@@ -799,6 +838,8 @@ public class AjouterCharge extends JDialog {
         lblOu.setVisible(visible);
         textFieldIDCharge.setVisible(visible);
         comboBoxChoixCharge.setVisible(visible);
+        lblNomTypeCharge.setVisible(visible);
+        textFieldTypeNomCharge.setVisible(visible);
     }
     
     public void setIdChargeNomVisible(boolean visible) {
@@ -806,6 +847,8 @@ public class AjouterCharge extends JDialog {
         lblOu.setVisible(false);
         textFieldIDCharge.setVisible(visible);
         lblIDChargeIndex.setVisible(visible);
+        lblNomTypeCharge.setVisible(visible);
+        textFieldTypeNomCharge.setVisible(visible);
     }
     
     // Pour afficher un message d'erreur

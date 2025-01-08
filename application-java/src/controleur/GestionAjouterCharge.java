@@ -15,11 +15,20 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.SwingWorker;
 import modele.Batiment;
+import modele.ChargeFixe;
 import modele.ChargeIndex;
+import modele.ConnexionBD;
+import modele.DocumentComptable;
+import modele.FactureBien;
+import modele.TypeDoc;
 import modele.dao.DaoAssurance;
 import modele.dao.DaoBatiment;
+import modele.dao.DaoBienLocatif;
+import modele.dao.DaoChargeFixe;
 import modele.dao.DaoChargeIndex;
+import modele.dao.DaoDocumentComptable;
 import modele.dao.DaoEntreprise;
+import modele.dao.DaoFactureBien;
 import modele.dao.DaoLocataire;
 import vue.AjouterCharge;
 
@@ -180,6 +189,7 @@ public class GestionAjouterCharge {
             @Override
             protected Void doInBackground() throws Exception {
                 res = new DaoChargeIndex().findAllDistinctId();
+                res.add(0,"");
                 return null;
             }
             
@@ -267,65 +277,13 @@ public class GestionAjouterCharge {
      * Action lors du changement de combo ID charge (comboBoxChoixCharge).
      */
     public void gestionComboIDCharge() {
-        String selectedID = fen.getTextIDCharge(); 
-        // OU, si on veut récupérer la valeur depuis la combo :
-        // String selectedID = (String) fen.getComboBoxChoixCharge().getSelectedItem();
+        fen.getTextIDCharge();
         
         // Faire un traitement si nécessaire
         // (Par exemple, charger l'ancien index, etc.)
         // ...
     }
     
-    /**
-     * Action quand on clique sur OK.
-     */
-    public void gestionBoutonOk() {
-        try {
-            // 1) Récupérer toutes les infos de la vue
-            String numDoc = fen.getTextNumDoc();
-            String dateDoc = fen.getTextDateDoc();
-            String typeDoc = fen.getTypeDoc();
-            String idEntreprise = fen.getIDEntreprise();
-            boolean recupLoc = fen.estRecupLoc();
-            BigDecimal coutUnit = fen.getCoutVarUnit();
-            BigDecimal coutAbon = fen.getCoutVarAbon();
-            BigDecimal valIndex = fen.getValIndex();
-            List<List<Object>> listeLogements = fen.getListeLogement();
-            
-            // 2) Logique métier, ex: vérifications, insertion en DB, etc.
-            String selected = fen.getTypeDoc();
-
-            switch (selected) {
-                case "QUITTANCE":
-
-                    break;
-                    
-                case "FACTURE":
-                	// meme que CF
-                case "FACTURE_CF":
-
-
-                    break;
-
-                case "FACTURE_CV":
-
-                    break;
-                    
-                case "DEVIS":
-
-                    break;
-                    
-                default:
-                	fen.afficherMessageErreur("Type non valide");
-                    break;
-            }
-            // 3) Si tout va bien, on peut fermer la fenêtre :
-            fen.dispose();
-            
-        } catch (Exception e) {
-            fen.afficherMessageErreur("Erreur dans le bouton OK : " + e.getMessage());
-        }
-    }
     
     /**
      * Action quand on clique sur le bouton Annuler.
@@ -354,7 +312,7 @@ public class GestionAjouterCharge {
             @Override
             protected Void doInBackground() throws Exception {
             	ChargeIndex ci;
-            	if (id == null) {
+            	if (id == null || id.isEmpty()) {
             		ci = null;
             	} else {
             		 ci = new DaoChargeIndex().findAllSameId(id).stream().findFirst().orElse(null);
@@ -362,7 +320,8 @@ public class GestionAjouterCharge {
             	fen.setSpinnerCoutVarAbon(ci == null ? BigDecimal.valueOf(0.0f) : ci.getCoutFixe());
             	fen.setSpinnerCoutVarUnit(ci == null ? BigDecimal.valueOf(0.0f) : ci.getCoutVariable());
             	fen.setTextAncienIndex(ci == null ? "" : String.valueOf(ci.getValeurCompteur()));
-            	
+            	fen.setNomTypeCharge(ci == null ? "" : String.valueOf(ci.getType()));
+            	fen.clearTextIdCharge();
             	return null;
             }
             
@@ -385,6 +344,231 @@ public class GestionAjouterCharge {
         });
     }
 
+    
+    /**
+     * Action quand on clique sur OK.
+     */
+    public void gestionBoutonOk() {
+    	
+    	ConnexionBD bd = null;
+        
+        try {
+        	
+            bd = ConnexionBD.getInstance();
+            bd.setAutoCommit(false);
+            
+            // 1) Récupérer toutes les infos de la vue
+            String numDoc = fen.getTextNumDoc();
+            String dateDoc = fen.getTextDateDoc();
+            String typeDoc = fen.getTypeDoc();
+            String fichierDoc = fen.getLienFichier();
+            boolean recupLoc = fen.estRecupLoc();
+            
+            String idEntreprise = fen.getIDEntreprise();
+            String idBat = fen.getIDBat();
+            String idLoc = fen.getIDLocataire();
+            String idAssu = fen.getIDAssu();
+            
+            String idCharge = fen.getTextIDCharge();
+            String idChargeCombo = fen.getIDChargeCombo();
+            
+            String typeCharge = fen.getNomTypeCharge();
+            
+            BigDecimal coutUnit = fen.getCoutVarUnit();
+            BigDecimal coutAbon = fen.getCoutVarAbon();
+            BigDecimal nouveaIndex = fen.getValIndex();
+            BigDecimal ancienIndex = fen.getAncienIndex();
+            List<List<Object>> listeLogements = fen.getListeLogement();
+            
+            // 2) Logique métier, ex: vérifications, insertion en DB, etc.
+            String selected = fen.getTypeDoc();
+
+            DocumentComptable nouveauDoc;
+            DaoDocumentComptable daoDC = new DaoDocumentComptable();
+            DaoFactureBien daoFB = new DaoFactureBien();
+            
+            DaoBienLocatif daoB = new DaoBienLocatif();
+           
+            String bien;
+            
+            BigDecimal tolerance = new BigDecimal("0.01");
+            
+            BigDecimal part;
+            
+            BigDecimal difference;
+            
+            BigDecimal somme;
+
+            switch (selected) {
+                case "QUITTANCE":
+                	                	
+                	nouveauDoc = new DocumentComptable(numDoc, dateDoc, TypeDoc.valueOf(typeDoc),
+                			coutUnit, fichierDoc);
+                	
+                	nouveauDoc.setRecuperableLoc(recupLoc);
+                	
+                	nouveauDoc.setBatiment(new DaoBatiment().findById(idBat));
+                	
+                	nouveauDoc.setLocataire(new DaoLocataire().findById(idLoc));
+                	
+                	daoDC.create(nouveauDoc);
+                
+                
+            		bien = String.valueOf(listeLogements.get(0).get(0));
+            		part = (BigDecimal)listeLogements.get(0).get(1);
+            		daoFB.create(new FactureBien(daoB.findById(bien), nouveauDoc, part.floatValue()));
+
+                	
+                    break;
+                    
+                case "FACTURE":
+
+                case "FACTURE_CF":
+                	
+                	nouveauDoc = new DocumentComptable(numDoc, dateDoc, TypeDoc.valueOf(typeDoc),
+                			coutUnit, fichierDoc);
+                	
+                	nouveauDoc.setRecuperableLoc(recupLoc);
+                	
+                	nouveauDoc.setBatiment(new DaoBatiment().findById(idBat));
+
+                	nouveauDoc.setEntreprise(new DaoEntreprise().findById(idEntreprise.split(" ")[1]));
+                	
+                	if (!idAssu.equalsIgnoreCase("aucune")) {
+                		nouveauDoc.setAssurance(new DaoAssurance().findById(idAssu.split(" ")[0], idAssu.split(" ")[1]));
+                	}
+                	
+                	daoDC.create(nouveauDoc);
+                	somme = new BigDecimal(0);
+                	for (List<Object> bienPart : listeLogements) {
+                		
+                		bien = String.valueOf(bienPart.get(0));
+                		part = (BigDecimal) bienPart.get(1);
+                		
+                		somme = somme.add(part);
+                		daoFB.create(new FactureBien(daoB.findById(bien), nouveauDoc, part.floatValue()));
+                	}
+
+                	
+                	difference = somme.subtract(BigDecimal.ONE).abs();
+
+                	if (difference.compareTo(tolerance) > 0) {
+                	    throw new IllegalArgumentException("La somme des parts de charges doit être égale à 1. Valeur : " + somme);
+                	}
+                	
+                	ChargeFixe cf = new ChargeFixe(idCharge, dateDoc,typeCharge, coutUnit, numDoc, dateDoc);
+                	new DaoChargeFixe().create(cf);
+            		
+
+                    break;
+
+                case "FACTURE_CV":
+                	
+                	if(nouveaIndex.compareTo(ancienIndex) < 0) {
+                		throw new IllegalArgumentException("L'ancien index ne peut etre inférieur au nouevau");
+                	}
+                	
+                	BigDecimal coutVar = coutUnit.multiply(nouveaIndex.subtract(ancienIndex)).add(coutAbon);
+                	
+                	
+                	
+                	nouveauDoc = new DocumentComptable(numDoc, dateDoc, TypeDoc.valueOf(typeDoc),
+                			coutVar, fichierDoc);
+                	
+                	nouveauDoc.setRecuperableLoc(recupLoc);
+                	
+                	nouveauDoc.setBatiment(new DaoBatiment().findById(idBat));
+
+                	nouveauDoc.setEntreprise(new DaoEntreprise().findById(idEntreprise.split(" ")[1]));
+                	
+                	if (!idAssu.equalsIgnoreCase("aucune")) {
+                		nouveauDoc.setAssurance(new DaoAssurance().findById(idAssu.split(" ")[0], idAssu.split(" ")[1]));
+                	}
+                	
+                	daoDC.create(nouveauDoc);
+                	somme = new BigDecimal(0);
+                	for (List<Object> bienPart : listeLogements) {
+                		
+                		bien = String.valueOf(bienPart.get(0));
+                		part = (BigDecimal) bienPart.get(1);
+                		
+                		somme = somme.add(part);
+                		daoFB.create(new FactureBien(daoB.findById(bien), nouveauDoc, part.floatValue()));
+                	}
+
+                	
+                	difference = somme.subtract(BigDecimal.ONE).abs();
+
+                	if (difference.compareTo(tolerance) > 0) {
+                	    throw new IllegalArgumentException("La somme des parts de charges doit être égale à 1. Valeur : " + somme);
+                	}
+                	
+                	String idcv = idCharge.isEmpty() ? idChargeCombo : idCharge;
+
+                	
+                	ChargeIndex cv = new ChargeIndex(idcv, dateDoc, typeCharge, nouveaIndex, 
+                			coutUnit, coutAbon, numDoc, dateDoc);
+                	
+                	if (!idChargeCombo.isEmpty()) {
+                		cv.setDateRelevePrecedent(new DaoChargeIndex().findAllSameId(idcv).get(0).getDateDeReleve());
+                	}
+                	new DaoChargeIndex().create(cv);
+
+                    break;
+                    
+                case "DEVIS":
+
+                	nouveauDoc = new DocumentComptable(numDoc, dateDoc, TypeDoc.valueOf(typeDoc),
+                			coutUnit, fichierDoc);
+                	
+                	nouveauDoc.setRecuperableLoc(recupLoc);
+                	
+                	nouveauDoc.setBatiment(new DaoBatiment().findById(idBat));
+
+                	nouveauDoc.setEntreprise(new DaoEntreprise().findById(idEntreprise.split(" ")[1]));
+                	
+                	daoDC.create(nouveauDoc);
+                	somme = new BigDecimal(0);
+                	for (List<Object> bienPart : listeLogements) {
+                		
+                		bien = String.valueOf(bienPart.get(0));
+                		part = (BigDecimal) bienPart.get(1);
+                		
+                		somme = somme.add(part);
+                		daoFB.create(new FactureBien(daoB.findById(bien), nouveauDoc, part.floatValue()));
+                	}
+
+                	
+                	difference = somme.subtract(BigDecimal.ONE).abs();
+
+                	if (difference.compareTo(tolerance) > 0) {
+                	    throw new IllegalArgumentException("La somme des parts de charges doit être égale à 1. Valeur : " + somme);
+                	}
+
+                    break;
+                    
+                default:
+                	fen.afficherMessageErreur("Type non valide");
+                    break;
+            }
+            bd.valider();
+            // 3) Si tout va bien, on peut fermer la fenêtre :
+            fen.dispose();
+            
+        } catch (Exception e) {
+        	if (bd != null) {
+        		bd.anuler();
+        	}
+        	e.printStackTrace();
+            fen.afficherMessageErreur(e.getMessage());
+            
+        } finally {
+        	if (bd != null) {
+        		bd.setAutoCommit(false);
+        	}
+        	
+        }
+    }
 
 
 }
