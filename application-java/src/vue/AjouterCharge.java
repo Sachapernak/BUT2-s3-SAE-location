@@ -2,40 +2,36 @@ package vue;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import java.awt.GridBagLayout;
+import java.awt.Font;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.SwingConstants;
-import javax.swing.JTextField;
-import javax.swing.JComboBox;
-import javax.swing.JTextArea;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
 import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.JComboBox;
+import java.awt.Component;
 
 import controleur.GestionAjouterCharge;
-
-import java.awt.Dimension;
-import javax.swing.JCheckBox;
-import java.awt.Font;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
-import java.awt.Component;
-import javax.swing.Box;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class AjouterCharge extends JDialog {
 
@@ -43,7 +39,7 @@ public class AjouterCharge extends JDialog {
 
     private final JPanel contentPanel = new JPanel();
     
-    // --- On transforme ces labels en champs d'instance pour pouvoir y accéder dans les setters d'affichage :
+    // --- Champs d'instance pour les labels :
     private JLabel lblTitre;
     private JLabel lblNumeroDoc;
     private JLabel lblDateDocument;
@@ -60,13 +56,13 @@ public class AjouterCharge extends JDialog {
     private JLabel lblLocataire;
     private JLabel lblAssu;
     
+    // --- Champs d'instance pour les composants de saisie :
     private JTextField textFieldNumDoc;
     private JTextField textFieldDateDoc;
     private JTable tableLogements;
     private JTextField textFieldIDCharge;
     private JTextField textFieldValeurAncienIndex;
     private JComboBox<String> comboBoxType;
-    private JTextArea textAreaLien;
     private JComboBox<String> comboBoxEntreprise;
     private JComboBox<String> comboBoxBat;
     private JScrollPane scrollPane;
@@ -78,11 +74,18 @@ public class AjouterCharge extends JDialog {
     private JComboBox<String> comboBoxLocataire;
     private JComboBox<String> comboBoxAssu;
     
-    // Boutons
+    // --- Remplacement de textAreaLien par un champ texte + bouton + fileChooser
+    private JTextField textFieldLienFichier;   // Montre le chemin du fichier sélectionné
+    private JButton buttonParcourir;           // Bouton pour ouvrir le JFileChooser
+    private JFileChooser fileChooser;          // Sélecteur de fichier
+    
+    // Boutons bas de fenêtre
     private JButton okButton;
     private JButton annulerButton; // renommé depuis 'cancelButton'
     
     private GestionAjouterCharge gest;
+    private JLabel lblNomTypeCharge;
+    private JTextField textFieldTypeNomCharge;
 
     /**
      * Launch the application (test).
@@ -100,7 +103,11 @@ public class AjouterCharge extends JDialog {
     /**
      * Create the dialog.
      */
-    public AjouterCharge() {
+    public AjouterCharge()  {
+        
+        // Permet d'afficher dans la barre des tâches
+        super(null, ModalityType.TOOLKIT_MODAL);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         
         this.gest = new GestionAjouterCharge(this);
         
@@ -131,11 +138,14 @@ public class AjouterCharge extends JDialog {
         contentPanel.add(panelLeft, gbc_panelLeft);
         GridBagLayout gbl_panelLeft = new GridBagLayout();
         gbl_panelLeft.columnWidths = new int[]{155, 160, 0, 160, 0, 0};
-        gbl_panelLeft.rowHeights = new int[]{30, 0, 0, 0, 0, 0, 0, 100, 16, 0, 0, 0, 0, 0, 0, 0, 0};
+        gbl_panelLeft.rowHeights = new int[]{30, 0, 0, 0, 0, 0, 0, 100, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0};
         gbl_panelLeft.columnWeights = new double[]{0.0, 1.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
-        gbl_panelLeft.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+        gbl_panelLeft.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
         panelLeft.setLayout(gbl_panelLeft);
         
+        // ---------------------
+        // Ligne : Numéro de document
+        // ---------------------
         lblNumeroDoc = new JLabel("Numero de document :");
         lblNumeroDoc.setHorizontalAlignment(SwingConstants.TRAILING);
         GridBagConstraints gbc_lblNumeroDoc = new GridBagConstraints();
@@ -155,6 +165,9 @@ public class AjouterCharge extends JDialog {
         panelLeft.add(textFieldNumDoc, gbc_textFieldNumDoc);
         textFieldNumDoc.setColumns(10);
         
+        // ---------------------
+        // Ligne : Date du document
+        // ---------------------
         lblDateDocument = new JLabel("Date du document :");
         lblDateDocument.setHorizontalAlignment(SwingConstants.TRAILING);
         GridBagConstraints gbc_lblDateDocument = new GridBagConstraints();
@@ -174,6 +187,9 @@ public class AjouterCharge extends JDialog {
         panelLeft.add(textFieldDateDoc, gbc_textFieldDateDoc);
         textFieldDateDoc.setColumns(10);
         
+        // ---------------------
+        // Ligne : Type de document
+        // ---------------------
         lblType = new JLabel("Type :");
         lblType.setHorizontalAlignment(SwingConstants.TRAILING);
         GridBagConstraints gbc_lblType = new GridBagConstraints();
@@ -183,7 +199,7 @@ public class AjouterCharge extends JDialog {
         gbc_lblType.gridy = 2;
         panelLeft.add(lblType, gbc_lblType);
         
-        comboBoxType = new JComboBox<String>();
+        comboBoxType = new JComboBox<>();
         GridBagConstraints gbc_comboBoxType = new GridBagConstraints();
         gbc_comboBoxType.gridwidth = 3;
         gbc_comboBoxType.insets = new Insets(0, 0, 5, 5);
@@ -192,6 +208,9 @@ public class AjouterCharge extends JDialog {
         gbc_comboBoxType.gridy = 2;
         panelLeft.add(comboBoxType, gbc_comboBoxType);
         
+        // ---------------------
+        // Ligne : Lien vers le fichier => on ajoute un panel pour le TextField + bouton "Parcourir..."
+        // ---------------------
         lblLienFichier = new JLabel("Lien vers le fichier :");
         lblLienFichier.setHorizontalAlignment(SwingConstants.TRAILING);
         GridBagConstraints gbc_lblLienFichier = new GridBagConstraints();
@@ -202,18 +221,31 @@ public class AjouterCharge extends JDialog {
         gbc_lblLienFichier.gridy = 3;
         panelLeft.add(lblLienFichier, gbc_lblLienFichier);
         
-        textAreaLien = new JTextArea();
-        textAreaLien.setLineWrap(true);
-        textAreaLien.setWrapStyleWord(true);
-        textAreaLien.setRows(2);
-        GridBagConstraints gbc_textAreaLien = new GridBagConstraints();
-        gbc_textAreaLien.gridwidth = 3;
-        gbc_textAreaLien.insets = new Insets(0, 0, 5, 5);
-        gbc_textAreaLien.fill = GridBagConstraints.BOTH;
-        gbc_textAreaLien.gridx = 1;
-        gbc_textAreaLien.gridy = 3;
-        panelLeft.add(textAreaLien, gbc_textAreaLien);
+        // Panel contenant le TextField + bouton
+        JPanel panelFileChooser = new JPanel(new BorderLayout());
+        GridBagConstraints gbc_panelFileChooser = new GridBagConstraints();
+        gbc_panelFileChooser.gridwidth = 3;
+        gbc_panelFileChooser.insets = new Insets(0, 0, 5, 5);
+        gbc_panelFileChooser.fill = GridBagConstraints.BOTH;
+        gbc_panelFileChooser.gridx = 1;
+        gbc_panelFileChooser.gridy = 3;
+        panelLeft.add(panelFileChooser, gbc_panelFileChooser);
         
+        textFieldLienFichier = new JTextField();
+        panelFileChooser.add(textFieldLienFichier, BorderLayout.CENTER);
+        
+        buttonParcourir = new JButton("Parcourir...");
+        panelFileChooser.add(buttonParcourir, BorderLayout.EAST);
+        
+        // Instanciation du JFileChooser
+        fileChooser = new JFileChooser();
+        // Configurez le JFileChooser si besoin (filtres, répertoires par défaut, etc.)
+        
+
+        
+        // ---------------------
+        // Strut vertical
+        // ---------------------
         Component verticalStrut = Box.createVerticalStrut(20);
         GridBagConstraints gbc_verticalStrut = new GridBagConstraints();
         gbc_verticalStrut.insets = new Insets(0, 0, 5, 5);
@@ -221,6 +253,9 @@ public class AjouterCharge extends JDialog {
         gbc_verticalStrut.gridy = 4;
         panelLeft.add(verticalStrut, gbc_verticalStrut);
         
+        // ---------------------
+        // Ligne : Entreprise
+        // ---------------------
         lblEntreprise = new JLabel("Entreprise :");
         lblEntreprise.setHorizontalAlignment(SwingConstants.TRAILING);
         GridBagConstraints gbc_lblEntreprise = new GridBagConstraints();
@@ -230,7 +265,7 @@ public class AjouterCharge extends JDialog {
         gbc_lblEntreprise.gridy = 5;
         panelLeft.add(lblEntreprise, gbc_lblEntreprise);
         
-        comboBoxEntreprise = new JComboBox<String>();
+        comboBoxEntreprise = new JComboBox<>();
         GridBagConstraints gbc_comboBoxEntreprise = new GridBagConstraints();
         gbc_comboBoxEntreprise.gridwidth = 3;
         gbc_comboBoxEntreprise.insets = new Insets(0, 0, 5, 5);
@@ -239,6 +274,9 @@ public class AjouterCharge extends JDialog {
         gbc_comboBoxEntreprise.gridy = 5;
         panelLeft.add(comboBoxEntreprise, gbc_comboBoxEntreprise);
         
+        // ---------------------
+        // Ligne : Bâtiment
+        // ---------------------
         lblBat = new JLabel("Batiment :");
         lblBat.setHorizontalAlignment(SwingConstants.TRAILING);
         GridBagConstraints gbc_lblBat = new GridBagConstraints();
@@ -248,7 +286,7 @@ public class AjouterCharge extends JDialog {
         gbc_lblBat.gridy = 6;
         panelLeft.add(lblBat, gbc_lblBat);
         
-        comboBoxBat = new JComboBox<String>();
+        comboBoxBat = new JComboBox<>();
         GridBagConstraints gbc_comboBoxBat = new GridBagConstraints();
         gbc_comboBoxBat.gridwidth = 3;
         gbc_comboBoxBat.insets = new Insets(0, 0, 5, 5);
@@ -257,6 +295,9 @@ public class AjouterCharge extends JDialog {
         gbc_comboBoxBat.gridy = 6;
         panelLeft.add(comboBoxBat, gbc_comboBoxBat);
         
+        // ---------------------
+        // Ligne : Bien locatifs (tableau)
+        // ---------------------
         lblBienLocatif = new JLabel("Bien locatifs concernés :");
         lblBienLocatif.setHorizontalAlignment(SwingConstants.TRAILING);
         lblBienLocatif.setVerticalAlignment(SwingConstants.TOP);
@@ -292,15 +333,20 @@ public class AjouterCharge extends JDialog {
             }
         ) {
             private static final long serialVersionUID = 1L;
+            @SuppressWarnings("rawtypes")
             Class[] columnTypes = new Class[] {
                 String.class, Float.class
             };
-            public Class<?> getColumnClass(int columnIndex) {
+            @SuppressWarnings("unchecked")
+            public Class getColumnClass(int columnIndex) {
                 return columnTypes[columnIndex];
             }
         });
         scrollPane.setViewportView(tableLogements);
         
+        // ---------------------
+        // Ligne : Récupérable locataire ?
+        // ---------------------
         lblRecupLoc = new JLabel("Récuperable locataire :");
         GridBagConstraints gbc_lblRecupLoc = new GridBagConstraints();
         gbc_lblRecupLoc.anchor = GridBagConstraints.EAST;
@@ -324,6 +370,9 @@ public class AjouterCharge extends JDialog {
         gbc_verticalStrut_1.gridy = 9;
         panelLeft.add(verticalStrut_1, gbc_verticalStrut_1);
         
+        // ---------------------
+        // Ligne : ID charge + combo
+        // ---------------------
         lblIDChargeIndex = new JLabel("ID charge :");
         lblIDChargeIndex.setHorizontalAlignment(SwingConstants.TRAILING);
         GridBagConstraints gbc_lblIDChargeIndex = new GridBagConstraints();
@@ -350,7 +399,7 @@ public class AjouterCharge extends JDialog {
         gbc_lblOu.gridy = 10;
         panelLeft.add(lblOu, gbc_lblOu);
         
-        comboBoxChoixCharge = new JComboBox<String>();
+        comboBoxChoixCharge = new JComboBox<>();
         GridBagConstraints gbc_comboBoxChoixCharge = new GridBagConstraints();
         gbc_comboBoxChoixCharge.insets = new Insets(0, 0, 5, 5);
         gbc_comboBoxChoixCharge.fill = GridBagConstraints.HORIZONTAL;
@@ -358,13 +407,33 @@ public class AjouterCharge extends JDialog {
         gbc_comboBoxChoixCharge.gridy = 10;
         panelLeft.add(comboBoxChoixCharge, gbc_comboBoxChoixCharge);
         
+        lblNomTypeCharge = new JLabel("Nom / Type :");
+        GridBagConstraints gbc_lblNomTypeCharge = new GridBagConstraints();
+        gbc_lblNomTypeCharge.anchor = GridBagConstraints.EAST;
+        gbc_lblNomTypeCharge.insets = new Insets(0, 0, 5, 5);
+        gbc_lblNomTypeCharge.gridx = 0;
+        gbc_lblNomTypeCharge.gridy = 11;
+        panelLeft.add(lblNomTypeCharge, gbc_lblNomTypeCharge);
+        
+        textFieldTypeNomCharge = new JTextField();
+        GridBagConstraints gbc_textFieldTypeNomCharge = new GridBagConstraints();
+        gbc_textFieldTypeNomCharge.insets = new Insets(0, 0, 5, 5);
+        gbc_textFieldTypeNomCharge.fill = GridBagConstraints.HORIZONTAL;
+        gbc_textFieldTypeNomCharge.gridx = 1;
+        gbc_textFieldTypeNomCharge.gridy = 11;
+        panelLeft.add(textFieldTypeNomCharge, gbc_textFieldTypeNomCharge);
+        textFieldTypeNomCharge.setColumns(10);
+        
+        // ---------------------
+        // Ligne : Coût unitaire | abonnement
+        // ---------------------
         lblCout = new JLabel("Cout unitaire | abonnement :");
         lblCout.setHorizontalAlignment(SwingConstants.TRAILING);
         GridBagConstraints gbc_lblCout = new GridBagConstraints();
         gbc_lblCout.anchor = GridBagConstraints.EAST;
         gbc_lblCout.insets = new Insets(0, 0, 5, 5);
         gbc_lblCout.gridx = 0;
-        gbc_lblCout.gridy = 11;
+        gbc_lblCout.gridy = 12;
         panelLeft.add(lblCout, gbc_lblCout);
         
         spinnerCoutVarUnit = new JSpinner();
@@ -373,7 +442,7 @@ public class AjouterCharge extends JDialog {
         gbc_spinnerCoutVarUnit.fill = GridBagConstraints.HORIZONTAL;
         gbc_spinnerCoutVarUnit.insets = new Insets(0, 0, 5, 5);
         gbc_spinnerCoutVarUnit.gridx = 1;
-        gbc_spinnerCoutVarUnit.gridy = 11;
+        gbc_spinnerCoutVarUnit.gridy = 12;
         panelLeft.add(spinnerCoutVarUnit, gbc_spinnerCoutVarUnit);
         
         spinnerCoutVarAbon = new JSpinner();
@@ -382,15 +451,18 @@ public class AjouterCharge extends JDialog {
         gbc_spinnerCoutVarAbon.fill = GridBagConstraints.HORIZONTAL;
         gbc_spinnerCoutVarAbon.insets = new Insets(0, 0, 5, 5);
         gbc_spinnerCoutVarAbon.gridx = 3;
-        gbc_spinnerCoutVarAbon.gridy = 11;
+        gbc_spinnerCoutVarAbon.gridy = 12;
         panelLeft.add(spinnerCoutVarAbon, gbc_spinnerCoutVarAbon);
         
+        // ---------------------
+        // Ligne : Nouvel/Ancien Index
+        // ---------------------
         lblValIndex = new JLabel("Nouveau | Ancien Index :");
         GridBagConstraints gbc_lblValIndex = new GridBagConstraints();
         gbc_lblValIndex.anchor = GridBagConstraints.EAST;
         gbc_lblValIndex.insets = new Insets(0, 0, 5, 5);
         gbc_lblValIndex.gridx = 0;
-        gbc_lblValIndex.gridy = 12;
+        gbc_lblValIndex.gridy = 13;
         panelLeft.add(lblValIndex, gbc_lblValIndex);
         
         spinnerNouveauIndex = new JSpinner();
@@ -399,7 +471,7 @@ public class AjouterCharge extends JDialog {
         gbc_spinnerNouveauIndex.fill = GridBagConstraints.HORIZONTAL;
         gbc_spinnerNouveauIndex.insets = new Insets(0, 0, 5, 5);
         gbc_spinnerNouveauIndex.gridx = 1;
-        gbc_spinnerNouveauIndex.gridy = 12;
+        gbc_spinnerNouveauIndex.gridy = 13;
         panelLeft.add(spinnerNouveauIndex, gbc_spinnerNouveauIndex);
         
         textFieldValeurAncienIndex = new JTextField();
@@ -408,46 +480,54 @@ public class AjouterCharge extends JDialog {
         gbc_textFieldValeurAncienIndex.insets = new Insets(0, 0, 5, 5);
         gbc_textFieldValeurAncienIndex.fill = GridBagConstraints.HORIZONTAL;
         gbc_textFieldValeurAncienIndex.gridx = 3;
-        gbc_textFieldValeurAncienIndex.gridy = 12;
+        gbc_textFieldValeurAncienIndex.gridy = 13;
         panelLeft.add(textFieldValeurAncienIndex, gbc_textFieldValeurAncienIndex);
         textFieldValeurAncienIndex.setColumns(10);
         
+        // ---------------------
+        // Ligne : Quittance pour (Locataire)
+        // ---------------------
         lblLocataire = new JLabel("Quittance pour :");
         GridBagConstraints gbc_lblLocataire = new GridBagConstraints();
         gbc_lblLocataire.anchor = GridBagConstraints.EAST;
         gbc_lblLocataire.insets = new Insets(0, 0, 5, 5);
         gbc_lblLocataire.gridx = 0;
-        gbc_lblLocataire.gridy = 14;
+        gbc_lblLocataire.gridy = 15;
         panelLeft.add(lblLocataire, gbc_lblLocataire);
         
-        comboBoxLocataire = new JComboBox<String>();
+        comboBoxLocataire = new JComboBox<>();
         GridBagConstraints gbc_comboBoxLocataire = new GridBagConstraints();
         gbc_comboBoxLocataire.gridwidth = 3;
         gbc_comboBoxLocataire.insets = new Insets(0, 0, 5, 5);
         gbc_comboBoxLocataire.fill = GridBagConstraints.HORIZONTAL;
         gbc_comboBoxLocataire.gridx = 1;
-        gbc_comboBoxLocataire.gridy = 14;
+        gbc_comboBoxLocataire.gridy = 15;
         panelLeft.add(comboBoxLocataire, gbc_comboBoxLocataire);
         
+        // ---------------------
+        // Ligne : Assurance
+        // ---------------------
         lblAssu = new JLabel("Assurance :");
         lblAssu.setHorizontalAlignment(SwingConstants.TRAILING);
         GridBagConstraints gbc_lblAssu = new GridBagConstraints();
         gbc_lblAssu.anchor = GridBagConstraints.EAST;
         gbc_lblAssu.insets = new Insets(0, 0, 0, 5);
         gbc_lblAssu.gridx = 0;
-        gbc_lblAssu.gridy = 15;
+        gbc_lblAssu.gridy = 16;
         panelLeft.add(lblAssu, gbc_lblAssu);
         
-        comboBoxAssu = new JComboBox<String>();
+        comboBoxAssu = new JComboBox<>();
         GridBagConstraints gbc_comboBoxAssu = new GridBagConstraints();
         gbc_comboBoxAssu.gridwidth = 3;
         gbc_comboBoxAssu.insets = new Insets(0, 0, 0, 5);
         gbc_comboBoxAssu.fill = GridBagConstraints.HORIZONTAL;
         gbc_comboBoxAssu.gridx = 1;
-        gbc_comboBoxAssu.gridy = 15;
+        gbc_comboBoxAssu.gridy = 16;
         panelLeft.add(comboBoxAssu, gbc_comboBoxAssu);
     
-        // -- Panel bas : boutons
+        // --------------------------------------------------------------------
+        // Panel bas : boutons OK et Annuler
+        // --------------------------------------------------------------------
         JPanel buttonPane = new JPanel();
         buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
         getContentPane().add(buttonPane, BorderLayout.SOUTH);
@@ -464,9 +544,9 @@ public class AjouterCharge extends JDialog {
         // Ajout du listener pour l'ajout automatique de ligne dans la table
         addRowListenerToTable();
         
-        // ---------------------------------------
-        //  AJOUT DES ACTION LISTENERS
-        // ---------------------------------------
+        // -------------------------------------------------
+        //  AJOUT DES ACTION LISTENERS (appels au contrôleur)
+        // -------------------------------------------------
         // 1) combo type
         comboBoxType.addActionListener(e -> {
             gest.gestionComboType();
@@ -489,7 +569,24 @@ public class AjouterCharge extends JDialog {
         
         // Charge les combos en asynchrone
         gest.chargerComboBox();
+        
+        // Gère la sélection IDCharge
+        gest.gestionComboID(comboBoxChoixCharge);
+        
+        // Action du bouton "Parcourir..."
+        gest.gestionBoutonParcourir(buttonParcourir, fileChooser);
+
     }
+
+	public void gestionBoutonParcourir(JButton buttonParcourir, JFileChooser fileChooser) {
+		buttonParcourir.addActionListener(e -> {
+            int returnValue = fileChooser.showOpenDialog(AjouterCharge.this);
+            if (returnValue == JFileChooser.APPROVE_OPTION) {
+                // Obtenir le fichier sélectionné
+                textFieldLienFichier.setText(fileChooser.getSelectedFile().getAbsolutePath());
+            }
+        });
+	}
     
     // ---------------- GETTERS -----------------
     public String getTextNumDoc() {
@@ -507,7 +604,7 @@ public class AjouterCharge extends JDialog {
         
         List<List<Object>> result = new ArrayList<>();
         
-        // Correction : on boucle sur i de 0 à rc-1
+        // On boucle de 0 à rc - 1
         for (int i = 0; i < rc; i++) {
             Object valLog = this.tableLogements.getValueAt(i, 0);
             Object valPart = this.tableLogements.getValueAt(i, 1);
@@ -525,6 +622,13 @@ public class AjouterCharge extends JDialog {
         return this.textFieldIDCharge.getText();
     }
     
+    /**
+     * Si on veut la valeur de la combo
+     */
+    public String getIDChargeCombo() {
+        return String.valueOf(this.comboBoxChoixCharge.getSelectedItem());
+    }
+    
     public void setAncienneValeur(String ancienne) {
         this.textFieldValeurAncienIndex.setText(ancienne);
     }
@@ -533,8 +637,11 @@ public class AjouterCharge extends JDialog {
         return String.valueOf(this.comboBoxType.getSelectedItem());
     }
     
+    /**
+     * Récupère le chemin du fichier choisi via le JFileChooser
+     */
     public String getLienFichier() {
-        return this.textAreaLien.getText();
+        return this.textFieldLienFichier.getText();
     }
     
     public String getIDEntreprise() {
@@ -565,6 +672,11 @@ public class AjouterCharge extends JDialog {
         return BigDecimal.valueOf((double) this.spinnerNouveauIndex.getValue());
     }
     
+    public BigDecimal getAncienIndex() {
+        return BigDecimal.valueOf(Float.valueOf(this.textFieldValeurAncienIndex.getText().isEmpty() ? 
+        										"0.0" : this.textFieldValeurAncienIndex.getText()));
+    }
+    
     public String getIDLocataire() {
         return String.valueOf(this.comboBoxLocataire.getSelectedItem());
     }
@@ -572,6 +684,12 @@ public class AjouterCharge extends JDialog {
     public String getIDAssu() {
         return String.valueOf(this.comboBoxAssu.getSelectedItem());
     }
+    
+    public String getNomTypeCharge() {
+    	return this.textFieldTypeNomCharge.getText();
+    }
+    
+    
     
     // ------------- Setters combos -------------
     // 1. Types de la combo box
@@ -656,55 +774,72 @@ public class AjouterCharge extends JDialog {
         }
     }
     
-
-    
     // 10. Setter textes 
-    
     public void setTextLblCout(String text) {
-    	lblCout.setText(text);
+        lblCout.setText(text);
+    }
+    
+    public void setLienFichier(String lien) {
+        textFieldLienFichier.setText(lien);
+    }
+    
+    public void setTextAncienIndex(String val) {
+        textFieldValeurAncienIndex.setText(val);
+    }
+    
+    public void clearTextIdCharge() {
+    	this.textFieldIDCharge.setText("");
+    }
+    
+    
+    public void setValSpinnerUnit(Float val) {
+        spinnerCoutVarUnit.setValue(val);
+    }
+    
+    public void setValSpinnerAbonn(Float val) {
+        spinnerCoutVarAbon.setValue(val);
+    }
+    
+    public void setNomTypeCharge(String type) {
+    	this.textFieldTypeNomCharge.setText(type);
     }
     
     // -----------------------------------------------------------------------
-    //  AJOUT DE METHODES POUR MASQUER / AFFICHER LES CHAMPS SELON LE TYPE
+    //  Méthodes pour masquer / afficher certains champs selon le type
     // -----------------------------------------------------------------------
     
-    /** Masque ou affiche la zone "Entreprise". */
     public void setEntrepriseVisible(boolean visible) {
         lblEntreprise.setVisible(visible);
         comboBoxEntreprise.setVisible(visible);
     }
     
-    /** Masque ou affiche la zone "Assurance". */
     public void setAssuranceVisible(boolean visible) {
         lblAssu.setVisible(visible);
         comboBoxAssu.setVisible(visible);
     }
     
-    /** Masque ou affiche la zone "Locataire" (Quittance pour). */
     public void setLocataireVisible(boolean visible) {
         lblLocataire.setVisible(visible);
         comboBoxLocataire.setVisible(visible);
     }
     
-    /** Masque ou affiche le cout abonnement. */
     public void setCoutAbonnementVisible(boolean visible) {
-            spinnerCoutVarAbon.setVisible(visible);
-            spinnerCoutVarAbon.setVisible(visible);
+        spinnerCoutVarAbon.setVisible(visible);
     }
     
-    /** Masque / affiche la zone Nouvel/Ancien index. */
     public void setIndexVisible(boolean visible) {
         lblValIndex.setVisible(visible);
         spinnerNouveauIndex.setVisible(visible);
         textFieldValeurAncienIndex.setVisible(visible);
     }
     
-    /** Masque / affiche la partie "ID charge" + combo d'id charge. */
     public void setIdChargeTotalVisible(boolean visible) {
         lblIDChargeIndex.setVisible(visible);
         lblOu.setVisible(visible);
         textFieldIDCharge.setVisible(visible);
         comboBoxChoixCharge.setVisible(visible);
+        lblNomTypeCharge.setVisible(visible);
+        textFieldTypeNomCharge.setVisible(visible);
     }
     
     public void setIdChargeNomVisible(boolean visible) {
@@ -712,14 +847,13 @@ public class AjouterCharge extends JDialog {
         lblOu.setVisible(false);
         textFieldIDCharge.setVisible(visible);
         lblIDChargeIndex.setVisible(visible);
+        lblNomTypeCharge.setVisible(visible);
+        textFieldTypeNomCharge.setVisible(visible);
     }
     
-    // Utilitaire :
-    
-    //Pour afficher un message d'erreur
+    // Pour afficher un message d'erreur
     public void afficherMessageErreur(String message) {
         JOptionPane.showMessageDialog(this, "Erreur : \n" + message, 
                                       "Erreur", JOptionPane.ERROR_MESSAGE);
     }
-    
 }

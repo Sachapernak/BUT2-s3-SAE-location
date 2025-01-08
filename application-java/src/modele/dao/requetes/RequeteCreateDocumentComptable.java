@@ -49,7 +49,7 @@ public class RequeteCreateDocumentComptable extends Requete<DocumentComptable> {
 
         if (document.getAssurance() != null) {
             prSt.setString(10, document.getAssurance().getNumeroContrat());
-            prSt.setInt(11, Integer.parseInt(document.getAssurance().getNumeroContrat()));
+            prSt.setInt(11, document.getAssurance().getAnneeContrat());
         } else {
             prSt.setNull(10, java.sql.Types.VARCHAR);
             prSt.setNull(11, java.sql.Types.INTEGER);
