@@ -19,20 +19,20 @@ import vue.FenetrePrincipale;
 
 public class GestionTablesFenetrePrincipale implements ListSelectionListener{
 
-	private FenetrePrincipale fen_principale;
+	private FenetrePrincipale fenPrincipale;
 	private DaoBatiment daoBatiment;
 	private DaoBienLocatif daoBienLocatif;
 	
 	public GestionTablesFenetrePrincipale(FenetrePrincipale fp) {
-		this.fen_principale = fp;
+		this.fenPrincipale = fp;
 		this.daoBatiment = new DaoBatiment();
 		this.daoBienLocatif = new DaoBienLocatif();
 	}
 	
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
-		JTable tableBatiments = this.fen_principale.getTableBatiment();
-		JTable tableBiensLoc = this.fen_principale.getTableBiensLoc();
+		JTable tableBatiments = this.fenPrincipale.getTableBatiment();
+		JTable tableBiensLoc = this.fenPrincipale.getTableBiensLoc();
 		
 		int ligneSelect = tableBatiments.getSelectedRow();
 		if (ligneSelect > -1) {
@@ -79,7 +79,6 @@ public class GestionTablesFenetrePrincipale implements ListSelectionListener{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-    	
     }
 
 }

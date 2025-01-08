@@ -77,9 +77,11 @@ public class GestionPageConnexion {
                     bd.updateBDLink();
                     
                     recharger();
+        
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
+               
             }
         });
     }

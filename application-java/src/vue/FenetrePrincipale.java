@@ -28,6 +28,8 @@ import java.awt.Font;
 import java.awt.Color;
 import javax.swing.JSeparator;
 import javax.swing.ListSelectionModel;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 
 public class FenetrePrincipale extends JFrame {
@@ -77,6 +79,8 @@ public class FenetrePrincipale extends JFrame {
 		this.gestionClic = new GestionFenetrePrincipale(this);
 		this.gestionMenu = new GestionMenu(this);
 		this.gestionTable = new GestionTablesFenetrePrincipale(this);
+		
+		this.gestionClic.afficherPageConnexion();
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 750, 600);
@@ -242,8 +246,13 @@ public class FenetrePrincipale extends JFrame {
 		scrollPaneBatiment.setViewportView(tableBatiment);
 		
 		JButton btnAjoutBien = new JButton("Ajouter un bien");
-		btnAjoutBien.setBounds(488, 36, 165, 21);
+		btnAjoutBien.setBounds(488, 36, 156, 21);
 		panel_bien.add(btnAjoutBien);
+		
+		JButton btnCharger = new JButton("Charger");
+		btnCharger.addActionListener(this.gestionClic);
+		btnCharger.setBounds(488, 73, 156, 21);
+		panel_bien.add(btnCharger);
 		
 		JSeparator separator = new JSeparator();
 		separator.setBounds(25, 253, 679, 2);
@@ -253,11 +262,5 @@ public class FenetrePrincipale extends JFrame {
 		lblLogo.setIcon(new ImageIcon("images/logo-immeuble.png"));
 		lblLogo.setBounds(265, 42, 55, 47);
 		contentPane.add(lblLogo);
-		
-		lblEtatConnexion = new JLabel("⬤");
-		//lblEtatConnexion.setForeground(new Color(0, 128, 0));
-		this.gestionClic.afficherEtaConnexion();
-		lblEtatConnexion.setBounds(10, 31, 19, 13);
-		contentPane.add(lblEtatConnexion);
 	}
 }
