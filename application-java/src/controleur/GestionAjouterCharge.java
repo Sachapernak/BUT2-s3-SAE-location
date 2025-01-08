@@ -1,14 +1,19 @@
 package controleur;
 
 import java.awt.Cursor;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import javax.swing.JComboBox;
 import javax.swing.SwingWorker;
 import modele.Batiment;
+import modele.ChargeIndex;
 import modele.dao.DaoAssurance;
 import modele.dao.DaoBatiment;
 import modele.dao.DaoChargeIndex;
@@ -62,7 +67,7 @@ public class GestionAjouterCharge {
                     "FACTURE_CF", 
                     "DEVIS", 
                     "QUITTANCE",
-                    "DEBUG"
+                    "DEBUG" // TODO : REMOVE
                 ));
                 fen.setCursor(Cursor.getDefaultCursor());
             }
@@ -202,6 +207,7 @@ public class GestionAjouterCharge {
         fen.setCoutAbonnementVisible(true);
         fen.setIndexVisible(true);
         fen.setIdChargeTotalVisible(true);
+        majIndex(null);
         
         // Puis on masque / grise selon le type
         switch (selected) {
@@ -229,7 +235,7 @@ public class GestionAjouterCharge {
                 fen.setIndexVisible(false);
                 fen.setIdChargeNomVisible(true);
                 fen.setTextLblCout("Montant :");
-
+                
                 break;
 
             case "FACTURE_CV":
@@ -238,6 +244,7 @@ public class GestionAjouterCharge {
                 fen.setCoutAbonnementVisible(true);
                 fen.setLocataireVisible(false);
                 fen.setTextLblCout("Cout unitaire | abonnement :");
+                majIndex(fen.getIDChargeCombo());
                 break;
                 
             case "DEVIS":
@@ -284,8 +291,32 @@ public class GestionAjouterCharge {
             List<List<Object>> listeLogements = fen.getListeLogement();
             
             // 2) Logique métier, ex: vérifications, insertion en DB, etc.
-            // ...
-            
+            String selected = fen.getTypeDoc();
+
+            switch (selected) {
+                case "QUITTANCE":
+
+                    break;
+                    
+                case "FACTURE":
+                	// meme que CF
+                case "FACTURE_CF":
+
+
+                    break;
+
+                case "FACTURE_CV":
+
+                    break;
+                    
+                case "DEVIS":
+
+                    break;
+                    
+                default:
+                	fen.afficherMessageErreur("Type non valide");
+                    break;
+            }
             // 3) Si tout va bien, on peut fermer la fenêtre :
             fen.dispose();
             
@@ -300,5 +331,45 @@ public class GestionAjouterCharge {
     public void gestionBoutonAnnuler() {
         // Par exemple, on ferme la fenêtre
         fen.dispose();
+    }
+    
+    public void gestionComboID(JComboBox<String> combo) {
+        combo.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent evt) {
+                if (evt.getStateChange() == ItemEvent.SELECTED && combo.isVisible()) {
+                    majIndex(String.valueOf(combo.getSelectedItem()));
+                }
+            }
+        });
+    }
+    
+    private void majIndex(String id) {
+        fen.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+  
+        
+        SwingWorker<Void, Void> workerIDCharge = new SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground() throws Exception {
+            	ChargeIndex ci;
+            	if (id == null) {
+            		ci = null;
+            	} else {
+            		 ci = new DaoChargeIndex().findAllSameId(id).stream().findFirst().orElse(null);
+            	}
+            	fen.setSpinnerCoutVarAbon(ci == null ? BigDecimal.valueOf(0.0f) : ci.getCoutFixe());
+            	fen.setSpinnerCoutVarUnit(ci == null ? BigDecimal.valueOf(0.0f) : ci.getCoutVariable());
+            	fen.setTextAncienIndex(ci == null ? "" : String.valueOf(ci.getValeurCompteur()));
+            	
+            	return null;
+            }
+            
+            @Override
+            protected void done() {
+                fen.setCursor(Cursor.getDefaultCursor());
+            }
+        };
+        workerIDCharge.execute();
+        
     }
 }

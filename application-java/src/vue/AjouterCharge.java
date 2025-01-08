@@ -34,8 +34,6 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import java.awt.Component;
 import javax.swing.Box;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class AjouterCharge extends JDialog {
 
@@ -100,8 +98,12 @@ public class AjouterCharge extends JDialog {
     /**
      * Create the dialog.
      */
-    public AjouterCharge() {
+    public AjouterCharge()  {
         
+    	// Permet d'afficher dans la barre des taches
+    	super(null, java.awt.Dialog.ModalityType.TOOLKIT_MODAL);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+    	
         this.gest = new GestionAjouterCharge(this);
         
         setBounds(100, 100, 548, 620);
@@ -464,9 +466,14 @@ public class AjouterCharge extends JDialog {
         // Ajout du listener pour l'ajout automatique de ligne dans la table
         addRowListenerToTable();
         
+        
+        
         // ---------------------------------------
         //  AJOUT DES ACTION LISTENERS
         // ---------------------------------------
+        
+
+        
         // 1) combo type
         comboBoxType.addActionListener(e -> {
             gest.gestionComboType();
@@ -489,6 +496,9 @@ public class AjouterCharge extends JDialog {
         
         // Charge les combos en asynchrone
         gest.chargerComboBox();
+        
+        gest.gestionComboID(comboBoxChoixCharge);
+        
     }
     
     // ---------------- GETTERS -----------------
@@ -523,6 +533,10 @@ public class AjouterCharge extends JDialog {
     
     public String getTextIDCharge() {
         return this.textFieldIDCharge.getText();
+    }
+    
+    public String getIDChargeCombo() {
+    	return String.valueOf(this.comboBoxChoixCharge.getSelectedItem());
     }
     
     public void setAncienneValeur(String ancienne) {
@@ -664,6 +678,18 @@ public class AjouterCharge extends JDialog {
     	lblCout.setText(text);
     }
     
+    public void setTextAncienIndex(String val) {
+    	textFieldValeurAncienIndex.setText(val);
+    }
+    
+    public void setValSpinnerUnit(Float val) {
+    	spinnerCoutVarUnit.setValue(val);
+    }
+    
+    public void setValSpinnerAbonn(Float val) {
+    	spinnerCoutVarAbon.setValue(val);
+    }
+    
     // -----------------------------------------------------------------------
     //  AJOUT DE METHODES POUR MASQUER / AFFICHER LES CHAMPS SELON LE TYPE
     // -----------------------------------------------------------------------
@@ -713,7 +739,7 @@ public class AjouterCharge extends JDialog {
         textFieldIDCharge.setVisible(visible);
         lblIDChargeIndex.setVisible(visible);
     }
-    
+    	
     // Utilitaire :
     
     //Pour afficher un message d'erreur
@@ -722,4 +748,8 @@ public class AjouterCharge extends JDialog {
                                       "Erreur", JOptionPane.ERROR_MESSAGE);
     }
     
+    
 }
+
+
+
