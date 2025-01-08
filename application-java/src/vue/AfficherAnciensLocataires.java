@@ -6,24 +6,58 @@ import java.awt.BorderLayout;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
 import javax.swing.border.TitledBorder;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import controleur.GestionAfficherAnciensLocataires;
+import controleur.GestionChampsMontantAfficherLocataire;
+import modele.dao.DaoBienLocatif;
+
 import javax.swing.SwingConstants;
 import java.awt.Font;
 import java.awt.Color;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
 
 
 
-public class AfficherAnciensLocataires extends JInternalFrame{
+public class AfficherAnciensLocataires extends JInternalFrame {
 
 	private static final long serialVersionUID = 1L;
-	private JTable tableLocataires;
+	private JComboBox comboBoxBatiment;
+	private JComboBox comboBoxBienLocatif;
+	private JTable tableAnciensLocataires;
 	
-	private GestionAfficherAnciensLocataires gestionClic;
+	private GestionAfficherAnciensLocataires gestionTab;
+	
+	
+	public JComboBox getComboBoxBatiment() {
+		return comboBoxBatiment;
+	}
+
+	public void setComboBoxBatiment(JComboBox comboBoxBatiment) {
+		this.comboBoxBatiment = comboBoxBatiment;
+	}
+	
+	public JComboBox getComboBoxBienLocatif() {
+		return comboBoxBienLocatif;
+	}
+
+	public void setComboBoxBienLocatif(JComboBox comboBoxBienLocatif) {
+		this.comboBoxBienLocatif = comboBoxBienLocatif;
+	}
+	
+	public JTable getTableAnciensLocataires() {
+		return tableAnciensLocataires;
+	}
+
+	public void setTableAnciensLocataires(JTable tableAnciensLocataires) {
+		this.tableAnciensLocataires = tableAnciensLocataires;
+	}
+	
 
 	/**
 	 * Create the frame.
@@ -31,23 +65,35 @@ public class AfficherAnciensLocataires extends JInternalFrame{
 	@SuppressWarnings("rawtypes")
 	public AfficherAnciensLocataires() {
 		
-		this.gestionClic = new GestionAfficherAnciensLocataires(this);
+		this.gestionTab = new GestionAfficherAnciensLocataires(this);
 		
 		setBounds(25, 25, 670, 490);
 		getContentPane().setLayout(null);
 		
 		JLabel lblBatiment = new JLabel("Batiment :");
-		lblBatiment.setBounds(10, 68, 66, 13);
+		lblBatiment.setBounds(65, 68, 66, 13);
 		getContentPane().add(lblBatiment);
 		
-		JComboBox comboBox = new JComboBox();
-		lblBatiment.setLabelFor(comboBox);
-		comboBox.setBounds(86, 64, 136, 21);
-		getContentPane().add(comboBox);
+		comboBoxBatiment = new JComboBox();
+
+		lblBatiment.setLabelFor(comboBoxBatiment);
+		comboBoxBatiment.setBounds(141, 64, 136, 21);
+		comboBoxBatiment.setModel(new DefaultComboBoxModel(new String[] {"Chargement..."}));
+		this.gestionTab.remplirComboBoxBatiment();
+		this.gestionTab.gestionActionComboBatiment();
+		getContentPane().add(comboBoxBatiment);
 		
-		JLabel lblAdresseComplete = new JLabel("adresse complète.........");
-		lblAdresseComplete.setBounds(380, 68, 145, 13);
-		getContentPane().add(lblAdresseComplete);
+		JLabel lblBienLocatif = new JLabel("Bien locatif :");
+		lblBienLocatif.setBounds(368, 68, 86, 13);
+		getContentPane().add(lblBienLocatif);
+		
+		comboBoxBienLocatif = new JComboBox();
+		lblBienLocatif.setLabelFor(comboBoxBienLocatif);
+		comboBoxBienLocatif.setBounds(450, 64, 136, 21);
+		comboBoxBienLocatif.setModel(new DefaultComboBoxModel(new String[] {"Chargement..."}));
+		gestionTab.remplirComboBoxBienLocatif(String.valueOf(comboBoxBatiment.getSelectedItem()));
+		this.gestionTab.gestionActionComboLogement();
+		getContentPane().add(comboBoxBienLocatif);
 		
 		JPanel panel_locataires = new JPanel();
 		panel_locataires.setBorder(new TitledBorder(null, "Les locataires", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -66,8 +112,8 @@ public class AfficherAnciensLocataires extends JInternalFrame{
 		scrollPaneLocataires.setBounds(21, 10, 581, 170);
 		p_locataires_centre.add(scrollPaneLocataires);
 		
-		tableLocataires = new JTable();
-		tableLocataires.setModel(new DefaultTableModel(
+		tableAnciensLocataires = new JTable();
+		tableAnciensLocataires.setModel(new DefaultTableModel(
 			new Object[][] {
 				{null, null, null, null, null},
 				{null, null, null, null, null},
@@ -84,14 +130,15 @@ public class AfficherAnciensLocataires extends JInternalFrame{
 				"Identifiant", "Nom", "Pr\u00E9nom", "Date d'entr\u00E9e", "Date de sortie"
 			}
 		));
-		scrollPaneLocataires.setViewportView(tableLocataires);
+		scrollPaneLocataires.setViewportView(tableAnciensLocataires);
+		this.gestionTab.remplirTableAnciensLocataires(String.valueOf(comboBoxBienLocatif.getSelectedItem()));
 		
 		JPanel p_boutons = new JPanel();
 		p_boutons.setBounds(20, 380, 89, 31);
 		getContentPane().add(p_boutons);
 		
 		JButton btnModifier = new JButton("Modifier");
-		btnModifier.addActionListener(this.gestionClic);
+		btnModifier.addActionListener(this.gestionTab);
 		p_boutons.add(btnModifier);
 		
 		JPanel panel_retour = new JPanel();
@@ -99,7 +146,7 @@ public class AfficherAnciensLocataires extends JInternalFrame{
 		getContentPane().add(panel_retour);
 		
 		JButton btnRetour = new JButton("Retour");
-		btnRetour.addActionListener(this.gestionClic);
+		btnRetour.addActionListener(this.gestionTab);
 		panel_retour.add(btnRetour);
 		
 		JLabel lblTitre = new JLabel("Anciens locataires");
