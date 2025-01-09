@@ -346,6 +346,7 @@ public class AjouterCautionnaire extends JInternalFrame {
         lblMontantLoyer.setFont(new Font("Tahoma", Font.ITALIC, 10));
         lblMontantLoyer.setForeground(Color.GRAY);
         lblMontantLoyer.setBounds(77, 43, 45, 13);
+        lblMontantLoyer.setText(this.gestionFen.recupererMontantLoyer());
         panel_acteCaution.add(lblMontantLoyer);
         
         btnAnnuler.addActionListener(this.gestionFen);

@@ -17,6 +17,7 @@ import modele.BienLocatif;
 import modele.Cautionnaire;
 import modele.Cautionner;
 import modele.Contracter;
+import modele.Loyer;
 import modele.Locataire;
 import modele.dao.DaoAdresse;
 import modele.dao.DaoBail;
@@ -160,7 +161,7 @@ public class GestionAjouterCautionnaire implements ActionListener {
 			this.fenAjouterCautionnaire.afficherMessageErreur("L'identifiant du cautionnaire doit être un entier");
 			erreurTrouvee = true;
 		}
-		if (!this.verifChamps.validerMontant(montantStr)) {
+		if (!this.verifChamps.validerMontant(montantStr, recupererMontantLoyer())) {
 			this.fenAjouterCautionnaire.afficherMessageErreur("Le montant de la caution doit être positif");
 			erreurTrouvee = true;
 		}
@@ -236,6 +237,22 @@ public class GestionAjouterCautionnaire implements ActionListener {
 			actualiserPartsLoyer(this.fenAjouterBail.getTablePartsLoyer(), bail);
 		}
 
+	}
+
+	public String recupererMontantLoyer() {
+		Bail bail = recupererBail();
+		BigDecimal montant = new BigDecimal(0);
+		List<Loyer> loyers;
+		try {
+			loyers = bail.getBien().getLoyers();
+			if (loyers != null && !loyers.isEmpty()) {
+			    Loyer dernierLoyer = loyers.get(loyers.size() - 1);
+			    montant = dernierLoyer.getMontantLoyer();
+			}
+		} catch (SQLException | IOException e) {
+			e.printStackTrace();
+		}
+		return String.valueOf(montant);
 	}
 
 	/*---------------------------------------------------------------------
