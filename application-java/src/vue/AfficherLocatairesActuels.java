@@ -37,8 +37,6 @@ public class AfficherLocatairesActuels extends JInternalFrame{
 	private JTextField textFieldTel;
 	private JTable tableBiensLoues;
 	private JTextField textFieldProvisionPourCharge;
-	private JTextField textFieldMontantPaye;
-	private JTextField textFieldMontantRestantDu;
 	private JTextField textFieldCaution;
 	private JTextField textFieldMail;
 	private JTable tableLocatairesActuels;
@@ -101,22 +99,6 @@ public class AfficherLocatairesActuels extends JInternalFrame{
 
 	public void setTextFieldProvisionPourCharge(JTextField textFieldProvisionPourCharge) {
 		this.textFieldProvisionPourCharge = textFieldProvisionPourCharge;
-	}
-
-	public JTextField getTextFieldMontantPaye() {
-		return textFieldMontantPaye;
-	}
-
-	public void setTextFieldMontantPaye(JTextField textFieldMontantPaye) {
-		this.textFieldMontantPaye = textFieldMontantPaye;
-	}
-
-	public JTextField getTextFieldMontantRestantDu() {
-		return textFieldMontantRestantDu;
-	}
-
-	public void setTextFieldMontantRestantDu(JTextField textFieldMontantRestantDu) {
-		this.textFieldMontantRestantDu = textFieldMontantRestantDu;
 	}
 
 	public JTextField getTextFieldCaution() {
@@ -254,7 +236,7 @@ public class AfficherLocatairesActuels extends JInternalFrame{
 		
 		JPanel panel_informationsBatiments = new JPanel();
 		panel_informationsBatiments.setBorder(new TitledBorder(null, "Location", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_informationsBatiments.setBounds(10, 267, 638, 73);
+		panel_informationsBatiments.setBounds(10, 267, 638, 90);
 		getContentPane().add(panel_informationsBatiments);
 		panel_informationsBatiments.setLayout(new BorderLayout(0, 0));
 		
@@ -288,7 +270,7 @@ public class AfficherLocatairesActuels extends JInternalFrame{
 		scrollPaneBiensLoues.setViewportView(tableBiensLoues);
 		
 		JPanel panel_infosPaiement = new JPanel();
-		panel_infosPaiement.setBounds(8, 350, 521, 91);
+		panel_infosPaiement.setBounds(10, 367, 521, 39);
 		getContentPane().add(panel_infosPaiement);
 		panel_infosPaiement.setLayout(null);
 		
@@ -301,26 +283,6 @@ public class AfficherLocatairesActuels extends JInternalFrame{
 		textFieldProvisionPourCharge.setBounds(181, 5, 96, 19);
 		panel_infosPaiement.add(textFieldProvisionPourCharge);
 		textFieldProvisionPourCharge.setColumns(10);
-		
-		JLabel lblMontantPaye = new JLabel("Montant payé :");
-		lblMontantPaye.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblMontantPaye.setBounds(0, 37, 167, 13);
-		panel_infosPaiement.add(lblMontantPaye);
-		
-		textFieldMontantPaye = new JTextField();
-		textFieldMontantPaye.setBounds(181, 34, 96, 19);
-		panel_infosPaiement.add(textFieldMontantPaye);
-		textFieldMontantPaye.setColumns(10);
-		
-		JLabel lblMontantRestantDu = new JLabel("Montant restant dû :");
-		lblMontantRestantDu.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblMontantRestantDu.setBounds(0, 66, 167, 13);
-		panel_infosPaiement.add(lblMontantRestantDu);
-		
-		textFieldMontantRestantDu = new JTextField();
-		textFieldMontantRestantDu.setBounds(181, 63, 96, 19);
-		panel_infosPaiement.add(textFieldMontantRestantDu);
-		textFieldMontantRestantDu.setColumns(10);
 		
 		JLabel lblCaution = new JLabel("Montant caution :");
 		lblCaution.setHorizontalAlignment(SwingConstants.RIGHT);

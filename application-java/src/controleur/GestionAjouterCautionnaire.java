@@ -43,7 +43,7 @@ public class GestionAjouterCautionnaire implements ActionListener{
 	private DaoBail daoBail;
 	private DaoBienLocatif daoBien;
 	
-	private VerificationFormatChamps formatCorrect;
+	private VerificationChamps verifChamps;
 	
 	public GestionAjouterCautionnaire(AjouterCautionnaire ac, AjouterLocataire al, AfficherLocatairesActuels afl, AjouterBail ab) {
 		this.fenAjouterCautionnaire = ac;
@@ -58,7 +58,7 @@ public class GestionAjouterCautionnaire implements ActionListener{
 		this.daoLocataire = new DaoLocataire();
 		this.daoAdresse = new DaoAdresse();
 		
-		this.formatCorrect= new VerificationFormatChamps();
+		this.verifChamps= new VerificationChamps();
 	}
 	
 	@Override
@@ -76,23 +76,24 @@ public class GestionAjouterCautionnaire implements ActionListener{
 				
 				break;
 			case "Valider" : 
-				if(!champsRemplis(this.fenAjouterCautionnaire.getChampsObligatoires())) {
-					this.fenAjouterCautionnaire.afficherMessageErreur("Tous les champs obligatoires ne sont pas remplis. \n Les champs obligatoires sont indiqués par *");
+				
+				if(!this.verifChamps.champsRemplis(this.fenAjouterCautionnaire.getChampsObligatoires())) {
+					this.fenAjouterCautionnaire.afficherMessageErreur("Tous les champs obligatoires pour saisir un cautionnaire ne sont pas remplis. \n Les champs obligatoires sont indiqués par *");
 				} else {
 					//verifier champs cautionnaire
 					String idCautionnaire = this.fenAjouterCautionnaire.getTextFieldIdentifiantCautionnaire();
 					String montantStr = this.fenAjouterCautionnaire.getTextFieldMontant();
 					String codePostalStr = this.fenAjouterCautionnaire.getTextFieldCodePostal();
-					if (!this.formatCorrect.validerInteger(idCautionnaire)) {
-						this.fenAjouterCautionnaire.afficherMessageErreur("L'identifiant du cuationnaire doit être un entier");
+					if (!this.verifChamps.validerInteger(idCautionnaire)) {
+						this.fenAjouterCautionnaire.afficherMessageErreur("L'identifiant du cautionnaire doit être un entier");
 						break;
 					}
-					if (!this.formatCorrect.validerMontant(montantStr)) {
+					if (!this.verifChamps.validerMontant(montantStr)) {
 						this.fenAjouterCautionnaire.afficherMessageErreur("Le montant de la caution doit être positif");
 						break;
 					}
 					if (!codePostalStr.equals("")) {
-						if (!this.formatCorrect.validerCodePostal(codePostalStr)){
+						if (!this.verifChamps.validerCodePostal(codePostalStr)){
 							this.fenAjouterCautionnaire.afficherMessageErreur("Le code postal doit être composé de 5 entiers");
 							break;
 						}
@@ -119,11 +120,7 @@ public class GestionAjouterCautionnaire implements ActionListener{
 					        String idBail = this.fenAjouterBail.getTextFieldIdBail();
 					        dateDebut = this.fenAjouterBail.getTextFieldDateDebut();
 					        String dateFin = this.fenAjouterBail.getTextFieldDateFin();
-					        
-					        if (!formatCorrect.validerDate(dateDebut)||!formatCorrect.validerDate(dateFin)) {
-					        	this.fenAjouterCautionnaire.afficherMessageErreur("Les dates doivent être au format YYYY-MM-dd");
-					        }
-					        
+					
 					        BienLocatif bien;
 						try {
 							bien = daoBien.findById((String) this.fenAjouterBail.getComboBoxBiensLoc().getSelectedItem());
@@ -131,7 +128,6 @@ public class GestionAjouterCautionnaire implements ActionListener{
 						    if (dateFin.length()>= 1) {
 						    	bail.setDateDeFin(dateFin);
 						    }
-							daoBail.create(bail);
 						} catch (SQLException | IOException e1) {
 							e1.printStackTrace();
 						}      
@@ -144,10 +140,6 @@ public class GestionAjouterCautionnaire implements ActionListener{
 				            // Récupérez les informations à partir de la ligne sélectionnée
 				            String bailSelectionne = (String) this.fenAjouterBail.getTableBauxActuels().getValueAt(selectedRow, 0);
 				            dateDebut = this.fenAjouterBail.getTextFieldDateArrivee();
-
-				            if (!formatCorrect.validerDate(dateDebut)) {
-					        	this.fenAjouterCautionnaire.afficherMessageErreur("Les dates doivent être au format YYYY-MM-dd");
-					        }
 				            
 				            JTable tableParts = this.fenAjouterBail.getTablePartsLoyer();
 				            partLoyer = (float) tableParts.getValueAt(tableParts.getRowCount()-2,1);				            		            			            
@@ -156,20 +148,39 @@ public class GestionAjouterCautionnaire implements ActionListener{
 							} catch (SQLException | IOException e1) {
 								e1.printStackTrace();
 							}
-							actualiserPartsLoyer(this.fenAjouterBail.getTablePartsLoyer(),bail);
 				        } 
 				    }
-					   
+					
+				    
 				    //Recup cautionnaire
 				    cautionnaire = recupInfosCautionnaire();
-					adresseCautionnaire = cautionnaire.getAdresse();
-					
+				    
+				    adresseCautionnaire = null;
+				    List<String> champsObligatoiresAdr = this.fenAjouterCautionnaire.getChampsObligatoiresAdresse();
+				    if (this.verifChamps.auMoinsUnChampRempli(champsObligatoiresAdr)) {
+				    	//Verification format codePostal s'il est saisi
+				    	String codePostal = this.fenAjouterLocataire.getTextFieldCodePostal();
+						if (!codePostal.isEmpty()&& !this.verifChamps.validerCodePostal(codePostal)){
+							this.fenAjouterLocataire.afficherMessageErreur("Le code postal doit etre composé de 5 entiers");
+						}
+						//verification tous les champs de l'adresse sont bien saisi
+				    	if(!this.verifChamps.champsRemplis(champsObligatoiresAdr)) {
+				    		this.fenAjouterCautionnaire.afficherMessageErreur("Si vous voulez saisir une adresse, \n"
+									+ "vous devez impérativement saisir l'ensembles des champs obligatoires \n"
+									+ "à l'exception du complément");
+				    		break;
+				    	}else {
+				    		adresseCautionnaire = cautionnaire.getAdresse();
+				    	}
+				    	
+				    }
 					//Recup cautionner 
 					cautionner = recupererInfosCautionner(bail,cautionnaire);
 					
 					Contracter ctr = new Contracter(nouveauLocataire, bail, dateDebut, partLoyer);
 					nouveauLocataire.getContrats().add(ctr);
 					
+					creationBail(bail);
 					try {
 						if (adresseLocataire != null) {
 							if (!estAdresseExistante(nouveauLocataire.getAdresse())) {
@@ -195,26 +206,25 @@ public class GestionAjouterCautionnaire implements ActionListener{
 					this.fenAjouterCautionnaire.getFenPrecedente().dispose();	
 					this.fenAjouterBail.getFenPrecedente().dispose();
 	
-				}
-					
+				}	
 				break;
 				
 		}
+	}	
+	
+	public void creationBail(Bail bail) {
+		if (this.fenAjouterBail.getRdbtnNouveauBail().isSelected()) {	
+			try {
+				daoBail.create(bail);
+			} catch (SQLException | IOException e1) {
+				e1.printStackTrace();
+			}      
+        
+		}  else if (this.fenAjouterBail.getRdbtnBailExistant().isSelected()) {	            		            			            
+			actualiserPartsLoyer(this.fenAjouterBail.getTablePartsLoyer(),bail);
+    	} 
+  
 	}
-
-	
-	
-	
-	public boolean champsRemplis(List<String> champs) {
-		boolean champsNonVides = true;
-		for (String champ : champs) {
-			if (champ.equals("")) {
-				return false;
-			}
-		}
-		return champsNonVides;
-	}
-	
 	
 	/*---------------------------------------------------------------------
 		Recuperer les infos du locataire
@@ -253,7 +263,7 @@ public class GestionAjouterCautionnaire implements ActionListener{
 	
 	private Adresse recupererInfosAdresseLocataire() {
 		Adresse adresseComplete = null;
-		if (champsRemplis(this.fenAjouterLocataire.getChampsObligatoiresAdresse())) {
+		if (this.verifChamps.champsRemplis(this.fenAjouterLocataire.getChampsObligatoiresAdresse())) {
 			String idAdresse = this.fenAjouterLocataire.getTextFieldAdr();
 			String adresse = this.fenAjouterLocataire.getTextFieldAdr();
 			String complement = this.fenAjouterLocataire.getTextComplement();
@@ -292,7 +302,7 @@ public class GestionAjouterCautionnaire implements ActionListener{
 	
 	private Adresse recupererInfosAdresseCautionnaire() {
 		Adresse adresseComplete = null;
-		if (champsRemplis(this.fenAjouterCautionnaire.getChampsObligatoiresAdresse())) {
+		if (this.verifChamps.champsRemplis(this.fenAjouterCautionnaire.getChampsObligatoiresAdresse())) {
 			String idAdrC = this.fenAjouterCautionnaire.getTextFieldIdAdr();
 			String adrC = this.fenAjouterCautionnaire.getTextFieldAdr();
 			String complementC = this.fenAjouterCautionnaire.getTextFieldComplement();

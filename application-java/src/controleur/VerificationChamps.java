@@ -1,8 +1,9 @@
 package controleur;
 
 import java.math.BigDecimal;
+import java.util.List;
 
-public class VerificationFormatChamps {
+public class VerificationChamps {
 	
 	private static final int TAILLE_CODE_POSTAL = 5;
 	
@@ -38,5 +39,36 @@ public class VerificationFormatChamps {
 	    } catch (java.time.format.DateTimeParseException e) {
 	        return false; 
 	    }
+	}
+	
+	public boolean champsRemplis(List<String> champs) {
+		for (String champ : champs) {
+			System.out.println(champ);
+			if (champ.isEmpty()) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public boolean auMoinsUnChampRempli(List<String> champs) {
+		System.out.println(champs.size());
+		for (String champ : champs) {
+			System.out.println(champ);
+			System.out.println(champ.isEmpty());
+			if (!champ.isEmpty()) {
+				 return true;
+			}
+		}
+		return false;
+	}
+	
+	
+	public boolean tousLesChampsSaisis(List<String> champsObligatoiresAdr, boolean auMoinsUnRempli) {
+		if (auMoinsUnChampRempli(champsObligatoiresAdr)) {
+			return champsRemplis(champsObligatoiresAdr);
+		}
+		auMoinsUnRempli = false;
+		return false;
 	}
 }

@@ -31,7 +31,7 @@ public class GestionAjouterBail implements ActionListener{
 	private AjouterLocataire fenAjouterLocataire;
 	private DaoBienLocatif daoBien;
 	
-	private VerificationFormatChamps formatCorrect;
+	private VerificationChamps verifChamps;
 	
 	public GestionAjouterBail(AjouterBail ab, AjouterLocataire al, AfficherLocatairesActuels afl) {
 		this.fenAjouterBail = ab;
@@ -39,7 +39,7 @@ public class GestionAjouterBail implements ActionListener{
 		this.fenAfficherLocataires = afl;
 		this.daoBien = new DaoBienLocatif();
 		
-		this.formatCorrect = new VerificationFormatChamps();
+		this.verifChamps = new VerificationChamps();
 	}
 	
 	
@@ -85,7 +85,7 @@ public class GestionAjouterBail implements ActionListener{
 							ouvrirFenAjoutCautionnaire();
 						}
 					}else if(this.fenAjouterBail.getRdbtnNouveauBail().isSelected()) {
-						if (!champsRemplis(this.fenAjouterBail.getChampsObligatoiresNouveauBail())){
+						if (!this.verifChamps.champsRemplis(this.fenAjouterBail.getChampsObligatoiresNouveauBail())){
 							this.fenAjouterBail.afficherMessageErreur("Les champs obligatoires (dotés d'une étoile) doivent être renseignés");
 						} else {
 							ouvrirFenAjoutCautionnaire();
@@ -100,10 +100,7 @@ public class GestionAjouterBail implements ActionListener{
 					break;
 			}
 		}
-		
-
 	}
-
 
 	private void ouvrirFenAjoutCautionnaire() {
 		AjouterCautionnaire ac = new AjouterCautionnaire(this.fenAjouterBail, this.fenAjouterLocataire, this.fenAfficherLocataires) ;
@@ -135,7 +132,7 @@ public class GestionAjouterBail implements ActionListener{
 	public boolean verifierDates() {
 		List<String> champsDate = this.fenAjouterBail.getChampsDate();
 		for (String champ : champsDate) {
-			if (!champ.equals("")&&!this.formatCorrect.validerDate(champ)) {
+			if (!champ.equals("")&&!this.verifChamps.validerDate(champ)) {
 				return false;
 			}
 		}
@@ -149,15 +146,5 @@ public class GestionAjouterBail implements ActionListener{
 		
 		return totalParts == 1F;
 	}
-	
-	public boolean champsRemplis(List<String> champs) {
-		boolean champsNonVides = true;
-		for (String champ : champs) {
-			System.out.println(champ);
-			if (champ.equals("")) {
-				champsNonVides = false;
-			}
-		}
-		return champsNonVides;
-	}
+
 }

@@ -21,13 +21,13 @@ public class GestionAjouterLocataire implements ActionListener{
 	private AjouterLocataire fenAjouterLocataire;
 	private AfficherLocatairesActuels fenAfficherLocataires;
 	
-	private VerificationFormatChamps formatCorrect;
+	private VerificationChamps verifChamps;
 	
 	public GestionAjouterLocataire(AjouterLocataire al, AfficherLocatairesActuels afl) {
 		this.fenAjouterLocataire = al;
 		this.fenAfficherLocataires = afl;
 		
-		this.formatCorrect = new VerificationFormatChamps();
+		this.verifChamps = new VerificationChamps();
 	}
 	
 	@Override
@@ -40,47 +40,55 @@ public class GestionAjouterLocataire implements ActionListener{
 				this.fenAjouterLocataire.dispose();
 				break;
 			case "Continuer" : 
-				if (!champsRemplis(this.fenAjouterLocataire.getChampsObligatoires())) {
+				if (!verifChamps.champsRemplis(this.fenAjouterLocataire.getChampsObligatoires())) {
 					this.fenAjouterLocataire.afficherMessageErreur("Il est nécessaire de remplir les champs obligatoires");
+					break;
 				} 
 				
 				String dateNaissance = this.fenAjouterLocataire.getTextFieldDateNaissance();
-				String tel = this.fenAjouterLocataire.getTextFieldTel();
 				
-				if (!this.formatCorrect.validerDate(dateNaissance)) {
+				if (!this.verifChamps.validerDate(dateNaissance)) {
 					this.fenAjouterLocataire.afficherMessageErreur("Les dates doivent être au format YYYY-MM-dd");
-				} else {
-					DaoLocataire daoLocataire = new DaoLocataire();
-					try {
-						Locataire loc = daoLocataire.findById(this.fenAjouterLocataire.getTextFieldIdLocataire());
-						if (loc == null) {
-							AjouterBail ab = new AjouterBail(this.fenAjouterLocataire, this.fenAfficherLocataires) ;
-							JLayeredPane layeredPaneAjoutBail = this.fenAfficherLocataires.getLayeredPane();
-							layeredPaneAjoutBail.add(ab, JLayeredPane.PALETTE_LAYER);
-							ab.setVisible(true);
-						}else {
-							this.fenAjouterLocataire.afficherMessageErreur("Le locataire existe déjà");
-						}
-					} catch (SQLException e1) {
-						e1.printStackTrace();
-					} catch (IOException e1) {
-						e1.printStackTrace();
+					break;
+				} 
+				
+				if(this.verifChamps.auMoinsUnChampRempli(this.fenAjouterLocataire.getChampsObligatoiresAdresse())) {
+					String codePostal = this.fenAjouterLocataire.getTextFieldCodePostal();
+					if (!codePostal.isEmpty()&& !this.verifChamps.validerCodePostal(codePostal)){
+						this.fenAjouterLocataire.afficherMessageErreur("Le code postal doit etre composé de 5 entiers");
+						break;
 					}
-				}	
-				break;
+					if (!this.verifChamps.champsRemplis(this.fenAjouterLocataire.getChampsObligatoiresAdresse())){
+						this.fenAjouterLocataire.afficherMessageErreur("Si vous voulez saisir une adresse, \n"
+								+ "vous devez impérativement saisir l'ensembles des champs obligatoires \n"
+								+ "à l'exception du complément");
+						break;
+					}
+					
+				}
+								
+				DaoLocataire daoLocataire = new DaoLocataire();
+				try {
+					Locataire loc = daoLocataire.findById(this.fenAjouterLocataire.getTextFieldIdLocataire());
+					if (loc == null) {
+						AjouterBail ab = new AjouterBail(this.fenAjouterLocataire, this.fenAfficherLocataires) ;
+						JLayeredPane layeredPaneAjoutBail = this.fenAfficherLocataires.getLayeredPane();
+						layeredPaneAjoutBail.add(ab, JLayeredPane.PALETTE_LAYER);
+						ab.setVisible(true);
+					}else {
+						this.fenAjouterLocataire.afficherMessageErreur("Le locataire existe déjà");
+					}
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				
+			
 		}
 	}
 	
-	public boolean champsRemplis(List<String> champs) {
-		boolean champsNonVides = true;
-		for (String champ : champs) {
-			System.out.println(champ);
-			if (champ.equals("")) {
-				champsNonVides = false;
-			}
-		}
-		return champsNonVides;
-	}
+	
 
 	
 }
