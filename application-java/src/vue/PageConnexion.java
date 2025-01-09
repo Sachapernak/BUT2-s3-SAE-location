@@ -18,6 +18,7 @@ import javax.swing.JPasswordField;
 import javax.swing.SwingConstants;
 
 import controleur.GestionPageConnexion;
+import java.awt.Dimension;
 
 public class PageConnexion extends JInternalFrame {
 
@@ -55,11 +56,13 @@ public class PageConnexion extends JInternalFrame {
      * Constructeur de la fenêtre (Vue).
      */
     public PageConnexion() {
+    	getContentPane().setPreferredSize(new Dimension(400, 300));
+    	setMinimumSize(new Dimension(430, 330));
         
         // Instanciation du contrôleur
         this.gest = new GestionPageConnexion(this);
 
-        getContentPane().setBounds(new Rectangle(0, 0, 400, 400));
+        getContentPane().setBounds(new Rectangle(0, 0, 800, 500));
         setBounds(100, 100, 400, 300);
         setResizable(false);
         getContentPane().setLayout(new BorderLayout(0, 0));

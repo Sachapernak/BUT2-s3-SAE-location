@@ -24,7 +24,7 @@ public class RequeteCreateBail extends Requete<Bail>{
 	public void parametres(PreparedStatement prSt, Bail donnee) throws SQLException {
 		
 		// Définir le formatter pour le format DD/MM/YY
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-dd-MM");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         // Convertir la chaîne en LocalDate
         LocalDate localDateDebut = LocalDate.parse(donnee.getDateDeDebut(), formatter);

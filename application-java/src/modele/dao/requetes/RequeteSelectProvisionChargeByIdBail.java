@@ -9,7 +9,7 @@ public class RequeteSelectProvisionChargeByIdBail extends Requete<ProvisionCharg
 
     @Override
     public String requete() {
-        return "SELECT * FROM SAE_PROVISION_CHARGE WHERE ID_BAIL = ? ";
+        return "SELECT * FROM SAE_PROVISION_CHARGE WHERE ID_BAIL = ? ORDER BY DATE_CHANGEMENT DESC ";
     }
 
     @Override

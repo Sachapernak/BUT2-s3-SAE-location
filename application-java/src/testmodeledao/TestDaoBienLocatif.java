@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.After;
@@ -131,6 +132,51 @@ public class TestDaoBienLocatif {
         }
     }
     
+    @Test 
+    public void testDaoBienLocatifFindByIdBatiment() throws SQLException, IOException{
+
+	     Batiment batiment = new Batiment("BAT_TEST4", adresse);
+	     daoBatiment.create(batiment);
+	     
+	     BienLocatif bien1 = new BienLocatif("BIEN_TEST05",TypeDeBien.LOGEMENT, 20, 2, new BigDecimal(150),batiment);
+	     BienLocatif bien2 = new BienLocatif("BIEN_TEST06",TypeDeBien.LOGEMENT, 20, 2, new BigDecimal(150),batiment);
+	     daoBien.create(bien1);
+	     daoBien.create(bien2);
+	    
+	     	     
+	     List<BienLocatif> biens = daoBien.findByIdBat(batiment.getIdBat());
+	     
+	     boolean contientTest005 = biens.stream()
+                 .anyMatch(bien -> "BIEN_TEST05".equals(bien.getIdentifiantLogement()));
+	     boolean contientTest006 = biens.stream()
+                 .anyMatch(bien -> "BIEN_TEST06".equals(bien.getIdentifiantLogement()));
+	     
+	     assertTrue("Le bien locatif BIEN_TEST05 devrait être présent.", contientTest005);
+	     assertTrue("Le bien locatif BIEN_TEST06 devrait être présent.", contientTest006);
+	     assertEquals("Le nombre de biens locatifs ne correspond pas.", biens.size(),2);
+	     
+	     daoBien.delete(bien1);
+	     daoBien.delete(bien2);
+    }
+    
+    @Test 
+    public void testDaoCountNbLogement() throws SQLException, IOException {
+         Batiment batiment = new Batiment("BATTEST04", adresse);
+         daoBatiment.create(batiment);
+         
+         BienLocatif bien1 = new BienLocatif("BIENTEST03",TypeDeBien.LOGEMENT, 20, 2, new BigDecimal(150),batiment);
+         BienLocatif bien2 = new BienLocatif("BIENTEST04",TypeDeBien.LOGEMENT, 20, 2, new BigDecimal(150),batiment);
+         daoBien.create(bien1);
+         daoBien.create(bien2);
+         
+         int nbLogements = daoBien.countBiens(batiment.getIdBat());
+         
+         assertEquals("Probleme de compte des biens locatifs",2, nbLogements);
+         daoBien.delete(bien1);
+	     daoBien.delete(bien2);
+         daoBatiment.delete(batiment);
+    }
+    
     public void deleteTestData() throws SQLException, IOException {
         String deleteBien = "delete from sae_bien_locatif where identifiant_logement like '%TEST%'";
         String deleteBat = "delete from sae_batiment where identifiant_batiment like '%TEST%'";
@@ -150,5 +196,6 @@ public class TestDaoBienLocatif {
             cn.commit();
         }
     }
+    
 }
 

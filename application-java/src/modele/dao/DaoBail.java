@@ -124,13 +124,13 @@ public class DaoBail extends DaoModele<Bail> implements Dao<Bail> {
 
 
         // Formatter la date de début
-        String dateDeDebut = localDateDebut.format(DateTimeFormatter.ofPattern("yyyy-dd-MM"));
+        String dateDeDebut = localDateDebut.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         Bail bail = new Bail(idBail, dateDeDebut, bien);
         String dateDeFin = curseur.getString("DATE_DE_FIN");
         if (dateDeFin != null) {
             LocalDateTime localDateTimeFin = LocalDateTime.parse(dateDeFin, formatter);
             LocalDate localDateFin = localDateTimeFin.toLocalDate();
-            bail.setDateDeFin(localDateFin.format(DateTimeFormatter.ofPattern("yyyy-dd-MM")));
+            bail.setDateDeFin(localDateFin.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         }
         return bail;
     }

@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -14,8 +15,11 @@ import org.junit.Test;
 
 import modele.Adresse;
 import modele.Batiment;
+import modele.BienLocatif;
+import modele.TypeDeBien;
 import modele.dao.DaoAdresse;
 import modele.dao.DaoBatiment;
+import modele.dao.DaoBienLocatif;
 
 public class TestDaoBatiment {
 
@@ -32,10 +36,12 @@ public class TestDaoBatiment {
     private void ajouterBatiment(Batiment batiment) throws SQLException, IOException {
         daoBat.create(batiment);
     }
+    
 
     private void supprimerBatiment(Batiment batiment) throws SQLException, IOException {
         daoBat.delete(batiment);
     }
+    
 
     @Test
     public void testDaoBatimentCreate() throws SQLException, IOException {
@@ -94,6 +100,7 @@ public class TestDaoBatiment {
         supprimerBatiment(batiment);
         daoAdresse.delete(adresse);
     }
+    
     
     @Test (expected = UnsupportedOperationException.class)
     public void testUpdateBatimentNotSupported() throws SQLException, IOException {
