@@ -9,6 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
 import controleur.GestionDetailChargeIndex;
@@ -29,9 +30,10 @@ public class DetailChargeIndex extends JDialog {
     private JLabel lblTxtValeurCompteur;
     private JLabel lblTxtCoutFixe;
     private JLabel lblTxtNumDoc;
-
+    
     private GestionDetailChargeIndex gest;
-    private JLabel lblCoutUnitaire;
+    private JLabel lblTxtValUnitaire;
+
 
     /**
      * Crée la boîte de dialogue pour afficher les détails d'une charge indexée.
@@ -42,7 +44,7 @@ public class DetailChargeIndex extends JDialog {
 
         setTitle("Détail de la charge indexée");
         setBounds(100, 100, 290, 250);
-        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new BorderLayout());
 
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -140,7 +142,7 @@ public class DetailChargeIndex extends JDialog {
         gbc_lblTxtValeurCompteur.gridy = 4;
         contentPanel.add(lblTxtValeurCompteur, gbc_lblTxtValeurCompteur);
         
-        lblCoutUnitaire = new JLabel("Coût unitaire :");
+        JLabel lblCoutUnitaire = new JLabel("Coût unitaire :");
         GridBagConstraints gbc_lblCoutUnitaire = new GridBagConstraints();
         gbc_lblCoutUnitaire.anchor = GridBagConstraints.EAST;
         gbc_lblCoutUnitaire.insets = new Insets(0, 0, 5, 5);
@@ -148,7 +150,7 @@ public class DetailChargeIndex extends JDialog {
         gbc_lblCoutUnitaire.gridy = 5;
         contentPanel.add(lblCoutUnitaire, gbc_lblCoutUnitaire);
         
-        JLabel lblTxtValUnitaire = new JLabel("Chargement...");
+        lblTxtValUnitaire = new JLabel("Chargement...");
         GridBagConstraints gbc_lblTxtValUnitaire = new GridBagConstraints();
         gbc_lblTxtValUnitaire.insets = new Insets(0, 0, 5, 0);
         gbc_lblTxtValUnitaire.anchor = GridBagConstraints.WEST;
@@ -228,6 +230,6 @@ public class DetailChargeIndex extends JDialog {
     }
     
     public void setValUnitaire(String val) {
-    	lblCoutUnitaire.setText(val); 	
+    	lblTxtValUnitaire.setText(val); 	
     }
 }

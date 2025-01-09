@@ -76,10 +76,16 @@ public class UITestLocataire {
 					"Id", "Nom", "Prenom", "Email", "Telephone", "Date Naissance", "Lieu"
 				}
 			) {
+				/**
+				 * 
+				 */
+				private static final long serialVersionUID = 1L;
+				@SuppressWarnings("rawtypes")
 				Class[] columnTypes = new Class[] {
 					String.class, String.class, String.class, String.class, String.class, String.class, String.class
 				};
-				public Class getColumnClass(int columnIndex) {
+				@Override
+				public Class<?> getColumnClass(int columnIndex) {
 					return columnTypes[columnIndex];
 				}
 			};
@@ -130,7 +136,6 @@ public class UITestLocataire {
 					textfield.setText(adresseComplete);
 					
 				} catch (SQLException | IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			    
@@ -150,7 +155,6 @@ public class UITestLocataire {
 		try {
 			locataires = daoLoc.findAll();
 		} catch (SQLException | IOException e) {
-			System.out.println("Erreur dans le chargement");
 			e.printStackTrace();
 		}
 		
@@ -163,7 +167,6 @@ public class UITestLocataire {
 	}
 
 	/* Permet de récuperer le string de l'adresse complete
-	 TODO: Peut etre implementer une methode dans la classe Adresse pour récuperer directement
 	 	l'adresse en string complet
 	*/       
 	private String recupererStringAdresseLocataire(String id) throws SQLException, IOException {
