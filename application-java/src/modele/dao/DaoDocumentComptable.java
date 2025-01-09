@@ -8,14 +8,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import modele.Assurance;
-import modele.Batiment;
 import modele.DocumentComptable;
-import modele.Entreprise;
-import modele.Locataire;
 import modele.TypeDoc;
-import modele.ChargeFixe;
-import modele.ChargeIndex;
 import modele.ConnexionBD;
 import modele.dao.requetes.RequeteDeleteDocumentComptable;
 import modele.dao.requetes.RequeteSelectDocumentComptable;

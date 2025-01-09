@@ -2,7 +2,6 @@ package vue;
 
 import java.awt.EventQueue;
 
-import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import java.awt.GridBagLayout;
 import javax.swing.JLabel;
@@ -16,9 +15,7 @@ import controleur.GestionICC;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import java.awt.event.ActionListener;
 import java.util.List;
-import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
 
@@ -34,7 +31,7 @@ public class SetICC extends JInternalFrame {
 	
 	private GestionICC gest;
 	private JScrollPane scrollPane;
-	private JList listICC;
+	private JList<String> listICC;
 
 	/**
 	 * Launch the application.
@@ -103,7 +100,7 @@ public class SetICC extends JInternalFrame {
 		gbc_scrollPane.gridy = 1;
 		getContentPane().add(scrollPane, gbc_scrollPane);
 		
-		listICC = new JList();
+		listICC = new JList<String>();
 		scrollPane.setViewportView(listICC);
 		
 		JLabel lblTrimestre = new JLabel("Trimestre de l'ICC (1-3) :");

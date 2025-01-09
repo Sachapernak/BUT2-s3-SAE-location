@@ -14,7 +14,6 @@ import modele.dao.requetes.RequeteCreateChargeIndex;
 import modele.dao.requetes.RequeteDeleteChargeIndex;
 import modele.dao.requetes.RequeteSelectChargeIndex;
 import modele.dao.requetes.RequeteSelectChargeIndexById;
-import modele.dao.requetes.RequeteSelectChargeIndexDistinctId;
 import modele.dao.requetes.RequeteSelectChargeIndexSameId;
 import modele.dao.requetes.RequeteSelectCiByIdDocComptable;
 import modele.dao.requetes.RequeteUpdateChargeIndex;
@@ -87,9 +86,9 @@ public class DaoChargeIndex extends DaoModele<ChargeIndex>{
 				coutFixe, numDoc, dateDoc);
 		
 		String dateRelevePreced = curseur.getDate("date_releve_precedent") != null ? curseur.getDate("date_releve_precedent").toString() : null;
-		//TODO : tester
+
 		if (!(dateRelevePreced == null || dateRelevePreced.isEmpty())) {
-			ChargeIndex ci = new DaoChargeIndex().findById(id, dateRelevePreced);
+			new DaoChargeIndex().findById(id, dateRelevePreced);
 			nouveau.setDateRelevePrecedent(dateRelevePreced);
 		}
 		return nouveau;

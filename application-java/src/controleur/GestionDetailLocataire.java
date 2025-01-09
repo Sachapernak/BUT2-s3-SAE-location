@@ -1,16 +1,11 @@
 package controleur;
 
-import java.awt.Cursor;
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import javax.swing.SwingWorker;
 
 import modele.Locataire;
-import modele.dao.DaoBatiment;
 import vue.DetailLocataire;
 
 public class GestionDetailLocataire {
