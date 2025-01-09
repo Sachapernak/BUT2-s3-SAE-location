@@ -22,11 +22,13 @@ public class GestionAfficherCharges implements ActionListener{
 		
 		switch (btnLibelle) {
 			case "Régulariser" :
-				System.out.println("regularisation");
+
 				break;
 				
 			case "Retour" :
 				this.fen_afficher_charges.dispose();
+				break;
+			default:
 				break;
 		}
 		

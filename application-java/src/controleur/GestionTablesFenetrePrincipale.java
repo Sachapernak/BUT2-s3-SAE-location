@@ -54,11 +54,9 @@ public class GestionTablesFenetrePrincipale implements ListSelectionListener{
 		        	nbLogements = daoBienLocatif.countBiens(batiment.getIdBat());
 		            model.addRow(new Object[] { batiment.getIdBat(), batiment.getAdresse().getAdressePostale(),nbLogements});
 		        }
-			} catch (SQLException e) {
+			} catch (SQLException | IOException e) {
 				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			} 
     }
     
     public void remplirBiensLoc (JTable tableBiensLoc, String idBatiment) {
@@ -74,11 +72,9 @@ public class GestionTablesFenetrePrincipale implements ListSelectionListener{
 	            		bien.getComplementAdresse(), bien.getLoyerBase(), dernierLoyer});
 	        }
 						
-		} catch (SQLException e) {
+		} catch (SQLException | IOException e) {
 			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		} 
     }
 
 }

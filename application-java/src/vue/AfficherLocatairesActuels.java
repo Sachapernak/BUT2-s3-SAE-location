@@ -144,9 +144,15 @@ public class AfficherLocatairesActuels extends JInternalFrame{
 				"Identifiant", "Nom", "Pr\u00E9nom"
 			}
 		) {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+			@SuppressWarnings("rawtypes")
 			Class[] columnTypes = new Class[] {
 				String.class, String.class, String.class
 			};
+			@SuppressWarnings("unchecked")
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
 			}
@@ -253,6 +259,10 @@ public class AfficherLocatairesActuels extends JInternalFrame{
 				"Bail", "Date d'entr\u00E9e", "Type ", "Batiment", "Adresse compl\u00E8te", "Loyer", "Parts de loyer", "Derni\u00E8re r\u00E9gularisation"
 			}
 		) {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
 			Class[] columnTypes = new Class[] {
 				String.class, Object.class, String.class, String.class, String.class, Object.class, Object.class, Object.class
 			};

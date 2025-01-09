@@ -38,15 +38,25 @@ public class AfficherCharges extends JFrame {
     private GestionAfficherCharge gest;
     private JButton btnSupprCharge;
     private JButton btnRecharger;
+    
+    private String bat;
+    private String log;
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(AfficherCharges::new);
     }
-
+    
     public AfficherCharges() {
-        super("Gestion des Charges");
+    	this(null, null);
+    }
+
+    public AfficherCharges(String bat, String log) {
+    	
+    	this.bat = bat;
+    	this.log = log;
+    	
         this.gest = new GestionAfficherCharge(this);
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         // Configuration du layout principal
         GridBagLayout gbl_mainPanel = new GridBagLayout();
@@ -200,9 +210,32 @@ public class AfficherCharges extends JFrame {
         btnRecharger.addActionListener(e -> gest.recharger());
         gest.gestionBoutonSupprimer(btnSupprCharge, tableCharges);
         gest.initDoubleClickListener(tableCharges);
+        
+        
+        
+
 
 
     }
+    
+    public void chargementFini(){
+        if (this.bat != null && this.log != null) {
+        	setItemInCombo(this.comboBatiment, bat);
+        	setItemInCombo(this.comboLogement, log);
+
+        }
+    }
+
+	private void setItemInCombo(JComboBox<String> combo, String val) {
+		String item;
+		for (int i = 0; i < combo.getItemCount(); i++) {
+			item = String.valueOf(combo.getItemAt(i));
+			if (item.equalsIgnoreCase(val)) {
+				combo.setSelectedIndex(i);
+				break;
+			}
+		}
+	}
 
 
     /** 
@@ -292,5 +325,10 @@ public class AfficherCharges extends JFrame {
         JOptionPane.showMessageDialog(this, "Erreur : \n" + message, 
                                       "Erreur", JOptionPane.ERROR_MESSAGE);
     }
+    
+
+
+
+
     
 }

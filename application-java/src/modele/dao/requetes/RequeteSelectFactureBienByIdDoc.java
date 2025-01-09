@@ -4,16 +4,15 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import modele.DocumentComptable;
+import modele.FactureBien;
 
-public class RequeteSelectDocumentComptableById extends Requete<DocumentComptable> {
+public class RequeteSelectFactureBienByIdDoc extends Requete<FactureBien> {
 
 	@Override
 	public String requete() {
-		return "Select * from sae_document_comptable "
+		return "select * from sae_facture_du_bien "
 				+ "where numero_document = ? "
 				+ "and date_document = ?";
-
 	}
 	
 	@Override

@@ -48,57 +48,118 @@ public class GestionAjouterBail implements ActionListener{
 		Object btn = e.getSource();
 		
 		if (btn instanceof JRadioButton) {
-	    	JRadioButton rdBtnActif = (JRadioButton) e.getSource();
-	        String rdBtnLibelle = rdBtnActif.getText();
-			CardLayout cd = this.fenAjouterBail.getCardLayout();
-			JPanel p = this.fenAjouterBail.getPanelAssocierBail();
-			switch (rdBtnLibelle) {
-				case "Créer un nouveau bail" :
-					cd.show(p, "nouveauBail");
-					break;
-				case "Rattacher à un bail existant" : 
-					cd.show(p, "bauxExistants");
-					break;
-			}
+	    	actionPerformedRadio(e);
 			
 		} else if (btn instanceof JButton) {
-	    	JButton btnActif = (JButton) e.getSource();
-	        String btnLibelle = btnActif.getText();
-			
-			switch (btnLibelle) {
-				case "Annuler" :
-					this.fenAjouterBail.dispose();
-					break;
-				case "Continuer" : 
-					
-					if (!verifierDates()) {
-						this.fenAjouterBail.afficherMessageErreur("Les dates doivent être au format YYYY-MM-dd");
-					} else if (this.fenAjouterBail.getRdbtnBailExistant().isSelected()) {
-						
-						if (this.fenAjouterBail.getTextFieldDateArrivee().equals("")) {
-							this.fenAjouterBail.afficherMessageErreur("Les champs obligatoires (dotés d'une étoile) doivent être renseignés");
-							break;
-						}
-						if(!totalPartEgalAUn()) {
-							this.fenAjouterBail.afficherMessageErreur("Le total des parts n'est pas égal à 1");
-						}else {
-							ouvrirFenAjoutCautionnaire();
-						}
-					}else if(this.fenAjouterBail.getRdbtnNouveauBail().isSelected()) {
-						if (!this.verifChamps.champsRemplis(this.fenAjouterBail.getChampsObligatoiresNouveauBail())){
-							this.fenAjouterBail.afficherMessageErreur("Les champs obligatoires (dotés d'une étoile) doivent être renseignés");
-						} else {
-							ouvrirFenAjoutCautionnaire();
-						}
-					}
-				
-					break;
-				case "Vider" : 
-					this.fenAjouterBail.textFieldIdBail.setText("");
-					this.fenAjouterBail.textFieldDateDebut.setText("");
-					this.fenAjouterBail.textFieldDateFin.setText("");		
-					break;
-			}
+	    	actionPerformedJbutton(e);
+		}
+	}
+
+	// TODO : A tester
+	private void actionPerformedJbutton(ActionEvent e) {
+	    JButton sourceButton = (JButton) e.getSource();
+	    String buttonLabel = sourceButton.getText();
+
+	    switch (buttonLabel) {
+	        case "Annuler":
+	            handleAnnuler();
+	            break;
+	        case "Continuer":
+	            handleContinuer();
+	            break;
+	        case "Vider":
+	            viderTextFields();
+	            break;
+	        default:
+	            // Aucun traitement pour les autres boutons
+	            break;
+	    }
+	}
+
+	/**
+	 * Gère l'action sur le bouton "Annuler" en fermant la fenêtre d'ajout de bail.
+	 */
+	private void handleAnnuler() {
+	    fenAjouterBail.dispose();
+	}
+
+	/**
+	 * Gère l'action sur le bouton "Continuer".
+	 * Valide les dates, puis délègue le traitement selon le type de bail sélectionné.
+	 */
+	private void handleContinuer() {
+	    // Vérification du format des dates
+	    if (!verifierDates()) {
+	        fenAjouterBail.afficherMessageErreur("Les dates doivent être au format YYYY-MM-dd");
+	        return;
+	    }
+
+	    // Traitement selon le type de bail sélectionné
+	    if (fenAjouterBail.getRdbtnBailExistant().isSelected()) {
+	        handleBailExistant();
+	    } else if (fenAjouterBail.getRdbtnNouveauBail().isSelected()) {
+	        handleNouveauBail();
+	    }
+	}
+
+	/**
+	 * Gère le cas d'un bail existant lors du clic sur "Continuer".
+	 * Vérifie les champs spécifiques et le total des parts avant d'ouvrir la fenêtre d'ajout de cautionnaire.
+	 */
+	private void handleBailExistant() {
+	    // Vérification que la date d'arrivée est renseignée
+	    if (fenAjouterBail.getStringTextFieldDateArrivee().equals("")) {
+	        fenAjouterBail.afficherMessageErreur("Les champs obligatoires (dotés d'une étoile) doivent être renseignés");
+	        return;
+	    }
+
+	    // Vérification que le total des parts est égal à 1
+	    if (!totalPartEgalAUn()) {
+	        fenAjouterBail.afficherMessageErreur("Le total des parts n'est pas égal à 1");
+	        return;
+	    }
+
+	    // Ouverture de la fenêtre d'ajout de cautionnaire si toutes les vérifications sont passées
+	    ouvrirFenAjoutCautionnaire();
+	}
+
+	/**
+	 * Gère le cas d'un nouveau bail lors du clic sur "Continuer".
+	 * Vérifie que tous les champs obligatoires pour un nouveau bail sont remplis avant d'ouvrir la fenêtre d'ajout de cautionnaire.
+	 */
+	private void handleNouveauBail() {
+	    if (!verifChamps.champsRemplis(fenAjouterBail.getChampsObligatoiresNouveauBail())) {
+	        fenAjouterBail.afficherMessageErreur("Les champs obligatoires (dotés d'une étoile) doivent être renseignés");
+	        return;
+	    }
+
+	    ouvrirFenAjoutCautionnaire();
+	}
+
+
+
+	private void viderTextFields() {
+		// TODO : Changer en un fen.setTextIdBail etc
+		this.fenAjouterBail.getTextFieldIdBail().setText("");
+		this.fenAjouterBail.getTextFieldDateDebut().setText("");
+		this.fenAjouterBail.getTextFieldDateFin().setText("");
+	}
+
+
+	private void actionPerformedRadio(ActionEvent e) {
+		JRadioButton rdBtnActif = (JRadioButton) e.getSource();
+		String rdBtnLibelle = rdBtnActif.getText();
+		CardLayout cd = this.fenAjouterBail.getCardLayout();
+		JPanel p = this.fenAjouterBail.getPanelAssocierBail();
+		switch (rdBtnLibelle) {
+			case "Créer un nouveau bail" :
+				cd.show(p, "nouveauBail");
+				break;
+			case "Rattacher à un bail existant" : 
+				cd.show(p, "bauxExistants");
+				break;
+			default:
+				break;
 		}
 	}
 
@@ -122,11 +183,9 @@ public class GestionAjouterBail implements ActionListener{
 			for (BienLocatif bien : biens) {
 	            comboBoxBiens.addItem(bien.getIdentifiantLogement());
 	        }
-		} catch (SQLException e) {
+		} catch (SQLException | IOException e) {
 			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		} 
 	}
 	
 	public boolean verifierDates() {

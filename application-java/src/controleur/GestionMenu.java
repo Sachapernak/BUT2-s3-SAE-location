@@ -10,8 +10,9 @@ import javax.swing.JLayeredPane;
 import javax.swing.JMenuItem;
 
 import vue.AfficherAnciensLocataires;
+import vue.AfficherCharges;
 import vue.AfficherLocatairesActuels;
-import vue.ArchiverDocuments;
+import vue.AfficherLoyers;
 import vue.FenetrePrincipale;
 import vue.PageConnexion;
 import vue.ReglesMetier;
@@ -30,6 +31,7 @@ public class GestionMenu implements ActionListener{
         String itemLibelle = itemActif.getText();
 		
 		switch (itemLibelle) {
+		
 			case "Quitter" :
 				this.fenPrincipale.dispose();
 				break;
@@ -68,11 +70,23 @@ public class GestionMenu implements ActionListener{
 				layeredPaneReglesMetiers.add(rm, JLayeredPane.PALETTE_LAYER);
 				rm.setVisible(true);
 				break;
-			case "Consulter les documents" : 
-				ArchiverDocuments ad = new ArchiverDocuments();
+
+			case "Consulter les charges" : 
+				AfficherCharges ad = new AfficherCharges();
 				JLayeredPane layeredPaneArchiverDoc = this.fenPrincipale.getLayeredPane();
 				layeredPaneArchiverDoc.add(ad, JLayeredPane.PALETTE_LAYER);
 				ad.setVisible(true);
+				break;
+
+			case "Consulter les loyers" : 
+				AfficherLoyers afloyers = new AfficherLoyers();
+				JLayeredPane layeredPaneLoyers = this.fenPrincipale.getLayeredPane();
+				layeredPaneLoyers.add(afloyers, JLayeredPane.PALETTE_LAYER);
+				afloyers.setVisible(true);
+				break;
+				
+			default:
+				break;
 				
 		}
 		

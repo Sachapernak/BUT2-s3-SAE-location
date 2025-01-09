@@ -229,7 +229,16 @@ CREATE TABLE sae_facture_du_bien(
 ALTER TABLE SAE_document_comptable
 ADD CONSTRAINT chk_SAE_doc_compta_type
 CHECK (
-    (Type_de_document = 'quittance' AND SIRET IS NULL)
+    (lower(Type_de_document) in ('quittance','loyer') AND SIRET IS NULL)
     OR
-    (Type_de_document <> 'quittance' AND SIRET IS NOT NULL)
+    (lower(Type_de_document) not in ('quittance','loyer') AND SIRET IS NOT NULL)
+);
+
+ALTER TABLE SAE_document_comptable
+ADD CONSTRAINT chk_Loyer_doc_compta
+CHECK (
+    lower(type_de_document) = 'loyer' AND RECUPERABLE_LOCATAIRE = 1
+    AND NUMERO_DE_CONTRAT IS NULL
+    AND ANNEE_DU_CONTRAT IS NULL
+    AND (MONTANT_DEVIS = 0 OR MONTANT_DEVIS IS NULL)
 );

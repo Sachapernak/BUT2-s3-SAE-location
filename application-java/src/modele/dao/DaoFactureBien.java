@@ -15,6 +15,7 @@ import modele.dao.requetes.RequeteCreateFactureBien;
 import modele.dao.requetes.RequeteDeleteFactureBien;
 import modele.dao.requetes.RequeteSelectFactureBienById;
 import modele.dao.requetes.RequeteSelectFactureBienByIdBien;
+import modele.dao.requetes.RequeteSelectFactureBienByIdDoc;
 import modele.dao.requetes.RequeteUpdateFactureBien;
 
 public class DaoFactureBien extends DaoModele<FactureBien> {
@@ -45,6 +46,10 @@ public class DaoFactureBien extends DaoModele<FactureBien> {
 
 	public List<FactureBien> findByIdLogement(String... id) throws SQLException, IOException {
 		return find(new RequeteSelectFactureBienByIdBien(), id);
+	}
+	
+	public List<FactureBien> findByIdDoc(String... id) throws SQLException, IOException {
+		return find(new RequeteSelectFactureBienByIdDoc(), id);
 	}
 	
 	

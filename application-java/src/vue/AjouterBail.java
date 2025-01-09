@@ -24,10 +24,8 @@ import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JComboBox;
 import javax.swing.ListSelectionModel;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.awt.event.KeyEvent;
 import java.awt.Color;
 
 public class AjouterBail extends JInternalFrame  {
@@ -38,9 +36,9 @@ public class AjouterBail extends JInternalFrame  {
     private JTable tableBauxActuels;
     private JTable tablePartsLoyer;
     private JTable tableTotal;
-    public JTextField textFieldIdBail;
-    public JTextField textFieldDateDebut;
-    public JTextField textFieldDateFin;
+    private JTextField textFieldIdBail;
+    private JTextField textFieldDateDebut;
+    private JTextField textFieldDateFin;
     private JTextField textFieldDateArrivee;
     
     private CardLayout cardLayout;
@@ -73,32 +71,32 @@ public class AjouterBail extends JInternalFrame  {
 	
 	public List<String> getChampsObligatoiresNouveauBail(){
 		List<String> res = new ArrayList<>();
-		res.add(getTextFieldIdBail());
-		res.add(getTextFieldDateDebut());
+		res.add(getStringTextFieldIdBail());
+		res.add(getStringTextFieldDateDebut());
 		return res;
 	}
 	
 	public List<String> getChampsDate(){
 		List<String> res = new ArrayList<>();
-		res.add(getTextFieldDateArrivee());
-		res.add(getTextFieldDateDebut());
-		res.add(getTextFieldDateFin());
+		res.add(getStringTextFieldDateArrivee());
+		res.add(getStringTextFieldDateDebut());
+		res.add(getStringTextFieldDateFin());
 		return res;
 	}
 	
-	public String getTextFieldIdBail() {
-		return textFieldIdBail.getText();
+	public String getStringTextFieldIdBail() {
+		return getTextFieldIdBail().getText();
 	}
 
-	public String getTextFieldDateDebut() {
-		return textFieldDateDebut.getText();
+	public String getStringTextFieldDateDebut() {
+		return getTextFieldDateDebut().getText();
 	}
 
-	public String getTextFieldDateFin() {
-		return textFieldDateFin.getText();
+	public String getStringTextFieldDateFin() {
+		return getTextFieldDateFin().getText();
 	}
 	
-	public String getTextFieldDateArrivee() {
+	public String getStringTextFieldDateArrivee() {
 		return textFieldDateArrivee.getText();
 	}
 
@@ -215,10 +213,16 @@ public class AjouterBail extends JInternalFrame  {
         		"Locataire", "Part de loyer en %"
         	}
         ) {
-        	Class[] columnTypes = new Class[] {
+        	/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+			@SuppressWarnings("rawtypes")
+			Class[] columnTypes = new Class[] {
         		Object.class, Float.class
         	};
-        	public Class getColumnClass(int columnIndex) {
+        	@SuppressWarnings("unchecked")
+			public Class getColumnClass(int columnIndex) {
         		return columnTypes[columnIndex];
         	}
         	boolean[] columnEditables = new boolean[] {
@@ -289,34 +293,34 @@ public class AjouterBail extends JInternalFrame  {
         panelNouveauBail_champs.add(lblIdBail);
                 
         textFieldIdBail = new JTextField();
-        textFieldIdBail.setBounds(135, 22, 100, 20);
-        panelNouveauBail_champs.add(textFieldIdBail);
-        textFieldIdBail.setColumns(10);
+        getTextFieldIdBail().setBounds(135, 22, 100, 20);
+        panelNouveauBail_champs.add(getTextFieldIdBail());
+        getTextFieldIdBail().setColumns(10);
                        
         JLabel lblDateDebut = new JLabel("Date de début* :");
         lblDateDebut.setBounds(10, 65, 100, 20);
         panelNouveauBail_champs.add(lblDateDebut);
                                
         textFieldDateDebut = new JTextField();
-        textFieldDateDebut.setBounds(135, 66, 100, 20);
-        panelNouveauBail_champs.add(textFieldDateDebut);
-        textFieldDateDebut.setColumns(10);
-        this.gestionFen.initialiserDateDebut(textFieldDateDebut);
+        getTextFieldDateDebut().setBounds(135, 66, 100, 20);
+        panelNouveauBail_champs.add(getTextFieldDateDebut());
+        getTextFieldDateDebut().setColumns(10);
+        this.gestionFen.initialiserDateDebut(getTextFieldDateDebut());
                                         
         JLabel lblDateFin = new JLabel("Date de fin :");
         lblDateFin.setBounds(10, 111, 100, 20);
         panelNouveauBail_champs.add(lblDateFin);
                                                 
         textFieldDateFin = new JTextField();
-        textFieldDateFin.setBounds(135, 112, 100, 20);
-        panelNouveauBail_champs.add(textFieldDateFin);
-        textFieldDateFin.setColumns(10);
+        getTextFieldDateFin().setBounds(135, 112, 100, 20);
+        panelNouveauBail_champs.add(getTextFieldDateFin());
+        getTextFieldDateFin().setColumns(10);
                                                        
         JButton btnVider = new JButton("Vider");
         btnVider.setBounds(161, 158, 74, 20);
         panelNouveauBail_champs.add(btnVider);
                                                        
-        comboBoxBiensLoc = new JComboBox<String>();
+        comboBoxBiensLoc = new JComboBox<>();
         comboBoxBiensLoc.setBounds(302, 10, 123, 21);
         this.gestionFen.remplirJComboBoxBatiment(comboBoxBiensLoc);
         panelNouveauBail.add(comboBoxBiensLoc);
@@ -367,6 +371,18 @@ public class AjouterBail extends JInternalFrame  {
 
 	public void afficherMessageErreur(String message) {
 		JOptionPane.showMessageDialog(this, message, "Erreur",JOptionPane.ERROR_MESSAGE);
+	}
+
+	public JTextField getTextFieldIdBail() {
+		return textFieldIdBail;
+	}
+
+	public JTextField getTextFieldDateDebut() {
+		return textFieldDateDebut;
+	}
+
+	public JTextField getTextFieldDateFin() {
+		return textFieldDateFin;
 	}
 	
 	
