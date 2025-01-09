@@ -11,8 +11,9 @@ public class RequeteSelectDocumentComptableByIdLog extends Requete<DocumentCompt
 	public String requete() {
 		return "select d.* from sae_document_comptable d, sae_facture_du_bien f "
 				+ "where d.numero_document = f.numero_document "
-				+ "and identifiant_logement = ? ";
-				//+ "and d.type_de_document in ('facture_cf', 'facture_cv', 'facture')";
+				+ "and identifiant_logement = ? "
+				+ "and Type_de_document!= 'loyer'";
+
 
 	}
 	

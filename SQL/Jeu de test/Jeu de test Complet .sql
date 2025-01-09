@@ -591,3 +591,177 @@ INSERT INTO sae_facture_du_bien (
 ) VALUES (
     'LOG002', 'DOC017', TO_DATE('2024-05-15','YYYY-MM-DD'), 1.00
 );
+
+-- Loyer 1 pour LOC005
+INSERT INTO SAE_document_comptable (
+  numero_document,
+  Date_document,
+  Type_de_document,
+  montant,
+  fichier_document,
+  montant_devis,
+  recuperable_locataire,
+  identifiant_locataire,
+  identifiant_batiment,
+  SIRET,
+  numero_de_contrat,
+  annee_du_contrat
+) VALUES (
+  'LOYER_LOC005_1',             
+  DATE '2023-01-01',            
+  'loyer',
+  1000,                         
+  NULL,
+  NULL,
+  1,
+  'LOC005',
+  'BAT001',
+  NULL,
+  NULL,
+  NULL
+);
+
+INSERT INTO sae_facture_du_bien (
+  identifiant_logement,
+  numero_document,
+  Date_document,
+  part_des_charges
+) VALUES (
+  'LOG001',                     -- logement correspondant
+  'LOYER_LOC005_1',             -- numéro de document référencé
+  DATE '2023-01-01',            -- même date que le document
+  1                             -- part des charges
+);
+
+-- Répétez pour les loyers 2 à 4 pour LOC005 avec des dates ou numéros de document différents
+
+-- Loyer 2 pour LOC005
+INSERT INTO SAE_document_comptable (
+  numero_document, Date_document, Type_de_document, montant, fichier_document,
+  montant_devis, recuperable_locataire, identifiant_locataire, identifiant_batiment,
+  SIRET, numero_de_contrat, annee_du_contrat
+) VALUES (
+  'LOYER_LOC005_2', DATE '2023-02-01', 'loyer', 1000, NULL,
+  NULL, 1, 'LOC005', 'BAT001', NULL, NULL, NULL
+);
+
+INSERT INTO sae_facture_du_bien (
+  identifiant_logement, numero_document, Date_document, part_des_charges
+) VALUES (
+  'LOG001', 'LOYER_LOC005_2', DATE '2023-02-01', 1
+);
+
+-- Loyer 3 pour LOC005
+INSERT INTO SAE_document_comptable (
+  numero_document, Date_document, Type_de_document, montant, fichier_document,
+  montant_devis, recuperable_locataire, identifiant_locataire, identifiant_batiment,
+  SIRET, numero_de_contrat, annee_du_contrat
+) VALUES (
+  'LOYER_LOC005_3', DATE '2023-03-01', 'loyer', 1000, NULL,
+  NULL, 1, 'LOC005', 'BAT001', NULL, NULL, NULL
+);
+
+INSERT INTO sae_facture_du_bien (
+  identifiant_logement, numero_document, Date_document, part_des_charges
+) VALUES (
+  'LOG001', 'LOYER_LOC005_3', DATE '2023-03-01', 1
+);
+
+-- Loyer 4 pour LOC005
+INSERT INTO SAE_document_comptable (
+  numero_document, Date_document, Type_de_document, montant, fichier_document,
+  montant_devis, recuperable_locataire, identifiant_locataire, identifiant_batiment,
+  SIRET, numero_de_contrat, annee_du_contrat
+) VALUES (
+  'LOYER_LOC005_4', DATE '2023-04-01', 'loyer', 1000, NULL,
+  NULL, 1, 'LOC005', 'BAT001', NULL, NULL, NULL
+);
+
+INSERT INTO sae_facture_du_bien (
+  identifiant_logement, numero_document, Date_document, part_des_charges
+) VALUES (
+  'LOG001', 'LOYER_LOC005_4', DATE '2023-04-01', 1
+);
+
+-- Loyer 1 pour LOC002
+INSERT INTO SAE_document_comptable (
+  numero_document, Date_document, Type_de_document, montant, fichier_document, montant_devis,
+  recuperable_locataire, identifiant_locataire, identifiant_batiment, SIRET, numero_de_contrat,
+  annee_du_contrat
+) VALUES (
+  'LOYER_LOC002_1', DATE '2023-01-01', 'loyer', 500, NULL, NULL,
+  1, 'LOC002', 'BAT001', NULL, NULL, NULL
+);
+
+INSERT INTO sae_facture_du_bien (
+  identifiant_logement, numero_document, Date_document, part_des_charges
+) VALUES (
+  'LOG002', 'LOYER_LOC002_1', DATE '2023-01-01', 1
+);
+
+-- Répétez pour les loyers 2 à 4 pour LOC002 avec des dates ou numéros de document différents
+
+-- Loyer 2 pour LOC002
+INSERT INTO SAE_document_comptable (
+  numero_document, Date_document, Type_de_document, montant, fichier_document,
+  montant_devis, recuperable_locataire, identifiant_locataire, identifiant_batiment,
+  SIRET, numero_de_contrat, annee_du_contrat
+) VALUES (
+  'LOYER_LOC002_2', DATE '2023-02-01', 'loyer', 500, NULL,
+  NULL, 1, 'LOC002', 'BAT001', NULL, NULL, NULL
+);
+
+INSERT INTO sae_facture_du_bien (
+  identifiant_logement, numero_document, Date_document, part_des_charges
+) VALUES (
+  'LOG002', 'LOYER_LOC002_2', DATE '2023-02-01', 1
+);
+
+-- Loyer 3 pour LOC002
+INSERT INTO SAE_document_comptable (
+  numero_document, Date_document, Type_de_document, montant, fichier_document,
+  montant_devis, recuperable_locataire, identifiant_locataire, identifiant_batiment,
+  SIRET, numero_de_contrat, annee_du_contrat
+) VALUES (
+  'LOYER_LOC002_3', DATE '2023-03-01', 'loyer', 500, NULL,
+  NULL, 1, 'LOC002', 'BAT001', NULL, NULL, NULL
+);
+
+INSERT INTO sae_facture_du_bien (
+  identifiant_logement, numero_document, Date_document, part_des_charges
+) VALUES (
+  'LOG002', 'LOYER_LOC002_3', DATE '2023-03-01', 1
+);
+
+-- Loyer 4 pour LOC002
+INSERT INTO SAE_document_comptable (
+  numero_document, Date_document, Type_de_document, montant, fichier_document,
+  montant_devis, recuperable_locataire, identifiant_locataire, identifiant_batiment,
+  SIRET, numero_de_contrat, annee_du_contrat
+) VALUES (
+  'LOYER_LOC002_4', DATE '2023-04-01', 'loyer', 500, NULL,
+  NULL, 1, 'LOC002', 'BAT001', NULL, NULL, NULL
+);
+
+INSERT INTO sae_facture_du_bien (
+  identifiant_logement, numero_document, Date_document, part_des_charges
+) VALUES (
+  'LOG002', 'LOYER_LOC002_4', DATE '2023-04-01', 1
+);
+
+-- Loyer 5 pour LOC002
+INSERT INTO SAE_document_comptable (
+  numero_document, Date_document, Type_de_document, montant, fichier_document,
+  montant_devis, recuperable_locataire, identifiant_locataire, identifiant_batiment,
+  SIRET, numero_de_contrat, annee_du_contrat
+) VALUES (
+  'LOYER_LOC002_4', DATE '2023-04-01', 'loyer', 500, NULL,
+  NULL, 1, 'LOC002', 'BAT001', NULL, NULL, NULL
+);
+
+INSERT INTO sae_facture_du_bien (
+  identifiant_logement, numero_document, Date_document, part_des_charges
+) VALUES (
+  'LOG002', 'LOYER_LOC002_4', DATE '2023-05-01', 1
+);
+

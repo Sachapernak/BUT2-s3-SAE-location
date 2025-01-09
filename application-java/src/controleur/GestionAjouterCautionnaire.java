@@ -117,9 +117,9 @@ public class GestionAjouterCautionnaire implements ActionListener{
 					//Recup bail
 				    if (this.fenAjouterBail.getRdbtnNouveauBail().isSelected()) {
 			
-					        String idBail = this.fenAjouterBail.getTextFieldIdBail();
-					        dateDebut = this.fenAjouterBail.getTextFieldDateDebut();
-					        String dateFin = this.fenAjouterBail.getTextFieldDateFin();
+					        String idBail = this.fenAjouterBail.getStringTextFieldIdBail();
+					        dateDebut = this.fenAjouterBail.getStringTextFieldDateDebut();
+					        String dateFin = this.fenAjouterBail.getStringTextFieldDateFin();
 					
 					        BienLocatif bien;
 						try {
@@ -139,7 +139,7 @@ public class GestionAjouterCautionnaire implements ActionListener{
 				        if (selectedRow != -1) {
 				            // Récupérez les informations à partir de la ligne sélectionnée
 				            String bailSelectionne = (String) this.fenAjouterBail.getTableBauxActuels().getValueAt(selectedRow, 0);
-				            dateDebut = this.fenAjouterBail.getTextFieldDateArrivee();
+				            dateDebut = this.fenAjouterBail.getStringTextFieldDateArrivee();
 				            
 				            JTable tableParts = this.fenAjouterBail.getTablePartsLoyer();
 				            partLoyer = (float) tableParts.getValueAt(tableParts.getRowCount()-2,1);				            		            			            

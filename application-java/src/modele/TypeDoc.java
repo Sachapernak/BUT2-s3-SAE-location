@@ -5,7 +5,8 @@ public enum TypeDoc {
 	FACTURE_CF("facture cf"),
 	FACTURE_CV("facture cv"),
 	FACTURE("facture"),
-	DEVIS("devis");
+	DEVIS("devis"),
+	LOYER("loyer");
 
 	private String type;
 	
@@ -17,5 +18,6 @@ public enum TypeDoc {
 		return this.type;
 	}
 	
+
 	
 }
