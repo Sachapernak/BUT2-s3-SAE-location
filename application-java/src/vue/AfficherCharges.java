@@ -4,17 +4,13 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.util.List;
 import java.awt.GridBagLayout;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
+import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
@@ -25,8 +21,6 @@ import javax.swing.JFrame;
 import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.DefaultComboBoxModel;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import javax.swing.ScrollPaneConstants;
 
 public class AfficherCharges extends JFrame {
@@ -42,6 +36,8 @@ public class AfficherCharges extends JFrame {
     private JButton btnAjouterCharge;
     private JTextField txtRecherche;
     private GestionAfficherCharge gest;
+    private JButton btnSupprCharge;
+    private JButton btnRecharger;
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(AfficherCharges::new);
@@ -50,12 +46,12 @@ public class AfficherCharges extends JFrame {
     public AfficherCharges() {
         super("Gestion des Charges");
         this.gest = new GestionAfficherCharge(this);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         // Configuration du layout principal
         GridBagLayout gbl_mainPanel = new GridBagLayout();
         gbl_mainPanel.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0};
-        gbl_mainPanel.columnWidths = new int[]{90, 99, 0, 100, 0, 110, 0};
+        gbl_mainPanel.columnWidths = new int[]{100, 99, 0, 100, 0, 100, 0};
         JPanel mainPanel = new JPanel(gbl_mainPanel);
 
         // ----- Ligne 0 : Sélection de batiment, logement, type de document -----
@@ -145,29 +141,44 @@ public class AfficherCharges extends JFrame {
         gbc9.weightx = 1.0; gbc9.weighty = 1.0;
         gbc9.insets = new Insets(5, 5, 5, 0);
         mainPanel.add(scrollPane, gbc9);
+        
+        btnSupprCharge = new JButton("Supprimer charge");
+
+        GridBagConstraints gbc_btnSupprCharge = new GridBagConstraints();
+        gbc_btnSupprCharge.insets = new Insets(5, 5, 5, 5);
+        gbc_btnSupprCharge.gridx = 0;
+        gbc_btnSupprCharge.gridy = 3;
+        mainPanel.add(btnSupprCharge, gbc_btnSupprCharge);
+        
+        btnRecharger = new JButton("Recharger");
+        GridBagConstraints gbc_btnRecharger = new GridBagConstraints();
+        gbc_btnRecharger.insets = new Insets(5, 5, 5, 5);
+        gbc_btnRecharger.gridx = 3;
+        gbc_btnRecharger.gridy = 3;
+        mainPanel.add(btnRecharger, gbc_btnRecharger);
 
         // ----- Ligne 3 : Boutons Quitter et Ajouter Charge -----
         btnQuitter = new JButton("Quitter");
         GridBagConstraints gbc10 = new GridBagConstraints();
+        gbc10.anchor = GridBagConstraints.EAST;
+        gbc10.insets = new Insets(5, 5, 5, 5);
         gbc10.gridx = 5; gbc10.gridy = 3;
         gbc10.fill = GridBagConstraints.NONE;
         gbc10.weightx = 0; gbc10.weighty = 0;
-        gbc10.anchor = GridBagConstraints.EAST;
-        gbc10.insets = new Insets(5, 5, 10, 5);
         mainPanel.add(btnQuitter, gbc10);
 
         btnAjouterCharge = new JButton("Ajouter Charge");
         GridBagConstraints gbc11 = new GridBagConstraints();
+        gbc11.insets = new Insets(5, 5, 5, 5);
         gbc11.gridx = 4; gbc11.gridy = 3;
         gbc11.fill = GridBagConstraints.NONE;
         gbc11.weightx = 0; gbc11.weighty = 0;
         gbc11.anchor = GridBagConstraints.EAST;
-        gbc11.insets = new Insets(5, 5, 10, 5);
         mainPanel.add(btnAjouterCharge, gbc11);
 
         // Configuration finale de la fenêtre
         setContentPane(mainPanel);
-        setSize(630, 572);
+        setSize(730, 572);
         setLocationRelativeTo(null);
         setVisible(true);
 
@@ -185,22 +196,14 @@ public class AfficherCharges extends JFrame {
         // Actions des boutons
         btnQuitter.addActionListener(e -> quitter());
         btnAjouterCharge.addActionListener(e -> gest.ajouterNouvelleCharge());
+        
+        btnRecharger.addActionListener(e -> gest.recharger());
+        gest.gestionBoutonSupprimer(btnSupprCharge, tableCharges);
+        gest.initDoubleClickListener(tableCharges);
 
-        // Gestion du double-clic sur une ligne de la table
-        tableCharges.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                // Si double-clic et une ligne est sélectionnée
-                if (e.getClickCount() == 2 && tableCharges.getSelectedRow() != -1) {
-                    int rowIndex = tableCharges.getSelectedRow();
-                    int modelIndex = tableCharges.convertRowIndexToModel(rowIndex);
-                    Object numeroDoc = tableCharges.getModel().getValueAt(modelIndex, 0);
-                    Object dateDoc = tableCharges.getModel().getValueAt(modelIndex, 3);
-                    gest.afficherChargeDetail((String) numeroDoc, (String) dateDoc);
-                }
-            }
-        });
+
     }
+
 
     /** 
      * Filtre la table en fonction du texte de recherche.
@@ -284,12 +287,10 @@ public class AfficherCharges extends JFrame {
         model.removeRow(ligne);
     }
     
-    public JTable getTableCharges() {
-        return tableCharges;
-    }
     
     public void afficherMessageErreur(String message) {
         JOptionPane.showMessageDialog(this, "Erreur : \n" + message, 
                                       "Erreur", JOptionPane.ERROR_MESSAGE);
     }
+    
 }

@@ -186,5 +186,26 @@ public class ConnexionBD {
     public boolean isConnexionOk() {
     	return (latenceConnexionBD().isPresent() && latenceRequeteBD().isPresent());
     }
+    
+    public void setAutoCommit(boolean value) {
+    	try {
+    		this.getConnexion().setAutoCommit(value);
+    	} catch (SQLException e) {
+    		e.printStackTrace();
+    	}
+    }
+    
+    public void valider() throws SQLException {
+    	this.getConnexion().commit();
+    }
+    
+    public void anuler() {
+    	try {
+    		this.getConnexion().rollback();
+    	} catch (SQLException e) {
+    		e.printStackTrace();
+    	}
+    	
+    }
 
 }
