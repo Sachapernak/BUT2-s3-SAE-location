@@ -43,11 +43,16 @@ public class AjouterCautionnaire extends JInternalFrame {
     private JTextPane textPaneDescription;
     private JTextField textFieldIdentifiantCautionnaire;
     private JTextField textFieldIdentifiantAdresse;
+    private JLabel lblMontantLoyer;
     
     
     public String getTextFieldMontant() {
 		return textFieldMontant.getText();
 	}
+    public String getLblMontantLoyer() {
+		return lblMontantLoyer.getText();
+	}
+	
 
 	public String getTextFieldLienActeCaution() {
 		return textFieldLienActeCaution.getText();
@@ -89,9 +94,7 @@ public class AjouterCautionnaire extends JInternalFrame {
 	    List<String> res = new ArrayList<>();
 	    res.add(getTextFieldIdentifiantCautionnaire());
 	    res.add(getTextFieldNomOuOrga());
-	    res.add(getTextFieldLienActeCaution());
 	    res.add(getTextFieldMontant());
-	   
 	    return res;
 	}
 	 
@@ -185,7 +188,7 @@ public class AjouterCautionnaire extends JInternalFrame {
         // Panel Encadré Nouveau Bail
         JPanel panelCautionnaire = new JPanel();
         panelCautionnaire.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Informations Cautionnaire", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-        panelCautionnaire.setBounds(31, 70, 592, 213);
+        panelCautionnaire.setBounds(31, 70, 592, 223);
         contentPane.add(panelCautionnaire);
         panelCautionnaire.setLayout(null);
 
@@ -210,7 +213,7 @@ public class AjouterCautionnaire extends JInternalFrame {
         
         JButton btnLocataireEstCautionnaire = new JButton("Remplir avec le locataire");
         btnLocataireEstCautionnaire.addActionListener(this.gestionFen);
-        btnLocataireEstCautionnaire.setBounds(359, 181, 193, 22);
+        btnLocataireEstCautionnaire.setBounds(9, 191, 193, 22);
         panelCautionnaire.add(btnLocataireEstCautionnaire);
         
         textFieldPrenom = new JTextField();
@@ -220,7 +223,8 @@ public class AjouterCautionnaire extends JInternalFrame {
         
         
         JPanel panelAdresse = new JPanel();
-        panelAdresse.setBounds(324, 10, 229, 161);
+        panelAdresse.setBorder(new TitledBorder(null, "Adresse", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        panelAdresse.setBounds(323, 16, 229, 179);
         panelCautionnaire.add(panelAdresse);
         panelAdresse.setLayout(new GridLayout(0, 2, 0, 0));
         
@@ -284,7 +288,7 @@ public class AjouterCautionnaire extends JInternalFrame {
         textFieldIdentifiantCautionnaire.setColumns(10);
         
         JScrollPane scrollPaneDescription = new JScrollPane();
-        scrollPaneDescription.setBounds(10, 140, 199, 46);
+        scrollPaneDescription.setBounds(10, 140, 199, 36);
         panelCautionnaire.add(scrollPaneDescription);
         
         textPaneDescription = new JTextPane();
@@ -303,7 +307,7 @@ public class AjouterCautionnaire extends JInternalFrame {
         
         JPanel panel_acteCaution = new JPanel();
         panel_acteCaution.setBorder(new TitledBorder(null, "Caution", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-        panel_acteCaution.setBounds(31, 293, 236, 115);
+        panel_acteCaution.setBounds(30, 299, 236, 115);
         contentPane.add(panel_acteCaution);
         panel_acteCaution.setLayout(null);
         
@@ -322,9 +326,27 @@ public class AjouterCautionnaire extends JInternalFrame {
         panel_acteCaution.add(textFieldLienActeCaution);
         textFieldLienActeCaution.setColumns(10);
         
-        JLabel lblLienActeCaution = new JLabel("Lien vers l'acte de caution : *");
+        JLabel lblLienActeCaution = new JLabel("Lien vers l'acte de caution : ");
         lblLienActeCaution.setBounds(10, 63, 169, 13);
         panel_acteCaution.add(lblLienActeCaution);
+        
+        JLabel lblLoyer = new JLabel("Loyer actuel :");
+        lblLoyer.setFont(new Font("Tahoma", Font.ITALIC, 10));
+        lblLoyer.setForeground(Color.GRAY);
+        lblLoyer.setBounds(9, 43, 79, 13);
+        panel_acteCaution.add(lblLoyer);
+        
+        JLabel lblEuros = new JLabel("€");
+        lblEuros.setFont(new Font("Tahoma", Font.ITALIC, 10));
+        lblEuros.setForeground(Color.GRAY);
+        lblEuros.setBounds(123, 43, 12, 13);
+        panel_acteCaution.add(lblEuros);
+        
+        lblMontantLoyer = new JLabel("");
+        lblMontantLoyer.setFont(new Font("Tahoma", Font.ITALIC, 10));
+        lblMontantLoyer.setForeground(Color.GRAY);
+        lblMontantLoyer.setBounds(77, 43, 45, 13);
+        panel_acteCaution.add(lblMontantLoyer);
         
         btnAnnuler.addActionListener(this.gestionFen);
         btnValider.addActionListener(this.gestionFen);

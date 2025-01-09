@@ -70,28 +70,9 @@ public class GestionAjouterBail implements ActionListener{
 					this.fenAjouterBail.dispose();
 					break;
 				case "Continuer" : 
-					
-					if (!verifierDates()) {
-						this.fenAjouterBail.afficherMessageErreur("Les dates doivent être au format YYYY-MM-dd");
-					} else if (this.fenAjouterBail.getRdbtnBailExistant().isSelected()) {
-						
-						if (this.fenAjouterBail.getTextFieldDateArrivee().equals("")) {
-							this.fenAjouterBail.afficherMessageErreur("Les champs obligatoires (dotés d'une étoile) doivent être renseignés");
-							break;
-						}
-						if(!totalPartEgalAUn()) {
-							this.fenAjouterBail.afficherMessageErreur("Le total des parts n'est pas égal à 1");
-						}else {
-							ouvrirFenAjoutCautionnaire();
-						}
-					}else if(this.fenAjouterBail.getRdbtnNouveauBail().isSelected()) {
-						if (!this.verifChamps.champsRemplis(this.fenAjouterBail.getChampsObligatoiresNouveauBail())){
-							this.fenAjouterBail.afficherMessageErreur("Les champs obligatoires (dotés d'une étoile) doivent être renseignés");
-						} else {
-							ouvrirFenAjoutCautionnaire();
-						}
+					if (!gererErreurs()) {
+						ouvrirFenAjoutCautionnaire();
 					}
-				
 					break;
 				case "Vider" : 
 					this.fenAjouterBail.textFieldIdBail.setText("");
@@ -100,6 +81,30 @@ public class GestionAjouterBail implements ActionListener{
 					break;
 			}
 		}
+	}
+	
+	private boolean gererErreurs() {
+		boolean erreurTrouvee = false;
+		
+		if (!verifChamps.verifierDates(this.fenAjouterBail.getChampsDate())) {
+			this.fenAjouterBail.afficherMessageErreur("Les dates doivent être au format YYYY-MM-dd");
+		} else if (this.fenAjouterBail.getRdbtnBailExistant().isSelected()) {
+			
+			if (this.fenAjouterBail.getTextFieldDateArrivee().isEmpty()) {
+				this.fenAjouterBail.afficherMessageErreur("Les champs obligatoires (dotés d'une étoile) doivent être renseignés");
+				erreurTrouvee = true;
+			}
+			if(!totalPartEgalAUn()) {
+				this.fenAjouterBail.afficherMessageErreur("Le total des parts n'est pas égal à 1");
+				erreurTrouvee = true;
+			}
+		}else if(this.fenAjouterBail.getRdbtnNouveauBail().isSelected()) {
+			if (!this.verifChamps.champsRemplis(this.fenAjouterBail.getChampsObligatoiresNouveauBail())){
+				this.fenAjouterBail.afficherMessageErreur("Les champs obligatoires (dotés d'une étoile) doivent être renseignés");
+				erreurTrouvee = true;
+			} 
+		}
+		return erreurTrouvee;
 	}
 
 	private void ouvrirFenAjoutCautionnaire() {
@@ -129,16 +134,6 @@ public class GestionAjouterBail implements ActionListener{
 		}
 	}
 	
-	public boolean verifierDates() {
-		List<String> champsDate = this.fenAjouterBail.getChampsDate();
-		for (String champ : champsDate) {
-			if (!champ.equals("")&&!this.verifChamps.validerDate(champ)) {
-				return false;
-			}
-		}
-		return true;
-	}
-	
 	public boolean totalPartEgalAUn() {
 		JTable tableParts = this.fenAjouterBail.getTablePartsLoyer();
 		int indexLastLigne = tableParts.getRowCount() - 1; 
@@ -146,5 +141,6 @@ public class GestionAjouterBail implements ActionListener{
 		
 		return totalParts == 1F;
 	}
+	
 
 }

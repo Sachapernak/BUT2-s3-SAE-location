@@ -41,6 +41,15 @@ public class VerificationChamps {
 	    }
 	}
 	
+	public boolean verifierDates(List<String> champsDate) {
+		for (String champ : champsDate) {
+			if (!champ.equals("")&&!validerDate(champ)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	public boolean champsRemplis(List<String> champs) {
 		for (String champ : champs) {
 			System.out.println(champ);
