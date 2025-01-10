@@ -151,7 +151,6 @@ public class DaoBail extends DaoModele<Bail> implements Dao<Bail> {
         PreparedStatement prSt = cn.prepareStatement(req.requete());
         req.parametres(prSt, idLogement);
         ResultSet rs = prSt.executeQuery();
-        
         while (rs.next()) {
             res.add(createInstance(rs));
         }

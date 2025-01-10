@@ -130,16 +130,12 @@ public class AfficherAnciensLocataires extends JInternalFrame {
 				"Identifiant", "Nom", "Pr\u00E9nom", "Date d'entr\u00E9e", "Date de sortie"
 			}
 		));
+		this.gestionTab.remplirTableAnciensLocatairesParBatiment(String.valueOf(comboBoxBatiment.getSelectedItem()));
 		scrollPaneLocataires.setViewportView(tableAnciensLocataires);
-		this.gestionTab.remplirTableAnciensLocataires(String.valueOf(comboBoxBienLocatif.getSelectedItem()));
 		
 		JPanel p_boutons = new JPanel();
 		p_boutons.setBounds(20, 380, 89, 31);
 		getContentPane().add(p_boutons);
-		
-		JButton btnModifier = new JButton("Modifier");
-		btnModifier.addActionListener(this.gestionTab);
-		p_boutons.add(btnModifier);
 		
 		JPanel panel_retour = new JPanel();
 		panel_retour.setBounds(559, 380, 89, 31);

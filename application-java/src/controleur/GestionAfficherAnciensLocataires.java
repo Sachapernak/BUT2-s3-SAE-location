@@ -45,9 +45,7 @@ public class GestionAfficherAnciensLocataires implements ActionListener {
             public void itemStateChanged(ItemEvent evt) {
                 if (evt.getStateChange() == ItemEvent.SELECTED) {
                     remplirComboBoxBienLocatif(String.valueOf(comboBoxBatiment.getSelectedItem()));
-                    if ((comboBoxBienLocatif.getSelectedItem() == null) || (comboBoxBienLocatif.getSelectedItem() == "Tous")){
-                    	remplirTableAnciensLocatairesParBatiment(String.valueOf(comboBoxBatiment.getSelectedItem()));
-                    }
+                    remplirTableAnciensLocatairesParBatiment(String.valueOf(comboBoxBatiment.getSelectedItem()));
                 }
             }
         });
@@ -55,12 +53,16 @@ public class GestionAfficherAnciensLocataires implements ActionListener {
 	
 	public void gestionActionComboLogement() {
 		JComboBox comboBoxBienLocatif = this.fenAfficherAnciensLocataires.getComboBoxBienLocatif();
+		JComboBox comboBoxBatiment = this.fenAfficherAnciensLocataires.getComboBoxBatiment();
 		comboBoxBienLocatif.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent evt) {
                 if (evt.getStateChange() == ItemEvent.SELECTED) {
                 	System.out.println("a");
 					remplirTableAnciensLocataires(String.valueOf(comboBoxBienLocatif.getSelectedItem()));
+					if (comboBoxBienLocatif.getSelectedItem() == "Tous"){
+						remplirTableAnciensLocatairesParBatiment(String.valueOf(comboBoxBatiment.getSelectedItem()));
+					}
                 }
             }
         });
@@ -73,9 +75,6 @@ public class GestionAfficherAnciensLocataires implements ActionListener {
 		switch (btnLibelle) {
 			case "Retour" :
 				this.fenAfficherAnciensLocataires.dispose();
-				break;
-			case "Modifier" :
-				System.out.println("modification");
 				break;
 		}
 	}
@@ -116,9 +115,11 @@ public class GestionAfficherAnciensLocataires implements ActionListener {
 			model.setRowCount(0);
 			List<Contracter> contrats = new DaoContracter().findByIdLogement(bienLocatif);
 	        for (Contracter contrat : contrats) {
-	        	Locataire locataire = contrat.getLocataire();
-	        	model.addRow(new String[] { locataire.getIdLocataire(), locataire.getNom(), locataire.getPrenom(), 
-	        			contrat.getDateEntree(), contrat.getDateSortie()});
+	        	if (contrat.getDateSortie() != null) {
+		        	Locataire locataire = contrat.getLocataire();
+		        	model.addRow(new String[] { locataire.getIdLocataire(), locataire.getNom(), locataire.getPrenom(), 
+		        			contrat.getDateEntree(), contrat.getDateSortie()});
+	        	}
 	        }
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -134,14 +135,19 @@ public class GestionAfficherAnciensLocataires implements ActionListener {
 			DefaultTableModel model = (DefaultTableModel) tableLocataires.getModel();
 			model.setRowCount(0);
 			
-			List<Bail> bails = new DaoBail().findByIdLogement(batiment);
-	        for (Bail bail : bails) {
-	        	List<Contracter> contrats = new DaoContracter().getContrats(bail);
-	        	for (Contracter contrat : contrats) {
-	        		Locataire locataire = contrat.getLocataire();
-	        		model.addRow(new String[] { locataire.getIdLocataire(), locataire.getNom(), locataire.getPrenom(), 
-	        		contrat.getDateEntree(), contrat.getDateSortie()});
-	        	}
+			List<BienLocatif> logements = new DaoBienLocatif().findByIdBatiment(batiment);
+			for (BienLocatif logement : logements) {
+				List<Bail> bails = new DaoBail().findByIdLogement(logement.getIdentifiantLogement());
+		        for (Bail bail : bails) {
+		        	List<Contracter> contrats = new DaoContracter().getContrats(bail);
+		        	for (Contracter contrat : contrats) {
+		        		if (contrat.getDateSortie() != null) {
+			        		Locataire locataire = contrat.getLocataire();
+			        		model.addRow(new String[] { locataire.getIdLocataire(), locataire.getNom(), locataire.getPrenom(), 
+			        		contrat.getDateEntree(), contrat.getDateSortie()});
+		        		}
+		        	}
+		        }
 	        }
 		} catch (SQLException e) {
 			e.printStackTrace();
