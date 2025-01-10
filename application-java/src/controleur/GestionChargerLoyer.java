@@ -1,5 +1,6 @@
 package controleur;
 
+import java.awt.Window.Type;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
@@ -8,13 +9,22 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
 import java.util.*;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 
+import modele.BienLocatif;
+import modele.ConnexionBD;
+import modele.DocumentComptable;
+import modele.FactureBien;
+import modele.TypeDoc;
+import modele.dao.DaoBienLocatif;
 import modele.dao.DaoDocumentComptable;
+import modele.dao.DaoFactureBien;
+import modele.dao.DaoLocataire;
 import vue.ChargerLoyers;
 
 
@@ -28,11 +38,11 @@ import vue.ChargerLoyers;
  *  - montant total (loyer + charges)
  *  - identifiant (numDoc) pseudo-unique
  */
-public class GestionnaireChargerLoyer {
+public class GestionChargerLoyer {
 
 	private ChargerLoyers fen;
 	
-	public GestionnaireChargerLoyer(ChargerLoyers fen) {
+	public GestionChargerLoyer(ChargerLoyers fen) {
 		this.fen = fen;
 	}
 
@@ -192,8 +202,12 @@ public class GestionnaireChargerLoyer {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
             	
-            	// TODO : envoyer sur la BD
-            	
+            	try {
+					envoyerDonneesVersBD(fen.getListsTable());
+				} catch (SQLException | IOException e) {
+					fen.afficherMessageErreur(e.getMessage());
+					e.printStackTrace();
+				}
                 fen.dispose();
             }
         });
@@ -232,22 +246,56 @@ public class GestionnaireChargerLoyer {
         });
 	}
 	
-	private void envoyerDonneesVersBD(List<List<String>> data ) {
+	private void envoyerDonneesVersBD(List<List<String>> data ) throws SQLException, IOException  {
 		
 		DaoDocumentComptable daoDoc = new DaoDocumentComptable();
+		DaoBienLocatif daoBien = new DaoBienLocatif();
+		DaoLocataire daoLoc = new DaoLocataire();
+		DaoFactureBien daoFactureBien = new DaoFactureBien();
+		String lienDoc = fen.getLienFichier();
+		TypeDoc type = TypeDoc.LOYER;
+		
+		
+		ConnexionBD bd = ConnexionBD.getInstance();
 		
 		// TODO Mettre en place un swing-worker + curseur souris en sablier.
-		
-		for (List<String> ligne : data) {
+		// TODO afficher une barre de chargement ?
+		try {
+			bd.setAutoCommit(false);
 			
-			String IdLog = ligne.get(0);
-			String IdLoc = ligne.get(1);
-			String date = ligne.get(2);
-			BigDecimal montant = new BigDecimal(ligne.get(3));
-			String numDoc = ligne.get(4);
-
-		}
+			for (List<String> ligne : data) {
+				
+				String idLog = ligne.get(0);
+				String idLoc = ligne.get(1);
+				String date = ligne.get(2);
+				BigDecimal montant = new BigDecimal(ligne.get(3));
+				String numDoc = ligne.get(4);
+				
+				BienLocatif bien = daoBien.findById(idLog);
+	
+				DocumentComptable doc = new DocumentComptable(numDoc, date, type, montant, lienDoc);
+				
+				doc.setBatiment(bien.getBat());
+				doc.setLocataire(daoLoc.findById(idLoc));
+				
+				daoDoc.create(doc);
+				
+				FactureBien fb = new FactureBien(bien, doc, 1);
+				
+				daoFactureBien.create(fb);
+	
+			}
+			
+			bd.valider();
 		
+		} catch (SQLException | IOException e) {
+			bd.anuler();
+			bd.setAutoCommit(true);
+			fen.afficherMessageErreur(e.getMessage());
+			e.printStackTrace();
+		} finally {
+			bd.setAutoCommit(true);
+		}
 		
 	}
 }

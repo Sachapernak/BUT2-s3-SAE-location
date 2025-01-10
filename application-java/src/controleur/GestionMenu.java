@@ -13,6 +13,7 @@ import vue.AfficherAnciensLocataires;
 import vue.AfficherCharges;
 import vue.AfficherLocatairesActuels;
 import vue.AfficherLoyers;
+import vue.ChargerLoyers;
 import vue.FenetrePrincipale;
 import vue.PageConnexion;
 import vue.ReglesMetier;
@@ -83,6 +84,11 @@ public class GestionMenu implements ActionListener{
 				JLayeredPane layeredPaneLoyers = this.fenPrincipale.getLayeredPane();
 				layeredPaneLoyers.add(afloyers, JLayeredPane.PALETTE_LAYER);
 				afloyers.setVisible(true);
+				break;
+				
+			case "Charger les loyers" : 
+				ChargerLoyers chLoyer = new ChargerLoyers();
+				chLoyer.setVisible(true);
 				break;
 				
 			default:

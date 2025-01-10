@@ -6,7 +6,8 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -17,9 +18,10 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import controleur.GestionnaireChargerLoyer;
+import controleur.GestionChargerLoyer;
 
 /**
  * Vue permettant de charger des loyers depuis un fichier CSV.
@@ -39,7 +41,7 @@ public class ChargerLoyers extends JDialog {
     private JButton btnAnnuler;
     
     // Contrôleur pour la logique de parsing CSV
-    private final GestionnaireChargerLoyer gestionnaireCharger;
+    private final GestionChargerLoyer gestionnaireCharger;
 
     /**
      * Lance l'application en mode autonome (pour test).
@@ -59,7 +61,7 @@ public class ChargerLoyers extends JDialog {
      */
     public ChargerLoyers() {
         // Instancie le contrôleur
-        this.gestionnaireCharger = new GestionnaireChargerLoyer(this);
+        this.gestionnaireCharger = new GestionChargerLoyer(this);
 
         setBounds(100, 100, 530, 381);
         getContentPane().setLayout(new BorderLayout());
@@ -202,4 +204,48 @@ public class ChargerLoyers extends JDialog {
     public String getLienFichier() {
         return textFieldLienFichier.getText();
     }
+    
+    /**
+     * Récupère les données de la JTable et les retourne sous forme de List<List<String>>.
+     * Ignore les lignes vides ou celles qui ne sont pas complètement remplies.
+     *
+     * @return List<List<String>> contenant les données valides de la JTable
+     */
+    public List<List<String>> getListsTable() {
+        DefaultTableModel model = (DefaultTableModel) tableLoyer.getModel();
+        int rowCount = model.getRowCount();
+        int colCount = model.getColumnCount();
+
+        List<List<String>> validRows = new ArrayList<>();
+
+        // Parcours des lignes du tableau
+        for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+            List<String> rowData = new ArrayList<>(colCount);
+            boolean skipRow = false;
+
+            // Parcours des colonnes de la ligne
+            for (int colIndex = 0; colIndex < colCount; colIndex++) {
+                Object cellValue = model.getValueAt(rowIndex, colIndex);
+                if (cellValue == null || cellValue.toString().trim().isEmpty()) {
+                    skipRow = true;  // On ignore cette ligne si une cellule est vide
+                    break;
+                }
+                rowData.add(cellValue.toString().trim());
+            }
+
+            // Ajoute la ligne seulement si elle est complète
+            if (!skipRow) {
+                validRows.add(rowData);
+            }
+        }
+
+        return validRows;
+    }
+    
+    // Pour afficher un message d'erreur
+    public void afficherMessageErreur(String message) {
+        JOptionPane.showMessageDialog(this, "Erreur : \n" + message, 
+                                      "Erreur", JOptionPane.ERROR_MESSAGE);
+    }
+
 }
