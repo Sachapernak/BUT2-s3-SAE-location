@@ -16,6 +16,7 @@ import modele.dao.DaoDocumentComptable;
 import modele.dao.DaoFactureBien;
 import modele.dao.DaoLocataire;
 import vue.AfficherLoyers;
+import vue.ChargerLoyers;
 
 /**
  * Contrôleur gérant les actions liées à l'affichage des loyers.
@@ -208,14 +209,10 @@ public class GestionAfficherLoyers {
 
     /**
      * Action pour le bouton "Ajouter".
-     * TODO : Ouvrir une nouvelle fenêtre/panneau pour saisir un nouveau loyer.
      */
     public void ajouterLoyer() {
-        // Fenêtre ou panel à définir plus tard
-        JOptionPane.showMessageDialog(frame, 
-            "Ouverture panneau d'ajout de loyer (à implémenter).", 
-            "Info", 
-            JOptionPane.INFORMATION_MESSAGE);
+		ChargerLoyers chLoyer = new ChargerLoyers();
+		chLoyer.setVisible(true);
     }
 
     /**
