@@ -162,7 +162,7 @@ public class GestionAjouterCautionnaire implements ActionListener {
 			erreurTrouvee = true;
 		}
 		if (!this.verifChamps.validerMontant(montantStr, recupererMontantLoyer())) {
-			this.fenAjouterCautionnaire.afficherMessageErreur("Le montant de la caution doit être positif");
+			this.fenAjouterCautionnaire.afficherMessageErreur("Le montant de la caution doit être positif et ne peut excéder le triple du loyer");
 			erreurTrouvee = true;
 		}
 
