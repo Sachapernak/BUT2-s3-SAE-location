@@ -8,7 +8,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -25,11 +24,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import controleur.GestionChargerLoyer;
-import javax.swing.SwingConstants;
-import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
-import java.awt.event.ActionEvent;
 
 /**
  * Vue permettant de charger des loyers depuis un fichier CSV.
@@ -334,5 +330,13 @@ public class ChargerLoyers extends JDialog {
             }
         };
         verticalBar.addAdjustmentListener(downScroller);
+    }
+    
+    public void fenClear() {
+        DefaultTableModel model = (DefaultTableModel) tableLoyer.getModel();
+        model.setRowCount(0); // Nettoyage des lignes existantes
+        setTextLienFichier("");
+        setTxtNbLoyers("0");
+
     }
 }
