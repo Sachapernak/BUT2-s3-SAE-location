@@ -114,22 +114,25 @@ public class FenetrePrincipale extends JFrame {
 		locataires.add(mntmLocatairesActuels);
 		locataires.add(mntmAnciensLocataires);
 		
-		JMenu archives = new JMenu("Charge et loyers");
-		archives.setForeground(new Color(255, 255, 255));
-		archives.setHorizontalAlignment(SwingConstants.CENTER);
-		menuBar.add(archives);
+		JMenu menuloyersCharges = new JMenu("Charge et loyers");
+		menuloyersCharges.setForeground(new Color(255, 255, 255));
+		menuloyersCharges.setHorizontalAlignment(SwingConstants.CENTER);
+		menuBar.add(menuloyersCharges);
 		
 		JMenuItem mntmConsulterCharges = new JMenuItem("Consulter les charges");
-		archives.add(mntmConsulterCharges);
+		menuloyersCharges.add(mntmConsulterCharges);
 		
 		JMenuItem mntmConsulterLoyers = new JMenuItem("Consulter les loyers");
 		mntmConsulterLoyers.addActionListener(this.gestionMenu);
-		archives.add(mntmConsulterLoyers);
+		menuloyersCharges.add(mntmConsulterLoyers);
 		
 		JMenuItem mntmChargerLoyers = new JMenuItem("Charger les loyers");
 		mntmChargerLoyers.addActionListener(this.gestionMenu);
-		archives.add(mntmChargerLoyers);
-		mntmConsulterCharges.addActionListener(this.gestionMenu);
+		menuloyersCharges.add(mntmChargerLoyers);
+		
+		JMenuItem mntmICC = new JMenuItem("Consulter ICC");
+		mntmICC.addActionListener(this.gestionMenu);
+		menuloyersCharges.add(mntmICC);
 		
 		JMenu reglesMetier = new JMenu("Règles métier");
 		reglesMetier.setForeground(new Color(255, 255, 255));
@@ -148,9 +151,9 @@ public class FenetrePrincipale extends JFrame {
 		menuBar.add(Box.createHorizontalGlue());
 		JMenu configurationConnexion = new JMenu(" ");
 		ImageIcon originalIcon = new ImageIcon("images/iconeEngrenage.png");
-		Image ImageRedim = originalIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
-		ImageIcon IconeRedim = new ImageIcon(ImageRedim);
-		configurationConnexion.setIcon(IconeRedim);
+		Image imageRedim = originalIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+		ImageIcon iconeRedim = new ImageIcon(imageRedim);
+		configurationConnexion.setIcon(iconeRedim);
 		menuBar.add(configurationConnexion);
 		
 		JMenuItem itemConfigurationConnexion = new JMenuItem("Configurer la connexion");

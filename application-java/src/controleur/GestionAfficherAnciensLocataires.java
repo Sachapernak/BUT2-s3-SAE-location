@@ -95,7 +95,7 @@ public class GestionAfficherAnciensLocataires implements ActionListener {
 	public void remplirComboBoxBienLocatif(String batiment) {
 	    JComboBox comboBoxBienLocatif = this.fenAfficherAnciensLocataires.getComboBoxBienLocatif();
 	    try {
-	    	List<String> valeurs = new DaoBienLocatif().findByIdBatiment(batiment).stream()
+	    	List<String> valeurs = new DaoBienLocatif().findByIdBat(batiment).stream()
 					.map(e -> e.getIdentifiantLogement())
 					.collect(Collectors.toList());
 	    	valeurs.add(0, "Tous");
@@ -135,7 +135,7 @@ public class GestionAfficherAnciensLocataires implements ActionListener {
 			DefaultTableModel model = (DefaultTableModel) tableLocataires.getModel();
 			model.setRowCount(0);
 			
-			List<BienLocatif> logements = new DaoBienLocatif().findByIdBatiment(batiment);
+			List<BienLocatif> logements = new DaoBienLocatif().findByIdBat(batiment);
 			for (BienLocatif logement : logements) {
 				List<Bail> bails = new DaoBail().findByIdLogement(logement.getIdentifiantLogement());
 		        for (Bail bail : bails) {

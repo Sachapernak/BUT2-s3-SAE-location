@@ -15,15 +15,17 @@ import controleur.GestionICC;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+
 import java.util.List;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
 
 public class SetICC extends JInternalFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JTextField textFieldAnnee;
-	private JTextField textFieldTrim;
 	private JTextField textFieldIndice;
 	private JButton btnSupprimer;
 	private JButton btnConfirmer;
@@ -32,6 +34,7 @@ public class SetICC extends JInternalFrame {
 	private GestionICC gest;
 	private JScrollPane scrollPane;
 	private JList<String> listICC;
+	private JComboBox<String> comboBoxTrimestre;
 
 	/**
 	 * Launch the application.
@@ -58,12 +61,12 @@ public class SetICC extends JInternalFrame {
 		
 		gest = new GestionICC(this);
 		
-		setBounds(100, 100, 480, 210);
+		setBounds(100, 100, 480, 280);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{160, 90, 0, 0, 0, 0};
 		gridBagLayout.rowHeights = new int[]{40, 0, 0, 0, 0, 0, 0};
-		gridBagLayout.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gridBagLayout.columnWeights = new double[]{0.0, 1.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
+		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE};
 		getContentPane().setLayout(gridBagLayout);
 		
 		JLabel lblTitre = new JLabel("Ajouter / Supprimer");
@@ -103,7 +106,7 @@ public class SetICC extends JInternalFrame {
 		listICC = new JList<String>();
 		scrollPane.setViewportView(listICC);
 		
-		JLabel lblTrimestre = new JLabel("Trimestre de l'ICC (1-3) :");
+		JLabel lblTrimestre = new JLabel("Trimestre de l'ICC :");
 		GridBagConstraints gbc_lblTrimestre = new GridBagConstraints();
 		gbc_lblTrimestre.anchor = GridBagConstraints.EAST;
 		gbc_lblTrimestre.insets = new Insets(0, 0, 5, 5);
@@ -111,25 +114,26 @@ public class SetICC extends JInternalFrame {
 		gbc_lblTrimestre.gridy = 2;
 		getContentPane().add(lblTrimestre, gbc_lblTrimestre);
 		
-		textFieldTrim = new JTextField();
+		comboBoxTrimestre = new JComboBox<String>();
+		comboBoxTrimestre.setModel(new DefaultComboBoxModel<String>(new String[] {"1", "2", "3"}));
 		GridBagConstraints gbc_textFieldTrim = new GridBagConstraints();
 		gbc_textFieldTrim.insets = new Insets(0, 0, 5, 5);
 		gbc_textFieldTrim.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textFieldTrim.gridx = 1;
 		gbc_textFieldTrim.gridy = 2;
-		getContentPane().add(textFieldTrim, gbc_textFieldTrim);
-		textFieldTrim.setColumns(10);
+		getContentPane().add(comboBoxTrimestre, gbc_textFieldTrim);
 		
 		JLabel lblIndice = new JLabel("Indice :");
 		GridBagConstraints gbc_lblIndice = new GridBagConstraints();
 		gbc_lblIndice.insets = new Insets(0, 0, 5, 5);
-		gbc_lblIndice.anchor = GridBagConstraints.EAST;
+		gbc_lblIndice.anchor = GridBagConstraints.NORTHEAST;
 		gbc_lblIndice.gridx = 0;
 		gbc_lblIndice.gridy = 3;
 		getContentPane().add(lblIndice, gbc_lblIndice);
 		
 		textFieldIndice = new JTextField();
 		GridBagConstraints gbc_textFieldIndice = new GridBagConstraints();
+		gbc_textFieldIndice.anchor = GridBagConstraints.NORTH;
 		gbc_textFieldIndice.insets = new Insets(0, 0, 5, 5);
 		gbc_textFieldIndice.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textFieldIndice.gridx = 1;
@@ -145,7 +149,7 @@ public class SetICC extends JInternalFrame {
 		gbc_btnSupprimer.gridy = 5;
 		getContentPane().add(btnSupprimer, gbc_btnSupprimer);
 		
-		btnConfirmer = new JButton("Confirmer");
+		btnConfirmer = new JButton("Ajouter");
 
 		
 		GridBagConstraints gbc_btnConfirmer = new GridBagConstraints();
@@ -155,7 +159,7 @@ public class SetICC extends JInternalFrame {
 		getContentPane().add(btnConfirmer, gbc_btnConfirmer);
 
 		
-		btnAnnuler = new JButton("Annuler");
+		btnAnnuler = new JButton("Quitter");
 		
 		GridBagConstraints gbc_btnAnnuler = new GridBagConstraints();
 		gbc_btnAnnuler.gridx = 4;
@@ -186,11 +190,15 @@ public class SetICC extends JInternalFrame {
 	}
 	
 	public String getTrimestre() {
-		return textFieldTrim.getText();
+		return String.valueOf(comboBoxTrimestre.getSelectedItem());
 	}
 	
 	public String getIndice() {
 		return textFieldIndice.getText();
+	}
+	
+	public String getSelectedLine() {
+		return listICC.getSelectedValue();
 	}
 	
     // Pour afficher un message d'erreur
