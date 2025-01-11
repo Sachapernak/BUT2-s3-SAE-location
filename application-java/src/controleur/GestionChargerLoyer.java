@@ -1,6 +1,7 @@
 package controleur;
 
 import java.awt.Window.Type;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
@@ -196,6 +197,28 @@ public class GestionChargerLoyer {
 	public void gestionAnnuler(JButton btnAnnuler) {
 		btnAnnuler.addActionListener(e -> fen.dispose());
 	}
+	
+	public void gestionBtnSupprimer(JButton btnSupprimer) {
+		btnSupprimer.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		if (fen.nbLigneTable() > 0) {
+            		fen.ajouterNbLoyers(-1);
+        		}
+        		fen.supprimerLigne(fen.getSelectLineIndex());
+        	}
+        });
+	}
+
+	public void gestionBtnAjouter(JButton btnAjouter) {
+		btnAjouter.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		fen.ajouterLigneVide();
+        		fen.scrollToBottom();
+        		fen.ajouterNbLoyers(1);
+        	}
+        });
+	}
+
 
 	public void gestionCharger(JButton btnCharger) {
 		btnCharger.addActionListener(new ActionListener() {

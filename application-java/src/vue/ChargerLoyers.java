@@ -1,5 +1,6 @@
 package vue;
 
+import java.awt.Adjustable;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Dimension;
@@ -8,11 +9,13 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JTextField;
@@ -22,6 +25,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import controleur.GestionChargerLoyer;
+import javax.swing.SwingConstants;
+import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
+import java.awt.event.ActionEvent;
 
 /**
  * Vue permettant de charger des loyers depuis un fichier CSV.
@@ -42,6 +50,9 @@ public class ChargerLoyers extends JDialog {
     
     // Contrôleur pour la logique de parsing CSV
     private final GestionChargerLoyer gestionnaireCharger;
+    private JButton btnAjouter;
+    private JButton btnSupprimer;
+    private JScrollPane scrollPaneLoyers;
 
     /**
      * Lance l'application en mode autonome (pour test).
@@ -130,7 +141,7 @@ public class ChargerLoyers extends JDialog {
         contentPanelPrincipal.add(lblLoyersAAjouter, gbc_lblLoyersAAjouter);
 
         // Tableau pour afficher les loyers chargés
-        JScrollPane scrollPaneLoyers = new JScrollPane();
+        scrollPaneLoyers = new JScrollPane();
         scrollPaneLoyers.setPreferredSize(new Dimension(100, 200));
         GridBagConstraints gbc_scrollPaneLoyers = new GridBagConstraints();
         gbc_scrollPaneLoyers.insets = new Insets(0, 0, 5, 0);
@@ -143,9 +154,7 @@ public class ChargerLoyers extends JDialog {
         // Configuration du modèle de table : 5 colonnes
         tableLoyer = new JTable();
         tableLoyer.setModel(new DefaultTableModel(
-        	new Object[][] {
-        		{null, null, null, null, null},
-        	},
+        	null,
         	new String[] {
         		"ID Logement", "ID Locataire", "Date", "Montant total", "NumDoc"
         	}
@@ -156,6 +165,14 @@ public class ChargerLoyers extends JDialog {
         JPanel buttonPane = new JPanel();
         buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
         getContentPane().add(buttonPane, BorderLayout.SOUTH);
+        
+        btnSupprimer = new JButton("Supprimer ligne");
+
+        buttonPane.add(btnSupprimer);
+        
+        btnAjouter = new JButton("Ajouter ligne");
+
+        buttonPane.add(btnAjouter);
 
         btnCharger = new JButton("Charger");
         btnCharger.setActionCommand("OK");
@@ -172,7 +189,10 @@ public class ChargerLoyers extends JDialog {
         gestionnaireCharger.gestionParcourirFichier(btnParcourirFichier);
         gestionnaireCharger.gestionCharger(btnCharger);
         gestionnaireCharger.gestionAnnuler(btnAnnuler);
+        gestionnaireCharger.gestionBtnAjouter(btnAjouter);
+        gestionnaireCharger.gestionBtnSupprimer(btnSupprimer);
     }
+
 
 
 	
@@ -195,7 +215,15 @@ public class ChargerLoyers extends JDialog {
         }
         
         // Mise à jour du label indiquant le nombre de loyers
-        lblNbLoyers.setText(String.valueOf(data.size()));
+        setTxtNbLoyers(String.valueOf(data.size()));
+    }
+    
+    public void setTxtNbLoyers(String valeur) {
+    	lblNbLoyers.setText(valeur);
+    }
+    
+    public void ajouterNbLoyers(int valeur) {
+    	lblNbLoyers.setText(String.valueOf(Integer.valueOf(lblNbLoyers.getText()) + valeur));
     }
     
     /**
@@ -214,32 +242,49 @@ public class ChargerLoyers extends JDialog {
     public List<List<String>> getListsTable() {
         DefaultTableModel model = (DefaultTableModel) tableLoyer.getModel();
         int rowCount = model.getRowCount();
-        int colCount = model.getColumnCount();
+
 
         List<List<String>> validRows = new ArrayList<>();
 
         // Parcours des lignes du tableau
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
-            List<String> rowData = new ArrayList<>(colCount);
-            boolean skipRow = false;
 
-            // Parcours des colonnes de la ligne
-            for (int colIndex = 0; colIndex < colCount; colIndex++) {
-                Object cellValue = model.getValueAt(rowIndex, colIndex);
-                if (cellValue == null || cellValue.toString().trim().isEmpty()) {
-                    skipRow = true;  // On ignore cette ligne si une cellule est vide
-                    break;
-                }
-                rowData.add(cellValue.toString().trim());
-            }
+        	List<String> rowData;
+        	
+        	rowData = getLigneIfValid(rowIndex);
+        	
+        	if (!rowData.isEmpty()) {
+        		validRows.add(rowData);
+        	}
 
-            // Ajoute la ligne seulement si elle est complète
-            if (!skipRow) {
-                validRows.add(rowData);
-            }
+
         }
 
         return validRows;
+    }
+    
+    public List<String> getLigneIfValid(int rowIndex) {
+    	
+        DefaultTableModel model = (DefaultTableModel) tableLoyer.getModel();
+        boolean skipRow = false;  
+        int colCount = model.getColumnCount();
+        List<String> rowData = new ArrayList<>(colCount);
+        
+        // Parcours des colonnes de la ligne
+        for (int colIndex = 0; colIndex < colCount; colIndex++) {
+            Object cellValue = model.getValueAt(rowIndex, colIndex);
+            if (cellValue == null || cellValue.toString().trim().isEmpty()) {
+                skipRow = true;  // On ignore cette ligne si une cellule est vide
+                break;
+            }
+            rowData.add(cellValue.toString().trim());
+        }
+
+        // Ajoute la ligne seulement si elle est complète
+        if (!skipRow) {
+            return rowData;
+        }
+    	return Collections.emptyList();
     }
     
     // Pour afficher un message d'erreur
@@ -247,5 +292,47 @@ public class ChargerLoyers extends JDialog {
         JOptionPane.showMessageDialog(this, "Erreur : \n" + message, 
                                       "Erreur", JOptionPane.ERROR_MESSAGE);
     }
+    
+    public int getSelectLineIndex() {
 
+    	return tableLoyer.getSelectedRow();
+    }
+    
+    public void supprimerLigne(int ligne) {
+        DefaultTableModel model = (DefaultTableModel) tableLoyer.getModel();
+    	
+    	if (ligne >= 0) {
+    		model.removeRow(ligne);
+    	} else if (nbLigneTable() > 0) {
+    		model.removeRow(nbLigneTable() - 1);
+    	}
+        
+
+    }
+    
+    public void ajouterLigneVide() {
+        DefaultTableModel model = (DefaultTableModel) tableLoyer.getModel();
+        model.addRow(new String[] {null, null, null, null});
+
+    }
+    
+    public int nbLigneTable() {
+    	DefaultTableModel model = (DefaultTableModel) tableLoyer.getModel();
+    	return model.getRowCount();
+    }
+    
+    // Scroll a la toute fin de la scrollPane
+    public void scrollToBottom() {
+    	
+        JScrollBar verticalBar = scrollPaneLoyers.getVerticalScrollBar();
+        AdjustmentListener downScroller = new AdjustmentListener() {
+            @Override
+            public void adjustmentValueChanged(AdjustmentEvent e) {
+                Adjustable adjustable = e.getAdjustable();
+                adjustable.setValue(adjustable.getMaximum());
+                verticalBar.removeAdjustmentListener(this);
+            }
+        };
+        verticalBar.addAdjustmentListener(downScroller);
+    }
 }

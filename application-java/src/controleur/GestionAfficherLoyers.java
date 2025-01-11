@@ -185,12 +185,12 @@ public class GestionAfficherLoyers {
 							frame.afficherMessageErreur(e.getMessage());
 						}
                     	
-                        return new Object[] { idBien, l.getDateDoc(), l.getMontant().toString() };
+                        return new Object[] {l.getNumeroDoc(), idBien, l.getDateDoc(), l.getMontant().toString() };
                     }).toList();
 
                     frame.majTableLoyers(data);
 
-                    // //TODO : calculer réellement le ratio payés/total. Exemple fictif :
+                    //TODO : calculer réellement le ratio payés/total.
                     String ratio = loyers.size() + " / " + loyers.size();
                     frame.setNbLoyers(ratio);
 
@@ -209,6 +209,8 @@ public class GestionAfficherLoyers {
 
     /**
      * Action pour le bouton "Ajouter".
+     * 
+     * Ouvre la page de chargement des loyers
      */
     public void ajouterLoyer() {
 		ChargerLoyers chLoyer = new ChargerLoyers();
@@ -226,9 +228,8 @@ public class GestionAfficherLoyers {
             return;
         }
         
-        // Récupérer la clé d'identification du loyer (ou ID Bien + date, selon la structure)
-        // Ici, on suppose qu'on s'appuie sur l'ID Bien et la date pour identifier le loyer.
-        Object idBien = frame.getValueAtSelectedRow();
+        // Verification de la présence des données
+        Object idBien = frame.getNumDocAtSelectedRow();
         if (idBien == null) {
             frame.afficherMessageErreur("Ligne de loyer invalide.");
             return;
@@ -240,23 +241,21 @@ public class GestionAfficherLoyers {
             JOptionPane.YES_NO_OPTION);
 
         if (confirmation != JOptionPane.YES_OPTION) {
+
             return;
         }
 
-        // Suppression en base de données (à adapter selon la structure du DocumentComptable)
-        // Exemple : vous pourriez avoir doc = new DaoDocumentComptable().findByIdBien(idBien, date) etc.
-        // Ici, on ne dispose pas de la dateDoc, donc à ajuster selon votre schéma de table.
-        
+        // Suppression en base de données du loyer        
         frame.setWaitCursor(true);
 
         new SwingWorker<Boolean, Void>() {
             @Override
-            protected Boolean doInBackground() throws Exception {
-            	/** TODO
-                * On suppose ici une méthode style : dao.deleteLoyer(idBien, dateDoc);
-                * Pour l'exemple, on va juste simuler un true
-                * A adapter à votre structure de la base/DAO.
-                **/
+            protected Boolean doInBackground() throws Exception {   
+            	
+            	DaoDocumentComptable dao = new DaoDocumentComptable();
+            	DocumentComptable doc = dao.findById(String.valueOf(frame.getNumDocAtSelectedRow()), String.valueOf(frame.getDateAtSelectedRow()));
+            	
+            	dao.delete(doc);
                 return true; 
             }
 
