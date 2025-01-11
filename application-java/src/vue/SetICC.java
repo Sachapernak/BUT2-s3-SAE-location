@@ -115,7 +115,7 @@ public class SetICC extends JInternalFrame {
 		getContentPane().add(lblTrimestre, gbc_lblTrimestre);
 		
 		comboBoxTrimestre = new JComboBox<String>();
-		comboBoxTrimestre.setModel(new DefaultComboBoxModel<String>(new String[] {"1", "2", "3"}));
+		comboBoxTrimestre.setModel(new DefaultComboBoxModel<String>(new String[] {"1", "2", "3", "4"}));
 		GridBagConstraints gbc_textFieldTrim = new GridBagConstraints();
 		gbc_textFieldTrim.insets = new Insets(0, 0, 5, 5);
 		gbc_textFieldTrim.fill = GridBagConstraints.HORIZONTAL;
