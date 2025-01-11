@@ -1,6 +1,6 @@
 package controleur;
 
-import java.awt.Window.Type;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
@@ -11,9 +11,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.function.Consumer;
 
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 
 import modele.BienLocatif;
@@ -26,6 +26,7 @@ import modele.dao.DaoDocumentComptable;
 import modele.dao.DaoFactureBien;
 import modele.dao.DaoLocataire;
 import vue.ChargerLoyers;
+import vue.FenBarreChargement;
 
 
 
@@ -196,21 +197,46 @@ public class GestionChargerLoyer {
 	public void gestionAnnuler(JButton btnAnnuler) {
 		btnAnnuler.addActionListener(e -> fen.dispose());
 	}
+	
+	public void gestionBtnSupprimer(JButton btnSupprimer) {
+		btnSupprimer.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		if (fen.nbLigneTable() > 0) {
+            		fen.ajouterNbLoyers(-1);
+        		}
+        		fen.supprimerLigne(fen.getSelectLineIndex());
+        	}
+        });
+	}
+
+	public void gestionBtnAjouter(JButton btnAjouter) {
+		btnAjouter.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		fen.ajouterLigneVide();
+        		fen.scrollToBottom();
+        		fen.ajouterNbLoyers(1);
+        	}
+        });
+	}
+
 
 	public void gestionCharger(JButton btnCharger) {
-		btnCharger.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-            	
-            	try {
-					envoyerDonneesVersBD(fen.getListsTable());
-				} catch (SQLException | IOException e) {
-					fen.afficherMessageErreur(e.getMessage());
-					e.printStackTrace();
-				}
-                fen.dispose();
-            }
-        });
+	    btnCharger.addActionListener(evt -> {
+	        List<List<String>> data = fen.getListsTable();
+	        if (data.isEmpty()) {
+	            fen.afficherMessageErreur("Aucun loyer à charger !");
+	            return;
+	        }
+	        // Ouvre la vue FenBarreChargement (modale)
+	        FenBarreChargement fenBarre = new FenBarreChargement(
+	            fen, // la fenêtre parent
+	            this, // le gestionnaire
+	            data, // la liste de loyers
+	            fen.getLienFichier() // le CSV
+	        );
+	        fenBarre.setVisible(true);
+	        fen.fenClear();
+	    });
 	}
 
 	/**
@@ -246,56 +272,74 @@ public class GestionChargerLoyer {
         });
 	}
 	
-	private void envoyerDonneesVersBD(List<List<String>> data ) throws SQLException, IOException  {
-		
-		DaoDocumentComptable daoDoc = new DaoDocumentComptable();
-		DaoBienLocatif daoBien = new DaoBienLocatif();
-		DaoLocataire daoLoc = new DaoLocataire();
-		DaoFactureBien daoFactureBien = new DaoFactureBien();
-		String lienDoc = fen.getLienFichier();
-		TypeDoc type = TypeDoc.LOYER;
-		
-		
-		ConnexionBD bd = ConnexionBD.getInstance();
-		
-		// TODO Mettre en place un swing-worker + curseur souris en sablier.
-		// TODO afficher une barre de chargement ?
-		try {
-			bd.setAutoCommit(false);
-			
-			for (List<String> ligne : data) {
-				
-				String idLog = ligne.get(0);
-				String idLoc = ligne.get(1);
-				String date = ligne.get(2);
-				BigDecimal montant = new BigDecimal(ligne.get(3));
-				String numDoc = ligne.get(4);
-				
-				BienLocatif bien = daoBien.findById(idLog);
-	
-				DocumentComptable doc = new DocumentComptable(numDoc, date, type, montant, lienDoc);
-				
-				doc.setBatiment(bien.getBat());
-				doc.setLocataire(daoLoc.findById(idLoc));
-				
-				daoDoc.create(doc);
-				
-				FactureBien fb = new FactureBien(bien, doc, 1);
-				
-				daoFactureBien.create(fb);
-	
-			}
-			
-			bd.valider();
-		
-		} catch (SQLException | IOException e) {
-			bd.anuler();
-			bd.setAutoCommit(true);
-			fen.afficherMessageErreur(e.getMessage());
-			e.printStackTrace();
-		} finally {
-			bd.setAutoCommit(true);
-		}
-		
-	}
+    /**
+     * Insertion en base de données, appelée depuis le SwingWorker de la vue FenBarreChargement.
+     * 
+     * @param data Liste de loyers
+     * @param lienFichier chemin du CSV
+     * @param consumerPublish callback pour 'publish(i+1)' ou tout autre indice d'avancement
+     * @param consumerSetProgress callback pour 'setProgress(pourcentage)'
+     * @throws SQLException, IOException
+     */
+    public void insertDonneesEnBD(List<List<String>> data,
+                                  String lienFichier,
+                                  Consumer<Integer> consumerPublish,
+                                  Consumer<Integer> consumerSetProgress) 
+                                  throws SQLException, IOException 
+    {
+        // On peut reprendre votre logique existante ici
+        DaoDocumentComptable daoDoc = new DaoDocumentComptable();
+        DaoBienLocatif daoBien = new DaoBienLocatif();
+        DaoLocataire daoLoc = new DaoLocataire();
+        DaoFactureBien daoFactureBien = new DaoFactureBien();
+        ConnexionBD bd = ConnexionBD.getInstance();
+
+        TypeDoc type = TypeDoc.LOYER;
+        
+        int total = data.size();
+        
+        try {
+            bd.setAutoCommit(false);
+
+            for (int i = 0; i < total; i++) {
+                List<String> ligne = data.get(i);
+                
+                String idLog = ligne.get(0);
+                String idLoc = ligne.get(1);
+                String date = ligne.get(2);
+                BigDecimal montant = new BigDecimal(ligne.get(3));
+                String numDoc = ligne.get(4);
+
+                BienLocatif bien = daoBien.findById(idLog);
+
+                DocumentComptable doc = new DocumentComptable(numDoc, date, type, montant, lienFichier);
+                doc.setBatiment(bien.getBat());
+                doc.setLocataire(daoLoc.findById(idLoc));
+                
+                daoDoc.create(doc);
+                
+                FactureBien fb = new FactureBien(bien, doc, 1);
+                daoFactureBien.create(fb);
+
+                // --- Mise à jour de la progression ---
+                if (consumerPublish != null) {
+                    consumerPublish.accept(i + 1); 
+                    // par ex., "publish(i + 1)" dans la vue
+                }
+                if (consumerSetProgress != null) {
+                    int pourcentage = (int) ((i + 1) * 100.0 / total);
+                    consumerSetProgress.accept(pourcentage); 
+                    // par ex., "setProgress(pourcentage)" dans la vue
+                }
+            }
+
+            bd.valider();
+
+        } catch (SQLException | IOException e) {
+            bd.anuler();
+            throw e; // on relance l’exception pour que la vue l’affiche
+        } finally {
+            bd.setAutoCommit(true);
+        }
+    }
 }

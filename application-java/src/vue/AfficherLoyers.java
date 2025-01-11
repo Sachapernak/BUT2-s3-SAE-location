@@ -69,7 +69,7 @@ public class AfficherLoyers extends JInternalFrame {
         GridBagLayout gridBagLayout = new GridBagLayout();
         gridBagLayout.columnWidths = new int[]{30, 90, 90, 30, 70, 80, 30};
         gridBagLayout.rowHeights = new int[]{30, 0, 0, 0, 0, 0};
-        gridBagLayout.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+        gridBagLayout.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0};
         gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 1.0, 0.0, 0.0};
         getContentPane().setLayout(gridBagLayout);
 
@@ -167,9 +167,14 @@ public class AfficherLoyers extends JInternalFrame {
         tableLoyers = new JTable();
         // Modèle initial
         tableLoyers.setModel(new DefaultTableModel(
-            new Object[][] { {"", "", ""} },
-            new String[] { "ID Bien", "Date", "Montant" }
+        	new Object[][] {
+        		{null, "", "", ""},
+        	},
+        	new String[] {
+        		"ID Doc", "ID Bien", "Date", "Montant"
+        	}
         ));
+        tableLoyers.getColumnModel().getColumn(0).setPreferredWidth(100);
         scrollPane.setViewportView(tableLoyers);
 
         // Bouton Supprimer
@@ -191,6 +196,7 @@ public class AfficherLoyers extends JInternalFrame {
         // Bouton Quitter (Annuler)
         btnQuitter = new JButton("Quitter");
         GridBagConstraints gbcBtnQuitter = new GridBagConstraints();
+        gbcBtnQuitter.anchor = GridBagConstraints.EAST;
         gbcBtnQuitter.insets = new Insets(0, 0, 5, 5);
         gbcBtnQuitter.gridx = 5;
         gbcBtnQuitter.gridy = 4;
@@ -222,7 +228,7 @@ public class AfficherLoyers extends JInternalFrame {
             }
         });
 
-        // Bouton Ajouter (ouvre un panneau pour ajouter un loyer) -> TODO
+        // Bouton Ajouter (ouvre un panneau pour ajouter un loyer) 
         btnAjouter.addActionListener(e -> gestion.ajouterLoyer());
 
         // Bouton Supprimer (supprime un loyer sélectionné)
@@ -238,7 +244,7 @@ public class AfficherLoyers extends JInternalFrame {
      * @param data Données à afficher
      */
     public void majTableLoyers(List<Object[]> data) {
-        String[] columns = { "ID Bien", "Date", "Montant" };
+        String[] columns = { "ID Doc", "ID Bien", "Date", "Montant" };
         DefaultTableModel model = new DefaultTableModel(columns, 0) {
             private static final long serialVersionUID = 1L;
 
@@ -298,7 +304,6 @@ public class AfficherLoyers extends JInternalFrame {
      * @param info texte à afficher
      */
     public void setNbLoyers(String info) {
-        // //TODO : Calculer réellement le ratio payés / total
         textFieldNbLoyers.setText(info);
     }
 
@@ -339,16 +344,29 @@ public class AfficherLoyers extends JInternalFrame {
     }
 
     /**
-     * Retourne la valeur "ID Bien" de la ligne sélectionnée, si existante.
+     * Retourne la valeur "NumDoc" de la ligne sélectionnée, si existante.
      * 
      * @return l'ID du bien (Object), ou null si rien.
      */
-    public Object getValueAtSelectedRow() {
+    public Object getNumDocAtSelectedRow() {
         int row = tableLoyers.getSelectedRow();
         if (row == -1) return null;
         int modelIndex = tableLoyers.convertRowIndexToModel(row);
         return tableLoyers.getModel().getValueAt(modelIndex, 0);
     }
+    
+    /**
+     * Retourne la valeur "date" de la ligne sélectionnée, si existante.
+     * 
+     * @return l'ID du bien (Object), ou null si rien.
+     */
+    public Object getDateAtSelectedRow() {
+        int row = tableLoyers.getSelectedRow();
+        if (row == -1) return null;
+        int modelIndex = tableLoyers.convertRowIndexToModel(row);
+        return tableLoyers.getModel().getValueAt(modelIndex, 2);
+    }
+   
 
     /**
      * Affiche une boîte de dialogue d'erreur.
@@ -381,4 +399,5 @@ public class AfficherLoyers extends JInternalFrame {
             frame.setVisible(true);
         });
     }
+
 }
