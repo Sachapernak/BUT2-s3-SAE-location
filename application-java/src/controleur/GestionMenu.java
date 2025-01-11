@@ -17,6 +17,7 @@ import vue.ChargerLoyers;
 import vue.FenetrePrincipale;
 import vue.PageConnexion;
 import vue.ReglesMetier;
+import vue.SetICC;
 
 public class GestionMenu implements ActionListener{
 
@@ -30,6 +31,8 @@ public class GestionMenu implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		JMenuItem itemActif = (JMenuItem) e.getSource();
         String itemLibelle = itemActif.getText();
+        
+		JLayeredPane fenLayerPane = this.fenPrincipale.getLayeredPane();
 		
 		switch (itemLibelle) {
 		
@@ -38,14 +41,12 @@ public class GestionMenu implements ActionListener{
 				break;
 			case "Liste des anciens locataires" :
 				AfficherAnciensLocataires afl = new AfficherAnciensLocataires();
-				JLayeredPane layeredPaneAfficherAnciensLoc = this.fenPrincipale.getLayeredPane();
-				layeredPaneAfficherAnciensLoc.add(afl, JLayeredPane.PALETTE_LAYER);
+				fenLayerPane.add(afl, JLayeredPane.PALETTE_LAYER);
 				afl.setVisible(true);
 				break;
 			case "Liste des locataires actuels" :
 				AfficherLocatairesActuels al = new AfficherLocatairesActuels();
-				JLayeredPane layeredPaneAfficherLocActuels = this.fenPrincipale.getLayeredPane();
-				layeredPaneAfficherLocActuels.add(al, JLayeredPane.PALETTE_LAYER);
+				fenLayerPane.add(al, JLayeredPane.PALETTE_LAYER);
 				al.setVisible(true);
 				break;
 			case "Configurer la connexion" :
@@ -61,34 +62,36 @@ public class GestionMenu implements ActionListener{
 		        jInternalFrame.setSize(450, 350);
 		        jInternalFrame.setVisible(true);
 		        jInternalFrame.setClosable(false);
-				JLayeredPane layeredPaneConnexion= this.fenPrincipale.getLayeredPane();
-				layeredPaneConnexion.add(jInternalFrame, JLayeredPane.PALETTE_LAYER);
+		        fenLayerPane.add(jInternalFrame, JLayeredPane.PALETTE_LAYER);
 				jInternalFrame.setVisible(true);
 				break;
 			case "Afficher les règles métier" : 
 				ReglesMetier rm = new ReglesMetier() ;
-				JLayeredPane layeredPaneReglesMetiers = this.fenPrincipale.getLayeredPane();
-				layeredPaneReglesMetiers.add(rm, JLayeredPane.PALETTE_LAYER);
+				fenLayerPane.add(rm, JLayeredPane.PALETTE_LAYER);
 				rm.setVisible(true);
 				break;
 
 			case "Consulter les charges" : 
 				AfficherCharges ad = new AfficherCharges();
-				JLayeredPane layeredPaneArchiverDoc = this.fenPrincipale.getLayeredPane();
-				layeredPaneArchiverDoc.add(ad, JLayeredPane.PALETTE_LAYER);
+				fenLayerPane.add(ad, JLayeredPane.PALETTE_LAYER);
 				ad.setVisible(true);
 				break;
 
 			case "Consulter les loyers" : 
 				AfficherLoyers afloyers = new AfficherLoyers();
-				JLayeredPane layeredPaneLoyers = this.fenPrincipale.getLayeredPane();
-				layeredPaneLoyers.add(afloyers, JLayeredPane.PALETTE_LAYER);
+				fenLayerPane.add(afloyers, JLayeredPane.PALETTE_LAYER);
 				afloyers.setVisible(true);
 				break;
 				
 			case "Charger les loyers" : 
 				ChargerLoyers chLoyer = new ChargerLoyers();
 				chLoyer.setVisible(true);
+				break;
+				
+			case "Consulter ICC" : 
+				SetICC stIcc= new SetICC();
+				fenLayerPane.add(stIcc, JLayeredPane.PALETTE_LAYER);
+				stIcc.setVisible(true);
 				break;
 				
 			default:
