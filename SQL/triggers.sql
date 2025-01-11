@@ -18,3 +18,26 @@ BEGIN
 END;
 /
 
+
+
+-- verifie que l'augementation du loyer est cohérente avec l'icc
+CREATE OR REPLACE TRIGGER TBI_loyer
+BEFORE INSERT OR UPDATE ON sae_loyer
+FOR EACH ROW
+DECLARE
+    v_max_loyer NUMBER;
+BEGIN
+    -- Appel à la procédure pour calculer le loyer maximal autorisé
+    pkg_icc.calculer_nouveau_loyer(:NEW.IDENTIFIANT_LOGEMENT, v_max_loyer);
+
+    -- Vérification si le montant du nouveau loyer dépasse le maximum autorisé
+    IF :NEW.montant_loyer > v_max_loyer THEN
+        RAISE_APPLICATION_ERROR(-20002, 
+            'Le nouveau loyer (' || :NEW.montant_loyer || ') ne peut pas être légalement supérieur à : ' || v_max_loyer);
+    END IF;
+
+EXCEPTION
+    WHEN OTHERS THEN
+        RAISE_APPLICATION_ERROR(-20003, 'Erreur lors du calcul du nouveau loyer : ' || SQLERRM);
+END;
+/
