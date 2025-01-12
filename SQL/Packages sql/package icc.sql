@@ -8,6 +8,16 @@ CREATE OR REPLACE PACKAGE pkg_icc AS
         p_logement      IN  VARCHAR2,
         p_dernier_loyer OUT NUMBER
     );
+    
+    PROCEDURE date_debut_bail(
+        p_logement in varchar2,
+        p_date_bail out date
+    );
+    
+    FUNCTION loyer_augmentable(
+        p_logement IN VARCHAR2
+    ) RETURN NUMBER;
+
 END pkg_icc;
 /
 
@@ -24,24 +34,12 @@ CREATE OR REPLACE PACKAGE BODY pkg_icc AS
         v_indice_new      NUMBER;
         v_indice_old      NUMBER;
     BEGIN
-        ----------------------------------------------------------------------
-        -- 1) Dernière date de début de bail pour ce logement
-        ----------------------------------------------------------------------
-        BEGIN
-            SELECT date_de_debut
-              INTO v_date_de_debut
-              FROM (
-                   SELECT date_de_debut
-                     FROM sae_bail
-                    WHERE identifiant_logement = p_logement
-                 ORDER BY date_de_debut DESC
-              )
-             WHERE ROWNUM = 1;
-         EXCEPTION
-            WHEN NO_DATA_FOUND THEN
-                RAISE_APPLICATION_ERROR(-20501, 'Pas de bail pour le logement sélectionné');
-        END;
 
+
+        ----------------------------------------------------------------------
+        -- 1) Obtention de la date du dernier bail
+        ----------------------------------------------------------------------
+        date_debut_bail(p_logement, v_date_de_debut);
         ----------------------------------------------------------------------
         -- 2) Obtention du loyer actuel via la procédure dernier_loyer
         ----------------------------------------------------------------------
@@ -145,6 +143,90 @@ CREATE OR REPLACE PACKAGE BODY pkg_icc AS
         END IF;
     
     END dernier_loyer;
+    
+    
+    PROCEDURE date_debut_bail(
+        p_logement in varchar2,
+        p_date_bail out date
+    ) AS
+
+    BEGIN
+        ----------------------------------------------------------------------
+        -- 1) Dernière date de début de bail pour ce logement
+        ----------------------------------------------------------------------
+        BEGIN
+            SELECT date_de_debut
+              INTO p_date_bail
+              FROM (
+                   SELECT date_de_debut
+                     FROM sae_bail
+                    WHERE identifiant_logement = p_logement
+                 ORDER BY date_de_debut DESC
+              )
+             WHERE ROWNUM = 1;
+         EXCEPTION
+            WHEN NO_DATA_FOUND THEN
+                RAISE_APPLICATION_ERROR(-20501, 'Pas de bail pour le logement sélectionné');
+        END;
+    END date_debut_bail;
+    
+    
+    FUNCTION loyer_augmentable(
+        p_logement IN VARCHAR2
+    ) RETURN NUMBER AS
+        v_date_bail       DATE;
+        v_date_anniversaire DATE;
+        v_last_increase   DATE;
+        v_annees          NUMBER;
+    BEGIN
+        ----------------------------------------------------------------------
+        -- 1) Obtention de la date du dernier bail
+        ----------------------------------------------------------------------
+        date_debut_bail(p_logement, v_date_bail);
+    
+        ----------------------------------------------------------------------
+        -- 2) Calcul de l'âge du bail en années
+        ----------------------------------------------------------------------
+        v_annees := TRUNC(MONTHS_BETWEEN(SYSDATE, v_date_bail) / 12);
+    
+        ----------------------------------------------------------------------
+        -- 3) Si le bail a moins d'un an, loyer non-augmentable
+        ----------------------------------------------------------------------
+        IF v_annees < 1 THEN
+            RETURN 0;
+        END IF;
+    
+        ----------------------------------------------------------------------
+        -- 4) Calcul de la date d'anniversaire du bail
+        ----------------------------------------------------------------------
+        v_date_anniversaire := ADD_MONTHS(v_date_bail, v_annees * 12);
+    
+        ----------------------------------------------------------------------
+        -- 5) Vérifier la date de la dernière augmentation de loyer
+        ----------------------------------------------------------------------
+        BEGIN
+            SELECT MAX(date_de_changement)
+              INTO v_last_increase
+              FROM sae_loyer
+             WHERE identifiant_logement = p_logement;
+    
+            -- Si une augmentation a été faite après l'anniversaire le loyer est non-augmentable
+            IF v_last_increase >= v_date_anniversaire THEN
+                RETURN 0;
+            END IF;
+        EXCEPTION
+            WHEN NO_DATA_FOUND THEN
+                -- Aucune augmentation de loyer trouvée donc augmentable
+                RETURN 1;
+        END;
+    
+        ----------------------------------------------------------------------
+        -- 6) Sinon, le loyer est augmentable
+        ----------------------------------------------------------------------
+        RETURN 1;
+    END loyer_augmentable;
+
+        
 
 END pkg_icc;
 /
