@@ -15,9 +15,12 @@ import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
+import javax.swing.WindowConstants;
+
 import modele.Loyer;
 import modele.dao.DaoBienLocatif;
 import modele.dao.DaoLoyer;
+import vue.DetailLoyersParLogement;
 import vue.RevalorisationLoyer;
 import vue.SetICC;
 
@@ -218,6 +221,28 @@ public class GestionRevalorisationLoyer {
             if (evt.getStateChange() == ItemEvent.SELECTED) {
                 chargerInfoLoyer();
             }
+        });
+    }
+    
+    /**
+     * Gère l'action du bouton "Historique" pour fermer la fenêtre.
+     */
+    public void gestionBtnHistorique(JButton btnHistorique) {
+        btnHistorique.addActionListener(e -> {
+            // Création de la fenêtre d'historique
+            DetailLoyersParLogement dialog = new DetailLoyersParLogement(fen.getSelectedIdLog());
+            dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+
+            // Ajouter un WindowListener pour recharger les données à la fermeture
+            dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosed(java.awt.event.WindowEvent e) {
+                    // Recharger les informations de loyer après la fermeture
+                    chargerInfoLoyer();
+                }
+            });
+
+            dialog.setVisible(true);
         });
     }
 }
