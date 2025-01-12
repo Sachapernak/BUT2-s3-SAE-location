@@ -34,7 +34,7 @@ public class GestionFenetrePrincipale implements ActionListener{
 		
 		switch (btnLibelle) {
 			case "Augmenter le loyer" : 
-				RevalorisationLoyer rl = new RevalorisationLoyer();
+				RevalorisationLoyer rl = new RevalorisationLoyer(fenPrincipale.getValeurIdTableLogement());
 				JLayeredPane layeredPaneRevalorisationLoyer= this.fenPrincipale.getLayeredPane();
 				layeredPaneRevalorisationLoyer.add(rl, JLayeredPane.PALETTE_LAYER);
 				rl.setVisible(true);

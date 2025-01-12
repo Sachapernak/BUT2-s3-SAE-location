@@ -120,6 +120,7 @@ public class FenetrePrincipale extends JFrame {
 		menuBar.add(menuloyersCharges);
 		
 		JMenuItem mntmConsulterCharges = new JMenuItem("Consulter les charges");
+		mntmConsulterCharges.addActionListener(this.gestionMenu);
 		menuloyersCharges.add(mntmConsulterCharges);
 		
 		JMenuItem mntmConsulterLoyers = new JMenuItem("Consulter les loyers");
@@ -297,4 +298,6 @@ public class FenetrePrincipale extends JFrame {
 	    }
 	    return null;
 	}
+	
+
 }

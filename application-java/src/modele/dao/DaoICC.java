@@ -1,10 +1,14 @@
 package modele.dao;
 
 import java.io.IOException;
+import java.sql.CallableStatement;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLType;
 import java.util.List;
 
+import modele.ConnexionBD;
 import modele.ICC;
 
 import modele.dao.requetes.RequeteCreateICC;
@@ -90,6 +94,7 @@ public class DaoICC extends DaoModele<ICC> {
     public List<ICC> findAll() throws SQLException, IOException {
         return find(new RequeteSelectICC());
     }
+    
 
 	@Override
 	protected ICC createInstance(ResultSet curseur) throws SQLException, IOException {
