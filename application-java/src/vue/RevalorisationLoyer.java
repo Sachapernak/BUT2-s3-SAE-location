@@ -5,12 +5,23 @@ import java.awt.EventQueue;
 import javax.swing.JInternalFrame;
 import java.awt.GridBagLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.GridBagConstraints;
 import javax.swing.JComboBox;
 import java.awt.Insets;
+import java.util.List;
+
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.SpinnerNumberModel;
+
+import controleur.GestionRevalorisationLoyer;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class RevalorisationLoyer extends JInternalFrame {
 
@@ -18,6 +29,15 @@ public class RevalorisationLoyer extends JInternalFrame {
 	private JLabel lblAncienLoyer;
 	private JTextField textFieldLoyerActuel;
 	private JTextField textFieldLoyerMax;
+	private JButton btnICC;
+	private JButton btnRevaloriser;
+	private JButton btnQuitter;
+	private JSpinner spinnerNouveauLoyer;
+	private JComboBox<String> comboBoxBienLoc;
+	
+	private String idLog;
+	
+	private GestionRevalorisationLoyer gest;
 
 	/**
 	 * Launch the application.
@@ -35,10 +55,20 @@ public class RevalorisationLoyer extends JInternalFrame {
 		});
 	}
 
+	
+	public RevalorisationLoyer() {
+		this("");
+	}
+	
 	/**
 	 * Create the frame.
 	 */
-	public RevalorisationLoyer() {
+	public RevalorisationLoyer(String idLog) {
+		
+		this.gest = new GestionRevalorisationLoyer(this);
+		
+		this.idLog = idLog;
+		
 		setBounds(100, 100, 450, 230);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{30, 100, 160, 50, 80, 0};
@@ -63,7 +93,7 @@ public class RevalorisationLoyer extends JInternalFrame {
 		gbc_lblBienLoc.gridy = 1;
 		getContentPane().add(lblBienLoc, gbc_lblBienLoc);
 		
-		JComboBox comboBoxBienLoc = new JComboBox();
+		comboBoxBienLoc = new JComboBox<String>();
 		GridBagConstraints gbc_comboBoxBienLoc = new GridBagConstraints();
 		gbc_comboBoxBienLoc.gridwidth = 2;
 		gbc_comboBoxBienLoc.insets = new Insets(0, 0, 5, 5);
@@ -131,22 +161,24 @@ public class RevalorisationLoyer extends JInternalFrame {
 		gbc_lblNouvLoyer.gridy = 5;
 		getContentPane().add(lblNouvLoyer, gbc_lblNouvLoyer);
 		
-		JSpinner spinner = new JSpinner();
-		GridBagConstraints gbc_spinner = new GridBagConstraints();
-		gbc_spinner.fill = GridBagConstraints.HORIZONTAL;
-		gbc_spinner.insets = new Insets(0, 0, 5, 5);
-		gbc_spinner.gridx = 2;
-		gbc_spinner.gridy = 5;
-		getContentPane().add(spinner, gbc_spinner);
+		spinnerNouveauLoyer = new JSpinner();
+		spinnerNouveauLoyer.setModel(new SpinnerNumberModel(0.0, 0.0, 0.0, 50.0));
+		GridBagConstraints gbc_spinnerNouveauLoyer = new GridBagConstraints();
+		gbc_spinnerNouveauLoyer.fill = GridBagConstraints.HORIZONTAL;
+		gbc_spinnerNouveauLoyer.insets = new Insets(0, 0, 5, 5);
+		gbc_spinnerNouveauLoyer.gridx = 2;
+		gbc_spinnerNouveauLoyer.gridy = 5;
+		getContentPane().add(spinnerNouveauLoyer, gbc_spinnerNouveauLoyer);
 		
-		JButton btnICC = new JButton("Voir ICC");
+		btnICC = new JButton("Voir ICC");
+
 		GridBagConstraints gbc_btnICC = new GridBagConstraints();
 		gbc_btnICC.insets = new Insets(0, 0, 0, 5);
 		gbc_btnICC.gridx = 1;
 		gbc_btnICC.gridy = 7;
 		getContentPane().add(btnICC, gbc_btnICC);
 		
-		JButton btnRevaloriser = new JButton("Revaloriser");
+		btnRevaloriser = new JButton("Revaloriser");
 		GridBagConstraints gbc_btnRevaloriser = new GridBagConstraints();
 		gbc_btnRevaloriser.anchor = GridBagConstraints.EAST;
 		gbc_btnRevaloriser.gridwidth = 2;
@@ -155,12 +187,90 @@ public class RevalorisationLoyer extends JInternalFrame {
 		gbc_btnRevaloriser.gridy = 7;
 		getContentPane().add(btnRevaloriser, gbc_btnRevaloriser);
 		
-		JButton btnQuitter = new JButton("Quitter");
+		btnQuitter = new JButton("Quitter");
 		GridBagConstraints gbc_btnQuitter = new GridBagConstraints();
 		gbc_btnQuitter.gridx = 4;
 		gbc_btnQuitter.gridy = 7;
 		getContentPane().add(btnQuitter, gbc_btnQuitter);
-
+		
+		gest.gestionBtnVoirICC(btnICC);
+		gest.gestionBtnQuitter(btnQuitter);
+		gest.gestionBtnRevaloriser(btnRevaloriser);
+		
+		gest.chargerComboBoxLogement();
+		
+		// Ajout du listener pour pas re-charger la page
+		gest.gestionActionComboLog(comboBoxBienLoc);
 	}
+
+	
+	public String getIdLog() {
+		return this.idLog;
+	}
+	
+	
+    /**
+     * Permet de définir la liste de bien locatifs.
+     * 
+     * @param listIDLog liste des identifiants des bien locatifs
+     */
+    public void setListLog(List<String> listIDLog) {
+        comboBoxBienLoc.setModel(new DefaultComboBoxModel<>(listIDLog.toArray(new String[0])));
+    }
+    
+    /**
+     * Permet de selectionner une valeur de la comboBox.
+     * 
+     * @param val valeur choisie.
+     */
+	public void setItemInCombo(String val) {
+
+		String item;
+		
+		for (int i = 0; i < comboBoxBienLoc.getItemCount(); i++) {
+			
+			item = String.valueOf(comboBoxBienLoc.getItemAt(i));
+			
+			if (item.equalsIgnoreCase(val)) {
+				comboBoxBienLoc.setSelectedIndex(i);
+				break;
+			}
+		}
+	}
+	
+	public String getSelectedIdLog() {
+		return String.valueOf(comboBoxBienLoc.getSelectedItem());
+	}
+	
+	public void setAncienLoyer(String val) {
+		textFieldLoyerActuel.setText(val);
+	}
+	
+
+    /**
+     * Permet de definir un loyer max
+     * 
+     * Met a jour la valeur du text field loyer max,
+     * Met a loyerMax la valeur du spinner
+     * Met a loyerMax la valeur maximale autorisée du spinner
+     * 
+     * @param loyerMax le loyer maximum.
+     */
+	public void setLoyerMax(String loyerMax) {
+		textFieldLoyerMax.setText(loyerMax);
+		
+		double loyerMaxDouble = Double.parseDouble(loyerMax);
+
+		spinnerNouveauLoyer.setModel(new SpinnerNumberModel(loyerMaxDouble, 0.0, loyerMaxDouble, 50.0));
+	}
+	
+	public String getValeurNouveauLoyer() {
+		return String.valueOf(spinnerNouveauLoyer.getValue());
+	}
+	
+    public void afficherMessageErreur(String message) {
+        JOptionPane.showMessageDialog(this, "Erreur : \n" + message, 
+                                      "Erreur", JOptionPane.ERROR_MESSAGE);
+    }
 
 }

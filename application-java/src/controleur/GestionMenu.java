@@ -72,8 +72,8 @@ public class GestionMenu implements ActionListener{
 				break;
 
 			case "Consulter les charges" : 
+				System.out.println("ok");
 				AfficherCharges ad = new AfficherCharges();
-				fenLayerPane.add(ad, JLayeredPane.PALETTE_LAYER);
 				ad.setVisible(true);
 				break;
 
