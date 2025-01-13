@@ -11,17 +11,16 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
-
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.SwingWorker;
+import javax.swing.WindowConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
@@ -38,6 +37,7 @@ import vue.DetailChargeDialog;
 public class GestionAfficherCharge {
     
     private AfficherCharges frame;
+    private boolean firstLoad = true;
     
     public GestionAfficherCharge(AfficherCharges frame) {
         this.frame = frame;
@@ -52,7 +52,7 @@ public class GestionAfficherCharge {
             protected List<String> doInBackground() throws Exception {
                 return new DaoBatiment().findAll().stream()
                                               .map(e -> e.getIdBat())
-                                              .collect(Collectors.toList());
+                                              .toList();
             }
 
             @Override
@@ -88,7 +88,7 @@ public class GestionAfficherCharge {
             protected List<String> doInBackground() throws Exception {
                 return new DaoBienLocatif().findByIdBat(idBat).stream()
                                                    .map(e -> e.getIdentifiantLogement())
-                                                   .collect(Collectors.toList());
+                                                   .toList();
             }
 
             @Override
@@ -178,11 +178,15 @@ public class GestionAfficherCharge {
                     }
                 })
                 // Filtrer les null potentiels
-                .filter(obj -> obj != null)
-                .collect(Collectors.toList());
+                .filter(Objects::nonNull)
+                .toList();
             
             // Chargement des données dans la table
             frame.chargerTable(rows);
+            if (firstLoad) {
+            	frame.chargementFini();
+            	firstLoad = false;
+            }
             
         } catch (SQLException | IOException e) {
             frame.afficherMessageErreur("Erreur : " + e.getMessage());
@@ -245,7 +249,7 @@ public class GestionAfficherCharge {
      */
     public void ajouterNouvelleCharge() {
         AjouterCharge dialog = new AjouterCharge();
-        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         dialog.setVisible(true);
     }
 

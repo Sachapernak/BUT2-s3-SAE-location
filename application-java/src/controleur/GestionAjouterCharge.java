@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.SwingWorker;
+
 import modele.Batiment;
 import modele.ChargeFixe;
 import modele.ChargeIndex;
@@ -32,12 +33,23 @@ import modele.dao.DaoFactureBien;
 import modele.dao.DaoLocataire;
 import vue.AjouterCharge;
 
+/**
+ * Gère les actions et chargements de données pour l'écran d'ajout de charges (AjouterCharge).
+ */
 public class GestionAjouterCharge {
     
-    private AjouterCharge fen;
-    
-    public GestionAjouterCharge(AjouterCharge fen) {
-        this.fen = fen;
+    /**
+     * Vue associée au contrôleur.
+     */
+    private final AjouterCharge view;
+
+    /**
+     * Constructeur.
+     *
+     * @param view Fenêtre (vue) à contrôler.
+     */
+    public GestionAjouterCharge(AjouterCharge view) {
+        this.view = view;
     }
     
     /**
@@ -45,56 +57,63 @@ public class GestionAjouterCharge {
      */
     public void chargerComboBox() {
         try {
-            chargerComboType();
-            chargerComboEntreprise();
-            chargerComboBat();
-            chargerComboLoc();
-            chargerComboAssurance();
-            chargerComboIDCharge();
+            loadTypeCombo();
+            loadCompanyCombo();
+            loadBuildingCombo();
+            loadTenantCombo();
+            loadAssuranceCombo();
+            loadChargeIndexCombo();
         } catch (Exception e) {
-            fen.afficherMessageErreur(e.getMessage());
+            view.afficherMessageErreur(e.getMessage());
         }
     }
     
     // ---------------------------------------------
-    //  CHARGEMENT DES COMBOS (asynchrone)
+    //  CHARGEMENT ASYNCHRONE DES COMBOS
     // ---------------------------------------------
-    private void chargerComboType() {
-        fen.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        fen.setComboBoxTypes(Arrays.asList("Chargement..."));
+
+    /**
+     * Charge la liste des types de documents dans la comboBox de la vue.
+     */
+    private void loadTypeCombo() {
+        view.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        view.setComboBoxTypes(Arrays.asList("Chargement..."));
         
-        SwingWorker<Void, Void> workerType = new SwingWorker<Void, Void>() {
+        SwingWorker<Void, Void> typeWorker = new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() {
-                // Si besoin : on peut charger en base la liste des types...
+                // Ici, si besoin, on chargerait en base la liste des types
                 return null;
             }
             
             @Override
             protected void done() {
-                fen.setComboBoxTypes(Arrays.asList(
+                view.setComboBoxTypes(Arrays.asList(
                     "FACTURE", 
                     "FACTURE_CV", 
                     "FACTURE_CF", 
                     "DEVIS", 
-                    "QUITTANCE",
-                    "DEBUG" // TODO : REMOVE
+                    "QUITTANCE"
                 ));
-                fen.setCursor(Cursor.getDefaultCursor());
+                view.setCursor(Cursor.getDefaultCursor());
             }
         };
-        workerType.execute();
+        typeWorker.execute();
     }
     
-    private void chargerComboEntreprise() {
-        fen.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        fen.setComboBoxEntreprise(Arrays.asList("Chargement..."));
+    /**
+     * Charge la liste des entreprises dans la comboBox de la vue.
+     */
+    private void loadCompanyCombo() {
+        view.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        view.setComboBoxEntreprise(Arrays.asList("Chargement..."));
         
-        SwingWorker<Void, Void> workerEntr = new SwingWorker<Void, Void>() {
-            private List<String> nomsEntr;
+        SwingWorker<Void, Void> companyWorker = new SwingWorker<Void, Void>() {
+            private List<String> companyNames;
+
             @Override
             protected Void doInBackground() throws Exception {
-                nomsEntr = new DaoEntreprise().findAll().stream()
+                companyNames = new DaoEntreprise().findAll().stream()
                     .map(e -> e.getNom() + " " + e.getSiret())
                     .collect(Collectors.toList());
                 return null;
@@ -102,22 +121,26 @@ public class GestionAjouterCharge {
             
             @Override
             protected void done() {
-                fen.setComboBoxEntreprise(nomsEntr);
-                fen.setCursor(Cursor.getDefaultCursor());
+                view.setComboBoxEntreprise(companyNames);
+                view.setCursor(Cursor.getDefaultCursor());
             }
         };
-        workerEntr.execute();
+        companyWorker.execute();
     }
     
-    private void chargerComboBat() {
-        fen.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        fen.setComboBoxBat(Arrays.asList("Chargement..."));
+    /**
+     * Charge la liste des identifiants de bâtiments dans la comboBox de la vue.
+     */
+    private void loadBuildingCombo() {
+        view.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        view.setComboBoxBat(Arrays.asList("Chargement..."));
         
-        SwingWorker<Void, Void> workerBat = new SwingWorker<Void, Void>() {
-            private List<String> bats;
+        SwingWorker<Void, Void> buildingWorker = new SwingWorker<Void, Void>() {
+            private List<String> buildingIds;
+            
             @Override
             protected Void doInBackground() throws Exception {
-                bats = new DaoBatiment().findAll().stream()
+                buildingIds = new DaoBatiment().findAll().stream()
                     .map(Batiment::getIdBat)
                     .collect(Collectors.toList());
                 return null;
@@ -125,22 +148,26 @@ public class GestionAjouterCharge {
             
             @Override
             protected void done() {
-                fen.setComboBoxBat(bats);
-                fen.setCursor(Cursor.getDefaultCursor());
+                view.setComboBoxBat(buildingIds);
+                view.setCursor(Cursor.getDefaultCursor());
             }
         };
-        workerBat.execute();
+        buildingWorker.execute();
     }
     
-    private void chargerComboLoc() {
-        fen.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        fen.setComboBoxLocataire(Arrays.asList("Chargement..."));
+    /**
+     * Charge la liste des locataires dans la comboBox de la vue.
+     */
+    private void loadTenantCombo() {
+        view.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        view.setComboBoxLocataire(Arrays.asList("Chargement..."));
         
-        SwingWorker<Void, Void> workerLoc = new SwingWorker<Void, Void>() {
-            private List<String> locs;
+        SwingWorker<Void, Void> tenantWorker = new SwingWorker<Void, Void>() {
+            private List<String> tenantNames;
+            
             @Override
             protected Void doInBackground() throws Exception {
-                locs = new DaoLocataire().findAll().stream()
+                tenantNames = new DaoLocataire().findAll().stream()
                     .map(e -> e.getNom() + " " + e.getIdLocataire())
                     .collect(Collectors.toList());
                 return null;
@@ -148,124 +175,123 @@ public class GestionAjouterCharge {
             
             @Override
             protected void done() {
-                fen.setComboBoxLocataire(locs);
-                fen.setCursor(Cursor.getDefaultCursor());
+                view.setComboBoxLocataire(tenantNames);
+                view.setCursor(Cursor.getDefaultCursor());
             }
         };
-        workerLoc.execute();
+        tenantWorker.execute();
     }
     
-    private void chargerComboAssurance() {
-        fen.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        fen.setComboBoxAssu(Arrays.asList("Chargement..."));
+    /**
+     * Charge la liste des contrats d'assurance dans la comboBox de la vue.
+     */
+    private void loadAssuranceCombo() {
+        view.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        view.setComboBoxAssu(Arrays.asList("Chargement..."));
         
-        SwingWorker<Void, Void> workerAssu = new SwingWorker<Void, Void>() {
-            private List<String> assus;
+        SwingWorker<Void, Void> assuranceWorker = new SwingWorker<Void, Void>() {
+            private List<String> assuranceContracts;
+            
             @Override
             protected Void doInBackground() throws Exception {
-            	
-                assus = new DaoAssurance().findAll().stream()
+                assuranceContracts = new DaoAssurance().findAll().stream()
                     .map(a -> a.getNumeroContrat() + " " + a.getAnneeContrat())
                     .collect(Collectors.toList());
-                assus.add(0, "Aucune");
+                assuranceContracts.add(0, "Aucune");
                 return null;
             }
             
             @Override
             protected void done() {
-                fen.setComboBoxAssu(assus);
-                fen.setCursor(Cursor.getDefaultCursor());
+                view.setComboBoxAssu(assuranceContracts);
+                view.setCursor(Cursor.getDefaultCursor());
             }
         };
-        workerAssu.execute();
+        assuranceWorker.execute();
     }
     
-    private void chargerComboIDCharge() throws SQLException, IOException {
-        fen.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        fen.setComboIDCharge(Arrays.asList("Chargement..."));
+    /**
+     * Charge les ID de charge (distinct) pour les charges à index dans la comboBox de la vue.
+     */
+    private void loadChargeIndexCombo() {
+        view.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        view.setComboIDCharge(Arrays.asList("Chargement..."));
         
-        SwingWorker<Void, Void> workerIDCharge = new SwingWorker<Void, Void>() {
-            private List<String> res;
+        SwingWorker<Void, Void> chargeIndexWorker = new SwingWorker<Void, Void>() {
+            private List<String> distinctChargeIndexIds;
+            
             @Override
-            protected Void doInBackground() throws Exception {
-                res = new DaoChargeIndex().findAllDistinctId();
-                res.add(0,"");
+            protected Void doInBackground() throws SQLException, IOException {
+                distinctChargeIndexIds = new DaoChargeIndex().findAllDistinctId();
+                distinctChargeIndexIds.add(0, "");
                 return null;
             }
             
             @Override
             protected void done() {
-                fen.setComboIDCharge(res);
-                fen.setCursor(Cursor.getDefaultCursor());
+                view.setComboIDCharge(distinctChargeIndexIds);
+                view.setCursor(Cursor.getDefaultCursor());
             }
         };
-        workerIDCharge.execute();
+        chargeIndexWorker.execute();
     }
     
     // ---------------------------------------------
     //  GESTION DES ACTIONS UTILISATEUR
     // ---------------------------------------------
-    
+
     /**
-     * Action lors du changement de type de document (comboBoxType).
+     * Gère les changements du comboBox de type de document (typeDoc).
+     * Masque ou affiche certaines zones de la vue selon le type.
      */
     public void gestionComboType() {
-        String selected = fen.getTypeDoc();
+        String selectedType = view.getTypeDoc();
         
         // On remet tout "visible" par défaut
-        fen.setEntrepriseVisible(true);
-        fen.setAssuranceVisible(true);
-        fen.setLocataireVisible(true);
-        fen.setCoutAbonnementVisible(true);
-        fen.setIndexVisible(true);
-        fen.setIdChargeTotalVisible(true);
-        majIndex(null);
+        view.setEntrepriseVisible(true);
+        view.setAssuranceVisible(true);
+        view.setLocataireVisible(true);
+        view.setCoutAbonnementVisible(true);
+        view.setIndexVisible(true);
+        view.setIdChargeTotalVisible(true);
+        refreshIndex(null);
         
-        // Puis on masque / grise selon le type
-        switch (selected) {
+        // On masque / affiche les champs selon le type
+        switch (selectedType) {
             case "QUITTANCE":
-                // On veut : "cacher l'entreprise, l'assurance"
-                fen.setEntrepriseVisible(false);
-                fen.setAssuranceVisible(false);
-                // On veut "afficher la quittance" => donc Locataire visible
-                fen.setLocataireVisible(true);
-                // On peut masquer l'abonnement si non pertinent, par exemple:
-                fen.setCoutAbonnementVisible(false);
-                // Idem pour l'index si c'est inutile pour une quittance
-                fen.setIndexVisible(false);
-                // On peut masquer le choix IDCharge si ce n’est pas pertinent pour quittance
-                fen.setIdChargeTotalVisible(false);
-                
-                fen.setTextLblCout("Montant quittance :");
+                view.setEntrepriseVisible(false);
+                view.setAssuranceVisible(false);
+                view.setLocataireVisible(true);
+                view.setCoutAbonnementVisible(false);
+                view.setIndexVisible(false);
+                view.setIdChargeTotalVisible(false);
+                view.setTextLblCout("Montant quittance :");
                 break;
                 
             case "FACTURE":
-            	// meme que CF
+                // même logique que FACTURE_CF
             case "FACTURE_CF":
-                fen.setLocataireVisible(false);
-                fen.setCoutAbonnementVisible(false);
-                fen.setIndexVisible(false);
-                fen.setIdChargeNomVisible(true);
-                fen.setTextLblCout("Montant :");
-                
+                view.setLocataireVisible(false);
+                view.setCoutAbonnementVisible(false);
+                view.setIndexVisible(false);
+                view.setIdChargeNomVisible(true);
+                view.setTextLblCout("Montant :");
                 break;
 
             case "FACTURE_CV":
-            	
-            	fen.setLocataireVisible(false);
-                fen.setCoutAbonnementVisible(true);
-                fen.setLocataireVisible(false);
-                fen.setTextLblCout("Cout unitaire | abonnement :");
-                majIndex(fen.getIDChargeCombo());
+                view.setLocataireVisible(false);
+                view.setCoutAbonnementVisible(true);
+                view.setTextLblCout("Cout unitaire | abonnement :");
+                refreshIndex(view.getIDChargeCombo());
                 break;
                 
             case "DEVIS":
-                fen.setLocataireVisible(false);
-                fen.setAssuranceVisible(false);
-                fen.setCoutAbonnementVisible(false);
-                fen.setIndexVisible(false);
-                fen.setIdChargeNomVisible(false);
-                fen.setTextLblCout("Montant devis :");
+                view.setLocataireVisible(false);
+                view.setAssuranceVisible(false);
+                view.setCoutAbonnementVisible(false);
+                view.setIndexVisible(false);
+                view.setIdChargeNomVisible(false);
+                view.setTextLblCout("Montant devis :");
                 break;
                 
             default:
@@ -274,301 +300,321 @@ public class GestionAjouterCharge {
     }
     
     /**
-     * Action lors du changement de combo ID charge (comboBoxChoixCharge).
+     * Gère le changement de sélection dans la comboBox de choix de l'ID de charge.
+     * Peut servir à récupérer l'ancien index.
      */
     public void gestionComboIDCharge() {
-        fen.getTextIDCharge();
-        
-        // Faire un traitement si nécessaire
-        // (Par exemple, charger l'ancien index, etc.)
-        // ...
+        // Récupération de la valeur, puis traitement si nécessaire
+        view.getTextIDCharge();
     }
-    
     
     /**
-     * Action quand on clique sur le bouton Annuler.
+     * Gère l'événement quand on clique sur le bouton "Annuler".
+     * Ferme simplement la fenêtre d'ajout de charge.
      */
     public void gestionBoutonAnnuler() {
-        // Par exemple, on ferme la fenêtre
-        fen.dispose();
+        view.dispose();
     }
     
+    /**
+     * Ajoute un écouteur pour surveiller le changement d'état de la comboBox d'ID de charge.
+     *
+     * @param combo ComboBox concerné
+     */
     public void gestionComboID(JComboBox<String> combo) {
         combo.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent evt) {
                 if (evt.getStateChange() == ItemEvent.SELECTED && combo.isVisible()) {
-                    majIndex(String.valueOf(combo.getSelectedItem()));
+                    refreshIndex(String.valueOf(combo.getSelectedItem()));
                 }
             }
         });
     }
     
-    private void majIndex(String id) {
-        fen.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-  
+    /**
+     * Met à jour les valeurs d'index et les coûts (unitaire, abonnement)
+     * dès qu'un ID de charge est sélectionné.
+     *
+     * @param chargeIndexId ID de la charge à mettre à jour
+     */
+    private void refreshIndex(String chargeIndexId) {
+        view.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         
-        SwingWorker<Void, Void> workerIDCharge = new SwingWorker<Void, Void>() {
+        SwingWorker<Void, Void> refreshIndexWorker = new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() throws Exception {
-            	ChargeIndex ci;
-            	if (id == null || id.isEmpty()) {
-            		ci = null;
-            	} else {
-            		 ci = new DaoChargeIndex().findAllSameId(id).stream().findFirst().orElse(null);
-            	}
-            	fen.setSpinnerCoutVarAbon(ci == null ? BigDecimal.valueOf(0.0f) : ci.getCoutFixe());
-            	fen.setSpinnerCoutVarUnit(ci == null ? BigDecimal.valueOf(0.0f) : ci.getCoutVariable());
-            	fen.setTextAncienIndex(ci == null ? "" : String.valueOf(ci.getValeurCompteur()));
-            	fen.setNomTypeCharge(ci == null ? "" : String.valueOf(ci.getType()));
-            	fen.clearTextIdCharge();
-            	return null;
+                ChargeIndex chargeIndex;
+                if (chargeIndexId == null || chargeIndexId.isEmpty()) {
+                    chargeIndex = null;
+                } else {
+                    chargeIndex = new DaoChargeIndex()
+                            .findAllSameId(chargeIndexId)
+                            .stream()
+                            .findFirst()
+                            .orElse(null);
+                }
+
+                view.setSpinnerCoutVarAbon(chargeIndex == null ? BigDecimal.valueOf(0.0) : chargeIndex.getCoutFixe());
+                view.setSpinnerCoutVarUnit(chargeIndex == null ? BigDecimal.valueOf(0.0) : chargeIndex.getCoutVariable());
+                view.setTextAncienIndex(chargeIndex == null ? "" : String.valueOf(chargeIndex.getValeurCompteur()));
+                view.setNomTypeCharge(chargeIndex == null ? "" : String.valueOf(chargeIndex.getType()));
+                view.clearTextIdCharge();
+                return null;
             }
             
             @Override
             protected void done() {
-                fen.setCursor(Cursor.getDefaultCursor());
+                view.setCursor(Cursor.getDefaultCursor());
             }
         };
-        workerIDCharge.execute();
-        
+        refreshIndexWorker.execute();
     }
     
-    public void gestionBoutonParcourir(JButton buttonParcourir, JFileChooser fileChooser) {
-        buttonParcourir.addActionListener(e -> {
-            int returnValue = fileChooser.showOpenDialog(fen);
+    /**
+     * Gère l'événement quand on clique sur le bouton "Parcourir".
+     * Ouvre un JFileChooser pour sélectionner un fichier et met à jour la vue.
+     *
+     * @param browseButton Bouton "Parcourir"
+     * @param fileChooser Composant JFileChooser
+     */
+    public void gestionBoutonParcourir(JButton browseButton, JFileChooser fileChooser) {
+        browseButton.addActionListener(e -> {
+            int returnValue = fileChooser.showOpenDialog(view);
             if (returnValue == JFileChooser.APPROVE_OPTION) {
-                // Met à jour le champ texte du fichier sélectionné via la vue
-                fen.setLienFichier(fileChooser.getSelectedFile().getAbsolutePath());
+                view.setLienFichier(fileChooser.getSelectedFile().getAbsolutePath());
             }
         });
     }
-
-    
     /**
-     * Action quand on clique sur OK.
+     * Gère le clic sur le bouton "OK".
+     * Vérifie les champs obligatoires, effectue les contrôles métiers, enregistre les données en base,
+     * puis ferme la fenêtre si tout est correct.
      */
     public void gestionBoutonOk() {
-    	
-    	ConnexionBD bd = null;
-        
+        ConnexionBD bd = null;
         try {
-        	
+            validateMandatoryFields();
             bd = ConnexionBD.getInstance();
             bd.setAutoCommit(false);
-            
-            // 1) Récupérer toutes les infos de la vue
-            String numDoc = fen.getTextNumDoc();
-            String dateDoc = fen.getTextDateDoc();
-            String typeDoc = fen.getTypeDoc();
-            String fichierDoc = fen.getLienFichier();
-            boolean recupLoc = fen.estRecupLoc();
-            
-            String idEntreprise = fen.getIDEntreprise();
-            String idBat = fen.getIDBat();
-            String idLoc = fen.getIDLocataire();
-            String idAssu = fen.getIDAssu();
-            
-            String idCharge = fen.getTextIDCharge();
-            String idChargeCombo = fen.getIDChargeCombo();
-            
-            String typeCharge = fen.getNomTypeCharge();
-            
-            BigDecimal coutUnit = fen.getCoutVarUnit();
-            BigDecimal coutAbon = fen.getCoutVarAbon();
-            BigDecimal nouveaIndex = fen.getValIndex();
-            BigDecimal ancienIndex = fen.getAncienIndex();
-            List<List<Object>> listeLogements = fen.getListeLogement();
-            
-            // 2) Logique métier, ex: vérifications, insertion en DB, etc.
-            String selected = fen.getTypeDoc();
 
-            DocumentComptable nouveauDoc;
-            DaoDocumentComptable daoDC = new DaoDocumentComptable();
-            DaoFactureBien daoFB = new DaoFactureBien();
-            
-            DaoBienLocatif daoB = new DaoBienLocatif();
-           
-            String bien;
-            
-            BigDecimal tolerance = new BigDecimal("0.01");
-            
-            BigDecimal part;
-            
-            BigDecimal difference;
-            
-            BigDecimal somme;
-
-            switch (selected) {
-                case "QUITTANCE":
-                	                	
-                	nouveauDoc = new DocumentComptable(numDoc, dateDoc, TypeDoc.valueOf(typeDoc),
-                			coutUnit, fichierDoc);
-                	
-                	nouveauDoc.setRecuperableLoc(recupLoc);
-                	
-                	nouveauDoc.setBatiment(new DaoBatiment().findById(idBat));
-                	
-                	nouveauDoc.setLocataire(new DaoLocataire().findById(idLoc));
-                	
-                	daoDC.create(nouveauDoc);
-                
-                
-            		bien = String.valueOf(listeLogements.get(0).get(0));
-            		part = (BigDecimal)listeLogements.get(0).get(1);
-            		daoFB.create(new FactureBien(daoB.findById(bien), nouveauDoc, part.floatValue()));
-
-                	
-                    break;
-                    
-                case "FACTURE":
-
-                case "FACTURE_CF":
-                	
-                	nouveauDoc = new DocumentComptable(numDoc, dateDoc, TypeDoc.valueOf(typeDoc),
-                			coutUnit, fichierDoc);
-                	
-                	nouveauDoc.setRecuperableLoc(recupLoc);
-                	
-                	nouveauDoc.setBatiment(new DaoBatiment().findById(idBat));
-
-                	nouveauDoc.setEntreprise(new DaoEntreprise().findById(idEntreprise.split(" ")[1]));
-                	
-                	if (!idAssu.equalsIgnoreCase("aucune")) {
-                		nouveauDoc.setAssurance(new DaoAssurance().findById(idAssu.split(" ")[0], idAssu.split(" ")[1]));
-                	}
-                	
-                	daoDC.create(nouveauDoc);
-                	somme = new BigDecimal(0);
-                	for (List<Object> bienPart : listeLogements) {
-                		
-                		bien = String.valueOf(bienPart.get(0));
-                		part = (BigDecimal) bienPart.get(1);
-                		
-                		somme = somme.add(part);
-                		daoFB.create(new FactureBien(daoB.findById(bien), nouveauDoc, part.floatValue()));
-                	}
-
-                	
-                	difference = somme.subtract(BigDecimal.ONE).abs();
-
-                	if (difference.compareTo(tolerance) > 0) {
-                	    throw new IllegalArgumentException("La somme des parts de charges doit être égale à 1. Valeur : " + somme);
-                	}
-                	
-                	ChargeFixe cf = new ChargeFixe(idCharge, dateDoc,typeCharge, coutUnit, numDoc, dateDoc);
-                	new DaoChargeFixe().create(cf);
-            		
-
-                    break;
-
-                case "FACTURE_CV":
-                	
-                	if(nouveaIndex.compareTo(ancienIndex) < 0) {
-                		throw new IllegalArgumentException("L'ancien index ne peut etre inférieur au nouevau");
-                	}
-                	
-                	BigDecimal coutVar = coutUnit.multiply(nouveaIndex.subtract(ancienIndex)).add(coutAbon);
-                	
-                	
-                	
-                	nouveauDoc = new DocumentComptable(numDoc, dateDoc, TypeDoc.valueOf(typeDoc),
-                			coutVar, fichierDoc);
-                	
-                	nouveauDoc.setRecuperableLoc(recupLoc);
-                	
-                	nouveauDoc.setBatiment(new DaoBatiment().findById(idBat));
-
-                	nouveauDoc.setEntreprise(new DaoEntreprise().findById(idEntreprise.split(" ")[1]));
-                	
-                	if (!idAssu.equalsIgnoreCase("aucune")) {
-                		nouveauDoc.setAssurance(new DaoAssurance().findById(idAssu.split(" ")[0], idAssu.split(" ")[1]));
-                	}
-                	
-                	daoDC.create(nouveauDoc);
-                	somme = new BigDecimal(0);
-                	for (List<Object> bienPart : listeLogements) {
-                		
-                		bien = String.valueOf(bienPart.get(0));
-                		part = (BigDecimal) bienPart.get(1);
-                		
-                		somme = somme.add(part);
-                		daoFB.create(new FactureBien(daoB.findById(bien), nouveauDoc, part.floatValue()));
-                	}
-
-                	
-                	difference = somme.subtract(BigDecimal.ONE).abs();
-
-                	if (difference.compareTo(tolerance) > 0) {
-                	    throw new IllegalArgumentException("La somme des parts de charges doit être égale à 1. Valeur : " + somme);
-                	}
-                	
-                	String idcv = idCharge.isEmpty() ? idChargeCombo : idCharge;
-
-                	
-                	ChargeIndex cv = new ChargeIndex(idcv, dateDoc, typeCharge, nouveaIndex, 
-                			coutUnit, coutAbon, numDoc, dateDoc);
-                	
-                	if (!idChargeCombo.isEmpty()) {
-                		cv.setDateRelevePrecedent(new DaoChargeIndex().findAllSameId(idcv).get(0).getDateDeReleve());
-                	}
-                	new DaoChargeIndex().create(cv);
-
-                    break;
-                    
-                case "DEVIS":
-
-                	nouveauDoc = new DocumentComptable(numDoc, dateDoc, TypeDoc.valueOf(typeDoc),
-                			coutUnit, fichierDoc);
-                	
-                	nouveauDoc.setRecuperableLoc(recupLoc);
-                	
-                	nouveauDoc.setBatiment(new DaoBatiment().findById(idBat));
-
-                	nouveauDoc.setEntreprise(new DaoEntreprise().findById(idEntreprise.split(" ")[1]));
-                	
-                	daoDC.create(nouveauDoc);
-                	somme = new BigDecimal(0);
-                	for (List<Object> bienPart : listeLogements) {
-                		
-                		bien = String.valueOf(bienPart.get(0));
-                		part = (BigDecimal) bienPart.get(1);
-                		
-                		somme = somme.add(part);
-                		daoFB.create(new FactureBien(daoB.findById(bien), nouveauDoc, part.floatValue()));
-                	}
-
-                	
-                	difference = somme.subtract(BigDecimal.ONE).abs();
-
-                	if (difference.compareTo(tolerance) > 0) {
-                	    throw new IllegalArgumentException("La somme des parts de charges doit être égale à 1. Valeur : " + somme);
-                	}
-
-                    break;
-                    
+            final String typeDoc = view.getTypeDoc();
+            switch (typeDoc) {
+                case "QUITTANCE": processQuittance(); break;
+                case "FACTURE": 
+                case "FACTURE_CF": processFacture(); break;
+                case "FACTURE_CV": processFactureCV(); break;
+                case "DEVIS": processDevis(); break;
                 default:
-                	fen.afficherMessageErreur("Type non valide");
-                    break;
+                    view.afficherMessageErreur("Type de document non valide.");
+                    return;
             }
+
             bd.valider();
-            // 3) Si tout va bien, on peut fermer la fenêtre :
-            fen.dispose();
-            
+            view.dispose();
         } catch (Exception e) {
-        	if (bd != null) {
-        		bd.anuler();
-        	}
-        	e.printStackTrace();
-            fen.afficherMessageErreur(e.getMessage());
-            
+            if (bd != null) { bd.anuler(); }
+            e.printStackTrace();
+            view.afficherMessageErreur(e.getMessage());
         } finally {
-        	if (bd != null) {
-        		bd.setAutoCommit(false);
-        	}
-        	
+            if (bd != null) { bd.setAutoCommit(false); }
         }
     }
 
+    /**
+     * Traite le cas où le type de document est "QUITTANCE".
+     * @throws IOException 
+     * @throws SQLException en cas d'erreur de bd
+     */
+    private void processQuittance() throws SQLException, IOException {
+        DaoDocumentComptable daoDoc = new DaoDocumentComptable();
+        DaoFactureBien daoFacture = new DaoFactureBien();
+        DaoBienLocatif daoBien = new DaoBienLocatif();
+
+        DocumentComptable doc = new DocumentComptable(
+                view.getTextNumDoc(), view.getTextDateDoc(), 
+                TypeDoc.valueOf(view.getTypeDoc()),
+                view.getCoutVarUnit(), view.getLienFichier()
+        );
+        doc.setRecuperableLoc(view.estRecupLoc());
+        doc.setBatiment(new DaoBatiment().findById(view.getIDBat()));
+        doc.setLocataire(new DaoLocataire().findById(view.getIDLocataire()));
+        daoDoc.create(doc);
+
+        List<Object> logement = view.getListeLogement().get(0);
+        String bienId = String.valueOf(logement.get(0));
+        BigDecimal part = (BigDecimal) logement.get(1);
+        daoFacture.create(new FactureBien(daoBien.findById(bienId), doc, part.floatValue()));
+    }
+
+    /**
+     * Traite le cas où le type de document est "FACTURE" ou "FACTURE_CF".
+     * @throws IOException 
+     * @throws SQLException en cas d'erreur de bd
+     */
+    private void processFacture() throws SQLException, IOException {
+        DaoDocumentComptable daoDoc = new DaoDocumentComptable();
+        DaoFactureBien daoFacture = new DaoFactureBien();
+        DaoBienLocatif daoBien = new DaoBienLocatif();
+
+        String idEntreprise = view.getIDEntreprise().split(" ")[1];
+        String idBat = view.getIDBat();
+        String idAssurance = view.getIDAssu();
+
+        DocumentComptable doc = new DocumentComptable(
+                view.getTextNumDoc(), view.getTextDateDoc(), 
+                TypeDoc.valueOf(view.getTypeDoc()),
+                view.getCoutVarUnit(), view.getLienFichier()
+        );
+        doc.setRecuperableLoc(view.estRecupLoc());
+        doc.setBatiment(new DaoBatiment().findById(idBat));
+        doc.setEntreprise(new DaoEntreprise().findById(idEntreprise));
+        if (!idAssurance.equalsIgnoreCase("aucune")) {
+            String[] parts = idAssurance.split(" ");
+            doc.setAssurance(new DaoAssurance().findById(parts[0], parts[1]));
+        }
+        daoDoc.create(doc);
+
+        processParts(daoFacture, daoBien, doc);
+        new DaoChargeFixe().create(new ChargeFixe(
+                view.getTextIDCharge(), view.getTextDateDoc(), view.getNomTypeCharge(),
+                view.getCoutVarUnit(), view.getTextNumDoc(), view.getTextDateDoc()
+        ));
+    }
+
+    /**
+     * Traite le cas où le type de document est "FACTURE_CV".
+     * @throws IOException 
+     * @throws SQLException en cas d'erreur de bd
+     */
+    private void processFactureCV() throws SQLException, IOException {
+        BigDecimal nouvelIndex = view.getValIndex();
+        BigDecimal ancienIndex = view.getAncienIndex();
+        if (nouvelIndex.compareTo(ancienIndex) < 0) {
+            throw new IllegalArgumentException("L'ancien index ne peut être supérieur au nouveau.");
+        }
+
+        DaoDocumentComptable daoDoc = new DaoDocumentComptable();
+        DaoFactureBien daoFacture = new DaoFactureBien();
+        DaoBienLocatif daoBien = new DaoBienLocatif();
+
+        BigDecimal coutVariable = view.getCoutVarUnit()
+                .multiply(nouvelIndex.subtract(ancienIndex))
+                .add(view.getCoutVarAbon());
+
+        String idEntreprise = view.getIDEntreprise().split(" ")[1];
+        String idBat = view.getIDBat();
+        String idAssurance = view.getIDAssu();
+
+        DocumentComptable doc = new DocumentComptable(
+                view.getTextNumDoc(), view.getTextDateDoc(), 
+                TypeDoc.valueOf(view.getTypeDoc()),
+                coutVariable, view.getLienFichier()
+        );
+        doc.setRecuperableLoc(view.estRecupLoc());
+        doc.setBatiment(new DaoBatiment().findById(idBat));
+        doc.setEntreprise(new DaoEntreprise().findById(idEntreprise));
+        if (!idAssurance.equalsIgnoreCase("aucune")) {
+            String[] parts = idAssurance.split(" ");
+            doc.setAssurance(new DaoAssurance().findById(parts[0], parts[1]));
+        }
+        daoDoc.create(doc);
+
+        processParts(daoFacture, daoBien, doc);
+
+        String idChargeVar = view.getTextIDCharge().isEmpty() ? view.getIDChargeCombo() : view.getTextIDCharge();
+        ChargeIndex chargeIndex = new ChargeIndex(
+                idChargeVar, view.getTextDateDoc(), view.getNomTypeCharge(),
+                nouvelIndex, view.getCoutVarUnit(), view.getCoutVarAbon(),
+                view.getTextNumDoc(), view.getTextDateDoc()
+        );
+        if (!view.getIDChargeCombo().isEmpty()) {
+            chargeIndex.setDateRelevePrecedent(
+                    new DaoChargeIndex().findAllSameId(idChargeVar).get(0).getDateDeReleve()
+            );
+        }
+        new DaoChargeIndex().create(chargeIndex);
+    }
+
+    /**
+     * Traite le cas où le type de document est "DEVIS".
+     * @throws IOException
+     * @throws SQLException en cas d'erreur de bd
+     */
+    private void processDevis() throws SQLException, IOException {
+        DaoDocumentComptable daoDoc = new DaoDocumentComptable();
+        DaoFactureBien daoFacture = new DaoFactureBien();
+        DaoBienLocatif daoBien = new DaoBienLocatif();
+
+        String idEntreprise = view.getIDEntreprise().split(" ")[1];
+        String idBat = view.getIDBat();
+
+        DocumentComptable doc = new DocumentComptable(
+                view.getTextNumDoc(), view.getTextDateDoc(), 
+                TypeDoc.valueOf(view.getTypeDoc()),
+                view.getCoutVarUnit(), view.getLienFichier()
+        );
+        doc.setRecuperableLoc(view.estRecupLoc());
+        doc.setBatiment(new DaoBatiment().findById(idBat));
+        doc.setEntreprise(new DaoEntreprise().findById(idEntreprise));
+        daoDoc.create(doc);
+
+        processParts(daoFacture, daoBien, doc);
+    }
+
+    /**
+     * Traite les parties communes à plusieurs types de documents.
+     * Crée les factures associées à chaque logement, vérifie que la somme des parts est égale à 1 avec une tolérance.
+     *
+     * @param daoFacture DAO pour gérer les factures
+     * @param daoBien DAO pour récupérer un bien locatif
+     * @param doc Document comptable déjà créé
+     * @throws SQLException en cas d'erreur base de données
+     * @throws IOException 
+     */
+    private void processParts(DaoFactureBien daoFacture, DaoBienLocatif daoBien, DocumentComptable doc) throws SQLException, IOException {
+        BigDecimal sumParts = BigDecimal.ZERO;
+        final BigDecimal tolerance = new BigDecimal("0.01");
+        
+        List<List<Object>> logements = view.getListeLogement();
+
+        for (List<Object> bienPart : logements) {
+            String bienId = String.valueOf(bienPart.get(0));
+            BigDecimal part = (BigDecimal) bienPart.get(1);
+            sumParts = sumParts.add(part);
+            daoFacture.create(new FactureBien(daoBien.findById(bienId), doc, part.floatValue()));
+        }
+        BigDecimal difference = sumParts.subtract(BigDecimal.ONE).abs();
+        if (difference.compareTo(tolerance) > 0) {
+            throw new IllegalArgumentException(
+                "La somme des parts de charges doit être égale à 1. Valeur : " + sumParts
+            );
+        }
+    }
+
+    // ---------------------------------------------
+    //  MÉTHODES PRIVÉES
+    // ---------------------------------------------
+
+    /**
+     * Valide que les champs obligatoires de la vue soient renseignés.
+     * Lance une IllegalArgumentException en cas de problème.
+     */
+    private void validateMandatoryFields() {
+        if (view.getTextNumDoc() == null || view.getTextNumDoc().isEmpty()) {
+            throw new IllegalArgumentException("Le numéro du document est obligatoire.");
+        }
+        if (view.getTextDateDoc() == null || view.getTextDateDoc().isEmpty()) {
+            throw new IllegalArgumentException("La date du document est obligatoire.");
+        }
+        if (view.getTypeDoc() == null || view.getTypeDoc().isEmpty()) {
+            throw new IllegalArgumentException("Le type du document est obligatoire.");
+        }
+        if (view.getIDBat() == null || view.getIDBat().isEmpty()) {
+            throw new IllegalArgumentException("Le bâtiment est obligatoire.");
+        }
+        // Les autres champs comme l'entreprise ou l'assurance peuvent être optionnels
+        // suivant le type de document choisi, donc on ne les force pas ici.
+    }
 
 }

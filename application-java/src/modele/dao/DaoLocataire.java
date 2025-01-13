@@ -1,18 +1,23 @@
 package modele.dao;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
 import modele.Adresse;
+import modele.ConnexionBD;
 import modele.Contracter;
 import modele.Locataire;
 import modele.dao.requetes.ProcedureCreateLocataire;
+import modele.dao.requetes.RequeteCountNbLogementsBatiment;
 import modele.dao.requetes.RequeteDeleteLocataire;
 import modele.dao.requetes.RequeteSelectLocataire;
 import modele.dao.requetes.RequeteSelectLocataireById;
 import modele.dao.requetes.RequeteUpdateLocataire;
+import modele.dao.requetes.requeteSelectLocataireByBienActif;
 
 /**
  * Classe DaoLocataire qui gère l'accès aux données relatives aux locataires dans la base de données.
@@ -85,6 +90,10 @@ public class DaoLocataire extends DaoModele<Locataire> {
         }
         
         return locataire;
+    }
+    
+    public List<Locataire> findByIdBien(String...id) throws SQLException, IOException {
+    	return find(new requeteSelectLocataireByBienActif(), id);
     }
 
     /**
@@ -160,4 +169,5 @@ public class DaoLocataire extends DaoModele<Locataire> {
         
         return locataire;
     }
+    
 }

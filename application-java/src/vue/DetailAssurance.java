@@ -5,13 +5,10 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
-import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 
 import controleur.GestionDetailAssurance;
@@ -28,8 +25,6 @@ public class DetailAssurance extends JDialog {
     private JLabel lblTxtNumeroContrat;
     private JLabel lblTxtAnneeContrat;
     private JLabel lblTxtTypeContrat;
-    private JTextArea textAreaDetails;
-    
     private GestionDetailAssurance gest;
 
     /**

@@ -73,7 +73,7 @@ public class DetailLocataire extends JDialog {
      */
     public DetailLocataire(Locataire locataire) {
         this.locataire = locataire;
-        gest = new GestionDetailLocataire();
+        gest = new GestionDetailLocataire(this);
         
         setPreferredSize(new Dimension(500, 0));
         setBounds(100, 100, 530, 342);
@@ -374,14 +374,18 @@ public class DetailLocataire extends JDialog {
         buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
         getContentPane().add(buttonPane, BorderLayout.SOUTH);
         
-        JButton cancelButton = new JButton("Cancel");
+        JButton cancelButton = new JButton("Fermer");
+
         cancelButton.setActionCommand("Cancel");
         buttonPane.add(cancelButton);
                     
-        gest.chargerLocataireDansFenetre(this, locataire);
+        gest.chargerLocataireDansFenetre(locataire);
+        gest.gestionBtnFermer(cancelButton);
         
-        //TODO : lier vers "DetailBail" quand on clique sur la liste
+        //TODO : lier vers "DetailBail" quand on clique sur la liste (priorité : faible)
     }
+
+
     
     // Méthode pour charger une liste de baux dans le JList
     public void chargerBaux(List<String> baux) {

@@ -333,12 +333,14 @@ public class AjouterCharge extends JDialog {
             }
         ) {
             private static final long serialVersionUID = 1L;
+
             @SuppressWarnings("rawtypes")
-            Class[] columnTypes = new Class[] {
+			Class[] columnTypes = new Class[] {
                 String.class, Float.class
             };
-            @SuppressWarnings("unchecked")
-            public Class getColumnClass(int columnIndex) {
+            
+            @Override
+            public Class<?> getColumnClass(int columnIndex) {
                 return columnTypes[columnIndex];
             }
         });

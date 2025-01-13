@@ -16,6 +16,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
@@ -28,9 +29,6 @@ import java.awt.Font;
 import java.awt.Color;
 import javax.swing.JSeparator;
 import javax.swing.ListSelectionModel;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-
 
 public class FenetrePrincipale extends JFrame {
 
@@ -82,7 +80,7 @@ public class FenetrePrincipale extends JFrame {
 		
 		this.gestionClic.afficherPageConnexion();
 		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setBounds(100, 100, 750, 600);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -116,17 +114,26 @@ public class FenetrePrincipale extends JFrame {
 		locataires.add(mntmLocatairesActuels);
 		locataires.add(mntmAnciensLocataires);
 		
-		JMenu archives = new JMenu("Archives");
-		archives.setForeground(new Color(255, 255, 255));
-		archives.setHorizontalAlignment(SwingConstants.CENTER);
-		menuBar.add(archives);
+		JMenu menuloyersCharges = new JMenu("Charge et loyers");
+		menuloyersCharges.setForeground(new Color(255, 255, 255));
+		menuloyersCharges.setHorizontalAlignment(SwingConstants.CENTER);
+		menuBar.add(menuloyersCharges);
 		
-		JMenuItem mntmArchiverDocs = new JMenuItem("Consulter les documents");
-		archives.add(mntmArchiverDocs);
+		JMenuItem mntmConsulterCharges = new JMenuItem("Consulter les charges");
+		mntmConsulterCharges.addActionListener(this.gestionMenu);
+		menuloyersCharges.add(mntmConsulterCharges);
 		
-		JMenuItem mntmArchiverDocumentComptable = new JMenuItem("Archiver les documents comptables");
-		archives.add(mntmArchiverDocumentComptable);
-		mntmArchiverDocs.addActionListener(this.gestionMenu);
+		JMenuItem mntmConsulterLoyers = new JMenuItem("Consulter les loyers");
+		mntmConsulterLoyers.addActionListener(this.gestionMenu);
+		menuloyersCharges.add(mntmConsulterLoyers);
+		
+		JMenuItem mntmChargerLoyers = new JMenuItem("Charger les loyers");
+		mntmChargerLoyers.addActionListener(this.gestionMenu);
+		menuloyersCharges.add(mntmChargerLoyers);
+		
+		JMenuItem mntmICC = new JMenuItem("Consulter ICC");
+		mntmICC.addActionListener(this.gestionMenu);
+		menuloyersCharges.add(mntmICC);
 		
 		JMenu reglesMetier = new JMenu("Règles métier");
 		reglesMetier.setForeground(new Color(255, 255, 255));
@@ -145,9 +152,9 @@ public class FenetrePrincipale extends JFrame {
 		menuBar.add(Box.createHorizontalGlue());
 		JMenu configurationConnexion = new JMenu(" ");
 		ImageIcon originalIcon = new ImageIcon("images/iconeEngrenage.png");
-		Image ImageRedim = originalIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
-		ImageIcon IconeRedim = new ImageIcon(ImageRedim);
-		configurationConnexion.setIcon(IconeRedim);
+		Image imageRedim = originalIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+		ImageIcon iconeRedim = new ImageIcon(imageRedim);
+		configurationConnexion.setIcon(iconeRedim);
 		menuBar.add(configurationConnexion);
 		
 		JMenuItem itemConfigurationConnexion = new JMenuItem("Configurer la connexion");
@@ -195,9 +202,9 @@ public class FenetrePrincipale extends JFrame {
 		btnAugmenterLoyer.setBounds(10, 213, 165, 21);
 		panel_biensLocatifs.add(btnAugmenterLoyer);
 		
-		JButton btnAfficherLesCharges = new JButton("Afficher les charges");
+		JButton btnAfficherLesCharges = new JButton("Consulter charges");
 		btnAfficherLesCharges.addActionListener(this.gestionClic);
-		btnAfficherLesCharges.setBounds(201, 213, 165, 21);
+		btnAfficherLesCharges.setBounds(201, 213, 210, 21);
 		panel_biensLocatifs.add(btnAfficherLesCharges);
 		
 		
@@ -263,4 +270,34 @@ public class FenetrePrincipale extends JFrame {
 		lblLogo.setBounds(265, 42, 55, 47);
 		contentPane.add(lblLogo);
 	}
+	
+	/**
+	 * Renvoie l'identifiant du logement de la ligne sélectionnée dans la table des biens locatifs.
+	 *
+	 * @return L'identifiant du logement sélectionné, ou null si aucune ligne n'est sélectionnée.
+	 */
+	public String getValeurIdTableLogement() {
+		return getIdTable(tableBiensLoc);
+	}
+	
+	/**
+	 * Renvoie l'identifiant du batiment de la ligne sélectionnée dans la table des biens locatifs.
+	 *
+	 * @return L'identifiant du batiment sélectionné, ou null si aucune ligne n'est sélectionnée.
+	 */
+	public String getValeurIdTableBat() {
+		
+		return getIdTable(tableBatiment);
+	}
+	
+	// Utilitaire pour eviter la duplication de code
+	private String getIdTable(JTable table) {
+	    int selectedRow = table.getSelectedRow(); // Récupère l'index de la ligne sélectionnée
+	    if (selectedRow != -1) { // Vérifie qu'une ligne est bien sélectionnée
+	        return table.getValueAt(selectedRow, 0).toString(); // Récupère la valeur de la première colonne
+	    }
+	    return null;
+	}
+	
+
 }

@@ -153,6 +153,7 @@ public class GestionAjouterCautionnaire implements ActionListener {
 					cautionner = recupererInfosCautionner(bail, cautionnaire);
 
 					Contracter ctr = new Contracter(nouveauLocataire, bail, bail.getDateDeDebut(), this.partLoyer);
+
 					nouveauLocataire.getContrats().add(ctr);
 
 					creationBail(bail);

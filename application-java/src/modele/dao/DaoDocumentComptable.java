@@ -8,19 +8,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import modele.Assurance;
-import modele.Batiment;
 import modele.DocumentComptable;
-import modele.Entreprise;
-import modele.Locataire;
 import modele.TypeDoc;
-import modele.ChargeFixe;
-import modele.ChargeIndex;
 import modele.ConnexionBD;
 import modele.dao.requetes.RequeteDeleteDocumentComptable;
 import modele.dao.requetes.RequeteSelectDocumentComptable;
 import modele.dao.requetes.RequeteSelectDocumentComptableById;
 import modele.dao.requetes.RequeteSelectDocumentComptableByIdLog;
+import modele.dao.requetes.RequeteSelectDocumentComptableLoyersParLocataire;
 import modele.dao.requetes.RequeteUpdateDocumentComptable;
 import modele.dao.requetes.RequeteCreateDocumentComptable;
 
@@ -77,6 +72,17 @@ public class DaoDocumentComptable extends DaoModele<DocumentComptable> {
 		
 		
 	}
+	
+	public List<DocumentComptable> findLoyersByIdLocataire (String idLocataire) throws SQLException, IOException {
+		
+		return find(new RequeteSelectDocumentComptableLoyersParLocataire(), idLocataire);
+	}
+	
+	public List<DocumentComptable> findAllLoyers() throws SQLException, IOException {
+		
+		return find(new RequeteSelectDocumentComptableLoyersParLocataire());
+	}
+	
 
 	@Override
 	public List<DocumentComptable> findAll() throws SQLException, IOException {
