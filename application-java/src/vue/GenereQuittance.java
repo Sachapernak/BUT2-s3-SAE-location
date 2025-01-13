@@ -15,13 +15,14 @@ import modele.ProvisionCharge;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.sql.SQLException;
 
 public class GenereQuittance {
 
     public GenereQuittance() {
     }
 
-    public static void generateQuittanceWord(DocumentComptable dcQuittance, BigDecimal montant, BienLocatif bienLocatif, Loyer loyer, ProvisionCharge pc) throws IOException {
+    public static void generateQuittanceWord(DocumentComptable dcQuittance, BigDecimal montant, BienLocatif bienLocatif, Loyer loyer, ProvisionCharge pc) throws SQLException, IOException {
         // Création du document Word
         XWPFDocument document = new XWPFDocument();
 
