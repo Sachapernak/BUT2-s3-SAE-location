@@ -54,11 +54,9 @@ public class GestionTablesFenetrePrincipale implements ListSelectionListener{
 		        	nbLogements = daoBienLocatif.countBiens(batiment.getIdBat());
 		            model.addRow(new Object[] { batiment.getIdBat(), batiment.getAdresse().getAdressePostale(),nbLogements});
 		        }
-			} catch (SQLException e) {
+			} catch (SQLException | IOException e) {
 				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			} 
     }
     
     public void remplirBiensLoc (JTable tableBiensLoc, String idBatiment) {
@@ -69,16 +67,25 @@ public class GestionTablesFenetrePrincipale implements ListSelectionListener{
 			model.setRowCount(0);
 	        for (BienLocatif bien : biens) {
 	        	List<Loyer> loyers = bien.getLoyers();
-	        	BigDecimal dernierLoyer = loyers.get(loyers.size()-1).getMontantLoyer();
-	            model.addRow(new Object[] { bien.getIdentifiantLogement(),bien.getNbPiece(), bien.getSurface(), bien.getType(), 
+	        	
+	        	String dernierLoyer;
+	        	
+	        	if (loyers.size() > 0){
+		        	dernierLoyer = loyers.get(loyers.size()-1).getMontantLoyer().toString();
+		            
+	        	} else {
+	        		dernierLoyer = bien.getLoyerBase().toString();
+	        	}
+	        	
+	        	model.addRow(new Object[] { bien.getIdentifiantLogement(),bien.getNbPiece(), bien.getSurface(), bien.getType(), 
 	            		bien.getComplementAdresse(), bien.getLoyerBase(), dernierLoyer});
+	        	
+
 	        }
 						
-		} catch (SQLException e) {
+		} catch (SQLException | IOException e) {
 			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		} 
     }
 
 }

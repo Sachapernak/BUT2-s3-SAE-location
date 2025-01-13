@@ -7,8 +7,6 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -84,7 +82,6 @@ public class TestDaoCautionner {
     }
     
     public void deleteTestData() throws SQLException, IOException {
-        String deleteCautionner = "DELETE FROM SAE_cautionner WHERE lower(id_caution) LIKE '%test%'";
         String deleteAddresses = "DELETE FROM SAE_ADRESSE WHERE lower(ID_SAE_ADRESSE) LIKE '%test%'";
         String deleteCautionnaire = "DELETE FROM SAE_CAUTIONNAIRE WHERE lower(ID_CAUTION) = 9";
         String deleteBien = "DELETE FROM SAE_bien_locatif WHERE lower(IDENTIFIANT_LOGEMENT) LIKE '%test%'";

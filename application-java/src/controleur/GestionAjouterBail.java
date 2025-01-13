@@ -48,18 +48,7 @@ public class GestionAjouterBail implements ActionListener{
 		Object btn = e.getSource();
 		
 		if (btn instanceof JRadioButton) {
-	    	JRadioButton rdBtnActif = (JRadioButton) e.getSource();
-	        String rdBtnLibelle = rdBtnActif.getText();
-			CardLayout cd = this.fenAjouterBail.getCardLayout();
-			JPanel p = this.fenAjouterBail.getPanelAssocierBail();
-			switch (rdBtnLibelle) {
-				case "Créer un nouveau bail" :
-					cd.show(p, "nouveauBail");
-					break;
-				case "Rattacher à un bail existant" : 
-					cd.show(p, "bauxExistants");
-					break;
-			}
+	    	actionPerformedRadio(e);
 			
 		} else if (btn instanceof JButton) {
 	    	JButton btnActif = (JButton) e.getSource();
@@ -80,7 +69,8 @@ public class GestionAjouterBail implements ActionListener{
 					this.fenAjouterBail.textFieldDateFin.setText("");		
 					break;
 			}
-		}
+
+		
 	}
 	
 	private boolean gererErreurs() {
@@ -127,11 +117,9 @@ public class GestionAjouterBail implements ActionListener{
 			for (BienLocatif bien : biens) {
 	            comboBoxBiens.addItem(bien.getIdentifiantLogement());
 	        }
-		} catch (SQLException e) {
+		} catch (SQLException | IOException e) {
 			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		} 
 	}
 	
 	public boolean totalPartEgalAUn() {

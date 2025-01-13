@@ -6,7 +6,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -15,11 +14,8 @@ import org.junit.Test;
 
 import modele.Adresse;
 import modele.Batiment;
-import modele.BienLocatif;
-import modele.TypeDeBien;
 import modele.dao.DaoAdresse;
 import modele.dao.DaoBatiment;
-import modele.dao.DaoBienLocatif;
 
 public class TestDaoBatiment {
 

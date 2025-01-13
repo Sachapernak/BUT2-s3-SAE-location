@@ -12,9 +12,7 @@ import javax.swing.JInternalFrame;
 import javax.swing.JLayeredPane;
 
 import modele.ConnexionBD;
-import utilitaires.ConfigConnexion;
 import vue.AfficherCharges;
-import vue.AjouterBatiment;
 import vue.FenetrePrincipale;
 import vue.RevalorisationLoyer;
 import vue.PageConnexion;
@@ -28,6 +26,7 @@ public class GestionFenetrePrincipale implements ActionListener{
 	}
 	
 	
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		JButton btnActif = (JButton) e.getSource();
@@ -35,27 +34,20 @@ public class GestionFenetrePrincipale implements ActionListener{
 		
 		switch (btnLibelle) {
 			case "Augmenter le loyer" : 
-				RevalorisationLoyer rl = new RevalorisationLoyer();
+				RevalorisationLoyer rl = new RevalorisationLoyer(fenPrincipale.getValeurIdTableLogement());
 				JLayeredPane layeredPaneRevalorisationLoyer= this.fenPrincipale.getLayeredPane();
 				layeredPaneRevalorisationLoyer.add(rl, JLayeredPane.PALETTE_LAYER);
 				rl.setVisible(true);
 				break;
-			case "Afficher les charges" : 
-				AfficherCharges a1 = new AfficherCharges();
-				JLayeredPane layeredPaneAfficherCharges= this.fenPrincipale.getLayeredPane();
-				layeredPaneAfficherCharges.add(a1, JLayeredPane.PALETTE_LAYER);
-				a1.setVisible(true);
-				break;
 			case "Charger" : 
 				GestionTablesFenetrePrincipale gestionTables = new GestionTablesFenetrePrincipale(this.fenPrincipale);
 				gestionTables.remplirBatiments(this.fenPrincipale.getTableBatiment());
-			case "Ajouter un batiment" : 
-				AjouterBatiment ab = new AjouterBatiment(); 
-				JLayeredPane layeredPaneAjouterBatiment = this.fenPrincipale.getLayeredPane();
-				layeredPaneAjouterBatiment.add(ab, JLayeredPane.PALETTE_LAYER);
-				ab.setVisible(true);
 				break;
-			default : 
+			case "Consulter charges" :
+				AfficherCharges a1 = new AfficherCharges(fenPrincipale.getValeurIdTableBat(), fenPrincipale.getValeurIdTableLogement() );
+				a1.setVisible(true);
+				break;
+			default:
 				break;
 		}
 		

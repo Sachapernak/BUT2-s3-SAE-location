@@ -87,13 +87,7 @@ public class DetailChargeDialog extends JDialog {
         addEmptyLine(contentPanel);
 
         // SECTION : autres infos
-        if (doc.isRecuperableLoc()) {
-            JButton btnVoirLoc = new JButton(doc.getIdLocataire());
-            gestionBoutonLocataire(doc, btnVoirLoc);
-            JPanel panelLoc = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-            panelLoc.add(btnVoirLoc);
-            adder.addRow("Locataire :", panelLoc);
-        }
+
 
         if (!"quittance".equalsIgnoreCase(doc.getTypeDoc().toString())) {
             JButton btnVoirEntreprise = new JButton(doc.getIdEntreprise());
@@ -123,6 +117,12 @@ public class DetailChargeDialog extends JDialog {
                 panelCI.add(btnVoirCI);
                 adder.addRow("Charge index :", panelCI);
             }
+        } else {
+            JButton btnVoirLoc = new JButton(doc.getIdLocataire());
+            gestionBoutonLocataire(doc, btnVoirLoc);
+            JPanel panelLoc = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+            panelLoc.add(btnVoirLoc);
+            adder.addRow("Locataire :", panelLoc);
         }
 
         addEmptyLine(contentPanel);
@@ -188,7 +188,7 @@ public class DetailChargeDialog extends JDialog {
                 this.dispose();
             } catch(Exception ex) { 
                 JOptionPane.showMessageDialog(DetailChargeDialog.this, 
-                    "Erreur lors de l'affichage de l'assurance : " + ex.getMessage());
+                    "Erreur lors de l'affichage de la charge : " + ex.getMessage());
             }
         });
     }
@@ -202,7 +202,7 @@ public class DetailChargeDialog extends JDialog {
                 this.dispose();
             } catch(Exception ex) { 
                 JOptionPane.showMessageDialog(DetailChargeDialog.this, 
-                    "Erreur lors de l'affichage de l'assurance : " + ex.getMessage());
+                    "Erreur lors de l'affichage de la charge: " + ex.getMessage());
             }
         });
     }

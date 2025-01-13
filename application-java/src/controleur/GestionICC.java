@@ -4,6 +4,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import javax.swing.JButton;
@@ -37,7 +41,7 @@ public class GestionICC {
 				
 				try {
 					new DaoICC().create(new ICC(fen.getAnnee(), fen.getTrimestre(), Integer.valueOf(fen.getIndice())));
-					fen.dispose();
+					chargerDonnee();
 				} catch (NumberFormatException | SQLException | IOException e1) {
 					fen.afficherMessageErreur(e1.getMessage());
 					e1.printStackTrace();
@@ -50,8 +54,10 @@ public class GestionICC {
 		btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					new DaoICC().delete(new ICC(fen.getAnnee(), fen.getTrimestre(), 0));
-					fen.dispose();
+					List<String> identifiants = extraireIdIcc(fen.getSelectedLine());
+					ICC icc = new ICC(identifiants.get(0), identifiants.get(1), 0);
+					new DaoICC().delete(icc);
+					chargerDonnee();
 				} catch (NumberFormatException | SQLException | IOException e1) {
 					fen.afficherMessageErreur(e1.getMessage());
 					e1.printStackTrace();
@@ -66,6 +72,25 @@ public class GestionICC {
 				fen.dispose();
 			}
 		});
+	}
+	
+	public List<String> extraireIdIcc(String ligne){
+		List<String> res = new ArrayList<>();
+        // Expression régulière pour capturer l'année et le numéro de trimestre
+        Pattern pattern = Pattern.compile("(\\d{4})\\sT(\\d)");
+        java.util.regex.Matcher matcher = pattern.matcher(ligne);
+
+        if (matcher.find()) {
+            String year = matcher.group(1);      
+            String trim = matcher.group(2);    
+            res.add(year);
+            res.add(trim);
+            
+            return res;
+            
+        } else {
+            return Collections.emptyList();
+        }
 	}
 	
 }

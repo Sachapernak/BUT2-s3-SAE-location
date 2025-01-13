@@ -1,19 +1,23 @@
 package controleur;
 
-import java.awt.Cursor;
-import java.io.IOException;
-import java.sql.SQLException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
+import javax.swing.JButton;
 import javax.swing.SwingWorker;
 
 import modele.Locataire;
-import modele.dao.DaoBatiment;
 import vue.DetailLocataire;
 
 public class GestionDetailLocataire {
+	
+	DetailLocataire fen;
+	
+	public GestionDetailLocataire(DetailLocataire fen) {
+		this.fen = fen;
+	}
     
     /**
      * Charge les informations du locataire dans la fenêtre DetailLocataire.
@@ -21,7 +25,7 @@ public class GestionDetailLocataire {
      * @param fen    La fenêtre de détail dans laquelle on injecte les données.
      * @param loc    Le locataire dont on veut afficher les informations.
      */
-    public void chargerLocataireDansFenetre(DetailLocataire fen, Locataire loc) {
+    public void chargerLocataireDansFenetre(Locataire loc) {
     	
         new SwingWorker<Void, Void>() {
             @Override
@@ -49,19 +53,19 @@ public class GestionDetailLocataire {
             }
         }.execute();
         
-        chargerBaux(fen, loc);
+        chargerBaux(loc);
         
         
     }
 
-	private void chargerBaux(DetailLocataire fen, Locataire loc) {
+	private void chargerBaux(Locataire loc) {
         new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() throws Exception {
 
                 List<String> baux = loc.getContrats().stream()
                 		.map(ctr -> ctr.getBail().getIdBail())
-                		.collect(Collectors.toList());
+                		.toList();
                 
                 fen.chargerBaux(baux);
                 
@@ -69,5 +73,13 @@ public class GestionDetailLocataire {
             }
         }.execute();
 		
+	}
+	
+	public void gestionBtnFermer(JButton cancelButton) {
+		cancelButton.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		fen.dispose();
+        	}
+        });
 	}
 }

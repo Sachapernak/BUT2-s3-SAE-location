@@ -26,8 +26,6 @@ public class DetailChargeCF extends JDialog {
     private JLabel lblTxtType;
     private JLabel lblTxtMontant;
     private JLabel lblTxtNumDoc;
-    private JLabel lblTxtDateDoc;
-
     private GestionDetailChargeCF gest;
 
     /**
