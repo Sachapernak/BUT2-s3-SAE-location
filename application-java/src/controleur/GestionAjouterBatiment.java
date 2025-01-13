@@ -14,6 +14,13 @@ import modele.dao.DaoAdresse;
 import modele.dao.DaoBatiment;
 import vue.AjouterBatiment;
 
+/**
+ * Contrôleur gérant l'ajout d'un batiment 
+ * 
+ * Cette classe interagit avec la vue AjouterBatiment et met à jour le
+ * modèle (DAOs, entités) en fonction des actions de l'utilisateur.
+ */
+
 public class GestionAjouterBatiment implements ActionListener {
 
     private final DaoAdresse daoAdresse; 
@@ -21,6 +28,12 @@ public class GestionAjouterBatiment implements ActionListener {
     private final AjouterBatiment fenAjoutBatiment;
     private final VerificationChamps verifChamps;
 
+    
+    /**
+     * Constructeur principal : injecte la vue et instancie les DAO.
+     *
+     * @param aj  la vue pour ajouter un batiment
+     */
     public GestionAjouterBatiment(AjouterBatiment aj) {
         this.fenAjoutBatiment = aj;
         this.verifChamps = new VerificationChamps();
@@ -28,6 +41,9 @@ public class GestionAjouterBatiment implements ActionListener {
         this.daoBatiment = new DaoBatiment();
     }
 
+	/**
+	 * Méthode déclenchée par les actions sur la vue. On décompose selon le bouton cliqué.
+	 */
     @Override
     public void actionPerformed(ActionEvent e) {
         String btnLibelle = ((JButton) e.getSource()).getText();
@@ -43,6 +59,14 @@ public class GestionAjouterBatiment implements ActionListener {
         }
     }
 
+    
+    // --------------------------------------------------------------------
+ 	//                 Méthodes privées de gestion d'actions
+ 	// --------------------------------------------------------------------
+
+ 	/**
+ 	 * Gère l’action de validation dans la vue AjouterBatiment.
+ 	 */
     private void handleValider() {
         if (!verifierChamps()) {
             return;
@@ -62,6 +86,12 @@ public class GestionAjouterBatiment implements ActionListener {
         this.fenAjoutBatiment.dispose();
     }
 
+    /**
+     * Vérifie si tous les champs obligatoires sont remplis et si le code postal est valide.
+     * Affiche un message d'erreur si une condition n'est pas respectée.
+     *
+     * @return true si tous les champs sont valides, false sinon.
+     */
     private boolean verifierChamps() {
         List<String> champs = this.fenAjoutBatiment.getChampsObligatoires();
 
@@ -78,6 +108,14 @@ public class GestionAjouterBatiment implements ActionListener {
         return true;
     }
 
+    /**
+     * Crée un bâtiment en fonction des informations saisies par l'utilisateur.
+     * Vérifie si le bâtiment ou l'adresse existe déjà en base de données avant de les ajouter.
+     *
+     * @return le bâtiment créé, ou null si une erreur survient (par ex. bâtiment déjà existant).
+     * @throws SQLException en cas de problème d'accès à la base de données.
+     * @throws IOException en cas d'erreur d'entrée/sortie.
+     */
     private Batiment creerBatiment() throws SQLException, IOException {
         String idBat = this.fenAjoutBatiment.getStringTextFieldIdentifiant();
         Adresse adresse = creerAdresse();
@@ -92,7 +130,13 @@ public class GestionAjouterBatiment implements ActionListener {
         daoBatiment.create(batiment);
         return batiment;
     }
-
+    
+    /**
+     * Crée une instance de l'adresse en fonction des informations saisies par l'utilisateur.
+     * Vérifie et ajoute un complément d'adresse si celui-ci est renseigné.
+     *
+     * @return une instance de l'objet Adresse créée à partir des champs de l'interface.
+     */
     private Adresse creerAdresse() {
         String id = this.fenAjoutBatiment.getStringTextFieldIdAdr();
         String adr = this.fenAjoutBatiment.getStringTextFieldAdresse();

@@ -11,6 +11,7 @@ import javax.swing.JMenuItem;
 
 import vue.AfficherAnciensLocataires;
 import vue.AfficherCharges;
+import vue.AfficherEntreprises;
 import vue.AfficherLocatairesActuels;
 import vue.AfficherLoyers;
 import vue.ChargerLoyers;
@@ -92,7 +93,11 @@ public class GestionMenu implements ActionListener{
 				fenLayerPane.add(stIcc, JLayeredPane.PALETTE_LAYER);
 				stIcc.setVisible(true);
 				break;
-				
+			case "Afficher les entreprises":
+				AfficherEntreprises ae = new AfficherEntreprises();
+				fenLayerPane.add(ae, JLayeredPane.PALETTE_LAYER);
+				ae.setVisible(true);
+				break;
 			default:
 				break;
 				
