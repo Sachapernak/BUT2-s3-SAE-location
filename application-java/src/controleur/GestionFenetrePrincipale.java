@@ -14,6 +14,7 @@ import javax.swing.JLayeredPane;
 import modele.ConnexionBD;
 import utilitaires.ConfigConnexion;
 import vue.AfficherCharges;
+import vue.AjouterBatiment;
 import vue.FenetrePrincipale;
 import vue.RevalorisationLoyer;
 import vue.PageConnexion;
@@ -48,6 +49,14 @@ public class GestionFenetrePrincipale implements ActionListener{
 			case "Charger" : 
 				GestionTablesFenetrePrincipale gestionTables = new GestionTablesFenetrePrincipale(this.fenPrincipale);
 				gestionTables.remplirBatiments(this.fenPrincipale.getTableBatiment());
+			case "Ajouter un batiment" : 
+				AjouterBatiment ab = new AjouterBatiment(); 
+				JLayeredPane layeredPaneAjouterBatiment = this.fenPrincipale.getLayeredPane();
+				layeredPaneAjouterBatiment.add(ab, JLayeredPane.PALETTE_LAYER);
+				ab.setVisible(true);
+				break;
+			default : 
+				break;
 		}
 		
 	}

@@ -245,9 +245,10 @@ public class FenetrePrincipale extends JFrame {
 		tableBatiment.getSelectionModel().addListSelectionListener(this.gestionTable);
 		scrollPaneBatiment.setViewportView(tableBatiment);
 		
-		JButton btnAjoutBien = new JButton("Ajouter un bien");
-		btnAjoutBien.setBounds(488, 36, 156, 21);
-		panel_bien.add(btnAjoutBien);
+		JButton btnAjoutBatiment = new JButton("Ajouter un batiment");
+		btnAjoutBatiment.addActionListener(this.gestionClic);
+		btnAjoutBatiment.setBounds(488, 36, 156, 21);
+		panel_bien.add(btnAjoutBatiment);
 		
 		JButton btnCharger = new JButton("Charger");
 		btnCharger.addActionListener(this.gestionClic);
