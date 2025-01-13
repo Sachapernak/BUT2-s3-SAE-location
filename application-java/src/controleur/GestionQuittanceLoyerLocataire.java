@@ -24,6 +24,7 @@ import modele.DocumentComptable;
 import modele.FactureBien;
 import modele.Locataire;
 import modele.Loyer;
+import modele.ProvisionCharge;
 import modele.TypeDoc;
 import modele.dao.DaoBienLocatif;
 import modele.dao.DaoDocumentComptable;
@@ -40,8 +41,7 @@ public class GestionQuittanceLoyerLocataire  implements ActionListener{
 	private JTable tableLocataires;
 	private JTable tableBiensActuels;
 	private JTable tableBiensAnciens;
-	private JTable tableChargeIndex;
-	private JTable tableChargeFixe;
+	private JTable tableCharge;
 	private JTable tableLoyer;
 	private DaoLocataire dl;
 	private DaoBienLocatif dbl;
@@ -53,8 +53,7 @@ public class GestionQuittanceLoyerLocataire  implements ActionListener{
 		this.tableLocataires = fenQuittanceLoyer.getTableLocataires();
 		this.tableBiensActuels = fenQuittanceLoyer.getTableBiensActuels();
 		this.tableBiensAnciens = fenQuittanceLoyer.getTableBiensAnciens();
-		this.tableChargeIndex = fenQuittanceLoyer.getChargeIndexTable();
-		this.tableChargeFixe = fenQuittanceLoyer.getChargeCFTable();
+		this.tableCharge = fenQuittanceLoyer.getChargeTable();
 		this.tableLoyer = fenQuittanceLoyer.getLoyerTable();
 		this.dl = new DaoLocataire();
 		this.dbl = new DaoBienLocatif();
@@ -76,21 +75,17 @@ public class GestionQuittanceLoyerLocataire  implements ActionListener{
 	                JOptionPane.showMessageDialog(fenQuittanceLoyer, "Veuillez sélectionner un loyer.", "Avertissement", JOptionPane.WARNING_MESSAGE);
 	                break;
 	            }
-	            if (tableChargeIndex.getSelectedRow() == -1) {
+	            if (tableCharge.getSelectedRow() == -1) {
 	                JOptionPane.showMessageDialog(fenQuittanceLoyer, "Veuillez sélectionner une charge index.", "Avertissement", JOptionPane.WARNING_MESSAGE);
 	                break;
 	            }
-	            if (tableChargeFixe.getSelectedRow() == -1) {
-	                JOptionPane.showMessageDialog(fenQuittanceLoyer, "Veuillez sélectionner une charge CF.", "Avertissement", JOptionPane.WARNING_MESSAGE);
-	                break;
-	            }
+	            
 				
 				String idBien;
 				int ligneSelectLoc = tableLocataires.getSelectedRow();
 				int ligneSelectBien = tableBiensActuels.getSelectedRow();
 				int ligneSelectLoyer = tableLoyer.getSelectedRow();
-				int ligneSelectChargeIndex = tableChargeIndex.getSelectedRow();
-				int ligneSelectChargeFixe = tableChargeFixe.getSelectedRow();
+				int ligneSelectCharge = tableCharge.getSelectedRow();
 				String idLoc = (String) tableLocataires.getValueAt(ligneSelectLoc, 0);
 				
 				if (fenQuittanceLoyer.getEstActuel()) {
@@ -98,11 +93,14 @@ public class GestionQuittanceLoyerLocataire  implements ActionListener{
 				}else {
 					idBien = (String) tableBiensAnciens.getValueAt(ligneSelectBien, 0);
 				}
-				ChargeIndex ci = createChargeIndex(ligneSelectChargeIndex);
-				ChargeFixe cf = createChargeFixe(ligneSelectChargeFixe);
+				ProvisionCharge ci = createCharge(ligneSelectCharge);
 				Loyer loyer = createLoyer(ligneSelectLoyer);
 				String numDoc = fenQuittanceLoyer.getNumeroDoc();
-				
+				if (numDoc == null || numDoc.trim().isEmpty()) {
+				    JOptionPane.showMessageDialog(fenQuittanceLoyer, "Veuillez écrire un numéro de document.", "Avertissement", JOptionPane.WARNING_MESSAGE);
+				    break;
+				}
+
 				Date currentDate = new Date();
 
 		        // Définir un formatteur
@@ -114,15 +112,16 @@ public class GestionQuittanceLoyerLocataire  implements ActionListener{
 				BigDecimal montant = new BigDecimal((String) tableLoyer.getValueAt(ligneSelectLoyer,2));
 				String fichierDoc = "Quittance de Loyer "+numDoc+".word";
 				DocumentComptable dc = new DocumentComptable(numDoc,dateDoc,type,montant,fichierDoc);
-				float partDeCharge = Float.parseFloat(fenQuittanceLoyer.getPartCharges());
+				
 				try {
 					Locataire locataire = dl.findById(idLoc);
+					DocumentComptable dcLoyer = ddc.findByIdtypeloyer(idLoc,idBien);
 					dc.setLocataire(locataire);
 					BienLocatif bien = dbl.findById(idBien);
-					FactureBien facturebien = new FactureBien(bien,dc,partDeCharge);
+					FactureBien facturebien = new FactureBien(bien,dc,1);
 					ddc.create(dc);
 					dfb.create(facturebien);
-					GenereQuittance.generateQuittanceWord(dc,loyer,ci,cf);
+					GenereQuittance.generateQuittanceWord(dc,dcLoyer.getMontant(),bien,loyer,ci);
 					
 				} catch (SQLException | IOException e1) {
 					e1.printStackTrace();
@@ -174,37 +173,21 @@ public class GestionQuittanceLoyerLocataire  implements ActionListener{
 		        	tableBiensActuels.clearSelection();
 			    }
 		        fenQuittanceLoyer.setEstActuel(false);
-				
 				break;
-			
 			}
 		}
 		
-		
-		
 	}
 	
-	public ChargeIndex createChargeIndex(int ligneSelectChargeIndex) {
-		String id = (String) tableChargeIndex.getValueAt(ligneSelectChargeIndex, 0);
-		String dateDeReleve = (String) tableChargeIndex.getValueAt(ligneSelectChargeIndex, 1);
-		String type = (String) tableChargeIndex.getValueAt(ligneSelectChargeIndex, 2);
-		BigDecimal valeurCompteur = new BigDecimal((String) tableChargeIndex.getValueAt(ligneSelectChargeIndex,3));
-		BigDecimal coutVariable = new BigDecimal((String) tableChargeIndex.getValueAt(ligneSelectChargeIndex,4));
-		BigDecimal coutFixe = new BigDecimal((String) tableChargeIndex.getValueAt(ligneSelectChargeIndex,5));
+	public ProvisionCharge createCharge(int ligneSelectCharge) {
+		String id = (String) tableCharge.getValueAt(ligneSelectCharge, 0);
+		String dateDeChangement = (String) tableCharge.getValueAt(ligneSelectCharge, 1);
+		BigDecimal charge = new BigDecimal((String) tableCharge.getValueAt(ligneSelectCharge,2));
 		
 		
-		return new ChargeIndex(id,dateDeReleve,type,valeurCompteur,coutVariable,coutFixe,null,null);
+		return new ProvisionCharge(id,dateDeChangement,charge);
 	}
 	
-	public ChargeFixe createChargeFixe(int ligneSelectChargeFixe) {
-		String id = (String) tableChargeFixe.getValueAt(ligneSelectChargeFixe, 0);
-		String dateDeCharge = (String) tableChargeFixe.getValueAt(ligneSelectChargeFixe, 1);
-		String type = (String) tableChargeFixe.getValueAt(ligneSelectChargeFixe, 2);
-		BigDecimal montant = new BigDecimal((String) tableChargeFixe.getValueAt(ligneSelectChargeFixe,3));
-		
-
-		return new ChargeFixe(id,dateDeCharge,type,montant,null,null);
-	}
 	
 	public Loyer createLoyer(int ligneSelectLoyer) {
 		String idBien = (String) tableLoyer.getValueAt(ligneSelectLoyer, 0);
@@ -213,13 +196,5 @@ public class GestionQuittanceLoyerLocataire  implements ActionListener{
 
 		return new Loyer(idBien,dateDeChangement,montantLoyer);
 	}
-//	
-//public Loyer(String idBien, String dateDeChangement, BigDecimal montantLoyer) {
-//        
-//    	if (montantLoyer.compareTo(BigDecimal.ZERO) < 0) { throw new IllegalArgumentException("Un loyer ne peut etre negatif");}
-//    	
-//    	this.idBien = idBien;
-//        this.dateDeChangement = dateDeChangement;
-//        this.montantLoyer = montantLoyer;
-//    }
+
 }

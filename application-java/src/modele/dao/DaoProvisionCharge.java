@@ -1,5 +1,6 @@
 package modele.dao;
 
+
 import java.io.IOException;
 
 
@@ -18,6 +19,8 @@ import modele.dao.requetes.RequeteSelectProvisionChargeByIdBail;
 import modele.dao.requetes.RequeteSelectProvisionCharge;
 import modele.dao.requetes.RequeteSelectProvisionChargeById;
 import modele.dao.requetes.RequeteUpdateProvisionCharge;
+import modele.dao.requetes.RequeteSelectPPCByID;
+
 
 
 public class DaoProvisionCharge extends DaoModele<ProvisionCharge> implements Dao<ProvisionCharge> {
@@ -44,6 +47,10 @@ public class DaoProvisionCharge extends DaoModele<ProvisionCharge> implements Da
     
     public List<ProvisionCharge> findByIdBail(String... id) throws SQLException, IOException {
         return find(new RequeteSelectProvisionChargeByIdBail(), id);
+    }
+    
+    public List<ProvisionCharge> findByIdPPC(String... id) throws SQLException, IOException {
+        return find(new RequeteSelectPPCByID(), id);
     }
     
     @Override

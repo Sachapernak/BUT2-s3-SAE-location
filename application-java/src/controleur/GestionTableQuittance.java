@@ -29,10 +29,12 @@ import modele.ChargeIndex;
 import modele.Contracter;
 	import modele.Locataire;
 	import modele.Loyer;
+import modele.ProvisionCharge;
 import modele.dao.DaoChargeFixe;
 import modele.dao.DaoChargeIndex;
 import modele.dao.DaoLocataire;
 import modele.dao.DaoLoyer;
+import modele.dao.DaoProvisionCharge;
 import vue.AfficherLocatairesActuels;
 	
 	import vue.QuittanceLoyerPrincipal;
@@ -42,15 +44,13 @@ import vue.AfficherLocatairesActuels;
 		
 		private QuittanceLoyerPrincipal fenQuittanceLoyerPrincipal;
 		private DaoLocataire daoLocataire;
-		private DaoChargeFixe dcf;
-		private DaoChargeIndex dci;
+		private DaoProvisionCharge dpc;
 		private DaoLoyer dl;
 		private JTable tableLocataires;
 		private JTable tableBiensActuels;
 		private JTable tableBiensAnciens;
 		private JTable tableLoyer;
 		private JTable tableChargeIndex;
-		private JTable tableChargeFixe;
 		
 		public GestionTableQuittance(QuittanceLoyerPrincipal qlp)  {
 			this.fenQuittanceLoyerPrincipal = qlp;
@@ -58,12 +58,10 @@ import vue.AfficherLocatairesActuels;
 			this.tableBiensActuels = fenQuittanceLoyerPrincipal.getTableBiensActuels();
 			this.tableBiensAnciens = fenQuittanceLoyerPrincipal.getTableBiensAnciens();
 			this.tableLoyer = fenQuittanceLoyerPrincipal.getLoyerTable();
-			this.tableChargeIndex = fenQuittanceLoyerPrincipal.getChargeIndexTable();
-			this.tableChargeFixe = fenQuittanceLoyerPrincipal.getChargeCFTable();
+			this.tableChargeIndex = fenQuittanceLoyerPrincipal.getChargeTable();
 			this.daoLocataire = new DaoLocataire();
-			this.dcf = new DaoChargeFixe();
-			this.dci = new DaoChargeIndex();
 			this.dl = new DaoLoyer();
+			this.dpc = new DaoProvisionCharge();
 			
 			
 		}
@@ -129,61 +127,25 @@ import vue.AfficherLocatairesActuels;
 		
 	}
 	
-	public void remplirTableChargeIndex(List<ChargeIndex> listChargeIndex) {
-		
+	public void remplirTableCharge(List<ProvisionCharge> listProvisionCharge) {
 	    UtilitaireTable.viderTable(tableChargeIndex);
 	    DefaultTableModel model = (DefaultTableModel) tableChargeIndex.getModel();
 	    model.setRowCount(0);
-	    List<ChargeIndex> listeChargeIndex;
+	    List<ProvisionCharge> listeProvisionCharge;
 		try {
-			if (listChargeIndex == null) {
-				listeChargeIndex = dci.findAll();
+			if (listProvisionCharge == null) {
+				listeProvisionCharge = dpc.findAll();
 			}else {
-				listeChargeIndex =listChargeIndex;
+				listeProvisionCharge =listProvisionCharge;
 			}
-			
-			
-	        for (ChargeIndex chargeIndex:listeChargeIndex) {
-	        	
-	            
-	        	model.addRow(new String[] { chargeIndex.getId(), chargeIndex.getDateDeReleve(), chargeIndex.getType(),
-	        			chargeIndex.getValeurCompteur().toString(),chargeIndex.getCoutVariable().toString(),
-	        			chargeIndex.getCoutFixe().toString()});
-	            
+	        for (ProvisionCharge provisionCharge:listeProvisionCharge) {
+	        	model.addRow(new String[] { provisionCharge.getIdBail(), provisionCharge.getDateChangement(), provisionCharge.getProvisionPourCharge().toString()});
 	        }
 		} catch (SQLException | IOException e) {
-			// TODO Auto-generated catch block
 				e.printStackTrace();
 			} 
 	}
-	
-	public void remplirTableChargeFixe(List<ChargeFixe> listChargeFixe) {
-		
-	    UtilitaireTable.viderTable(tableChargeFixe);
-	    DefaultTableModel model = (DefaultTableModel) tableChargeFixe.getModel();
-	    model.setRowCount(0);
-	    List<ChargeFixe> listeChargeFixe;
-		try {
-			if (listChargeFixe == null) {
-				listeChargeFixe = dcf.findAll();
-			}else {
-				listeChargeFixe =listChargeFixe;
-			}
-			
-			
-	        for (ChargeFixe chargeFixe:listeChargeFixe) {
-	        	
-	            
-	        	model.addRow(new String[] { chargeFixe.getId(), chargeFixe.getDateDeCharge(), chargeFixe.getType(),
-	        			chargeFixe.getMontant().toString()});
 
-	        }
-		} catch (SQLException | IOException e) {
-			// TODO Auto-generated catch block
-				e.printStackTrace();
-			} 
-		
-	}
 	
 	public void remplirTableLoyer(List<Loyer> listLoyer) {
 		
@@ -259,7 +221,8 @@ import vue.AfficherLocatairesActuels;
 			int dateAnnee = (int)fenQuittanceLoyerPrincipal.getYearSpinner().getValue();
 			int dateMois = (int)fenQuittanceLoyerPrincipal.getMonthSpinner().getValue();
 		    
-		    String dateDoc = String.format("%02d-%04d", dateMois,dateAnnee);
+		    String dateDocCharge = String.format("%02d-%04d", dateMois,dateAnnee);
+		    String dateDocLoyer = String.format("%04d", dateAnnee);
 		    String idBien;
 			int ligneSelectLoc = tableLocataires.getSelectedRow();
 			int ligneSelectBien = tableBiensActuels.getSelectedRow();
@@ -270,13 +233,10 @@ import vue.AfficherLocatairesActuels;
 				idBien = (String) tableBiensAnciens.getValueAt(ligneSelectBien, 0);
 			}
 		    try {
-				List<ChargeIndex> listeChargeIndex = dci.findByIdLocBienDocComptable(idBien,dateDoc,idLoc);
-				remplirTableChargeIndex(listeChargeIndex);
-				
-				List<ChargeFixe> listeChargeFixe = dcf.findByIdLocBienDocComptable(idBien,dateDoc,idLoc);
-				remplirTableChargeFixe(listeChargeFixe);
-				
-				List<Loyer> listeLoyer = dl.findByIdLocBienDocComptable(idBien,idLoc);
+		    	List<ProvisionCharge> listeProvisionCharge = dpc.findByIdPPC(dateDocCharge,idLoc,idBien);
+		    	remplirTableCharge(listeProvisionCharge);
+		    	
+				List<Loyer> listeLoyer = dl.findByIdLocBienDocComptable(dateDocLoyer,idLoc,idBien);
 				remplirTableLoyer(listeLoyer);
 			} catch (SQLException | IOException e) {
 				// TODO Auto-generated catch block

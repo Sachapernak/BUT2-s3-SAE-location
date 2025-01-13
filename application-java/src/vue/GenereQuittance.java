@@ -7,10 +7,10 @@ import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 
 import modele.Adresse;
-import modele.ChargeFixe;
-import modele.ChargeIndex;
+import modele.BienLocatif;
 import modele.DocumentComptable;
 import modele.Loyer;
+import modele.ProvisionCharge;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -21,14 +21,14 @@ public class GenereQuittance {
     public GenereQuittance() {
     }
 
-    public static void generateQuittanceWord(DocumentComptable dc, Loyer loyer, ChargeIndex chargeIndex, ChargeFixe chargeFixe) throws IOException {
+    public static void generateQuittanceWord(DocumentComptable dcQuittance, BigDecimal montant, BienLocatif bienLocatif, Loyer loyer, ProvisionCharge pc) throws IOException {
         // Création du document Word
         XWPFDocument document = new XWPFDocument();
 
         // Ajouter le texte "Locataire" en haut à droite
         XWPFParagraph locataireParagraph = document.createParagraph();
         XWPFRun locataireRun = locataireParagraph.createRun();
-        locataireRun.setText("Locataire: " + dc.getLocataire().getNom());
+        locataireRun.setText("Locataire: " + dcQuittance.getLocataire().getNom());
         locataireRun.setBold(true);
         locataireParagraph.setAlignment(org.apache.poi.xwpf.usermodel.ParagraphAlignment.RIGHT);
 
@@ -43,84 +43,81 @@ public class GenereQuittance {
         // Ajouter les détails de la quittance
         XWPFParagraph detailsParagraph = document.createParagraph();
         XWPFRun detailsRun = detailsParagraph.createRun();
-        Adresse adresse = dc.getBatiment() != null ? dc.getBatiment().getAdresse() : null;
-        detailsRun.setText("Quittance de loyer n° " + dc.getNumeroDoc());
+        Adresse adresse = bienLocatif.getBat() != null ? bienLocatif.getBat().getAdresse() : null;
+        detailsRun.setText("Quittance de loyer n° " + dcQuittance.getNumeroDoc());
         detailsRun.addBreak();
-        detailsRun.setText("Reçu de : " + dc.getLocataire().getNom());
+        detailsRun.setText("Reçu de : " + dcQuittance.getLocataire().getNom());
         detailsRun.addBreak();
-        detailsRun.setText("Le : " + dc.getDateDoc());
+        detailsRun.setText("Le : " + dcQuittance.getDateDoc());
         detailsRun.addBreak();
         detailsRun.setText("Pour loyer et accessoires des locaux sis :");
         detailsRun.addBreak();
         detailsRun.setText(adresse != null ? adresse.getAdressePostale() + ", " + adresse.getCodePostal() + " " + adresse.getVille() : "Non spécifié");
         detailsRun.addBreak();
 
-        // Ajouter un tableau pour les loyers
-        XWPFTable loyerTable = document.createTable();
-        XWPFTableRow loyerHeaderRow = loyerTable.getRow(0);
-        loyerHeaderRow.getCell(0).setText("Identifiant Logement");
-        loyerHeaderRow.addNewTableCell().setText("Date de Changement");
-        loyerHeaderRow.addNewTableCell().setText("Montant Loyer (€)");
-
-        XWPFTableRow loyerRow = loyerTable.createRow();
-        loyerRow.getCell(0).setText(loyer.getIdBien());
-        loyerRow.getCell(1).setText(loyer.getDateDeChangement());
-        loyerRow.getCell(2).setText(loyer.getMontantLoyer().toString());
-
-        // Ajouter un tableau pour toutes les charges (fusion des charges fixes et indexées)
-        XWPFParagraph separationParagraph = document.createParagraph();
-        separationParagraph.createRun().addBreak();
-
-        XWPFTable chargeTable = document.createTable();
-        XWPFTableRow chargeHeaderRow = chargeTable.getRow(0);
-        chargeHeaderRow.getCell(0).setText("Type de Charge");
-        chargeHeaderRow.addNewTableCell().setText("Description");
-        chargeHeaderRow.addNewTableCell().setText("Montant (€)");
-
-        // Charges indexées
-        XWPFTableRow chargeIndexRow = chargeTable.createRow();
-        chargeIndexRow.getCell(0).setText("Charge Indexée");
-        chargeIndexRow.getCell(1).setText(chargeIndex.getType());
-        chargeIndexRow.getCell(2).setText(chargeIndex.getCoutFixe().add(chargeIndex.getCoutVariable().multiply(chargeIndex.getValeurCompteur())).toString());
-
-        // Charges fixes
-        XWPFTableRow chargeFixeRow = chargeTable.createRow();
-        chargeFixeRow.getCell(0).setText("Charge Fixe");
-        chargeFixeRow.getCell(1).setText(chargeFixe.getType());
-        chargeFixeRow.getCell(2).setText(chargeFixe.getMontant().toString());
+        // Tableau des montants à payer
+        XWPFParagraph amountsToPayTitle = document.createParagraph();
+        XWPFRun amountsToPayRun = amountsToPayTitle.createRun();
+        amountsToPayRun.setText("Montants à payer :");
+        amountsToPayRun.setBold(true);
         
-        // Ajouter la somme des charges
-        BigDecimal totalCharges = chargeFixe.getMontant().add(chargeIndex.getCoutFixe().add(chargeIndex.getCoutVariable().multiply(chargeIndex.getValeurCompteur())));
-        XWPFTableRow totalChargesRow = chargeTable.createRow();
-        totalChargesRow.getCell(0).setText("");
-        totalChargesRow.getCell(1).setText("");
-        totalChargesRow.getCell(2).setText("Total Charges: " + totalCharges);
+        XWPFTable amountsToPayTable = document.createTable();
+        XWPFTableRow loyerRow = amountsToPayTable.getRow(0);
+        loyerRow.getCell(0).setText("Loyer dû :");
+        loyerRow.addNewTableCell().setText(loyer.getMontantLoyer() + " €");
 
-        // Ajouter le total général (loyer + charges)
-        BigDecimal totalGeneral = loyer.getMontantLoyer().add(totalCharges);
-        XWPFParagraph totalGeneralParagraph = document.createParagraph();
-        XWPFRun totalGeneralRun = totalGeneralParagraph.createRun();
-        totalGeneralRun.setText("Montant Total (Loyer + Charges): " + totalGeneral + " €");
-        totalGeneralRun.setBold(true);
-        totalGeneralParagraph.setAlignment(org.apache.poi.xwpf.usermodel.ParagraphAlignment.RIGHT);
+        XWPFTableRow chargeRow = amountsToPayTable.createRow();
+        chargeRow.getCell(0).setText("Provision pour charges :");
+        chargeRow.getCell(1).setText(pc.getProvisionPourCharge() + " €");
 
-        // Ajouter les mentions légales
-        XWPFParagraph legalParagraph = document.createParagraph();
-        XWPFRun legalRun = legalParagraph.createRun();
-        legalRun.setText("Le paiement de la présente n'emporte pas présomption de paiement des termes antérieurs.");
-        legalRun.addBreak();
-        legalRun.setText("Cette quittance annule tous les reçus qui auraient pu être donnés pour acompte versé sur le présent terme.");
-        legalRun.addBreak();
-        legalRun.setText("Sous réserve d'encaissement.");
+        BigDecimal totalDues = loyer.getMontantLoyer().add(pc.getProvisionPourCharge());
+        XWPFTableRow totalDueRow = amountsToPayTable.createRow();
+        totalDueRow.getCell(0).setText("Total dû :");
+        totalDueRow.getCell(1).setText(totalDues + " €");
 
-        // Ajouter une signature
+        // Tableau des montants payés
+        XWPFParagraph amountsPaidTitle = document.createParagraph();
+        XWPFRun amountsPaidRun = amountsPaidTitle.createRun();
+        amountsPaidRun.setText("Montants payés :");
+        amountsPaidRun.setBold(true);
+
+        XWPFTable amountsPaidTable = document.createTable();
+        XWPFTableRow paidRow = amountsPaidTable.getRow(0);
+        paidRow.getCell(0).setText("Montant payé par le locataire :");
+        paidRow.addNewTableCell().setText(montant + " €");
+
+        BigDecimal differenceLoyer = montant.subtract(loyer.getMontantLoyer());
+        XWPFTableRow differenceLoyerRow = amountsPaidTable.createRow();
+        differenceLoyerRow.getCell(0).setText("Montant - Loyer :");
+        differenceLoyerRow.getCell(1).setText(differenceLoyer + " €");
+
+        BigDecimal differenceTotal = montant.subtract(totalDues);
+        XWPFTableRow differenceTotalRow = amountsPaidTable.createRow();
+        differenceTotalRow.getCell(0).setText("Montant - (Loyer + Charges) :");
+        differenceTotalRow.getCell(1).setText(differenceTotal + " €");
+
+        // Observation selon les cas
+        String observation;
+        if (differenceTotal.compareTo(BigDecimal.ZERO) >= 0) {
+            observation = "Tout a été payé pour ce mois.";
+        } else if (montant.compareTo(loyer.getMontantLoyer()) < 0) {
+            observation = "Le locataire n'a pas terminé de payer le loyer.";
+        } else {
+            observation = "Il manque des charges à payer.";
+        }
+
+        XWPFTableRow observationRow = amountsPaidTable.createRow();
+        observationRow.getCell(0).setText("Observation :");
+        observationRow.getCell(1).setText(observation);
+
+        // Ajouter la date du paiement et signature
         XWPFParagraph signatureParagraph = document.createParagraph();
         XWPFRun signatureRun = signatureParagraph.createRun();
-        signatureRun.setText("Fait à " + (adresse != null ? adresse.getVille() : "Non spécifié") + " le " + dc.getDateDoc());
+        signatureRun.setText("Fait à " + (adresse != null ? adresse.getVille() : "Non spécifié") + " le " + dcQuittance.getDateDoc());
         signatureParagraph.setAlignment(org.apache.poi.xwpf.usermodel.ParagraphAlignment.RIGHT);
 
         // Sauvegarder le document Word
-        try (FileOutputStream out = new FileOutputStream("QuittanceLoyer_" + dc.getNumeroDoc() + ".docx")) {
+        try (FileOutputStream out = new FileOutputStream("QuittanceLoyer_" + dcQuittance.getNumeroDoc() + ".docx")) {
             document.write(out);
         }
 

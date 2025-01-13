@@ -30,11 +30,9 @@ public class QuittanceLoyerPrincipal extends JInternalFrame {
 	private JTextField numeroDocField;
 	private JTextField dateDocField;
 	private JTextField partChargesField;
-	private JTable chargeIndexTable;
-	private JTable chargeCFTable;
+	private JTable chargeTable;
 	private JSpinner yearSpinner;
 	private JSpinner monthSpinner;
-	private JSpinner daySpinner;
 
 	public JTable getLoyerTable() {
 		return loyerTable;
@@ -48,20 +46,10 @@ public class QuittanceLoyerPrincipal extends JInternalFrame {
 	public JSpinner getMonthSpinner() {
 		return monthSpinner;
 	}
+	
 
-
-	public JSpinner getDaySpinner() {
-		return daySpinner;
-	}
-
-
-	public JTable getChargeIndexTable() {
-		return chargeIndexTable;
-	}
-
-
-	public JTable getChargeCFTable() {
-		return chargeCFTable;
+	public JTable getChargeTable() {
+		return chargeTable;
 	}
 
 
@@ -146,13 +134,10 @@ public QuittanceLoyerPrincipal() {
     DefaultTableModel loyerTableModel = new DefaultTableModel(loyerColumns, 0);
     loyerTable = new JTable(loyerTableModel);
     
-    String[] chargeIndexColumns = {"ID", "Date de Relevé", "Type", "Valeur Compteur", "Coût Variable", "Coût Fixe"};
+    String[] chargeIndexColumns = {"ID", "Date de Changement", "Montant"};
     DefaultTableModel chargeIndexTableModel = new DefaultTableModel(chargeIndexColumns, 0);
-    chargeIndexTable = new JTable(chargeIndexTableModel);
-    
-    String[] chargeCFColumns = {"ID", "Date de Charge", "Type", "Montant"};
-    DefaultTableModel chargeCFTableModel = new DefaultTableModel(chargeCFColumns, 0);
-    chargeCFTable = new JTable(chargeCFTableModel);
+    chargeTable = new JTable(chargeIndexTableModel);
+
     
 	gestionTableQuittance = new GestionTableQuittance(this);
 	gestionQuittanceLoyerLocataire = new GestionQuittanceLoyerLocataire(this);
@@ -285,8 +270,6 @@ public QuittanceLoyerPrincipal() {
     JPanel quittancePanel = new JPanel(new GridBagLayout());
     mainPanel.add(quittancePanel, "Quittance");
     
-    
-    
 
     // Champ pour le numéro de document
     JLabel numeroDocLabel = new JLabel("Numéro de Document:");
@@ -322,7 +305,6 @@ public QuittanceLoyerPrincipal() {
     Calendar calendar = Calendar.getInstance();
     int currentYear = calendar.get(Calendar.YEAR);
     int currentMonth = calendar.get(Calendar.MONTH) + 1; // Les mois commencent à 0
-    int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
 
     // JSpinner pour les années
     SpinnerNumberModel yearModel = new SpinnerNumberModel(currentYear, 1900, 2100, 1);
@@ -332,26 +314,8 @@ public QuittanceLoyerPrincipal() {
     SpinnerNumberModel monthModel = new SpinnerNumberModel(currentMonth, 1, 12, 1);
     monthSpinner = new JSpinner(monthModel);
     monthSpinner.addChangeListener(gestionTableQuittance);
-    // JSpinner pour les jours
-    SpinnerNumberModel dayModel = new SpinnerNumberModel(currentDay, 1, 31, 1);
-    daySpinner = new JSpinner(dayModel);
-    daySpinner.addChangeListener(gestionTableQuittance);
+ 
     
-    JLabel partChargesLabel = new JLabel("Part des Charges:");
-    GridBagConstraints gbcpartChargesLabel = new GridBagConstraints();
-    gbcpartChargesLabel.anchor = GridBagConstraints.WEST;
-    gbcpartChargesLabel.insets = new Insets(5, 5, 5, 5);
-    gbcpartChargesLabel.gridx = 0;
-    gbcpartChargesLabel.gridy = 1;
-    quittancePanel.add(partChargesLabel, gbcpartChargesLabel);
-    partChargesField = new JTextField(20);
-    
-        GridBagConstraints gbcpartChargesField = new GridBagConstraints();
-        gbcpartChargesField.fill = GridBagConstraints.HORIZONTAL;
-        gbcpartChargesField.insets = new Insets(5, 5, 5, 5);
-        gbcpartChargesField.gridx = 1;
-        gbcpartChargesField.gridy = 1;
-        quittancePanel.add(partChargesField, gbcpartChargesField);
     
     GridBagConstraints gbcDateDocLabel = new GridBagConstraints();
     gbcDateDocLabel.gridx = 0;
@@ -361,8 +325,6 @@ public QuittanceLoyerPrincipal() {
     quittancePanel.add(dateDocLabel, gbcDateDocLabel);
 
     JPanel datePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-    datePanel.add(new JLabel("Jour:"));
-    datePanel.add(daySpinner);
     datePanel.add(new JLabel("Mois:"));
     datePanel.add(monthSpinner);
     datePanel.add(new JLabel("Année:"));
@@ -401,57 +363,30 @@ public QuittanceLoyerPrincipal() {
     quittancePanel.add(loyerScrollPane, gbcLoyerTable);
 
     // Tableau des charges indexées
-    JLabel chargeIndexLabel = new JLabel("Charges Indexées:");
-    GridBagConstraints gbcChargeIndexLabel = new GridBagConstraints();
-    gbcChargeIndexLabel.gridx = 0;
-    gbcChargeIndexLabel.gridy = 5;
-    gbcChargeIndexLabel.gridwidth = 2;
-    gbcChargeIndexLabel.insets = new Insets(5, 5, 5, 5);
-    gbcChargeIndexLabel.anchor = GridBagConstraints.WEST;
-    quittancePanel.add(chargeIndexLabel, gbcChargeIndexLabel);
+    JLabel chargeLabel = new JLabel("Charges :");
+    GridBagConstraints gbcChargeLabel = new GridBagConstraints();
+    gbcChargeLabel.gridx = 0;
+    gbcChargeLabel.gridy = 5;
+    gbcChargeLabel.gridwidth = 2;
+    gbcChargeLabel.insets = new Insets(5, 5, 5, 5);
+    gbcChargeLabel.anchor = GridBagConstraints.WEST;
+    quittancePanel.add(chargeLabel, gbcChargeLabel);
 
     
-    this.gestionTableQuittance.remplirTableChargeIndex(null);
-    JScrollPane chargeIndexScrollPane = new JScrollPane(chargeIndexTable);
+    this.gestionTableQuittance.remplirTableCharge(null);
+    JScrollPane chargeScrollPane = new JScrollPane(chargeTable);
 
-    GridBagConstraints gbcChargeIndexTable = new GridBagConstraints();
-    gbcChargeIndexTable.gridx = 0;
-    gbcChargeIndexTable.gridy = 6;
-    gbcChargeIndexTable.gridwidth = 2;
-    gbcChargeIndexTable.weightx = 1;
-    gbcChargeIndexTable.weighty = 0.3;
-    gbcChargeIndexTable.insets = new Insets(5, 5, 5, 5);
-    gbcChargeIndexTable.fill = GridBagConstraints.BOTH;
-    quittancePanel.add(chargeIndexScrollPane, gbcChargeIndexTable);
+    GridBagConstraints gbcChargeTable = new GridBagConstraints();
+    gbcChargeTable.gridx = 0;
+    gbcChargeTable.gridy = 6;
+    gbcChargeTable.gridwidth = 2;
+    gbcChargeTable.weightx = 1;
+    gbcChargeTable.weighty = 0.3;
+    gbcChargeTable.insets = new Insets(5, 5, 5, 5);
+    gbcChargeTable.fill = GridBagConstraints.BOTH;
+    quittancePanel.add(chargeScrollPane, gbcChargeTable);
 
-    // Tableau des charges fixes
-    JLabel chargeCFLabel = new JLabel("Charges Fixes:");
-    GridBagConstraints gbcChargeCFLabel = new GridBagConstraints();
-    gbcChargeCFLabel.gridx = 0;
-    gbcChargeCFLabel.gridy = 7;
-    gbcChargeCFLabel.gridwidth = 2;
-    gbcChargeCFLabel.insets = new Insets(5, 5, 5, 5);
-    gbcChargeCFLabel.anchor = GridBagConstraints.WEST;
-    quittancePanel.add(chargeCFLabel, gbcChargeCFLabel);
-
-    
-    this.gestionTableQuittance.remplirTableChargeFixe(null);
-    JScrollPane chargeCFScrollPane = new JScrollPane(chargeCFTable);
-
-    GridBagConstraints gbcChargeCFTable = new GridBagConstraints();
-    gbcChargeCFTable.gridx = 0;
-    gbcChargeCFTable.gridy = 8;
-    gbcChargeCFTable.gridwidth = 2;
-    gbcChargeCFTable.weightx = 1;
-    gbcChargeCFTable.weighty = 0.3;
-    gbcChargeCFTable.insets = new Insets(5, 5, 5, 5);
-    gbcChargeCFTable.fill = GridBagConstraints.BOTH;
-    quittancePanel.add(chargeCFScrollPane, gbcChargeCFTable);
-    gbcRetourButton.gridx = 0;
-    gbcRetourButton.gridy = 9;
-    gbcRetourButton.insets = new Insets(10, 5, 5, 5);
-    gbcRetourButton.anchor = GridBagConstraints.CENTER;
-
+ 
     JButton saveButton = new JButton("Voir Quittance de Loyer");
     saveButton.addActionListener(gestionQuittanceLoyerLocataire);
     
@@ -461,12 +396,13 @@ public QuittanceLoyerPrincipal() {
     GridBagConstraints gbcRetourButton2 = new GridBagConstraints();
     gbcRetourButton2.insets = new Insets(0, 0, 0, 5);
     gbcRetourButton2.gridx = 0;
-    gbcRetourButton2.gridy = 9;
+    gbcRetourButton2.gridy = 7;
+    gbcRetourButton2.anchor = GridBagConstraints.CENTER;
     quittancePanel.add(retourButton2, gbcRetourButton2);
     
     GridBagConstraints gbcSaveButton = new GridBagConstraints();
     gbcSaveButton.gridx = 1;
-    gbcSaveButton.gridy = 9;
+    gbcSaveButton.gridy = 7;
     gbcSaveButton.insets = new Insets(10, 5, 0, 5);
     gbcSaveButton.anchor = GridBagConstraints.CENTER;
     quittancePanel.add(saveButton, gbcSaveButton);

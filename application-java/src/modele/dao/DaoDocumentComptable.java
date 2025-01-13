@@ -1,6 +1,7 @@
 package modele.dao;
 
 import java.io.IOException;
+
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,6 +21,7 @@ import modele.dao.requetes.RequeteSelectDocumentComptable;
 import modele.dao.requetes.RequeteSelectDocumentComptableById;
 import modele.dao.requetes.RequeteUpdateDocumentComptable;
 import modele.dao.requetes.RequeteCreateDocumentComptable;
+import modele.dao.requetes.RequeteSelectDocumentComptableByIdLocBienTypeLoyer;
 
 public class DaoDocumentComptable extends DaoModele<DocumentComptable> {
 
@@ -46,6 +48,11 @@ public class DaoDocumentComptable extends DaoModele<DocumentComptable> {
 		return findById(new RequeteSelectDocumentComptableById(), id);
 	}
 
+	public DocumentComptable findByIdtypeloyer(String... id) throws SQLException, IOException {
+		return findById(new RequeteSelectDocumentComptableByIdLocBienTypeLoyer(), id);
+	}
+	
+	
 	@Override
 	public List<DocumentComptable> findAll() throws SQLException, IOException {
 		return find(new RequeteSelectDocumentComptable());
