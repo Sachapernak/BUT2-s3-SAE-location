@@ -76,28 +76,28 @@ public class DetailAssurance extends JDialog {
         contentPanel.add(lblAnneeContrat, gbc_lblAnneeContrat);
 
         lblTxtAnneeContrat = new JLabel("Chargement...");
-        GridBagConstraints gbc_lblTxtAnneeContrat = new GridBagConstraints();
-        gbc_lblTxtAnneeContrat.anchor = GridBagConstraints.WEST;
-        gbc_lblTxtAnneeContrat.insets = new Insets(0, 0, 5, 0);
-        gbc_lblTxtAnneeContrat.gridx = 1;
-        gbc_lblTxtAnneeContrat.gridy = 1;
-        contentPanel.add(lblTxtAnneeContrat, gbc_lblTxtAnneeContrat);
+        GridBagConstraints gbcLblTxtAnneeContrat = new GridBagConstraints();
+        gbcLblTxtAnneeContrat.anchor = GridBagConstraints.WEST;
+        gbcLblTxtAnneeContrat.insets = new Insets(0, 0, 5, 0);
+        gbcLblTxtAnneeContrat.gridx = 1;
+        gbcLblTxtAnneeContrat.gridy = 1;
+        contentPanel.add(lblTxtAnneeContrat, gbcLblTxtAnneeContrat);
 
         // Ligne 2 : Type de contrat
         JLabel lblTypeContrat = new JLabel("Type de contrat :");
-        GridBagConstraints gbc_lblTypeContrat = new GridBagConstraints();
-        gbc_lblTypeContrat.anchor = GridBagConstraints.EAST;
-        gbc_lblTypeContrat.insets = new Insets(0, 0, 0, 5);
-        gbc_lblTypeContrat.gridx = 0;
-        gbc_lblTypeContrat.gridy = 2;
-        contentPanel.add(lblTypeContrat, gbc_lblTypeContrat);
+        GridBagConstraints gbcLblTypeContrat = new GridBagConstraints();
+        gbcLblTypeContrat.anchor = GridBagConstraints.EAST;
+        gbcLblTypeContrat.insets = new Insets(0, 0, 0, 5);
+        gbcLblTypeContrat.gridx = 0;
+        gbcLblTypeContrat.gridy = 2;
+        contentPanel.add(lblTypeContrat, gbcLblTypeContrat);
 
         lblTxtTypeContrat = new JLabel("Chargement...");
-        GridBagConstraints gbc_lblTxtTypeContrat = new GridBagConstraints();
-        gbc_lblTxtTypeContrat.anchor = GridBagConstraints.WEST;
-        gbc_lblTxtTypeContrat.gridx = 1;
-        gbc_lblTxtTypeContrat.gridy = 2;
-        contentPanel.add(lblTxtTypeContrat, gbc_lblTxtTypeContrat);
+        GridBagConstraints gbcLblTxtTypeContrat = new GridBagConstraints();
+        gbcLblTxtTypeContrat.anchor = GridBagConstraints.WEST;
+        gbcLblTxtTypeContrat.gridx = 1;
+        gbcLblTxtTypeContrat.gridy = 2;
+        contentPanel.add(lblTxtTypeContrat, gbcLblTxtTypeContrat);
 
         // Bouton Annuler en bas
         JPanel buttonPane = new JPanel(new FlowLayout(FlowLayout.RIGHT));

@@ -66,10 +66,7 @@ public class DaoCautionner extends DaoModele<Cautionner> implements Dao<Cautionn
         String idBail = curseur.getString("id_bail");
         String fichierCaution = curseur.getString("fichier_caution");
         BigDecimal montant = curseur.getBigDecimal("montant");        
-        Cautionner caution = new Cautionner(montant,fichierCaution ,new DaoBail().findById(idBail), new DaoCautionnaire().findById(idCautionnaire));
-
-
-        return caution;
+        return new Cautionner(montant,fichierCaution ,new DaoBail().findById(idBail), new DaoCautionnaire().findById(idCautionnaire));
 	}
 	
 	
@@ -90,10 +87,7 @@ public class DaoCautionner extends DaoModele<Cautionner> implements Dao<Cautionn
         String idCautionnaire = curseur.getString("id_caution");
         String fichierCaution = curseur.getString("fichier_caution");
         BigDecimal montant = curseur.getBigDecimal("montant");        
-        Cautionner caution = new Cautionner(montant,fichierCaution ,bail, new DaoCautionnaire().findById(idCautionnaire));
-
-
-        return caution;
+        return new Cautionner(montant,fichierCaution ,bail, new DaoCautionnaire().findById(idCautionnaire));
     }
 
    
@@ -110,7 +104,7 @@ public class DaoCautionner extends DaoModele<Cautionner> implements Dao<Cautionn
      */
     protected List<Cautionner> getCautions(Bail donnees) throws SQLException, IOException {
         if (donnees == null) {
-            return new ArrayList<Cautionner>();
+            return new ArrayList<>();
         }
 
         Requete<Cautionner> req = new RequeteSelectCautionByIdBail();

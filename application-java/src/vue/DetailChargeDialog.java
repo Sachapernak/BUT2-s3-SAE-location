@@ -23,6 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
 import modele.DocumentComptable;
@@ -139,7 +140,7 @@ public class DetailChargeDialog extends JDialog {
             try {
                 Locataire loc = new DaoLocataire().findById(doc.getIdLocataire());
                 DetailLocataire dialog = new DetailLocataire(loc);
-                dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                 dialog.setVisible(true);
                 this.dispose();
             } catch(Exception ex) { 
@@ -154,7 +155,7 @@ public class DetailChargeDialog extends JDialog {
             try {
                 Entreprise ent = new DaoEntreprise().findById(doc.getIdEntreprise());
                 DetailEntreprise dialog = new DetailEntreprise(ent);
-                dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                 dialog.setVisible(true);
                 this.dispose();
             } catch(Exception ex) { 
@@ -169,7 +170,7 @@ public class DetailChargeDialog extends JDialog {
             try {
                 Assurance assu = new DaoAssurance().findById(doc.getNumeroContrat(), doc.getAnneeContrat());
                 DetailAssurance dialog = new DetailAssurance(assu);
-                dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                 dialog.setVisible(true);
                 this.dispose();
             } catch(Exception ex) { 
@@ -183,7 +184,7 @@ public class DetailChargeDialog extends JDialog {
         btnVoirCF.addActionListener(e -> {
             try {
                 DetailChargeCF dialog = new DetailChargeCF(doc.getChargeFixe());
-                dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                 dialog.setVisible(true);
                 this.dispose();
             } catch(Exception ex) { 
@@ -197,7 +198,7 @@ public class DetailChargeDialog extends JDialog {
         btnVoirCF.addActionListener(e -> {
             try {
                 DetailChargeIndex dialog = new DetailChargeIndex(doc.getChargeIndex());
-                dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                 dialog.setVisible(true);
                 this.dispose();
             } catch(Exception ex) { 

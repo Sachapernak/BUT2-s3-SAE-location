@@ -69,8 +69,6 @@ public class DaoDocument extends DaoModele<Document> implements Dao<Document> {
         
         String urlDocument = curseur.getString("URL_DOCUMENT");
         
-        Document document = new Document(idBail, dateDocument, typeDeDocument, urlDocument);
-
-        return document;
+        return new Document(idBail, dateDocument, typeDeDocument, urlDocument);
     }
 }

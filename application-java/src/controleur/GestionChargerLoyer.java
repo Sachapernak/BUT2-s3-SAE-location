@@ -1,7 +1,5 @@
 package controleur;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -11,7 +9,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.function.Consumer;
+import java.util.function.IntConsumer;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -199,24 +197,20 @@ public class GestionChargerLoyer {
 	}
 	
 	public void gestionBtnSupprimer(JButton btnSupprimer) {
-		btnSupprimer.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
+		btnSupprimer.addActionListener(e -> {
         		if (fen.nbLigneTable() > 0) {
             		fen.ajouterNbLoyers(-1);
         		}
         		fen.supprimerLigne(fen.getSelectLineIndex());
-        	}
-        });
+		});
 	}
 
 	public void gestionBtnAjouter(JButton btnAjouter) {
-		btnAjouter.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
+		btnAjouter.addActionListener(e ->{
         		fen.ajouterLigneVide();
         		fen.scrollToBottom();
         		fen.ajouterNbLoyers(1);
-        	}
-        });
+        	});
 	}
 
 
@@ -283,8 +277,8 @@ public class GestionChargerLoyer {
      */
     public void insertDonneesEnBD(List<List<String>> data,
                                   String lienFichier,
-                                  Consumer<Integer> consumerPublish,
-                                  Consumer<Integer> consumerSetProgress) 
+                                  IntConsumer consumerPublish,
+                                  IntConsumer consumerSetProgress) 
                                   throws SQLException, IOException 
     {
         // On peut reprendre votre logique existante ici

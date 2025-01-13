@@ -23,35 +23,56 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+
 import controleur.GestionChargerLoyer;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 
 /**
- * Vue permettant de charger des loyers depuis un fichier CSV.
- * Affiche un bouton "Parcourir" pour sélectionner le fichier, 
- * puis charge les données et les affiche dans la JTable.
+ * Fenêtre (JDialog) permettant de charger des loyers à partir d'un fichier CSV.
+ * L'utilisateur peut parcourir le disque pour sélectionner un fichier,
+ * puis visualiser et éventuellement manipuler (ajouter/supprimer) les lignes
+ * dans un tableau avant de confirmer le chargement.
  */
 public class ChargerLoyers extends JDialog {
     
     private static final long serialVersionUID = 1L;
+
+    /** Panneau principal contenant les éléments de la fenêtre. */
     private final JPanel contentPanelPrincipal = new JPanel();
+
+    /** Champ texte affichant le chemin du fichier CSV. */
     private JTextField textFieldLienFichier;
+    /** Tableau affichant les loyers chargés. */
     private JTable tableLoyer;
+
+    /** Label indiquant le nombre de loyers chargés. */
     private JLabel lblNbLoyers;
+    /** Label pour désigner le champ "Fichier". */
     private JLabel lblFichier;
+
+    /** Bouton pour parcourir le disque (ouvrir un JFileChooser). */
     private JButton btnParcourirFichier;
+    /** Bouton pour déclencher le chargement effectif des loyers. */
     private JButton btnCharger;
+    /** Bouton pour annuler et fermer la fenêtre. */
     private JButton btnAnnuler;
-    
-    // Contrôleur pour la logique de parsing CSV
+
+    /** Contrôleur gérant la logique de chargement de fichiers CSV. */
     private final GestionChargerLoyer gestionnaireCharger;
+
+    /** Bouton pour ajouter une ligne vide dans le tableau. */
     private JButton btnAjouter;
+    /** Bouton pour supprimer une ligne sélectionnée du tableau. */
     private JButton btnSupprimer;
+
+    /** Zone de défilement contenant le tableau des loyers. */
     private JScrollPane scrollPaneLoyers;
 
     /**
-     * Lance l'application en mode autonome (pour test).
+     * Point d'entrée pour tester la boîte de dialogue en autonome.
+     * 
+     * @param args arguments de la ligne de commande
      */
     public static void main(String[] args) {
         try {
@@ -64,110 +85,112 @@ public class ChargerLoyers extends JDialog {
     }
 
     /**
-     * Constructeur : création de la fenêtre et positionnement des composants.
+     * Constructeur principal de la fenêtre ChargerLoyers.
+     * Initialise le contrôleur, les composants de l'interface
+     * et configure leurs positions/layout.
      */
     public ChargerLoyers() {
-        // Instancie le contrôleur
+        // Instanciation du contrôleur
         this.gestionnaireCharger = new GestionChargerLoyer(this);
 
+        // Configuration de la fenêtre
         setBounds(100, 100, 530, 381);
         getContentPane().setLayout(new BorderLayout());
         contentPanelPrincipal.setBorder(new EmptyBorder(5, 5, 5, 5));
         getContentPane().add(contentPanelPrincipal, BorderLayout.CENTER);
 
-        // Configuration du layout principal
-        GridBagLayout gbl_contentPanelPrincipal = new GridBagLayout();
-        gbl_contentPanelPrincipal.columnWidths = new int[]{0, 0, 0, 0};
-        gbl_contentPanelPrincipal.rowHeights = new int[]{0, 0, 0, 100, 0, 0};
-        gbl_contentPanelPrincipal.columnWeights = new double[]{0.0, 1.0, 0.0, Double.MIN_VALUE};
-        gbl_contentPanelPrincipal.rowWeights = new double[]{0.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
-        contentPanelPrincipal.setLayout(gbl_contentPanelPrincipal);
+        // Layout principal (GridBagLayout)
+        GridBagLayout gblContentPanelPrincipal = new GridBagLayout();
+        gblContentPanelPrincipal.columnWidths = new int[]{0, 0, 0, 0};
+        gblContentPanelPrincipal.rowHeights = new int[]{0, 0, 0, 100, 0, 0};
+        gblContentPanelPrincipal.columnWeights = new double[]{0.0, 1.0, 0.0, Double.MIN_VALUE};
+        gblContentPanelPrincipal.rowWeights = new double[]{0.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
+        contentPanelPrincipal.setLayout(gblContentPanelPrincipal);
 
-        // Label principal
+        // Label principal en haut
         JLabel lblCharger = new JLabel("Charger Loyers");
-        GridBagConstraints gbc_lblCharger = new GridBagConstraints();
-        gbc_lblCharger.gridwidth = 3;
-        gbc_lblCharger.insets = new Insets(0, 0, 5, 0);
-        gbc_lblCharger.gridx = 0;
-        gbc_lblCharger.gridy = 0;
-        contentPanelPrincipal.add(lblCharger, gbc_lblCharger);
+        GridBagConstraints gbcLblCharger = new GridBagConstraints();
+        gbcLblCharger.gridwidth = 3;
+        gbcLblCharger.insets = new Insets(0, 0, 5, 0);
+        gbcLblCharger.gridx = 0;
+        gbcLblCharger.gridy = 0;
+        contentPanelPrincipal.add(lblCharger, gbcLblCharger);
 
         // Label "Fichier"
         lblFichier = new JLabel("Fichier : ");
-        GridBagConstraints gbc_lblFichier = new GridBagConstraints();
-        gbc_lblFichier.insets = new Insets(0, 0, 5, 5);
-        gbc_lblFichier.anchor = GridBagConstraints.EAST;
-        gbc_lblFichier.gridx = 0;
-        gbc_lblFichier.gridy = 1;
-        contentPanelPrincipal.add(lblFichier, gbc_lblFichier);
+        GridBagConstraints gbcLblFichier = new GridBagConstraints();
+        gbcLblFichier.insets = new Insets(0, 0, 5, 5);
+        gbcLblFichier.anchor = GridBagConstraints.EAST;
+        gbcLblFichier.gridx = 0;
+        gbcLblFichier.gridy = 1;
+        contentPanelPrincipal.add(lblFichier, gbcLblFichier);
 
-        // Champ texte pour le lien du fichier
+        // Champ texte pour le lien du fichier CSV
         textFieldLienFichier = new JTextField();
-        GridBagConstraints gbc_textFieldLienFichier = new GridBagConstraints();
-        gbc_textFieldLienFichier.insets = new Insets(0, 0, 5, 5);
-        gbc_textFieldLienFichier.fill = GridBagConstraints.HORIZONTAL;
-        gbc_textFieldLienFichier.gridx = 1;
-        gbc_textFieldLienFichier.gridy = 1;
-        contentPanelPrincipal.add(textFieldLienFichier, gbc_textFieldLienFichier);
+        GridBagConstraints gbcTextFieldLienFichier = new GridBagConstraints();
+        gbcTextFieldLienFichier.insets = new Insets(0, 0, 5, 5);
+        gbcTextFieldLienFichier.fill = GridBagConstraints.HORIZONTAL;
+        gbcTextFieldLienFichier.gridx = 1;
+        gbcTextFieldLienFichier.gridy = 1;
+        contentPanelPrincipal.add(textFieldLienFichier, gbcTextFieldLienFichier);
         textFieldLienFichier.setColumns(10);
 
         // Bouton "Parcourir"
         btnParcourirFichier = new JButton("Parcourir");
-        GridBagConstraints gbc_btnParcourirFichier = new GridBagConstraints();
-        gbc_btnParcourirFichier.insets = new Insets(0, 0, 5, 0);
-        gbc_btnParcourirFichier.gridx = 2;
-        gbc_btnParcourirFichier.gridy = 1;
-        contentPanelPrincipal.add(btnParcourirFichier, gbc_btnParcourirFichier);
+        GridBagConstraints gbcBtnParcourirFichier = new GridBagConstraints();
+        gbcBtnParcourirFichier.insets = new Insets(0, 0, 5, 0);
+        gbcBtnParcourirFichier.gridx = 2;
+        gbcBtnParcourirFichier.gridy = 1;
+        contentPanelPrincipal.add(btnParcourirFichier, gbcBtnParcourirFichier);
 
-        // Label "Nb loyers"
+        // Label indiquant le nombre de loyers
         lblNbLoyers = new JLabel("0");
-        GridBagConstraints gbc_lblNbLoyers = new GridBagConstraints();
-        gbc_lblNbLoyers.anchor = GridBagConstraints.EAST;
-        gbc_lblNbLoyers.insets = new Insets(0, 0, 5, 5);
-        gbc_lblNbLoyers.gridx = 0;
-        gbc_lblNbLoyers.gridy = 2;
-        contentPanelPrincipal.add(lblNbLoyers, gbc_lblNbLoyers);
+        GridBagConstraints gbcLblNbLoyers = new GridBagConstraints();
+        gbcLblNbLoyers.anchor = GridBagConstraints.EAST;
+        gbcLblNbLoyers.insets = new Insets(0, 0, 5, 5);
+        gbcLblNbLoyers.gridx = 0;
+        gbcLblNbLoyers.gridy = 2;
+        contentPanelPrincipal.add(lblNbLoyers, gbcLblNbLoyers);
 
+        // Label "loyer(s) à ajouter :"
         JLabel lblLoyersAAjouter = new JLabel("loyer(s) à ajouter : ");
-        GridBagConstraints gbc_lblLoyersAAjouter = new GridBagConstraints();
-        gbc_lblLoyersAAjouter.anchor = GridBagConstraints.WEST;
-        gbc_lblLoyersAAjouter.insets = new Insets(0, 0, 5, 5);
-        gbc_lblLoyersAAjouter.gridx = 1;
-        gbc_lblLoyersAAjouter.gridy = 2;
-        contentPanelPrincipal.add(lblLoyersAAjouter, gbc_lblLoyersAAjouter);
+        GridBagConstraints gbcLblLoyersAAjouter = new GridBagConstraints();
+        gbcLblLoyersAAjouter.anchor = GridBagConstraints.WEST;
+        gbcLblLoyersAAjouter.insets = new Insets(0, 0, 5, 5);
+        gbcLblLoyersAAjouter.gridx = 1;
+        gbcLblLoyersAAjouter.gridy = 2;
+        contentPanelPrincipal.add(lblLoyersAAjouter, gbcLblLoyersAAjouter);
 
-        // Tableau pour afficher les loyers chargés
+        // Zone de défilement pour la table des loyers
         scrollPaneLoyers = new JScrollPane();
         scrollPaneLoyers.setPreferredSize(new Dimension(100, 200));
-        GridBagConstraints gbc_scrollPaneLoyers = new GridBagConstraints();
-        gbc_scrollPaneLoyers.insets = new Insets(0, 0, 5, 0);
-        gbc_scrollPaneLoyers.gridwidth = 3;
-        gbc_scrollPaneLoyers.fill = GridBagConstraints.BOTH;
-        gbc_scrollPaneLoyers.gridx = 0;
-        gbc_scrollPaneLoyers.gridy = 3;
-        contentPanelPrincipal.add(scrollPaneLoyers, gbc_scrollPaneLoyers);
+        GridBagConstraints gbcScrollPaneLoyers = new GridBagConstraints();
+        gbcScrollPaneLoyers.insets = new Insets(0, 0, 5, 0);
+        gbcScrollPaneLoyers.gridwidth = 3;
+        gbcScrollPaneLoyers.fill = GridBagConstraints.BOTH;
+        gbcScrollPaneLoyers.gridx = 0;
+        gbcScrollPaneLoyers.gridy = 3;
+        contentPanelPrincipal.add(scrollPaneLoyers, gbcScrollPaneLoyers);
 
-        // Configuration du modèle de table : 5 colonnes
+        // Table affichant les loyers (5 colonnes)
         tableLoyer = new JTable();
         tableLoyer.setModel(new DefaultTableModel(
-        	null,
-        	new String[] {
-        		"ID Logement", "ID Locataire", "Date", "Montant total", "NumDoc"
-        	}
+            null,
+            new String[] {
+                "ID Logement", "ID Locataire", "Date", "Montant total", "NumDoc"
+            }
         ));
         scrollPaneLoyers.setViewportView(tableLoyer);
 
-        // Panel bas : Boutons "Charger" et "Annuler"
+        // Panel bas (flow layout) pour les boutons
         JPanel buttonPane = new JPanel();
         buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
         getContentPane().add(buttonPane, BorderLayout.SOUTH);
-        
+
         btnSupprimer = new JButton("Supprimer ligne");
-
         buttonPane.add(btnSupprimer);
-        
-        btnAjouter = new JButton("Ajouter ligne");
 
+        btnAjouter = new JButton("Ajouter ligne");
         buttonPane.add(btnAjouter);
 
         btnCharger = new JButton("Charger");
@@ -179,9 +202,7 @@ public class ChargerLoyers extends JDialog {
         btnAnnuler.setActionCommand("Cancel");
         buttonPane.add(btnAnnuler);
 
-        // --- Ajout des action listeners ---
-        
-        
+        // Configuration des listeners via le contrôleur
         gestionnaireCharger.gestionParcourirFichier(btnParcourirFichier);
         gestionnaireCharger.gestionCharger(btnCharger);
         gestionnaireCharger.gestionAnnuler(btnAnnuler);
@@ -189,137 +210,159 @@ public class ChargerLoyers extends JDialog {
         gestionnaireCharger.gestionBtnSupprimer(btnSupprimer);
     }
 
-
-
-	
-	public void setTextLienFichier(String text) {
-		textFieldLienFichier.setText(text);
-	}
+    /**
+     * Assigne un texte au champ indiquant le chemin du fichier CSV.
+     *
+     * @param text le chemin du fichier à afficher
+     */
+    public void setTextLienFichier(String text) {
+        textFieldLienFichier.setText(text);
+    }
 
     /**
-     * Met à jour la JTable en affichant la liste de loyers.
-     * Met également à jour le label lblNbLoyers avec la taille de la liste.
+     * Met à jour la table (JTable) avec une liste de loyers (sous forme de liste de listes).
+     * Puis met à jour le label du nombre de loyers.
      *
-     * @param data liste de données [idLog, idLoc, date, montantTotal, numDoc]
+     * @param data liste des données à afficher, chaque élément représente une ligne
      */
     public void afficherDonneesLoyer(List<List<String>> data) {
         DefaultTableModel model = (DefaultTableModel) tableLoyer.getModel();
-        model.setRowCount(0); // Nettoyage des lignes existantes
+        model.setRowCount(0); // Nettoie les lignes existantes
 
         for (List<String> row : data) {
             model.addRow(row.toArray());
         }
-        
-        // Mise à jour du label indiquant le nombre de loyers
+
         setTxtNbLoyers(String.valueOf(data.size()));
     }
-    
-    public void setTxtNbLoyers(String valeur) {
-    	lblNbLoyers.setText(valeur);
-    }
-    
-    public void ajouterNbLoyers(int valeur) {
-    	lblNbLoyers.setText(String.valueOf(Integer.valueOf(lblNbLoyers.getText()) + valeur));
-    }
-    
+
     /**
-     * @return Le chemin du fichier indiqué dans le champ texte (si besoin)
+     * Met à jour le label indiquant le nombre de loyers chargés.
+     *
+     * @param valeur la nouvelle valeur du label
+     */
+    public void setTxtNbLoyers(String valeur) {
+        lblNbLoyers.setText(valeur);
+    }
+
+    /**
+     * Ajoute une valeur entière au nombre de loyers existant dans le label.
+     *
+     * @param valeur la valeur à ajouter
+     */
+    public void ajouterNbLoyers(int valeur) {
+        lblNbLoyers.setText(String.valueOf(Integer.valueOf(lblNbLoyers.getText()) + valeur));
+    }
+
+    /**
+     * @return la chaîne correspondant au chemin du fichier CSV saisi
      */
     public String getLienFichier() {
         return textFieldLienFichier.getText();
     }
-    
+
     /**
-     * Récupère les données de la JTable et les retourne sous forme de List<List<String>>.
-     * Ignore les lignes vides ou celles qui ne sont pas complètement remplies.
+     * Récupère les données de la JTable et les retourne sous forme de liste de listes de chaînes.
+     * Les lignes incomplètes ou vides sont ignorées.
      *
-     * @return List<List<String>> contenant les données valides de la JTable
+     * @return liste des lignes valides du tableau
      */
     public List<List<String>> getListsTable() {
         DefaultTableModel model = (DefaultTableModel) tableLoyer.getModel();
         int rowCount = model.getRowCount();
-
-
         List<List<String>> validRows = new ArrayList<>();
 
-        // Parcours des lignes du tableau
         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
-
-        	List<String> rowData;
-        	
-        	rowData = getLigneIfValid(rowIndex);
-        	
-        	if (!rowData.isEmpty()) {
-        		validRows.add(rowData);
-        	}
-
-
+            List<String> rowData = getLigneIfValid(rowIndex);
+            if (!rowData.isEmpty()) {
+                validRows.add(rowData);
+            }
         }
-
         return validRows;
     }
-    
+
+    /**
+     * Récupère la ligne à l'indice 'rowIndex' si elle est complète
+     * (aucune cellule vide). Retourne une liste vide si la ligne est incomplète.
+     *
+     * @param rowIndex indice de la ligne à examiner
+     * @return la liste des valeurs si la ligne est complète, sinon liste vide
+     */
     public List<String> getLigneIfValid(int rowIndex) {
-    	
         DefaultTableModel model = (DefaultTableModel) tableLoyer.getModel();
-        boolean skipRow = false;  
         int colCount = model.getColumnCount();
         List<String> rowData = new ArrayList<>(colCount);
-        
-        // Parcours des colonnes de la ligne
+        boolean skipRow = false;
+
         for (int colIndex = 0; colIndex < colCount; colIndex++) {
             Object cellValue = model.getValueAt(rowIndex, colIndex);
             if (cellValue == null || cellValue.toString().trim().isEmpty()) {
-                skipRow = true;  // On ignore cette ligne si une cellule est vide
+                skipRow = true;  
                 break;
             }
             rowData.add(cellValue.toString().trim());
         }
 
-        // Ajoute la ligne seulement si elle est complète
-        if (!skipRow) {
-            return rowData;
-        }
-    	return Collections.emptyList();
+        return skipRow ? Collections.emptyList() : rowData;
     }
-    
-    // Pour afficher un message d'erreur
-    public void afficherMessageErreur(String message) {
-        JOptionPane.showMessageDialog(this, "Erreur : \n" + message, 
-                                      "Erreur", JOptionPane.ERROR_MESSAGE);
-    }
-    
-    public int getSelectLineIndex() {
 
-    	return tableLoyer.getSelectedRow();
+    /**
+     * Affiche un message d'erreur dans une boîte de dialogue.
+     *
+     * @param message le texte de l'erreur
+     */
+    public void afficherMessageErreur(String message) {
+        JOptionPane.showMessageDialog(
+            this,
+            "Erreur : \n" + message,
+            "Erreur",
+            JOptionPane.ERROR_MESSAGE
+        );
     }
-    
+
+    /**
+     * @return l'indice de la ligne sélectionnée dans la JTable (ou -1 si aucune sélection).
+     */
+    public int getSelectLineIndex() {
+        return tableLoyer.getSelectedRow();
+    }
+
+    /**
+     * Supprime la ligne spécifiée. Si l'indice est invalide (-1),
+     * supprime la dernière ligne existante si possible.
+     *
+     * @param ligne l'indice de la ligne à supprimer
+     */
     public void supprimerLigne(int ligne) {
         DefaultTableModel model = (DefaultTableModel) tableLoyer.getModel();
-    	
-    	if (ligne >= 0) {
-    		model.removeRow(ligne);
-    	} else if (nbLigneTable() > 0) {
-    		model.removeRow(nbLigneTable() - 1);
-    	}
-        
 
+        if (ligne >= 0) {
+            model.removeRow(ligne);
+        } else if (nbLigneTable() > 0) {
+            model.removeRow(nbLigneTable() - 1);
+        }
     }
-    
+
+    /**
+     * Ajoute une nouvelle ligne vide (cellules null).
+     */
     public void ajouterLigneVide() {
         DefaultTableModel model = (DefaultTableModel) tableLoyer.getModel();
         model.addRow(new String[] {null, null, null, null});
+    }
 
-    }
-    
+    /**
+     * @return le nombre total de lignes dans le tableau
+     */
     public int nbLigneTable() {
-    	DefaultTableModel model = (DefaultTableModel) tableLoyer.getModel();
-    	return model.getRowCount();
+        DefaultTableModel model = (DefaultTableModel) tableLoyer.getModel();
+        return model.getRowCount();
     }
-    
-    // Scroll a la toute fin de la scrollPane
+
+    /**
+     * Fait défiler la barre de défilement vers le bas de la table.
+     */
     public void scrollToBottom() {
-    	
         JScrollBar verticalBar = scrollPaneLoyers.getVerticalScrollBar();
         AdjustmentListener downScroller = new AdjustmentListener() {
             @Override
@@ -331,12 +374,15 @@ public class ChargerLoyers extends JDialog {
         };
         verticalBar.addAdjustmentListener(downScroller);
     }
-    
+
+    /**
+     * Réinitialise la fenêtre : supprime toutes les lignes du tableau,
+     * vide le champ de texte pour le lien et remet le compteur de loyers à 0.
+     */
     public void fenClear() {
         DefaultTableModel model = (DefaultTableModel) tableLoyer.getModel();
-        model.setRowCount(0); // Nettoyage des lignes existantes
+        model.setRowCount(0); 
         setTextLienFichier("");
         setTxtNbLoyers("0");
-
     }
 }

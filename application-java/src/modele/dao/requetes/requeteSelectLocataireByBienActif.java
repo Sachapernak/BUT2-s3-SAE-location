@@ -20,7 +20,6 @@ public class requeteSelectLocataireByBienActif extends Requete<Locataire> {
 	
 	@Override
 	public void parametres(PreparedStatement prSt, String... id) throws SQLException {
-		// TODO Auto-generated method stub
 		prSt.setString(1, id[0]);
 	}
 

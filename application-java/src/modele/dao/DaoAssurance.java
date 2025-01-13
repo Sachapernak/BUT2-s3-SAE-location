@@ -48,9 +48,7 @@ public class DaoAssurance extends DaoModele<Assurance>{
         int anneeContrat = curseur.getInt("annee_du_contrat");
         String typeContrat = curseur.getString("type_de_contrat");
 		
-        Assurance assurance = new Assurance(numeroContrat, anneeContrat, typeContrat);
-        
-        return assurance;
+        return new Assurance(numeroContrat, anneeContrat, typeContrat);
 	}
 
 }

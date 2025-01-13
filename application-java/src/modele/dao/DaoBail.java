@@ -14,13 +14,11 @@ import java.util.List;
 import modele.Bail;
 import modele.BienLocatif;
 import modele.ConnexionBD;
-import modele.Contracter;
 import modele.dao.requetes.RequeteCreateBail;
 import modele.dao.requetes.RequeteDeleteBail;
 import modele.dao.requetes.RequeteSelectBail;
 import modele.dao.requetes.RequeteSelectBailById;
 import modele.dao.requetes.RequeteSelectBailByIdLogement;
-import modele.dao.requetes.RequeteSelectContracterByIdLogement;
 import modele.dao.requetes.RequeteUpdateBail;
 
 /**
@@ -144,7 +142,7 @@ public class DaoBail extends DaoModele<Bail> implements Dao<Bail> {
     
     public List<Bail> findByIdLogement(String idLogement) throws SQLException, IOException{
     	if (idLogement == null) {
-            return new ArrayList<Bail>();
+            return new ArrayList<>();
         }
     	List<Bail> res = new ArrayList<>();
 		Connection cn = ConnexionBD.getInstance().getConnexion();

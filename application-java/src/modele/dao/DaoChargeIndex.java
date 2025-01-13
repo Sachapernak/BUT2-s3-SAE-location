@@ -48,20 +48,24 @@ public class DaoChargeIndex extends DaoModele<ChargeIndex>{
 	}
 	
 	public List<String> findAllDistinctId() throws SQLException, IOException {
-		
+	   
 		List<String> res = new ArrayList<>();
-		
-		String requete = "select distinct id_charge_index from sae_charge_index";
-		
-		PreparedStatement prSt = ConnexionBD.getInstance().getConnexion().prepareStatement(requete);
-		
-		ResultSet rs = prSt.executeQuery();
-		
-		while (rs.next()) {
-			res.add(rs.getString(1));
-		}
-		return res;
+
+	    String requete = "SELECT DISTINCT id_charge_index FROM sae_charge_index";
+
+	    // Try-with-resources pour garantir la fermeture du PreparedStatement et du ResultSet
+	    try (
+	        PreparedStatement prSt = ConnexionBD.getInstance().getConnexion().prepareStatement(requete);
+	        ResultSet rs = prSt.executeQuery()
+	    ) {
+	        while (rs.next()) {
+	            res.add(rs.getString(1));
+	        }
+	    }
+
+	    return res;
 	}
+
 
 	@Override
 	public List<ChargeIndex> findAll() throws SQLException, IOException {

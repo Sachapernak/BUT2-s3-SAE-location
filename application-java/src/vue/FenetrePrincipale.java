@@ -15,6 +15,7 @@ import controleur.GestionTablesFenetrePrincipale;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.ImageIcon;
@@ -161,33 +162,24 @@ public class FenetrePrincipale extends JFrame {
 		itemConfigurationConnexion.addActionListener(this.gestionMenu);
 		configurationConnexion.add(itemConfigurationConnexion);
 		
-		JPanel panel_biensLocatifs = new JPanel();
-		panel_biensLocatifs.setBounds(25, 264, 679, 266);
-		contentPane.add(panel_biensLocatifs);
-		panel_biensLocatifs.setLayout(null);
+		JPanel panelBiensLocatifs = new JPanel();
+		panelBiensLocatifs.setBounds(25, 264, 679, 266);
+		contentPane.add(panelBiensLocatifs);
+		panelBiensLocatifs.setLayout(null);
 		
 		JLabel lblBiensLoc = new JLabel("Liste des biens locatifs :");
 		lblBiensLoc.setForeground(new Color(0, 0, 0));
 		lblBiensLoc.setBounds(0, 10, 700, 13);
-		panel_biensLocatifs.add(lblBiensLoc);
+		panelBiensLocatifs.add(lblBiensLoc);
 		
 		JScrollPane scrollPaneBiensLoc = new JScrollPane();
 		scrollPaneBiensLoc.setBounds(0, 39, 596, 154);
-		panel_biensLocatifs.add(scrollPaneBiensLoc);
+		panelBiensLocatifs.add(scrollPaneBiensLoc);
 		
 		tableBiensLoc = new JTable();
 		tableBiensLoc.setModel(new DefaultTableModel(
 			new Object[][] {
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null}
 			},
 			new String[] {
 				"Identifiant", "Nb de pi\u00E8ces", "Surface", "Type", "Compl\u00E9ment d'adresse", "Loyer de base", "Loyer actuel"
@@ -200,12 +192,12 @@ public class FenetrePrincipale extends JFrame {
 		JButton btnAugmenterLoyer = new JButton("Augmenter le loyer");
 		btnAugmenterLoyer.addActionListener(this.gestionClic);
 		btnAugmenterLoyer.setBounds(10, 213, 165, 21);
-		panel_biensLocatifs.add(btnAugmenterLoyer);
+		panelBiensLocatifs.add(btnAugmenterLoyer);
 		
 		JButton btnAfficherLesCharges = new JButton("Consulter charges");
 		btnAfficherLesCharges.addActionListener(this.gestionClic);
 		btnAfficherLesCharges.setBounds(201, 213, 210, 21);
-		panel_biensLocatifs.add(btnAfficherLesCharges);
+		panelBiensLocatifs.add(btnAfficherLesCharges);
 		
 		
 		JLabel lblTitre = new JLabel("Bienvenue");
@@ -215,18 +207,18 @@ public class FenetrePrincipale extends JFrame {
 		lblTitre.setBounds(0, 54, 746, 13);
 		contentPane.add(lblTitre);
 		
-		JPanel panel_bien = new JPanel();
-		panel_bien.setBounds(25, 92, 679, 151);
-		contentPane.add(panel_bien);
-		panel_bien.setLayout(null);
+		JPanel panelBien = new JPanel();
+		panelBien.setBounds(25, 92, 679, 151);
+		contentPane.add(panelBien);
+		panelBien.setLayout(null);
 		
 		JLabel lblBatiment = new JLabel("Liste des batiments :");
 		lblBatiment.setBounds(0, 10, 147, 13);
-		panel_bien.add(lblBatiment);
+		panelBien.add(lblBatiment);
 		
 		JScrollPane scrollPaneBatiment = new JScrollPane();
 		scrollPaneBatiment.setBounds(0, 33, 454, 88);
-		panel_bien.add(scrollPaneBatiment);
+		panelBien.add(scrollPaneBatiment);
 		
 		tableBatiment = new JTable();
 		tableBatiment.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -254,12 +246,12 @@ public class FenetrePrincipale extends JFrame {
 		
 		JButton btnAjoutBien = new JButton("Ajouter un bien");
 		btnAjoutBien.setBounds(488, 36, 156, 21);
-		panel_bien.add(btnAjoutBien);
+		panelBien.add(btnAjoutBien);
 		
 		JButton btnCharger = new JButton("Charger");
 		btnCharger.addActionListener(this.gestionClic);
 		btnCharger.setBounds(488, 73, 156, 21);
-		panel_bien.add(btnCharger);
+		panelBien.add(btnCharger);
 		
 		JSeparator separator = new JSeparator();
 		separator.setBounds(25, 253, 679, 2);
@@ -298,6 +290,16 @@ public class FenetrePrincipale extends JFrame {
 	    }
 	    return null;
 	}
+	
+    /**
+     * Affiche une boîte de dialogue d'erreur.
+     * 
+     * @param message contenu de l'erreur
+     */
+    public void afficherMessageErreur(String message) {
+        JOptionPane.showMessageDialog(this, message, "Erreur", JOptionPane.ERROR_MESSAGE);
+    }
+
 	
 
 }

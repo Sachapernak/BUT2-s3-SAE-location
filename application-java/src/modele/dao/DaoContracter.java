@@ -9,13 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import modele.Bail;
-import modele.Cautionner;
 import modele.ConnexionBD;
 import modele.Contracter;
 import modele.Locataire;
 import modele.dao.requetes.Requete;
-import modele.dao.requetes.RequeteCountNbLogementsBatiment;
-import modele.dao.requetes.RequeteSelectBiensByIdBatiment;
 import modele.dao.requetes.RequeteSelectContracterByIdLogement;
 import modele.dao.requetes.RequeteSelectContratByIdLocataire;
 import modele.dao.requetes.RequeteSelectContratByIdBail;
@@ -127,7 +124,7 @@ public class DaoContracter {
      */
     public List<Contracter> getContrats(Locataire donnees) throws SQLException, IOException {
         if (donnees == null) {
-            return new ArrayList<Contracter>();
+            return new ArrayList<>();
         }
         
         Requete<Contracter> req = new RequeteSelectContratByIdLocataire();
@@ -155,7 +152,7 @@ public class DaoContracter {
     
     public List<Contracter> getContrats(Bail donnees)  throws SQLException, IOException{
         if (donnees == null) {
-            return new ArrayList<Contracter>();
+            return new ArrayList<>();
         }
         
         Requete<Contracter> req = new RequeteSelectContratByIdBail();
@@ -183,7 +180,7 @@ public class DaoContracter {
     
     public List<Contracter> findByIdLogement(String idLogement) throws SQLException, IOException{
     	if (idLogement == null) {
-            return new ArrayList<Contracter>();
+            return new ArrayList<>();
         }
     	List<Contracter> res = new ArrayList<>();
 		Connection cn = ConnexionBD.getInstance().getConnexion();

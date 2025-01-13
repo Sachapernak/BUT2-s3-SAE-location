@@ -9,10 +9,10 @@ import vue.ReglesMetier;
 
 public class GestionReglesMetier implements ActionListener {
 
-	private ReglesMetier fen_regles_metier;
+	private ReglesMetier fen;
 	
 	public GestionReglesMetier(ReglesMetier rm)  {
-		this.fen_regles_metier = rm;
+		this.fen = rm;
 	}
 
 	@Override
@@ -20,10 +20,8 @@ public class GestionReglesMetier implements ActionListener {
     	JButton btnActif = (JButton) e.getSource();
         String btnLibelle = btnActif.getText();
 		
-		switch (btnLibelle) {
-			case "Retour" :
-				this.fen_regles_metier.dispose();
-				break;
+		if( "Retour".equals(btnLibelle)) {
+				this.fen.dispose();
 		}
 	}
 	

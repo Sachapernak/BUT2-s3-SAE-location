@@ -1,7 +1,5 @@
 package controleur;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.JButton;
 
 import modele.Assurance;
@@ -39,10 +37,6 @@ public class GestionDetailAssurance {
      * @param cancelButton Le bouton Annuler.
      */
     public void gestionAnnuler(JButton cancelButton) {
-        cancelButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                fen.dispose();
-            }
-        });
+        cancelButton.addActionListener(e->  fen.dispose());
     }
 }

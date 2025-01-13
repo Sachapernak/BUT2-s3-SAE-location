@@ -5,6 +5,8 @@ import javax.swing.table.DefaultTableModel;
 
 public class UtilitaireTable {
 	
+	private UtilitaireTable() {}
+	
     public static void viderTable(JTable table) {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         

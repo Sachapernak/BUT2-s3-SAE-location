@@ -2,6 +2,7 @@ package vue;
 
 import java.awt.EventQueue;
 import javax.swing.JFrame;
+import javax.swing.WindowConstants;
 import javax.swing.JDesktopPane;
 import javax.swing.JButton;
 import java.awt.BorderLayout;
@@ -41,7 +42,7 @@ public class UtilitaireICC {
         frame = new JFrame();
         frame.setTitle("Test setICC");
         frame.setBounds(100, 100, 800, 600);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         // Desktop Pane pour gérer les JInternalFrame
         JDesktopPane desktopPane = new JDesktopPane();
