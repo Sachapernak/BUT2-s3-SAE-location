@@ -4,11 +4,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLayeredPane;
-import javax.swing.JOptionPane;
+
 
 import modele.Locataire;
 import modele.dao.DaoLocataire;

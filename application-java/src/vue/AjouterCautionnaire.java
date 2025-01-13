@@ -22,6 +22,7 @@ import java.awt.Color;
 import javax.swing.JScrollPane;
 import java.awt.GridLayout;
 import java.awt.SystemColor;
+import javax.swing.JSeparator;
 
 public class AjouterCautionnaire extends JInternalFrame {
 
@@ -306,7 +307,10 @@ public class AjouterCautionnaire extends JInternalFrame {
         JButton btnAnnuler = new JButton("Annuler");
         panelBoutons.add(btnAnnuler);
         
-        JButton btnPoursuivreSsCautionnaire = new JButton("Poursuivre sans cautionnaire");
+        JSeparator separator = new JSeparator();
+        panelBoutons.add(separator);
+        
+        JButton btnPoursuivreSsCautionnaire = new JButton("Poursuivre sans cautionnaire →");
         btnPoursuivreSsCautionnaire.setBorder(null);
         btnPoursuivreSsCautionnaire.setBackground(SystemColor.menu);
         btnPoursuivreSsCautionnaire.setForeground(Color.BLUE);
