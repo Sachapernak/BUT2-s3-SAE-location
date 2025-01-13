@@ -47,6 +47,7 @@ public class GestionAjouterCautionnaire implements ActionListener {
 	private VerificationChamps verifChamps;
 
 	private float partLoyer;
+	private String dateDebut;
 
 	public GestionAjouterCautionnaire(AjouterCautionnaire ac, AjouterLocataire al, AfficherLocatairesActuels afl,
 			AjouterBail ab) {
@@ -75,116 +76,120 @@ public class GestionAjouterCautionnaire implements ActionListener {
 		String btnLibelle = btnActif.getText();
 
 		switch (btnLibelle) {
-		case "Annuler":
-			this.fenAjouterCautionnaire.dispose();
-			break;
-		case "Remplir avec le locataire":
-
-			remplirAdresseAvecLocataire();
-
-			break;
-		case "Poursuivre sans cautionnaire":
-
-			JTable tableLocataire = this.fenAfficherLocataires.getTableLocatairesActuels();
-			Locataire newLocataire;
-			Adresse adresseLoc;
-			Bail bailLoc = null;
-			this.partLoyer = 1F;
-
-			newLocataire = recupererInfosLocataire();
-			adresseLoc = newLocataire.getAdresse();
-			bailLoc = recupererBail();
-
-			Contracter ctrLoc = new Contracter(newLocataire, bailLoc, bailLoc.getDateDeDebut(), this.partLoyer);
-			newLocataire.getContrats().add(ctrLoc);
-
-			creationBail(bailLoc);
-			try {
-				if (adresseLoc!= null) {
-					if (!estAdresseExistante(newLocataire.getAdresse())) {
-						daoAdresse.create(adresseLoc);
+			case "Annuler":
+				this.fenAjouterCautionnaire.dispose();
+				break;
+			case "Remplir avec le locataire":
+	
+				remplirAdresseAvecLocataire();
+	
+				break;
+			case "Poursuivre sans cautionnaire":
+	
+				JTable tableLocataire = this.fenAfficherLocataires.getTableLocatairesActuels();
+				Locataire newLocataire;
+				Adresse adresseLoc;
+				Bail bailLoc = null;
+				this.partLoyer = 1F;
+	
+				newLocataire = recupererInfosLocataire();
+				adresseLoc = newLocataire.getAdresse();
+				bailLoc = recupererBail();
+				
+				if(bailLoc == null) {
+					break;
+				}
+	
+				Contracter ctrLoc = new Contracter(newLocataire, bailLoc, bailLoc.getDateDeDebut(), this.partLoyer);
+				newLocataire.getContrats().add(ctrLoc);
+	
+				creationBail(bailLoc);
+				try {
+					if (adresseLoc != null && estAdresseExistante(newLocataire.getAdresse())) {
+							daoAdresse.create(adresseLoc);
+						}
+						
+					
+					daoLocataire.create(newLocataire);
+	
+				} catch (SQLException | IOException e1) {
+					e1.printStackTrace();
+				}
+				DefaultTableModel modelTableLocataire = (DefaultTableModel) tableLocataire.getModel();
+				modelTableLocataire.addRow(new String[] { newLocataire.getIdLocataire(), newLocataire.getNom(),
+						newLocataire.getPrenom() });
+				
+				this.fenAjouterCautionnaire.dispose();
+				this.fenAjouterCautionnaire.getFenPrecedente().dispose();
+				this.fenAjouterBail.getFenPrecedente().dispose();
+				break;
+				
+			case "Valider":
+	
+				if (!this.verifChamps.champsRemplis(this.fenAjouterCautionnaire.getChampsObligatoires())) {
+					this.fenAjouterCautionnaire.afficherMessageErreur(
+							"Tous les champs obligatoires pour saisir un cautionnaire ne sont pas remplis. \n Les champs obligatoires sont indiqués par *");
+				} else {
+	
+					if (!gererErreur()) {
+	
+						JTable tableLoc = this.fenAfficherLocataires.getTableLocatairesActuels();
+						Locataire nouveauLocataire;
+						Cautionnaire cautionnaire;
+						Cautionner cautionner;
+						Adresse adresseLocataire;
+						Adresse adresseCautionnaire;
+						Bail bail = null;
+						this.partLoyer = 1F;
+	
+						// Recup infos locataire
+						nouveauLocataire = recupererInfosLocataire();
+						adresseLocataire = nouveauLocataire.getAdresse();
+	
+						// Recup bail
+						bail = recupererBail();
+	
+						// Recup cautionnaire
+						cautionnaire = recupInfosCautionnaire();
+	
+						adresseCautionnaire = cautionnaire.getAdresse();
+	
+						// Recup cautionner
+						cautionner = recupererInfosCautionner(bail, cautionnaire);
+	
+						Contracter ctr = new Contracter(nouveauLocataire, bail, dateDebut, this.partLoyer);
+	
+						nouveauLocataire.getContrats().add(ctr);
+	
+						creationBail(bail);
+						try {
+							if (adresseLocataire != null && !estAdresseExistante(nouveauLocataire.getAdresse())) {
+									daoAdresse.create(adresseLocataire);
+								}
+							
+							if (adresseCautionnaire != null && !estAdresseExistante(adresseCautionnaire)) {
+									daoAdresse.create(adresseCautionnaire);
+								}
+							
+							daoLocataire.create(nouveauLocataire);
+							daoCautionnaire.create(cautionnaire);
+							daoCautionner.create(cautionner);
+	
+						} catch (SQLException | IOException e1) {
+							e1.printStackTrace();
+						}
+						DefaultTableModel modelTableLoc = (DefaultTableModel) tableLoc.getModel();
+						modelTableLoc.addRow(new String[] { nouveauLocataire.getIdLocataire(), nouveauLocataire.getNom(),
+								nouveauLocataire.getPrenom() });
+	
+						this.fenAjouterCautionnaire.dispose();
+						this.fenAjouterCautionnaire.getFenPrecedente().dispose();
+						this.fenAjouterBail.getFenPrecedente().dispose();
 					}
 				}
-				daoLocataire.create(newLocataire);
-
-			} catch (SQLException | IOException e1) {
-				e1.printStackTrace();
-			}
-			DefaultTableModel modelTableLocataire = (DefaultTableModel) tableLocataire.getModel();
-			modelTableLocataire.addRow(new String[] { newLocataire.getIdLocataire(), newLocataire.getNom(),
-					newLocataire.getPrenom() });
-			
-			this.fenAjouterCautionnaire.dispose();
-			this.fenAjouterCautionnaire.getFenPrecedente().dispose();
-			this.fenAjouterBail.getFenPrecedente().dispose();
-			break;
-			
-		case "Valider":
-
-			if (!this.verifChamps.champsRemplis(this.fenAjouterCautionnaire.getChampsObligatoires())) {
-				this.fenAjouterCautionnaire.afficherMessageErreur(
-						"Tous les champs obligatoires pour saisir un cautionnaire ne sont pas remplis. \n Les champs obligatoires sont indiqués par *");
-			} else {
-
-				if (!gererErreur()) {
-
-					JTable tableLoc = this.fenAfficherLocataires.getTableLocatairesActuels();
-					Locataire nouveauLocataire;
-					Cautionnaire cautionnaire;
-					Cautionner cautionner;
-					Adresse adresseLocataire;
-					Adresse adresseCautionnaire;
-					Bail bail = null;
-					this.partLoyer = 1F;
-
-					// Recup infos locataire
-					nouveauLocataire = recupererInfosLocataire();
-					adresseLocataire = nouveauLocataire.getAdresse();
-
-					// Recup bail
-					bail = recupererBail();
-
-					// Recup cautionnaire
-					cautionnaire = recupInfosCautionnaire();
-
-					adresseCautionnaire = cautionnaire.getAdresse();
-
-					// Recup cautionner
-					cautionner = recupererInfosCautionner(bail, cautionnaire);
-
-					Contracter ctr = new Contracter(nouveauLocataire, bail, bail.getDateDeDebut(), this.partLoyer);
-
-					nouveauLocataire.getContrats().add(ctr);
-
-					creationBail(bail);
-					try {
-						if (adresseLocataire != null) {
-							if (!estAdresseExistante(nouveauLocataire.getAdresse())) {
-								daoAdresse.create(adresseLocataire);
-							}
-						}
-						if (adresseCautionnaire != null) {
-							if (!estAdresseExistante(adresseCautionnaire)) {
-								daoAdresse.create(adresseCautionnaire);
-							}
-						}
-						daoLocataire.create(nouveauLocataire);
-						daoCautionnaire.create(cautionnaire);
-						daoCautionner.create(cautionner);
-
-					} catch (SQLException | IOException e1) {
-						e1.printStackTrace();
-					}
-					DefaultTableModel modelTableLoc = (DefaultTableModel) tableLoc.getModel();
-					modelTableLoc.addRow(new String[] { nouveauLocataire.getIdLocataire(), nouveauLocataire.getNom(),
-							nouveauLocataire.getPrenom() });
-
-					this.fenAjouterCautionnaire.dispose();
-					this.fenAjouterCautionnaire.getFenPrecedente().dispose();
-					this.fenAjouterBail.getFenPrecedente().dispose();
-				}
-			}
-			break;
+				break;
+			default:
+				break;
 
 		}
 	}
@@ -213,9 +218,11 @@ public class GestionAjouterCautionnaire implements ActionListener {
 			}
 			// verification tous les champs de l'adresse sont bien saisi
 			if (!this.verifChamps.champsRemplis(champsObligatoiresAdr)) {
-				this.fenAjouterCautionnaire.afficherMessageErreur("Si vous voulez saisir une adresse, \n"
-						+ "vous devez impérativement saisir l'ensembles des champs obligatoires \n"
-						+ "à l'exception du complément");
+				this.fenAjouterCautionnaire.afficherMessageErreur("""
+								Si vous voulez saisir une adresse
+								vous devez impérativement saisir l'ensembles des champs obligatoires
+								à l'exception du complément
+								""");
 				erreurTrouvee = true;
 			}
 		}
@@ -225,12 +232,11 @@ public class GestionAjouterCautionnaire implements ActionListener {
 
 	private Bail recupererBail() {
 		Bail bail = null;
-		String dateDebut = null;
 		if (this.fenAjouterBail.getRdbtnNouveauBail().isSelected()) {
 			// Création d'un nouveau bail
-			String idBail = this.fenAjouterBail.getTextFieldIdBail();
-			dateDebut = this.fenAjouterBail.getTextFieldDateDebut();
-			String dateFin = this.fenAjouterBail.getTextFieldDateFin();
+			String idBail = this.fenAjouterBail.getStringTextFieldIdBail();
+			dateDebut = this.fenAjouterBail.getStringTextFieldDateDebut();
+			String dateFin = this.fenAjouterBail.getStringTextFieldDateFin();
 
 			try {
 				BienLocatif bien = daoBien
@@ -247,7 +253,8 @@ public class GestionAjouterCautionnaire implements ActionListener {
 			int selectedRow = this.fenAjouterBail.getTableBauxActuels().getSelectedRow();
 			if (selectedRow != -1) {
 				String bailSelectionne = (String) this.fenAjouterBail.getTableBauxActuels().getValueAt(selectedRow, 0);
-				dateDebut = this.fenAjouterBail.getTextFieldDateArrivee();
+				
+				dateDebut = this.fenAjouterBail.getStringTextFieldDateDebut();
 
 				JTable tableParts = this.fenAjouterBail.getTablePartsLoyer();
 				this.setPartLoyer((float) tableParts.getValueAt(tableParts.getRowCount() - 2, 1));
@@ -281,6 +288,9 @@ public class GestionAjouterCautionnaire implements ActionListener {
 		BigDecimal montant = new BigDecimal(0);
 		List<Loyer> loyers;
 		try {
+			if (bail == null) {
+				return String.valueOf(montant);
+			}
 			loyers = bail.getBien().getLoyers();
 			if (loyers != null && !loyers.isEmpty()) {
 			    Loyer dernierLoyer = loyers.get(loyers.size() - 1);
@@ -306,17 +316,17 @@ public class GestionAjouterCautionnaire implements ActionListener {
 		String email = this.fenAjouterLocataire.getTextFieldEmail();
 		String tel = this.fenAjouterLocataire.getTextFieldTel();
 
-		String date_naissance = this.fenAjouterLocataire.getTextFieldDateNaissance();
-		String lieu_naissance = this.fenAjouterLocataire.getTextFieldLieuNaissance();
+		String dateNaissance = this.fenAjouterLocataire.getTextFieldDateNaissance();
+		String lieuNaissance = this.fenAjouterLocataire.getTextFieldLieuNaissance();
 
-		nouveauLocataire = new Locataire(idLoc, nom, prenom, date_naissance);
+		nouveauLocataire = new Locataire(idLoc, nom, prenom, dateNaissance);
 		if (!email.isEmpty()) {
 			nouveauLocataire.setEmail(email);
 		}
 		if (!tel.isEmpty()) {
 			nouveauLocataire.setTelephone(tel);
 		}
-		nouveauLocataire.setLieuDeNaissance(lieu_naissance);
+		nouveauLocataire.setLieuDeNaissance(lieuNaissance);
 
 		Adresse adresseLoc = recupererInfosAdresseLocataire();
 		if (adresseLoc != null) {
@@ -414,10 +424,11 @@ public class GestionAjouterCautionnaire implements ActionListener {
 	}
 
 	private int convertirStrToInt(String str) {
-		if (!str.isEmpty() && !str.isBlank() && str != null) {
-			return Integer.parseInt(str);
+		if (str == null || str.isBlank()) {
+			return 0;
 		}
-		return 0;
+		return Integer.parseInt(str);
+		
 	}
 
 	private boolean estAdresseExistante(Adresse adresse) {

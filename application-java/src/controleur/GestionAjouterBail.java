@@ -64,12 +64,12 @@ public class GestionAjouterBail implements ActionListener{
 					}
 					break;
 				case "Vider" : 
-					this.fenAjouterBail.textFieldIdBail.setText("");
-					this.fenAjouterBail.textFieldDateDebut.setText("");
-					this.fenAjouterBail.textFieldDateFin.setText("");		
+					viderTextFields();
+					break;
+				default:
 					break;
 			}
-
+		}
 		
 	}
 	
@@ -80,7 +80,7 @@ public class GestionAjouterBail implements ActionListener{
 			this.fenAjouterBail.afficherMessageErreur("Les dates doivent être au format YYYY-MM-dd");
 		} else if (this.fenAjouterBail.getRdbtnBailExistant().isSelected()) {
 			
-			if (this.fenAjouterBail.getTextFieldDateArrivee().isEmpty()) {
+			if (this.fenAjouterBail.getStringTextFieldDateArrivee().isEmpty()) {
 				this.fenAjouterBail.afficherMessageErreur("Les champs obligatoires (dotés d'une étoile) doivent être renseignés");
 				erreurTrouvee = true;
 			}
@@ -130,5 +130,27 @@ public class GestionAjouterBail implements ActionListener{
 		return totalParts == 1F;
 	}
 	
+	private void viderTextFields() {
+		// TODO : Changer en un fen.setTextIdBail etc
+		this.fenAjouterBail.getTextFieldIdBail().setText("");
+		this.fenAjouterBail.getTextFieldDateDebut().setText("");
+		this.fenAjouterBail.getTextFieldDateFin().setText("");
+	}
 
+	private void actionPerformedRadio(ActionEvent e) {
+		JRadioButton rdBtnActif = (JRadioButton) e.getSource();
+		String rdBtnLibelle = rdBtnActif.getText();
+		CardLayout cd = this.fenAjouterBail.getCardLayout();
+		JPanel p = this.fenAjouterBail.getPanelAssocierBail();
+		switch (rdBtnLibelle) {
+			case "Créer un nouveau bail" :
+				cd.show(p, "nouveauBail");
+				break;
+			case "Rattacher à un bail existant" : 
+				cd.show(p, "bauxExistants");
+				break;
+			default:
+				break;
+		}
+	}
 }
