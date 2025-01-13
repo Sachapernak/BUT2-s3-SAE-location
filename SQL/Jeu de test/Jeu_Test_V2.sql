@@ -94,9 +94,9 @@ INSERT INTO SAE_document_comptable (numero_document, Date_document, Type_de_docu
 INSERT INTO SAE_document_comptable (numero_document, Date_document, Type_de_document, montant, fichier_document, montant_devis, recuperable_locataire, identifiant_locataire, identifiant_batiment, SIRET) VALUES
 ('DOC005', TO_DATE('2023-09-01', 'YYYY-MM-DD'), 'charge', 110, 'doc005.pdf', NULL, 1, 'MATLOC001','MATBAT001', 'ENTR002');
 INSERT INTO SAE_document_comptable (numero_document, Date_document, Type_de_document, montant, fichier_document, montant_devis, recuperable_locataire, identifiant_locataire, identifiant_batiment, SIRET) VALUES
-('DOC006', TO_DATE('2023-09-01', 'YYYY-MM-DD'), 'charge_Entretiens', 250, 'doc006.pdf', NULL, 1, 'MATLOC001','MATBAT001', 'ENTR002');
+('DOC006', TO_DATE('2023-01-15', 'YYYY-MM-DD'), 'charge_Entretiens', 250, 'doc006.pdf', NULL, 1, 'MATLOC001','MATBAT001', 'ENTR002');
 INSERT INTO SAE_document_comptable (numero_document, Date_document, Type_de_document, montant, fichier_document, montant_devis, recuperable_locataire, identifiant_locataire, identifiant_batiment, SIRET) VALUES
-('DOC007', TO_DATE('2023-09-01', 'YYYY-MM-DD'), 'charge', 180, 'doc007.pdf', NULL, 1, 'MATLOC001','MATBAT001', 'ENTR002');
+('DOC007', TO_DATE('2023-06-15', 'YYYY-MM-DD'), 'charge', 180, 'doc007.pdf', NULL, 1, 'MATLOC001','MATBAT001', 'ENTR002');
 
 -- Table sae_charge_index
 INSERT INTO sae_charge_index (id_charge_index, Date_de_releve, Type, Valeur_compteur, Cout_variable_unitaire, Cout_fixe, numero_document, Date_document) VALUES
@@ -109,7 +109,6 @@ INSERT INTO sae_charge_index (id_charge_index, Date_de_releve, Type, Valeur_comp
 ('CHIDX004', TO_DATE('2023-08-01', 'YYYY-MM-DD'), 'Electricité', 275.000, 0.13000, 12.00, 'DOC004', TO_DATE('2023-06-15', 'YYYY-MM-DD'));
 INSERT INTO sae_charge_index (id_charge_index, Date_de_releve, Type, Valeur_compteur, Cout_variable_unitaire, Cout_fixe, numero_document, Date_document) VALUES
 ('CHIDX005', TO_DATE('2023-09-01', 'YYYY-MM-DD'), 'Eau', 310.000, 1.30000, 25.00, 'DOC005', TO_DATE('2023-09-01', 'YYYY-MM-DD'));
-
 
 -- Table SAE_Charge_cf
 INSERT INTO SAE_Charge_cf (id_charge_cf, Date_de_charge, Type, montant, numero_document, Date_document) VALUES
