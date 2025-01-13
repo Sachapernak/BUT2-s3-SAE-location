@@ -47,6 +47,7 @@ public class GestionAjouterCautionnaire implements ActionListener {
 	private VerificationChamps verifChamps;
 
 	private float partLoyer;
+	private String dateDebut;
 
 	public GestionAjouterCautionnaire(AjouterCautionnaire ac, AjouterLocataire al, AfficherLocatairesActuels afl,
 			AjouterBail ab) {
@@ -152,7 +153,7 @@ public class GestionAjouterCautionnaire implements ActionListener {
 					// Recup cautionner
 					cautionner = recupererInfosCautionner(bail, cautionnaire);
 
-					Contracter ctr = new Contracter(nouveauLocataire, bail, bail.getDateDeDebut(), this.partLoyer);
+					Contracter ctr = new Contracter(nouveauLocataire, bail, dateDebut, this.partLoyer);
 					nouveauLocataire.getContrats().add(ctr);
 
 					creationBail(bail);
@@ -224,7 +225,6 @@ public class GestionAjouterCautionnaire implements ActionListener {
 
 	private Bail recupererBail() {
 		Bail bail = null;
-		String dateDebut = null;
 		if (this.fenAjouterBail.getRdbtnNouveauBail().isSelected()) {
 			// Création d'un nouveau bail
 			String idBail = this.fenAjouterBail.getTextFieldIdBail();
