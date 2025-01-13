@@ -12,10 +12,12 @@ public class RequeteSelectCautionnaireById extends Requete<Cautionnaire>{
 		return "select * from SAE_Cautionnaire where id_caution = ? ";
 	}
 	
+	@Override
 	public void parametres(PreparedStatement prSt, String... id) throws SQLException {
 		prSt.setString(1,id[0]);
 	}
-	
+
+	@Override
 	public void parametres(PreparedStatement prSt, Cautionnaire donnee) throws SQLException {
 		prSt.setInt(1, donnee.getIdCautionnaire());
 	}

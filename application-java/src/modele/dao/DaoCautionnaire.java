@@ -57,7 +57,8 @@ public class DaoCautionnaire extends DaoModele<Cautionnaire> implements Dao<Caut
 	        adresse = new DaoAdresse().findById(idAdresse);
 	     }
 	     
-	     Cautionnaire cautionnaire = new Cautionnaire(idCautionnaire, nomOuOrganisme, prenom, description, adresse);   
+	     Cautionnaire cautionnaire = new Cautionnaire(idCautionnaire, nomOuOrganisme, prenom, description);   
+	     cautionnaire.setAdresse(adresse);
 	     
 	     return cautionnaire;
 	}

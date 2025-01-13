@@ -3,11 +3,14 @@ package modele.dao;
 import java.io.IOException;
 
 import java.math.BigDecimal;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import modele.ChargeIndex;
+import modele.ConnexionBD;
 import modele.dao.requetes.RequeteCreateChargeIndex;
 import modele.dao.requetes.RequeteDeleteChargeIndex;
 import modele.dao.requetes.RequeteSelectChargeIndex;
@@ -49,6 +52,26 @@ public class DaoChargeIndex extends DaoModele<ChargeIndex>{
 	public List<ChargeIndex> findAllSameId(String...id) throws SQLException, IOException {
 		return find(new RequeteSelectChargeIndexSameId(), id);
 	}
+	
+	public List<String> findAllDistinctId() throws SQLException, IOException {
+	   
+		List<String> res = new ArrayList<>();
+
+	    String requete = "SELECT DISTINCT id_charge_index FROM sae_charge_index";
+
+	    // Try-with-resources pour garantir la fermeture du PreparedStatement et du ResultSet
+	    try (
+	        PreparedStatement prSt = ConnexionBD.getInstance().getConnexion().prepareStatement(requete);
+	        ResultSet rs = prSt.executeQuery()
+	    ) {
+	        while (rs.next()) {
+	            res.add(rs.getString(1));
+	        }
+	    }
+
+	    return res;
+	}
+
 
 	@Override
 	public List<ChargeIndex> findAll() throws SQLException, IOException {
@@ -73,9 +96,9 @@ public class DaoChargeIndex extends DaoModele<ChargeIndex>{
 				coutFixe, numDoc, dateDoc);
 		
 		String dateRelevePreced = curseur.getDate("date_releve_precedent") != null ? curseur.getDate("date_releve_precedent").toString() : null;
-		//TODO : tester
+
 		if (!(dateRelevePreced == null || dateRelevePreced.isEmpty())) {
-			ChargeIndex ci = new DaoChargeIndex().findById(id, dateRelevePreced);
+			new DaoChargeIndex().findById(id, dateRelevePreced);
 			nouveau.setDateRelevePrecedent(dateRelevePreced);
 		}
 		return nouveau;

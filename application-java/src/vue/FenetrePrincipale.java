@@ -15,7 +15,9 @@ import controleur.GestionTablesFenetrePrincipale;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
@@ -28,7 +30,6 @@ import java.awt.Font;
 import java.awt.Color;
 import javax.swing.JSeparator;
 import javax.swing.ListSelectionModel;
-
 
 public class FenetrePrincipale extends JFrame {
 
@@ -81,7 +82,9 @@ public class FenetrePrincipale extends JFrame {
 		this.gestionMenu = new GestionMenu(this);
 		
 		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.gestionClic.afficherPageConnexion();
+		
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setBounds(100, 100, 750, 600);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -120,17 +123,26 @@ public class FenetrePrincipale extends JFrame {
 		locataires.add(mntmAnciensLocataires);
 		locataires.add(mntmQuittanceLoyer);
 		
-		JMenu archives = new JMenu("Archives");
-		archives.setForeground(new Color(255, 255, 255));
-		archives.setHorizontalAlignment(SwingConstants.CENTER);
-		menuBar.add(archives);
+		JMenu menuloyersCharges = new JMenu("Charge et loyers");
+		menuloyersCharges.setForeground(new Color(255, 255, 255));
+		menuloyersCharges.setHorizontalAlignment(SwingConstants.CENTER);
+		menuBar.add(menuloyersCharges);
 		
-		JMenuItem mntmArchiverDocs = new JMenuItem("Consulter les documents");
-		archives.add(mntmArchiverDocs);
+		JMenuItem mntmConsulterCharges = new JMenuItem("Consulter les charges");
+		mntmConsulterCharges.addActionListener(this.gestionMenu);
+		menuloyersCharges.add(mntmConsulterCharges);
 		
-		JMenuItem mntmArchiverDocumentComptable = new JMenuItem("Archiver les documents comptables");
-		archives.add(mntmArchiverDocumentComptable);
-		mntmArchiverDocs.addActionListener(this.gestionMenu);
+		JMenuItem mntmConsulterLoyers = new JMenuItem("Consulter les loyers");
+		mntmConsulterLoyers.addActionListener(this.gestionMenu);
+		menuloyersCharges.add(mntmConsulterLoyers);
+		
+		JMenuItem mntmChargerLoyers = new JMenuItem("Charger les loyers");
+		mntmChargerLoyers.addActionListener(this.gestionMenu);
+		menuloyersCharges.add(mntmChargerLoyers);
+		
+		JMenuItem mntmICC = new JMenuItem("Consulter ICC");
+		mntmICC.addActionListener(this.gestionMenu);
+		menuloyersCharges.add(mntmICC);
 		
 		JMenu reglesMetier = new JMenu("Règles métier");
 		reglesMetier.setForeground(new Color(255, 255, 255));
@@ -149,42 +161,33 @@ public class FenetrePrincipale extends JFrame {
 		menuBar.add(Box.createHorizontalGlue());
 		JMenu configurationConnexion = new JMenu(" ");
 		ImageIcon originalIcon = new ImageIcon("images/iconeEngrenage.png");
-		Image ImageRedim = originalIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
-		ImageIcon IconeRedim = new ImageIcon(ImageRedim);
-		configurationConnexion.setIcon(IconeRedim);
+		Image imageRedim = originalIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+		ImageIcon iconeRedim = new ImageIcon(imageRedim);
+		configurationConnexion.setIcon(iconeRedim);
 		menuBar.add(configurationConnexion);
 		
 		JMenuItem itemConfigurationConnexion = new JMenuItem("Configurer la connexion");
 		itemConfigurationConnexion.addActionListener(this.gestionMenu);
 		configurationConnexion.add(itemConfigurationConnexion);
 		
-		JPanel panel_biensLocatifs = new JPanel();
-		panel_biensLocatifs.setBounds(25, 264, 679, 266);
-		contentPane.add(panel_biensLocatifs);
-		panel_biensLocatifs.setLayout(null);
+		JPanel panelBiensLocatifs = new JPanel();
+		panelBiensLocatifs.setBounds(25, 264, 679, 266);
+		contentPane.add(panelBiensLocatifs);
+		panelBiensLocatifs.setLayout(null);
 		
 		JLabel lblBiensLoc = new JLabel("Liste des biens locatifs :");
 		lblBiensLoc.setForeground(new Color(0, 0, 0));
 		lblBiensLoc.setBounds(0, 10, 700, 13);
-		panel_biensLocatifs.add(lblBiensLoc);
+		panelBiensLocatifs.add(lblBiensLoc);
 		
 		JScrollPane scrollPaneBiensLoc = new JScrollPane();
 		scrollPaneBiensLoc.setBounds(0, 39, 596, 154);
-		panel_biensLocatifs.add(scrollPaneBiensLoc);
+		panelBiensLocatifs.add(scrollPaneBiensLoc);
 		
 		
 		tableBiensLoc.setModel(new DefaultTableModel(
 			new Object[][] {
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null}
 			},
 			new String[] {
 				"Identifiant", "Nb de pi\u00E8ces", "Surface", "Type", "Compl\u00E9ment d'adresse", "Loyer de base", "Loyer actuel"
@@ -197,12 +200,12 @@ public class FenetrePrincipale extends JFrame {
 		JButton btnAugmenterLoyer = new JButton("Augmenter le loyer");
 		btnAugmenterLoyer.addActionListener(this.gestionClic);
 		btnAugmenterLoyer.setBounds(10, 213, 165, 21);
-		panel_biensLocatifs.add(btnAugmenterLoyer);
+		panelBiensLocatifs.add(btnAugmenterLoyer);
 		
-		JButton btnAfficherLesCharges = new JButton("Afficher les charges");
+		JButton btnAfficherLesCharges = new JButton("Consulter charges");
 		btnAfficherLesCharges.addActionListener(this.gestionClic);
-		btnAfficherLesCharges.setBounds(201, 213, 165, 21);
-		panel_biensLocatifs.add(btnAfficherLesCharges);
+		btnAfficherLesCharges.setBounds(201, 213, 210, 21);
+		panelBiensLocatifs.add(btnAfficherLesCharges);
 		
 		
 		JLabel lblTitre = new JLabel("Bienvenue");
@@ -212,18 +215,18 @@ public class FenetrePrincipale extends JFrame {
 		lblTitre.setBounds(0, 54, 746, 13);
 		contentPane.add(lblTitre);
 		
-		JPanel panel_bien = new JPanel();
-		panel_bien.setBounds(25, 92, 679, 151);
-		contentPane.add(panel_bien);
-		panel_bien.setLayout(null);
+		JPanel panelBien = new JPanel();
+		panelBien.setBounds(25, 92, 679, 151);
+		contentPane.add(panelBien);
+		panelBien.setLayout(null);
 		
 		JLabel lblBatiment = new JLabel("Liste des batiments :");
 		lblBatiment.setBounds(0, 10, 147, 13);
-		panel_bien.add(lblBatiment);
+		panelBien.add(lblBatiment);
 		
 		JScrollPane scrollPaneBatiment = new JScrollPane();
 		scrollPaneBatiment.setBounds(0, 33, 454, 88);
-		panel_bien.add(scrollPaneBatiment);
+		panelBien.add(scrollPaneBatiment);
 		
 		
 		tableBatiment.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -249,9 +252,14 @@ public class FenetrePrincipale extends JFrame {
 		tableBatiment.getSelectionModel().addListSelectionListener(this.gestionTable);
 		scrollPaneBatiment.setViewportView(tableBatiment);
 		
-		btnAjoutBien.addActionListener(this.gestionClic);
-		btnAjoutBien.setBounds(488, 36, 165, 21);
-		panel_bien.add(btnAjoutBien);
+		
+		btnAjoutBien.setBounds(488, 36, 156, 21);
+		panelBien.add(btnAjoutBien);
+		
+		JButton btnCharger = new JButton("Charger");
+		btnCharger.addActionListener(this.gestionClic);
+		btnCharger.setBounds(488, 73, 156, 21);
+		panelBien.add(btnCharger);
 		
 		JSeparator separator = new JSeparator();
 		separator.setBounds(25, 253, 679, 2);
@@ -261,11 +269,45 @@ public class FenetrePrincipale extends JFrame {
 		lblLogo.setIcon(new ImageIcon("images/logo-immeuble.png"));
 		lblLogo.setBounds(265, 42, 55, 47);
 		contentPane.add(lblLogo);
-		
-		lblEtatConnexion = new JLabel("⬤");
-		//lblEtatConnexion.setForeground(new Color(0, 128, 0));
-		this.gestionClic.afficherEtaConnexion();
-		lblEtatConnexion.setBounds(10, 31, 19, 13);
-		contentPane.add(lblEtatConnexion);
 	}
+	
+	/**
+	 * Renvoie l'identifiant du logement de la ligne sélectionnée dans la table des biens locatifs.
+	 *
+	 * @return L'identifiant du logement sélectionné, ou null si aucune ligne n'est sélectionnée.
+	 */
+	public String getValeurIdTableLogement() {
+		return getIdTable(tableBiensLoc);
+	}
+	
+	/**
+	 * Renvoie l'identifiant du batiment de la ligne sélectionnée dans la table des biens locatifs.
+	 *
+	 * @return L'identifiant du batiment sélectionné, ou null si aucune ligne n'est sélectionnée.
+	 */
+	public String getValeurIdTableBat() {
+		
+		return getIdTable(tableBatiment);
+	}
+	
+	// Utilitaire pour eviter la duplication de code
+	private String getIdTable(JTable table) {
+	    int selectedRow = table.getSelectedRow(); // Récupère l'index de la ligne sélectionnée
+	    if (selectedRow != -1) { // Vérifie qu'une ligne est bien sélectionnée
+	        return table.getValueAt(selectedRow, 0).toString(); // Récupère la valeur de la première colonne
+	    }
+	    return null;
+	}
+	
+    /**
+     * Affiche une boîte de dialogue d'erreur.
+     * 
+     * @param message contenu de l'erreur
+     */
+    public void afficherMessageErreur(String message) {
+        JOptionPane.showMessageDialog(this, message, "Erreur", JOptionPane.ERROR_MESSAGE);
+    }
+
+	
+
 }

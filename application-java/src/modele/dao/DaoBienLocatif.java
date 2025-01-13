@@ -13,11 +13,11 @@ import modele.BienLocatif;
 import modele.ConnexionBD;
 import modele.dao.requetes.RequeteSelectBienLocatif;
 import modele.dao.requetes.RequeteSelectBienLocatifById;
+import modele.dao.requetes.RequeteSelectBienLocatifByIdBat;
 import modele.dao.requetes.RequeteCountNbLogementsBatiment;
 import modele.dao.requetes.RequeteCreateBienLocatif;
 import modele.dao.requetes.RequeteDeleteBienLocatif;
 import modele.dao.requetes.RequeteUpdateBienLocatif;
-import modele.dao.requetes.RequeteSelectBiensByIdBatiment;
 import modele.TypeDeBien;
 
 public class DaoBienLocatif extends DaoModele<BienLocatif> {
@@ -48,6 +48,27 @@ public class DaoBienLocatif extends DaoModele<BienLocatif> {
 	public List<BienLocatif> findAll() throws SQLException, IOException {
 		return find(new RequeteSelectBienLocatif());
 	}
+	
+	public List<BienLocatif> findByIdBat(String batiment) throws SQLException, IOException {
+		return find(new RequeteSelectBienLocatifByIdBat(), batiment);
+	}
+	
+	public int countBiens(String... id) throws SQLException, IOException{
+        Connection cn = ConnexionBD.getInstance().getConnexion();
+        RequeteCountNbLogementsBatiment req = new RequeteCountNbLogementsBatiment();
+        PreparedStatement prSt = cn.prepareStatement(req.requete());
+        req.parametres(prSt, id);
+        ResultSet rs = prSt.executeQuery();
+        int res = 0;
+        if (rs.next()) {
+             res = rs.getInt(2);
+        }
+
+        rs.close();
+        prSt.close();
+
+        return res;
+    }
 
 	@Override
 	protected BienLocatif createInstance(ResultSet curseur) throws SQLException, IOException {
@@ -64,25 +85,4 @@ public class DaoBienLocatif extends DaoModele<BienLocatif> {
 		return new BienLocatif(idLogement, type , surface, nbPiece, loyerBase, bat);
 	}
 	
-	
-	public List<BienLocatif> findByIdBatiment(String... id) throws SQLException, IOException{
-		return find(new RequeteSelectBiensByIdBatiment(),id);
-	}
-	
-	public int countBiens(String... id) throws SQLException, IOException{
-		Connection cn = ConnexionBD.getInstance().getConnexion();
-		RequeteCountNbLogementsBatiment req = new RequeteCountNbLogementsBatiment();
-        PreparedStatement prSt = cn.prepareStatement(req.requete());
-        req.parametres(prSt, id);
-        ResultSet rs = prSt.executeQuery();
-        int res = 0;
-        if (rs.next()) {
-        	 res = rs.getInt(2);
-        }
-
-        rs.close();
-        prSt.close();
-
-        return res;
-	}
 }

@@ -67,9 +67,14 @@ public class Adresse {
      *
      * @return Une chaîne de caractères décrivant l'adresse.
      */
+ 
+    public String debugtoString() {
+        return "(adresse " + idAdresse + ") " + this.toString();
+    }
     @Override
     public String toString() {
-        return "(adresse " + idAdresse + ") " + adressePostale + ", " + complementAdresse + ", " + codePostal + " " + ville;
+    	String complement = (complementAdresse == null || complementAdresse.isEmpty()) ? "" : complementAdresse + ", ";
+    	return adressePostale + ", " + complement + codePostal + " " + ville;
     }
 
     /**

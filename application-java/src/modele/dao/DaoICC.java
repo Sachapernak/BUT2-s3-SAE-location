@@ -90,6 +90,7 @@ public class DaoICC extends DaoModele<ICC> {
     public List<ICC> findAll() throws SQLException, IOException {
         return find(new RequeteSelectICC());
     }
+    
 
 	@Override
 	protected ICC createInstance(ResultSet curseur) throws SQLException, IOException {

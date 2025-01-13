@@ -1,5 +1,6 @@
 package modele.dao.requetes;
 
+import java.io.IOException;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -26,6 +27,7 @@ public class RequeteCreateDocumentComptable extends Requete<DocumentComptable> {
         prSt.setString(5, document.getFichierDoc());
         prSt.setBoolean(6, document.isRecuperableLoc());
         
+        try {
         // Gestion des associations (null si absent)
         if (document.getLocataire() != null) {
             prSt.setString(7, document.getLocataire().getIdLocataire());
@@ -47,10 +49,14 @@ public class RequeteCreateDocumentComptable extends Requete<DocumentComptable> {
 
         if (document.getAssurance() != null) {
             prSt.setString(10, document.getAssurance().getNumeroContrat());
-            prSt.setInt(11, Integer.parseInt(document.getAssurance().getNumeroContrat()));
+            prSt.setInt(11, document.getAssurance().getAnneeContrat());
         } else {
             prSt.setNull(10, java.sql.Types.VARCHAR);
             prSt.setNull(11, java.sql.Types.INTEGER);
+        }
+        
+        } catch (IOException | SQLException e) {
+        	e.printStackTrace();
         }
     }
 }

@@ -1,19 +1,24 @@
 package modele.dao;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 import modele.Bail;
 import modele.BienLocatif;
+import modele.ConnexionBD;
 import modele.dao.requetes.RequeteCreateBail;
 import modele.dao.requetes.RequeteDeleteBail;
 import modele.dao.requetes.RequeteSelectBail;
 import modele.dao.requetes.RequeteSelectBailById;
+import modele.dao.requetes.RequeteSelectBailByIdLogement;
 import modele.dao.requetes.RequeteUpdateBail;
 
 /**
@@ -119,8 +124,9 @@ public class DaoBail extends DaoModele<Bail> implements Dao<Bail> {
         String idBail = curseur.getString("ID_BAIL");
         
         String idBien = curseur.getString("IDENTIFIANT_LOGEMENT");
-        
         BienLocatif bien = new DaoBienLocatif().findById(idBien);
+        
+
 
         // Formatter la date de début
         String dateDeDebut = localDateDebut.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
@@ -133,4 +139,22 @@ public class DaoBail extends DaoModele<Bail> implements Dao<Bail> {
         }
         return bail;
     }
+    
+    public List<Bail> findByIdLogement(String idLogement) throws SQLException, IOException{
+    	if (idLogement == null) {
+            return new ArrayList<>();
+        }
+    	List<Bail> res = new ArrayList<>();
+		Connection cn = ConnexionBD.getInstance().getConnexion();
+		RequeteSelectBailByIdLogement req = new RequeteSelectBailByIdLogement();
+        PreparedStatement prSt = cn.prepareStatement(req.requete());
+        req.parametres(prSt, idLogement);
+        ResultSet rs = prSt.executeQuery();
+        while (rs.next()) {
+            res.add(createInstance(rs));
+        }
+        rs.close();
+        prSt.close();
+        return res;
+	}
 }

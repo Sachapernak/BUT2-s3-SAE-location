@@ -13,6 +13,7 @@ import modele.ConnexionBD;
 import modele.Contracter;
 import modele.Locataire;
 import modele.dao.requetes.Requete;
+import modele.dao.requetes.RequeteSelectContracterByIdLogement;
 import modele.dao.requetes.RequeteSelectContratByIdLocataire;
 import modele.dao.requetes.RequeteSelectContratByIdBail;
 
@@ -89,6 +90,27 @@ public class DaoContracter {
     }
     
     
+    protected Contracter createInstance(ResultSet curseur) throws SQLException, IllegalArgumentException, IOException {
+        String idLocataire = curseur.getString("identifiant_locataire");
+        String idBail = curseur.getString("id_Bail");
+        String dateEntre = curseur.getDate("Date_d_entree").toString();
+        String dateSortie;
+        dateSortie = curseur.getDate("Date_de_sortie") == null ?  null : curseur.getDate("Date_de_sortie").toString();
+        float partLoyer = curseur.getFloat("PART_DE_LOYER");
+        
+        Contracter contrat = new Contracter(new DaoLocataire().findById(idLocataire),
+        									new DaoBail().findById(idBail),
+                                            dateEntre,
+                                            partLoyer);
+        
+        if (dateSortie != null) {
+            contrat.ajouterDateSortie(dateSortie);
+        }
+        
+        return contrat;
+    }
+    
+    
     /**
      * Récupère la liste des contrats associés à un locataire.
      * 
@@ -100,9 +122,9 @@ public class DaoContracter {
      * @throws SQLException Si une erreur SQL survient lors de l'exécution de la requête.
      * @throws IOException Si une erreur d'entrée/sortie se produit.
      */
-    protected List<Contracter> getContrats(Locataire donnees) throws SQLException, IOException {
+    public List<Contracter> getContrats(Locataire donnees) throws SQLException, IOException {
         if (donnees == null) {
-            return new ArrayList<Contracter>();
+            return new ArrayList<>();
         }
         
         Requete<Contracter> req = new RequeteSelectContratByIdLocataire();
@@ -130,7 +152,7 @@ public class DaoContracter {
     
     public List<Contracter> getContrats(Bail donnees)  throws SQLException, IOException{
         if (donnees == null) {
-            return new ArrayList<Contracter>();
+            return new ArrayList<>();
         }
         
         Requete<Contracter> req = new RequeteSelectContratByIdBail();
@@ -155,5 +177,24 @@ public class DaoContracter {
         prSt.close();
         return res;
     }
+    
+    public List<Contracter> findByIdLogement(String idLogement) throws SQLException, IOException{
+    	if (idLogement == null) {
+            return new ArrayList<>();
+        }
+    	List<Contracter> res = new ArrayList<>();
+		Connection cn = ConnexionBD.getInstance().getConnexion();
+		RequeteSelectContracterByIdLogement req = new RequeteSelectContracterByIdLogement();
+        PreparedStatement prSt = cn.prepareStatement(req.requete());
+        req.parametres(prSt, idLogement);
+        ResultSet rs = prSt.executeQuery();
+        
+        while (rs.next()) {
+            res.add(createInstance(rs));
+        }
+        rs.close();
+        prSt.close();
+        return res;
+	}
     
 }

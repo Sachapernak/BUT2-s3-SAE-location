@@ -37,12 +37,12 @@ public class Cautionnaire {
      * @param prenom prenom de la personne
      * @param description
      */
-	public Cautionnaire(int idCautionnaire, String nomOuOrganisme, String prenom, String description, Adresse adresse) {
+	public Cautionnaire(int idCautionnaire, String nomOuOrganisme, String prenom, String description) {
 		this.idCautionnaire = idCautionnaire;
 		this.nomOuOrganisme = nomOuOrganisme;
 		this.prenom = prenom;
 		this.description = description;
-		this.adresse = adresse;
+		this.adresse = null;
 	}
 
 	/**
