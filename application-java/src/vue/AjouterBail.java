@@ -192,7 +192,14 @@ public class AjouterBail extends JInternalFrame  {
         	new String[] {
         		"Identifiant bail", "Compl\u00E9ment", "Adresse", "Date de d\u00E9but", "Date de fin"
         	}
-        ));
+        ) {
+        	boolean[] columnEditables = new boolean[] {
+        		false, false, false, false, false
+        	};
+        	public boolean isCellEditable(int row, int column) {
+        		return columnEditables[column];
+        	}
+        });
         this.gestionTableAjoutBail.remplirTableBauxExistant(tableBauxActuels);
         tableBauxActuels.getSelectionModel().addListSelectionListener(this.gestionTableAjoutBail);
         scrollPaneBauxActuels.setViewportView(tableBauxActuels);

@@ -8,10 +8,14 @@ public class VerificationChamps {
 	private static final int TAILLE_CODE_POSTAL = 5;
 	
 	// Vérifie si un montant est bien un nombre valide (entier ou décimal) et supérieur à 0
-	protected boolean validerMontant(String montantStr) {
-	    try {
+	protected boolean validerMontant(String montantStr, String loyerStr) {
+	    
+		try {
 	        BigDecimal montant = new BigDecimal(montantStr);
-	        return montant.compareTo(BigDecimal.ZERO) >= 0;
+	        BigDecimal loyer = new BigDecimal(loyerStr);
+	        BigDecimal loyerMax = loyer.multiply(BigDecimal.valueOf(3));
+	        
+	        return montant.compareTo(BigDecimal.ZERO) >= 0 && montant.compareTo(loyerMax) <= 0;
 	    } catch (NumberFormatException e) {
 	        return false; 
 	    }
@@ -39,6 +43,15 @@ public class VerificationChamps {
 	    } catch (java.time.format.DateTimeParseException e) {
 	        return false; 
 	    }
+	}
+	
+	public boolean verifierDates(List<String> champsDate) {
+		for (String champ : champsDate) {
+			if (!champ.equals("")&&!validerDate(champ)) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	public boolean champsRemplis(List<String> champs) {
