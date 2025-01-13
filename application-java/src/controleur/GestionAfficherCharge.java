@@ -1,10 +1,7 @@
 package controleur;
 
 import java.awt.Cursor;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -36,15 +33,17 @@ import vue.DetailChargeDialog;
 
 public class GestionAfficherCharge {
     
-    private AfficherCharges frame;
+    private final AfficherCharges frame;
     private boolean firstLoad = true;
     
     public GestionAfficherCharge(AfficherCharges frame) {
         this.frame = frame;
     }
     
+    /**
+     * Charge la liste des bâtiments dans la ComboBox de la vue, avec affichage d'un curseur d'attente.
+     */
     public void chargerComboBoxBatiment() {
-        // Afficher un curseur d'attente
         frame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         
         new SwingWorker<List<String>, Void>() {
@@ -71,7 +70,6 @@ public class GestionAfficherCharge {
                         frame.afficherMessageErreur("Erreur inattendue : " + cause.getMessage());
                     }
                 } finally {
-                    // Réinitialiser le curseur
                     frame.setCursor(Cursor.getDefaultCursor());
                     chargerComboBoxLogement();
                 }
@@ -79,6 +77,9 @@ public class GestionAfficherCharge {
         }.execute();
     }
     
+    /**
+     * Charge la liste des logements pour le bâtiment sélectionné dans la ComboBox.
+     */
     public void chargerComboBoxLogement() {
         String idBat = frame.getSelectBatiment();
         frame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -114,29 +115,33 @@ public class GestionAfficherCharge {
         }.execute();
     }
 
+    /**
+     * Gère l'action de changement de sélection sur la ComboBox des bâtiments.
+     * Utilise une lambda pour simplifier l'écouteur d'événements.
+     */
     public void gestionActionComboBat(JComboBox<String> combo) {
-        combo.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent evt) {
-                if (evt.getStateChange() == ItemEvent.SELECTED) {
-                    chargerComboBoxLogement();
-                    chargerTable();
-                }
+        combo.addItemListener(evt -> {
+            if (evt.getStateChange() == ItemEvent.SELECTED) {
+                chargerComboBoxLogement();
+                chargerTable();
             }
         });
     }
     
+    /**
+     * Gère l'action de changement de sélection sur la ComboBox des logements.
+     */
     public void gestionActionComboLog(JComboBox<String> combo) {
-        combo.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent evt) {
-                if (evt.getStateChange() == ItemEvent.SELECTED) {
-                    chargerTable();
-                }
+        combo.addItemListener(evt -> {
+            if (evt.getStateChange() == ItemEvent.SELECTED) {
+                chargerTable();
             }
         });
     }
     
+    /**
+     * Ajoute un DocumentListener au champ de recherche pour filtrer la table en temps réel.
+     */
     public void gestionEcouteChampRecherche(TableRowSorter<DefaultTableModel> sorter, JTextField txtRecherche) {
         txtRecherche.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -154,15 +159,15 @@ public class GestionAfficherCharge {
         });
     }
     
+    /**
+     * Charge les données des documents comptables dans la table de la vue.
+     */
     public void chargerTable() {
         try {
-            // Récupération des documents comptables
             DaoDocumentComptable dao = new DaoDocumentComptable();
             String selLog = frame.getSelectLogement();
-            
             List<DocumentComptable> docs = dao.findByIdLogement(selLog);
             
-            // Transformation des documents en lignes pour la table
             List<Object[]> rows = docs.stream()
                 .map(doc -> {
                     try {
@@ -173,59 +178,50 @@ public class GestionAfficherCharge {
                             doc.getDateDoc()
                         };
                     } catch (SQLException | IOException e) {
-                        // Si erreur, on peut retourner null ou un objet partiel
                         return null;
                     }
                 })
-                // Filtrer les null potentiels
                 .filter(Objects::nonNull)
                 .toList();
             
-            // Chargement des données dans la table
             frame.chargerTable(rows);
             if (firstLoad) {
-            	frame.chargementFini();
-            	firstLoad = false;
+                frame.chargementFini();
+                firstLoad = false;
             }
-            
         } catch (SQLException | IOException e) {
             frame.afficherMessageErreur("Erreur : " + e.getMessage());
         }
     }
     
+    /**
+     * Configure un ActionListener pour filtrer la table en fonction du type de charge sélectionné.
+     */
     public void gestionEcouteFiltreType(TableRowSorter<DefaultTableModel> sorter, JComboBox<String> comboTypeCharge, JTextField txtRecherche) {
-        comboTypeCharge.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                appliquerFiltres(sorter, comboTypeCharge, txtRecherche);
-            }
-        });
+        comboTypeCharge.addActionListener(e -> appliquerFiltres(sorter, comboTypeCharge, txtRecherche));
     }
 
-    // Méthode pour appliquer les deux filtres (recherche et type)
+    /**
+     * Applique les filtres de recherche et de type de charge à la table.
+     */
     private void appliquerFiltres(TableRowSorter<DefaultTableModel> sorter, JComboBox<String> comboTypeCharge, JTextField txtRecherche) {
         List<RowFilter<Object,Object>> filters = new ArrayList<>();
 
-        // Filtre de recherche
         String searchText = txtRecherche.getText();
-        if (searchText.trim().length() > 0) {
+        if (!searchText.trim().isEmpty()) {
             filters.add(RowFilter.regexFilter("(?i)" + searchText));
         }
 
-        // Filtre de type
         String selectedType = (String) comboTypeCharge.getSelectedItem();
         if (selectedType != null && !selectedType.equals("Tous")) {
             switch (selectedType) {
                 case "Charges":
-                    // Filtrer les types commençant par "FACTURE"
                     filters.add(RowFilter.regexFilter("^FACTURE.*", 1));
                     break;
                 case "Devis":
-                    // Filtrer les types commençant par "DEVIS"
                     filters.add(RowFilter.regexFilter("^DEVIS.*", 1));
                     break;
                 case "Quittance":
-                    // Filtrer les types commençant par "QUITTANCE"
                     filters.add(RowFilter.regexFilter("^QUITTANCE.*", 1));
                     break;
                 default:
@@ -233,11 +229,7 @@ public class GestionAfficherCharge {
             }
         }
 
-        if (filters.isEmpty()) {
-            sorter.setRowFilter(null);
-        } else {
-            sorter.setRowFilter(RowFilter.andFilter(filters));
-        }
+        sorter.setRowFilter(filters.isEmpty() ? null : RowFilter.andFilter(filters));
     }
 
     // -------------------------------------------------------------------------
@@ -245,7 +237,7 @@ public class GestionAfficherCharge {
     // -------------------------------------------------------------------------
 
     /**
-     * Méthode invoquée lors du clic sur le bouton "Ajouter Charge".
+     * Ouvre la boîte de dialogue pour ajouter une nouvelle charge.
      */
     public void ajouterNouvelleCharge() {
         AjouterCharge dialog = new AjouterCharge();
@@ -254,8 +246,7 @@ public class GestionAfficherCharge {
     }
 
     /**
-     * Méthode invoquée lors du double-clic sur une ligne du tableau.
-     * On récupère le numéro de doc pour afficher les détails
+     * Affiche les détails d'une charge sélectionnée via son numéro de document et sa date.
      */
     public void afficherChargeDetail(String numeroDoc, String dateDoc) {
         try {
@@ -270,6 +261,9 @@ public class GestionAfficherCharge {
         }
     }
     
+    /**
+     * Initialise un double-clic sur une ligne de la table pour afficher les détails de la charge.
+     */
     public void initDoubleClickListener(JTable table) {
         table.addMouseListener(new MouseAdapter() {
             @Override
@@ -285,53 +279,49 @@ public class GestionAfficherCharge {
         });
     }
 
-	public void recharger() {
-		chargerTable();
-	}
+    /**
+     * Recharge la table des charges.
+     */
+    public void recharger() {
+        chargerTable();
+    }
 
-	public void gestionBoutonSupprimer(JButton btnSupprCharge, JTable table) {
-	    btnSupprCharge.addActionListener(new ActionListener() {
-	        @Override
-	        public void actionPerformed(ActionEvent e) {
-	            int viewRow = table.getSelectedRow();
-	            if(viewRow == -1) {
-	                frame.afficherMessageErreur("Aucune ligne sélectionnée pour suppression.");
-	                return;
-	            }
-	            
-	            // Demander confirmation à l'utilisateur
-	            int result = JOptionPane.showConfirmDialog(
-	                frame,
-	                "Êtes-vous sûr de vouloir supprimer cette charge ?",
-	                "Confirmation de suppression",
-	                JOptionPane.YES_NO_OPTION
-	            );
-	            if(result != JOptionPane.YES_OPTION) {
-	                // Si l'utilisateur ne confirme pas, on annule la suppression
-	                return;
-	            }
-	            
-	            int modelRow = table.convertRowIndexToModel(viewRow);
-	            String numDoc = (String) table.getModel().getValueAt(modelRow, 0);
-	            String dateDoc = (String) table.getModel().getValueAt(modelRow, 3);
-	            try {
-	                DaoDocumentComptable dc = new DaoDocumentComptable();
-	                // Récupère le DocumentComptable à supprimer via findById
-	                DocumentComptable doc = dc.findById(numDoc, dateDoc);
-	                if(doc != null) {
-	                    dc.delete(doc);
-	                    recharger();
-	                } else {
-	                    frame.afficherMessageErreur("Document introuvable pour la suppression.");
-	                }
-	            } catch (SQLException | IOException ex) {
-	                frame.afficherMessageErreur("Erreur lors de la suppression : " + ex.getMessage());
-	            }
-	        }
-	    });
-	}
-
-
-	
-	
+    /**
+     * Configure le bouton de suppression de charge avec un ActionListener utilisant une lambda.
+     */
+    public void gestionBoutonSupprimer(JButton btnSupprCharge, JTable table) {
+        btnSupprCharge.addActionListener(e -> {
+            int viewRow = table.getSelectedRow();
+            if (viewRow == -1) {
+                frame.afficherMessageErreur("Aucune ligne sélectionnée pour suppression.");
+                return;
+            }
+            
+            int result = JOptionPane.showConfirmDialog(
+                frame,
+                "Êtes-vous sûr de vouloir supprimer cette charge ?",
+                "Confirmation de suppression",
+                JOptionPane.YES_NO_OPTION
+            );
+            if(result != JOptionPane.YES_OPTION) {
+                return;
+            }
+            
+            int modelRow = table.convertRowIndexToModel(viewRow);
+            String numDoc = (String) table.getModel().getValueAt(modelRow, 0);
+            String dateDoc = (String) table.getModel().getValueAt(modelRow, 3);
+            try {
+                DaoDocumentComptable dc = new DaoDocumentComptable();
+                DocumentComptable doc = dc.findById(numDoc, dateDoc);
+                if(doc != null) {
+                    dc.delete(doc);
+                    recharger();
+                } else {
+                    frame.afficherMessageErreur("Document introuvable pour la suppression.");
+                }
+            } catch (SQLException | IOException ex) {
+                frame.afficherMessageErreur("Erreur lors de la suppression : " + ex.getMessage());
+            }
+        });
+    }
 }

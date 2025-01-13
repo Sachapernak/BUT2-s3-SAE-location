@@ -25,6 +25,7 @@ import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.SpinnerNumberModel;
@@ -93,7 +94,7 @@ public class AjouterCharge extends JDialog {
     public static void main(String[] args) {
         try {
             AjouterCharge dialog = new AjouterCharge();
-            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             dialog.setVisible(true);
         } catch (Exception e) {
             e.printStackTrace();

@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
 
 import modele.Adresse;
@@ -60,7 +61,7 @@ public class UITestLocataire {
 	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 800, 200);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
 		
 		JScrollPane scrollPane = new JScrollPane();

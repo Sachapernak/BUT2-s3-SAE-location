@@ -49,29 +49,32 @@ public class DaoDocumentComptable extends DaoModele<DocumentComptable> {
 	}
 	
 	
-	public BigDecimal findMontantProrata (DocumentComptable doc, String id) throws  SQLException, IOException {
-		
-		String requete = "select part_des_charges from sae_facture_du_bien "
-				    + "where identifiant_logement = ? "
-					+ "and date_document = ? "
-					+ "and numero_document = ? ";
-		
-		
-		PreparedStatement prSt = ConnexionBD.getInstance().getConnexion().prepareStatement(requete);
-		prSt.setString(1, id);
-		prSt.setDate(2, Date.valueOf(doc.getDateDoc()));
-		prSt.setString(3, doc.getNumeroDoc());
-		
-		ResultSet rs = prSt.executeQuery();
-		
-		rs.next();
-		
-		BigDecimal taux = rs.getBigDecimal("part_des_charges");
-		
-		return doc.getMontant().multiply(taux);
-		
-		
+	public BigDecimal findMontantProrata(DocumentComptable doc, String id) throws SQLException, IOException {
+	    String requete = "SELECT part_des_charges FROM sae_facture_du_bien "
+	                   + "WHERE identifiant_logement = ? "
+	                   + "AND date_document = ? "
+	                   + "AND numero_document = ?";
+
+	    try (
+	        PreparedStatement prSt = ConnexionBD.getInstance().getConnexion().prepareStatement(requete)
+	    ) {
+	        // Paramétrage de la requête
+	        prSt.setString(1, id);
+	        prSt.setDate(2, Date.valueOf(doc.getDateDoc()));
+	        prSt.setString(3, doc.getNumeroDoc());
+
+	        // Exécution de la requête et récupération du résultat
+	        try (ResultSet rs = prSt.executeQuery()) {
+	            if (rs.next()) {
+	                BigDecimal taux = rs.getBigDecimal("part_des_charges");
+	                return doc.getMontant().multiply(taux);
+	            } else {
+	                throw new SQLException("Aucune donnée trouvée pour les critères spécifiés.");
+	            }
+	        }
+	    }
 	}
+
 	
 	public List<DocumentComptable> findLoyersByIdLocataire (String idLocataire) throws SQLException, IOException {
 		

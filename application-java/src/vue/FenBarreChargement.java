@@ -49,7 +49,7 @@ public class FenBarreChargement extends JDialog {
     }
 
     private void initUI() {
-        setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         setSize(400, 150);
         setLocationRelativeTo(fenParent);
         setLayout(new BorderLayout(10,10));
