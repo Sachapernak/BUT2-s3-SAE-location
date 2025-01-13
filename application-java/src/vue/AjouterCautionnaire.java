@@ -21,6 +21,7 @@ import javax.swing.border.EtchedBorder;
 import java.awt.Color;
 import javax.swing.JScrollPane;
 import java.awt.GridLayout;
+import java.awt.SystemColor;
 
 public class AjouterCautionnaire extends JInternalFrame {
 
@@ -295,7 +296,7 @@ public class AjouterCautionnaire extends JInternalFrame {
         scrollPaneDescription.setViewportView(textPaneDescription);
         
         JPanel panelBoutons = new JPanel();
-        panelBoutons.setBounds(330, 370, 260, 38);
+        panelBoutons.setBounds(296, 368, 339, 38);
         contentPane.add(panelBoutons);
         
         // Boutons en bas au centre
@@ -305,6 +306,13 @@ public class AjouterCautionnaire extends JInternalFrame {
         JButton btnAnnuler = new JButton("Annuler");
         panelBoutons.add(btnAnnuler);
         
+        JButton btnPoursuivreSsCautionnaire = new JButton("Poursuivre sans cautionnaire");
+        btnPoursuivreSsCautionnaire.setBorder(null);
+        btnPoursuivreSsCautionnaire.setBackground(SystemColor.menu);
+        btnPoursuivreSsCautionnaire.setForeground(Color.BLUE);
+        btnPoursuivreSsCautionnaire.setFont(new Font("Tahoma", Font.PLAIN, 9));
+        panelBoutons.add(btnPoursuivreSsCautionnaire);
+        
         JPanel panel_acteCaution = new JPanel();
         panel_acteCaution.setBorder(new TitledBorder(null, "Caution", TitledBorder.LEADING, TitledBorder.TOP, null, null));
         panel_acteCaution.setBounds(30, 299, 236, 115);
@@ -312,6 +320,7 @@ public class AjouterCautionnaire extends JInternalFrame {
         panel_acteCaution.setLayout(null);
         
         textFieldMontant = new JTextField();
+        textFieldMontant.setToolTipText("Le montant de la caution ne peut excéder le triple du loyer actuel.");
         textFieldMontant.setBounds(113, 20, 96, 19);
         panel_acteCaution.add(textFieldMontant);
         textFieldMontant.setColumns(10);
@@ -351,6 +360,8 @@ public class AjouterCautionnaire extends JInternalFrame {
         
         btnAnnuler.addActionListener(this.gestionFen);
         btnValider.addActionListener(this.gestionFen);
+        btnPoursuivreSsCautionnaire.addActionListener(this.gestionFen);
+      
     }
 
 	public AjouterBail getFenPrecedente() {

@@ -83,6 +83,42 @@ public class GestionAjouterCautionnaire implements ActionListener {
 			remplirAdresseAvecLocataire();
 
 			break;
+		case "Poursuivre sans cautionnaire":
+
+			JTable tableLocataire = this.fenAfficherLocataires.getTableLocatairesActuels();
+			Locataire newLocataire;
+			Adresse adresseLoc;
+			Bail bailLoc = null;
+			this.partLoyer = 1F;
+
+			newLocataire = recupererInfosLocataire();
+			adresseLoc = newLocataire.getAdresse();
+			bailLoc = recupererBail();
+
+			Contracter ctrLoc = new Contracter(newLocataire, bailLoc, bailLoc.getDateDeDebut(), this.partLoyer);
+			newLocataire.getContrats().add(ctrLoc);
+
+			creationBail(bailLoc);
+			try {
+				if (adresseLoc!= null) {
+					if (!estAdresseExistante(newLocataire.getAdresse())) {
+						daoAdresse.create(adresseLoc);
+					}
+				}
+				daoLocataire.create(newLocataire);
+
+			} catch (SQLException | IOException e1) {
+				e1.printStackTrace();
+			}
+			DefaultTableModel modelTableLocataire = (DefaultTableModel) tableLocataire.getModel();
+			modelTableLocataire.addRow(new String[] { newLocataire.getIdLocataire(), newLocataire.getNom(),
+					newLocataire.getPrenom() });
+			
+			this.fenAjouterCautionnaire.dispose();
+			this.fenAjouterCautionnaire.getFenPrecedente().dispose();
+			this.fenAjouterBail.getFenPrecedente().dispose();
+			break;
+			
 		case "Valider":
 
 			if (!this.verifChamps.champsRemplis(this.fenAjouterCautionnaire.getChampsObligatoires())) {
