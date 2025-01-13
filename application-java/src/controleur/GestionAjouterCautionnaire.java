@@ -316,9 +316,9 @@ public class GestionAjouterCautionnaire implements ActionListener {
 		Bail bail = null;
 		if (this.fenAjouterBail.getRdbtnNouveauBail().isSelected()) {
 			// Création d'un nouveau bail
-			String idBail = this.fenAjouterBail.getStringTextFieldIdBail();
-			dateDebut = this.fenAjouterBail.getStringTextFieldDateDebut();
-			String dateFin = this.fenAjouterBail.getStringTextFieldDateFin();
+			String idBail = this.fenAjouterBail.getTextIdBail();
+			dateDebut = this.fenAjouterBail.getTextDateDebut();
+			String dateFin = this.fenAjouterBail.getTextDateFin();
 			try {
 				BienLocatif bien = daoBien.findById(
 						(String) this.fenAjouterBail.getComboBoxBiensLoc().getSelectedItem()
@@ -338,7 +338,7 @@ public class GestionAjouterCautionnaire implements ActionListener {
 				String bailSelectionne = (String) this.fenAjouterBail
 						.getTableBauxActuels()
 						.getValueAt(selectedRow, 0);
-				dateDebut = this.fenAjouterBail.getStringTextFieldDateDebut();
+				dateDebut = this.fenAjouterBail.getTextDateDebut();
 
 				JTable tableParts = this.fenAjouterBail.getTablePartsLoyer();
 				this.setPartLoyer((float) tableParts.getValueAt(
@@ -432,8 +432,8 @@ public class GestionAjouterCautionnaire implements ActionListener {
 	 */
 	private Adresse recupererInfosAdresseLocataire() {
 		if (this.verifChamps.champsRemplis(this.fenAjouterLocataire.getChampsObligatoiresAdresse())) {
-			String idAdresse = this.fenAjouterLocataire.getTextFieldAdr();
-			String adresse = this.fenAjouterLocataire.getTextFieldAdr();
+			String idAdresse = this.fenAjouterLocataire.getTextFieldIdAdresse();
+			String adresse = this.fenAjouterLocataire.getTextFieldAdresse();
 			String complement = this.fenAjouterLocataire.getTextComplement();
 			String codePostalStr = this.fenAjouterLocataire.getTextFieldCodePostal();
 			int codePostal = convertirStrToInt(codePostalStr);
@@ -502,7 +502,7 @@ public class GestionAjouterCautionnaire implements ActionListener {
 	private void remplirAdresseAvecLocataire() {
 		String nomL = this.fenAjouterLocataire.getTextFieldNom();
 		String prenomL = this.fenAjouterLocataire.getTextFieldPrenom();
-		String adresseL = this.fenAjouterLocataire.getTextFieldAdr();
+		String adresseL = this.fenAjouterLocataire.getTextFieldAdresse();
 		String complementL = this.fenAjouterLocataire.getTextComplement();
 		String codePostalL = this.fenAjouterLocataire.getTextFieldCodePostal();
 		String villeL = this.fenAjouterLocataire.getTextFieldVille();

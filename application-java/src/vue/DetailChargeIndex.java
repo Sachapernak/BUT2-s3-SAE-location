@@ -50,147 +50,147 @@ public class DetailChargeIndex extends JDialog {
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         getContentPane().add(contentPanel, BorderLayout.CENTER);
 
-        GridBagLayout gbl_contentPanel = new GridBagLayout();
-        gbl_contentPanel.columnWidths = new int[]{150, 0, 0};
-        gbl_contentPanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-        gbl_contentPanel.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
-        gbl_contentPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-        contentPanel.setLayout(gbl_contentPanel);
+        GridBagLayout gblContentPanel = new GridBagLayout();
+        gblContentPanel.columnWidths = new int[]{150, 0, 0};
+        gblContentPanel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        gblContentPanel.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
+        gblContentPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+        contentPanel.setLayout(gblContentPanel);
 
         // Ligne 0 : ID
         JLabel lblId = new JLabel("ID :");
-        GridBagConstraints gbc_lblId = new GridBagConstraints();
-        gbc_lblId.anchor = GridBagConstraints.EAST;
-        gbc_lblId.insets = new Insets(0, 0, 5, 5);
-        gbc_lblId.gridx = 0;
-        gbc_lblId.gridy = 0;
-        contentPanel.add(lblId, gbc_lblId);
+        GridBagConstraints gbcLblId = new GridBagConstraints();
+        gbcLblId.anchor = GridBagConstraints.EAST;
+        gbcLblId.insets = new Insets(0, 0, 5, 5);
+        gbcLblId.gridx = 0;
+        gbcLblId.gridy = 0;
+        contentPanel.add(lblId, gbcLblId);
 
         lblTxtId = new JLabel("Chargement...");
-        GridBagConstraints gbc_lblTxtId = new GridBagConstraints();
-        gbc_lblTxtId.anchor = GridBagConstraints.WEST;
-        gbc_lblTxtId.insets = new Insets(0, 0, 5, 0);
-        gbc_lblTxtId.gridx = 1;
-        gbc_lblTxtId.gridy = 0;
-        contentPanel.add(lblTxtId, gbc_lblTxtId);
+        GridBagConstraints gbcLblTxtId = new GridBagConstraints();
+        gbcLblTxtId.anchor = GridBagConstraints.WEST;
+        gbcLblTxtId.insets = new Insets(0, 0, 5, 0);
+        gbcLblTxtId.gridx = 1;
+        gbcLblTxtId.gridy = 0;
+        contentPanel.add(lblTxtId, gbcLblTxtId);
 
         // Ligne 1 : Date de relevé
         JLabel lblDateDeReleve = new JLabel("Date de relevé :");
-        GridBagConstraints gbc_lblDateDeReleve = new GridBagConstraints();
-        gbc_lblDateDeReleve.anchor = GridBagConstraints.EAST;
-        gbc_lblDateDeReleve.insets = new Insets(0, 0, 5, 5);
-        gbc_lblDateDeReleve.gridx = 0;
-        gbc_lblDateDeReleve.gridy = 1;
-        contentPanel.add(lblDateDeReleve, gbc_lblDateDeReleve);
+        GridBagConstraints gbcLblDateDeReleve = new GridBagConstraints();
+        gbcLblDateDeReleve.anchor = GridBagConstraints.EAST;
+        gbcLblDateDeReleve.insets = new Insets(0, 0, 5, 5);
+        gbcLblDateDeReleve.gridx = 0;
+        gbcLblDateDeReleve.gridy = 1;
+        contentPanel.add(lblDateDeReleve, gbcLblDateDeReleve);
 
         lblTxtDateDeReleve = new JLabel("Chargement...");
-        GridBagConstraints gbc_lblTxtDateDeReleve = new GridBagConstraints();
-        gbc_lblTxtDateDeReleve.anchor = GridBagConstraints.WEST;
-        gbc_lblTxtDateDeReleve.insets = new Insets(0, 0, 5, 0);
-        gbc_lblTxtDateDeReleve.gridx = 1;
-        gbc_lblTxtDateDeReleve.gridy = 1;
-        contentPanel.add(lblTxtDateDeReleve, gbc_lblTxtDateDeReleve);
+        GridBagConstraints gbcLblTxtDateDeReleve = new GridBagConstraints();
+        gbcLblTxtDateDeReleve.anchor = GridBagConstraints.WEST;
+        gbcLblTxtDateDeReleve.insets = new Insets(0, 0, 5, 0);
+        gbcLblTxtDateDeReleve.gridx = 1;
+        gbcLblTxtDateDeReleve.gridy = 1;
+        contentPanel.add(lblTxtDateDeReleve, gbcLblTxtDateDeReleve);
 
         // Ligne 2 : Date de relevé précédent
         JLabel lblDateRelevePrecedent = new JLabel("Date relevé précédent :");
-        GridBagConstraints gbc_lblDateRelevePrecedent = new GridBagConstraints();
-        gbc_lblDateRelevePrecedent.anchor = GridBagConstraints.EAST;
-        gbc_lblDateRelevePrecedent.insets = new Insets(0, 0, 5, 5);
-        gbc_lblDateRelevePrecedent.gridx = 0;
-        gbc_lblDateRelevePrecedent.gridy = 2;
-        contentPanel.add(lblDateRelevePrecedent, gbc_lblDateRelevePrecedent);
+        GridBagConstraints gbcLblDateRelevePrecedent = new GridBagConstraints();
+        gbcLblDateRelevePrecedent.anchor = GridBagConstraints.EAST;
+        gbcLblDateRelevePrecedent.insets = new Insets(0, 0, 5, 5);
+        gbcLblDateRelevePrecedent.gridx = 0;
+        gbcLblDateRelevePrecedent.gridy = 2;
+        contentPanel.add(lblDateRelevePrecedent, gbcLblDateRelevePrecedent);
 
         lblTxtDateRelevePrecedent = new JLabel("Chargement...");
-        GridBagConstraints gbc_lblTxtDateRelevePrecedent = new GridBagConstraints();
-        gbc_lblTxtDateRelevePrecedent.anchor = GridBagConstraints.WEST;
-        gbc_lblTxtDateRelevePrecedent.insets = new Insets(0, 0, 5, 0);
-        gbc_lblTxtDateRelevePrecedent.gridx = 1;
-        gbc_lblTxtDateRelevePrecedent.gridy = 2;
-        contentPanel.add(lblTxtDateRelevePrecedent, gbc_lblTxtDateRelevePrecedent);
+        GridBagConstraints gbcLblTxtDateRelevePrecedent = new GridBagConstraints();
+        gbcLblTxtDateRelevePrecedent.anchor = GridBagConstraints.WEST;
+        gbcLblTxtDateRelevePrecedent.insets = new Insets(0, 0, 5, 0);
+        gbcLblTxtDateRelevePrecedent.gridx = 1;
+        gbcLblTxtDateRelevePrecedent.gridy = 2;
+        contentPanel.add(lblTxtDateRelevePrecedent, gbcLblTxtDateRelevePrecedent);
 
         // Ligne 3 : Type
         JLabel lblType = new JLabel("Type :");
-        GridBagConstraints gbc_lblType = new GridBagConstraints();
-        gbc_lblType.anchor = GridBagConstraints.EAST;
-        gbc_lblType.insets = new Insets(0, 0, 5, 5);
-        gbc_lblType.gridx = 0;
-        gbc_lblType.gridy = 3;
-        contentPanel.add(lblType, gbc_lblType);
+        GridBagConstraints gbcLblType = new GridBagConstraints();
+        gbcLblType.anchor = GridBagConstraints.EAST;
+        gbcLblType.insets = new Insets(0, 0, 5, 5);
+        gbcLblType.gridx = 0;
+        gbcLblType.gridy = 3;
+        contentPanel.add(lblType, gbcLblType);
 
         lblTxtType = new JLabel("Chargement...");
-        GridBagConstraints gbc_lblTxtType = new GridBagConstraints();
-        gbc_lblTxtType.anchor = GridBagConstraints.WEST;
-        gbc_lblTxtType.insets = new Insets(0, 0, 5, 0);
-        gbc_lblTxtType.gridx = 1;
-        gbc_lblTxtType.gridy = 3;
-        contentPanel.add(lblTxtType, gbc_lblTxtType);
+        GridBagConstraints gbcLblTxtType = new GridBagConstraints();
+        gbcLblTxtType.anchor = GridBagConstraints.WEST;
+        gbcLblTxtType.insets = new Insets(0, 0, 5, 0);
+        gbcLblTxtType.gridx = 1;
+        gbcLblTxtType.gridy = 3;
+        contentPanel.add(lblTxtType, gbcLblTxtType);
 
         // Ligne 4 : Valeur compteur
         JLabel lblValeurCompteur = new JLabel("Valeur compteur :");
-        GridBagConstraints gbc_lblValeurCompteur = new GridBagConstraints();
-        gbc_lblValeurCompteur.anchor = GridBagConstraints.EAST;
-        gbc_lblValeurCompteur.insets = new Insets(0, 0, 5, 5);
-        gbc_lblValeurCompteur.gridx = 0;
-        gbc_lblValeurCompteur.gridy = 4;
-        contentPanel.add(lblValeurCompteur, gbc_lblValeurCompteur);
+        GridBagConstraints gbcLblValeurCompteur = new GridBagConstraints();
+        gbcLblValeurCompteur.anchor = GridBagConstraints.EAST;
+        gbcLblValeurCompteur.insets = new Insets(0, 0, 5, 5);
+        gbcLblValeurCompteur.gridx = 0;
+        gbcLblValeurCompteur.gridy = 4;
+        contentPanel.add(lblValeurCompteur, gbcLblValeurCompteur);
 
         lblTxtValeurCompteur = new JLabel("Chargement...");
-        GridBagConstraints gbc_lblTxtValeurCompteur = new GridBagConstraints();
-        gbc_lblTxtValeurCompteur.anchor = GridBagConstraints.WEST;
-        gbc_lblTxtValeurCompteur.insets = new Insets(0, 0, 5, 0);
-        gbc_lblTxtValeurCompteur.gridx = 1;
-        gbc_lblTxtValeurCompteur.gridy = 4;
-        contentPanel.add(lblTxtValeurCompteur, gbc_lblTxtValeurCompteur);
+        GridBagConstraints gbcLblTxtValeurCompteur = new GridBagConstraints();
+        gbcLblTxtValeurCompteur.anchor = GridBagConstraints.WEST;
+        gbcLblTxtValeurCompteur.insets = new Insets(0, 0, 5, 0);
+        gbcLblTxtValeurCompteur.gridx = 1;
+        gbcLblTxtValeurCompteur.gridy = 4;
+        contentPanel.add(lblTxtValeurCompteur, gbcLblTxtValeurCompteur);
         
         JLabel lblCoutUnitaire = new JLabel("Coût unitaire :");
-        GridBagConstraints gbc_lblCoutUnitaire = new GridBagConstraints();
-        gbc_lblCoutUnitaire.anchor = GridBagConstraints.EAST;
-        gbc_lblCoutUnitaire.insets = new Insets(0, 0, 5, 5);
-        gbc_lblCoutUnitaire.gridx = 0;
-        gbc_lblCoutUnitaire.gridy = 5;
-        contentPanel.add(lblCoutUnitaire, gbc_lblCoutUnitaire);
+        GridBagConstraints gbcLblCoutUnitaire = new GridBagConstraints();
+        gbcLblCoutUnitaire.anchor = GridBagConstraints.EAST;
+        gbcLblCoutUnitaire.insets = new Insets(0, 0, 5, 5);
+        gbcLblCoutUnitaire.gridx = 0;
+        gbcLblCoutUnitaire.gridy = 5;
+        contentPanel.add(lblCoutUnitaire, gbcLblCoutUnitaire);
         
         lblTxtValUnitaire = new JLabel("Chargement...");
-        GridBagConstraints gbc_lblTxtValUnitaire = new GridBagConstraints();
-        gbc_lblTxtValUnitaire.insets = new Insets(0, 0, 5, 0);
-        gbc_lblTxtValUnitaire.anchor = GridBagConstraints.WEST;
-        gbc_lblTxtValUnitaire.gridx = 1;
-        gbc_lblTxtValUnitaire.gridy = 5;
-        contentPanel.add(lblTxtValUnitaire, gbc_lblTxtValUnitaire);
+        GridBagConstraints gbcLblTxtValUnitaire = new GridBagConstraints();
+        gbcLblTxtValUnitaire.insets = new Insets(0, 0, 5, 0);
+        gbcLblTxtValUnitaire.anchor = GridBagConstraints.WEST;
+        gbcLblTxtValUnitaire.gridx = 1;
+        gbcLblTxtValUnitaire.gridy = 5;
+        contentPanel.add(lblTxtValUnitaire, gbcLblTxtValUnitaire);
 
         // Ligne 5 : Coût fixe
         JLabel lblCoutFixe = new JLabel("Coût fixe :");
-        GridBagConstraints gbc_lblCoutFixe = new GridBagConstraints();
-        gbc_lblCoutFixe.anchor = GridBagConstraints.EAST;
-        gbc_lblCoutFixe.insets = new Insets(0, 0, 5, 5);
-        gbc_lblCoutFixe.gridx = 0;
-        gbc_lblCoutFixe.gridy = 6;
-        contentPanel.add(lblCoutFixe, gbc_lblCoutFixe);
+        GridBagConstraints gbcLblCoutFixe = new GridBagConstraints();
+        gbcLblCoutFixe.anchor = GridBagConstraints.EAST;
+        gbcLblCoutFixe.insets = new Insets(0, 0, 5, 5);
+        gbcLblCoutFixe.gridx = 0;
+        gbcLblCoutFixe.gridy = 6;
+        contentPanel.add(lblCoutFixe, gbcLblCoutFixe);
 
         lblTxtCoutFixe = new JLabel("Chargement...");
-        GridBagConstraints gbc_lblTxtCoutFixe = new GridBagConstraints();
-        gbc_lblTxtCoutFixe.anchor = GridBagConstraints.WEST;
-        gbc_lblTxtCoutFixe.insets = new Insets(0, 0, 5, 0);
-        gbc_lblTxtCoutFixe.gridx = 1;
-        gbc_lblTxtCoutFixe.gridy = 6;
-        contentPanel.add(lblTxtCoutFixe, gbc_lblTxtCoutFixe);
+        GridBagConstraints gbcLblTxtCoutFixe = new GridBagConstraints();
+        gbcLblTxtCoutFixe.anchor = GridBagConstraints.WEST;
+        gbcLblTxtCoutFixe.insets = new Insets(0, 0, 5, 0);
+        gbcLblTxtCoutFixe.gridx = 1;
+        gbcLblTxtCoutFixe.gridy = 6;
+        contentPanel.add(lblTxtCoutFixe, gbcLblTxtCoutFixe);
 
         // Ligne 6 : Numéro de document
         JLabel lblNumDoc = new JLabel("Numéro de document :");
-        GridBagConstraints gbc_lblNumDoc = new GridBagConstraints();
-        gbc_lblNumDoc.anchor = GridBagConstraints.EAST;
-        gbc_lblNumDoc.insets = new Insets(0, 0, 5, 5);
-        gbc_lblNumDoc.gridx = 0;
-        gbc_lblNumDoc.gridy = 7;
-        contentPanel.add(lblNumDoc, gbc_lblNumDoc);
+        GridBagConstraints gbcLblNumDoc = new GridBagConstraints();
+        gbcLblNumDoc.anchor = GridBagConstraints.EAST;
+        gbcLblNumDoc.insets = new Insets(0, 0, 5, 5);
+        gbcLblNumDoc.gridx = 0;
+        gbcLblNumDoc.gridy = 7;
+        contentPanel.add(lblNumDoc, gbcLblNumDoc);
 
         lblTxtNumDoc = new JLabel("Chargement...");
-        GridBagConstraints gbc_lblTxtNumDoc = new GridBagConstraints();
-        gbc_lblTxtNumDoc.insets = new Insets(0, 0, 5, 0);
-        gbc_lblTxtNumDoc.anchor = GridBagConstraints.WEST;
-        gbc_lblTxtNumDoc.gridx = 1;
-        gbc_lblTxtNumDoc.gridy = 7;
-        contentPanel.add(lblTxtNumDoc, gbc_lblTxtNumDoc);
+        GridBagConstraints gbcLblTxtNumDoc = new GridBagConstraints();
+        gbcLblTxtNumDoc.insets = new Insets(0, 0, 5, 0);
+        gbcLblTxtNumDoc.anchor = GridBagConstraints.WEST;
+        gbcLblTxtNumDoc.gridx = 1;
+        gbcLblTxtNumDoc.gridy = 7;
+        contentPanel.add(lblTxtNumDoc, gbcLblTxtNumDoc);
 
         // Bouton Annuler
         JPanel buttonPane = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -200,7 +200,11 @@ public class DetailChargeIndex extends JDialog {
         gest.gestionAnnuler(cancelButton);
         gest.chargeDonnee();
     }
-
+    
+    
+    //
+    //   Getters et Setters
+    //
     public void setId(String id) { 
     	lblTxtId.setText(id); 	
     }

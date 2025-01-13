@@ -40,8 +40,8 @@ public class AjouterCautionnaire extends JInternalFrame {
     private JTextField textFieldMontant;
     private JTextField textFieldLienActeCaution;
     private JTextField textFieldPrenom;
-    public  JTextField textFieldNomOuOrga;
-    public  JTextField textFieldDateDebut;
+    private  JTextField textFieldNomOuOrga;
+    private  JTextField textFieldDateDebut;
     private JTextField textFieldAdr;
     private JTextField textFieldComplement;
     private JTextField textFieldCodePostal;
@@ -171,7 +171,7 @@ public class AjouterCautionnaire extends JInternalFrame {
      * Assigne une valeur au champ "Prénom".
      */
     public void setTextFieldPrenom(String texte) {
-        this.textFieldPrenom.setText(texte);;
+        this.textFieldPrenom.setText(texte);
     }
 
     /**
@@ -406,46 +406,46 @@ public class AjouterCautionnaire extends JInternalFrame {
         panelBoutons.add(btnPoursuivreSsCautionnaire);
 
         // Panel acte de caution
-        JPanel panel_acteCaution = new JPanel();
-        panel_acteCaution.setBorder(new TitledBorder(null, "Caution", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-        panel_acteCaution.setBounds(30, 299, 236, 115);
-        contentPane.add(panel_acteCaution);
-        panel_acteCaution.setLayout(null);
+        JPanel panelActeCaution = new JPanel();
+        panelActeCaution.setBorder(new TitledBorder(null, "Caution", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        panelActeCaution.setBounds(30, 299, 236, 115);
+        contentPane.add(panelActeCaution);
+        panelActeCaution.setLayout(null);
 
         // Montant
         textFieldMontant = new JTextField();
         textFieldMontant.setToolTipText("Le montant de la caution ne peut excéder le triple du loyer actuel.");
         textFieldMontant.setBounds(113, 20, 96, 19);
         textFieldMontant.setColumns(10);
-        panel_acteCaution.add(textFieldMontant);
+        panelActeCaution.add(textFieldMontant);
 
         JLabel lblMontant = new JLabel("Montant : *");
         lblMontant.setLabelFor(textFieldMontant);
         lblMontant.setBounds(10, 23, 69, 13);
-        panel_acteCaution.add(lblMontant);
+        panelActeCaution.add(lblMontant);
 
         // Lien acte de caution
         textFieldLienActeCaution = new JTextField();
         textFieldLienActeCaution.setBounds(10, 86, 216, 19);
         textFieldLienActeCaution.setColumns(10);
-        panel_acteCaution.add(textFieldLienActeCaution);
+        panelActeCaution.add(textFieldLienActeCaution);
 
         JLabel lblLienActeCaution = new JLabel("Lien vers l'acte de caution : ");
         lblLienActeCaution.setBounds(10, 63, 169, 13);
-        panel_acteCaution.add(lblLienActeCaution);
+        panelActeCaution.add(lblLienActeCaution);
 
         // Label du loyer actuel (informatif)
         JLabel lblLoyer = new JLabel("Loyer actuel :");
         lblLoyer.setFont(new Font("Tahoma", Font.ITALIC, 10));
         lblLoyer.setForeground(Color.GRAY);
         lblLoyer.setBounds(9, 43, 79, 13);
-        panel_acteCaution.add(lblLoyer);
+        panelActeCaution.add(lblLoyer);
 
         JLabel lblEuros = new JLabel("€");
         lblEuros.setFont(new Font("Tahoma", Font.ITALIC, 10));
         lblEuros.setForeground(Color.GRAY);
         lblEuros.setBounds(123, 43, 12, 13);
-        panel_acteCaution.add(lblEuros);
+        panelActeCaution.add(lblEuros);
 
         lblMontantLoyer = new JLabel("");
         lblMontantLoyer.setFont(new Font("Tahoma", Font.ITALIC, 10));
@@ -453,7 +453,7 @@ public class AjouterCautionnaire extends JInternalFrame {
         lblMontantLoyer.setBounds(77, 43, 45, 13);
         // On récupère le loyer actuel depuis le contrôleur
         lblMontantLoyer.setText(this.gestionFen.recupererMontantLoyer());
-        panel_acteCaution.add(lblMontantLoyer);
+        panelActeCaution.add(lblMontantLoyer);
 
         // Listeners sur les boutons
         btnAnnuler.addActionListener(this.gestionFen);

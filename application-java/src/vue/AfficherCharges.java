@@ -322,6 +322,7 @@ public class AfficherCharges extends JFrame {
                             : Cursor.getDefaultCursor());
     }
     
+    // Charge la combo box quand tout a fini de charger
     public void chargementFini(){
         if (this.bat != null && this.log != null) {
         	setItemInCombo(this.comboBatiment, bat);
@@ -330,6 +331,13 @@ public class AfficherCharges extends JFrame {
         }
     }
     
+    /**
+     * Met la valeur de la comboBox combo a val, si cette valeur existe dans
+     * la comboBox
+     * 
+     * @param combo
+     * @param val
+     */
     private void setItemInCombo(JComboBox<String> combo, String val) {
 		String item;
 		for (int i = 0; i < combo.getItemCount(); i++) {

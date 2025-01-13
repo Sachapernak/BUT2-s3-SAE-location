@@ -63,10 +63,7 @@ public class FenBarreChargement extends JDialog {
 
         btnOk = new JButton("OK");
         btnOk.setEnabled(false);
-        btnOk.addActionListener(e -> {
-            // Quand on clique sur OK, on ferme la fenêtre
-            dispose();
-        });
+        btnOk.addActionListener(e -> dispose());
 
         JPanel panelCenter = new JPanel(new GridLayout(2, 1, 5, 5));
         panelCenter.add(lblProgress);

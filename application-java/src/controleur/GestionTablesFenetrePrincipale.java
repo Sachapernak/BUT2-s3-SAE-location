@@ -1,7 +1,6 @@
 package controleur;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -55,6 +54,7 @@ public class GestionTablesFenetrePrincipale implements ListSelectionListener{
 		            model.addRow(new Object[] { batiment.getIdBat(), batiment.getAdresse().getAdressePostale(),nbLogements});
 		        }
 			} catch (SQLException | IOException e) {
+				fenPrincipale.afficherMessageErreur(e.getMessage());
 				e.printStackTrace();
 			} 
     }
@@ -70,7 +70,7 @@ public class GestionTablesFenetrePrincipale implements ListSelectionListener{
 	        	
 	        	String dernierLoyer;
 	        	
-	        	if (loyers.size() > 0){
+	        	if (!loyers.isEmpty()){
 		        	dernierLoyer = loyers.get(loyers.size()-1).getMontantLoyer().toString();
 		            
 	        	} else {
@@ -84,6 +84,7 @@ public class GestionTablesFenetrePrincipale implements ListSelectionListener{
 	        }
 						
 		} catch (SQLException | IOException e) {
+			fenPrincipale.afficherMessageErreur(e.getMessage());
 			e.printStackTrace();
 		} 
     }

@@ -70,101 +70,101 @@ public class SetICC extends JInternalFrame {
 		getContentPane().setLayout(gridBagLayout);
 		
 		JLabel lblTitre = new JLabel("Ajouter / Supprimer");
-		GridBagConstraints gbc_lblTitre = new GridBagConstraints();
-		gbc_lblTitre.insets = new Insets(0, 0, 5, 5);
-		gbc_lblTitre.gridx = 1;
-		gbc_lblTitre.gridy = 0;
-		getContentPane().add(lblTitre, gbc_lblTitre);
+		GridBagConstraints gbcLblTitre = new GridBagConstraints();
+		gbcLblTitre.insets = new Insets(0, 0, 5, 5);
+		gbcLblTitre.gridx = 1;
+		gbcLblTitre.gridy = 0;
+		getContentPane().add(lblTitre, gbcLblTitre);
 		
 		JLabel lblAnneeICC = new JLabel("Année de l'ICC :");
-		GridBagConstraints gbc_lblAnneeICC = new GridBagConstraints();
-		gbc_lblAnneeICC.anchor = GridBagConstraints.EAST;
-		gbc_lblAnneeICC.insets = new Insets(0, 0, 5, 5);
-		gbc_lblAnneeICC.gridx = 0;
-		gbc_lblAnneeICC.gridy = 1;
-		getContentPane().add(lblAnneeICC, gbc_lblAnneeICC);
+		GridBagConstraints gbcLblAnneeICC = new GridBagConstraints();
+		gbcLblAnneeICC.anchor = GridBagConstraints.EAST;
+		gbcLblAnneeICC.insets = new Insets(0, 0, 5, 5);
+		gbcLblAnneeICC.gridx = 0;
+		gbcLblAnneeICC.gridy = 1;
+		getContentPane().add(lblAnneeICC, gbcLblAnneeICC);
 		
 		textFieldAnnee = new JTextField();
-		GridBagConstraints gbc_textFieldAnnee = new GridBagConstraints();
-		gbc_textFieldAnnee.insets = new Insets(0, 0, 5, 5);
-		gbc_textFieldAnnee.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textFieldAnnee.gridx = 1;
-		gbc_textFieldAnnee.gridy = 1;
-		getContentPane().add(textFieldAnnee, gbc_textFieldAnnee);
+		GridBagConstraints gbcTextFieldAnnee = new GridBagConstraints();
+		gbcTextFieldAnnee.insets = new Insets(0, 0, 5, 5);
+		gbcTextFieldAnnee.fill = GridBagConstraints.HORIZONTAL;
+		gbcTextFieldAnnee.gridx = 1;
+		gbcTextFieldAnnee.gridy = 1;
+		getContentPane().add(textFieldAnnee, gbcTextFieldAnnee);
 		textFieldAnnee.setColumns(10);
 		
 		scrollPane = new JScrollPane();
-		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
-		gbc_scrollPane.gridwidth = 2;
-		gbc_scrollPane.gridheight = 3;
-		gbc_scrollPane.insets = new Insets(0, 0, 5, 0);
-		gbc_scrollPane.fill = GridBagConstraints.BOTH;
-		gbc_scrollPane.gridx = 3;
-		gbc_scrollPane.gridy = 1;
-		getContentPane().add(scrollPane, gbc_scrollPane);
+		GridBagConstraints gbcScrollPane = new GridBagConstraints();
+		gbcScrollPane.gridwidth = 2;
+		gbcScrollPane.gridheight = 3;
+		gbcScrollPane.insets = new Insets(0, 0, 5, 0);
+		gbcScrollPane.fill = GridBagConstraints.BOTH;
+		gbcScrollPane.gridx = 3;
+		gbcScrollPane.gridy = 1;
+		getContentPane().add(scrollPane, gbcScrollPane);
 		
-		listICC = new JList<String>();
+		listICC = new JList<>();
 		scrollPane.setViewportView(listICC);
 		
 		JLabel lblTrimestre = new JLabel("Trimestre de l'ICC :");
-		GridBagConstraints gbc_lblTrimestre = new GridBagConstraints();
-		gbc_lblTrimestre.anchor = GridBagConstraints.EAST;
-		gbc_lblTrimestre.insets = new Insets(0, 0, 5, 5);
-		gbc_lblTrimestre.gridx = 0;
-		gbc_lblTrimestre.gridy = 2;
-		getContentPane().add(lblTrimestre, gbc_lblTrimestre);
+		GridBagConstraints gbcLblTrimestre = new GridBagConstraints();
+		gbcLblTrimestre.anchor = GridBagConstraints.EAST;
+		gbcLblTrimestre.insets = new Insets(0, 0, 5, 5);
+		gbcLblTrimestre.gridx = 0;
+		gbcLblTrimestre.gridy = 2;
+		getContentPane().add(lblTrimestre, gbcLblTrimestre);
 		
-		comboBoxTrimestre = new JComboBox<String>();
-		comboBoxTrimestre.setModel(new DefaultComboBoxModel<String>(new String[] {"1", "2", "3", "4"}));
-		GridBagConstraints gbc_textFieldTrim = new GridBagConstraints();
-		gbc_textFieldTrim.insets = new Insets(0, 0, 5, 5);
-		gbc_textFieldTrim.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textFieldTrim.gridx = 1;
-		gbc_textFieldTrim.gridy = 2;
-		getContentPane().add(comboBoxTrimestre, gbc_textFieldTrim);
+		comboBoxTrimestre = new JComboBox<>();
+		comboBoxTrimestre.setModel(new DefaultComboBoxModel<>(new String[] {"1", "2", "3", "4"}));
+		GridBagConstraints gbcTextFieldTrim = new GridBagConstraints();
+		gbcTextFieldTrim.insets = new Insets(0, 0, 5, 5);
+		gbcTextFieldTrim.fill = GridBagConstraints.HORIZONTAL;
+		gbcTextFieldTrim.gridx = 1;
+		gbcTextFieldTrim.gridy = 2;
+		getContentPane().add(comboBoxTrimestre, gbcTextFieldTrim);
 		
 		JLabel lblIndice = new JLabel("Indice :");
-		GridBagConstraints gbc_lblIndice = new GridBagConstraints();
-		gbc_lblIndice.insets = new Insets(0, 0, 5, 5);
-		gbc_lblIndice.anchor = GridBagConstraints.NORTHEAST;
-		gbc_lblIndice.gridx = 0;
-		gbc_lblIndice.gridy = 3;
-		getContentPane().add(lblIndice, gbc_lblIndice);
+		GridBagConstraints gbcLblIndice = new GridBagConstraints();
+		gbcLblIndice.insets = new Insets(0, 0, 5, 5);
+		gbcLblIndice.anchor = GridBagConstraints.NORTHEAST;
+		gbcLblIndice.gridx = 0;
+		gbcLblIndice.gridy = 3;
+		getContentPane().add(lblIndice, gbcLblIndice);
 		
 		textFieldIndice = new JTextField();
-		GridBagConstraints gbc_textFieldIndice = new GridBagConstraints();
-		gbc_textFieldIndice.anchor = GridBagConstraints.NORTH;
-		gbc_textFieldIndice.insets = new Insets(0, 0, 5, 5);
-		gbc_textFieldIndice.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textFieldIndice.gridx = 1;
-		gbc_textFieldIndice.gridy = 3;
-		getContentPane().add(textFieldIndice, gbc_textFieldIndice);
+		GridBagConstraints gbcTextFieldIndice = new GridBagConstraints();
+		gbcTextFieldIndice.anchor = GridBagConstraints.NORTH;
+		gbcTextFieldIndice.insets = new Insets(0, 0, 5, 5);
+		gbcTextFieldIndice.fill = GridBagConstraints.HORIZONTAL;
+		gbcTextFieldIndice.gridx = 1;
+		gbcTextFieldIndice.gridy = 3;
+		getContentPane().add(textFieldIndice, gbcTextFieldIndice);
 		textFieldIndice.setColumns(10);
 		
 		btnSupprimer = new JButton("Supprimer");
 
-		GridBagConstraints gbc_btnSupprimer = new GridBagConstraints();
-		gbc_btnSupprimer.insets = new Insets(0, 0, 0, 5);
-		gbc_btnSupprimer.gridx = 0;
-		gbc_btnSupprimer.gridy = 5;
-		getContentPane().add(btnSupprimer, gbc_btnSupprimer);
+		GridBagConstraints gbcBtnSupprimer = new GridBagConstraints();
+		gbcBtnSupprimer.insets = new Insets(0, 0, 0, 5);
+		gbcBtnSupprimer.gridx = 0;
+		gbcBtnSupprimer.gridy = 5;
+		getContentPane().add(btnSupprimer, gbcBtnSupprimer);
 		
 		btnConfirmer = new JButton("Ajouter");
 
 		
-		GridBagConstraints gbc_btnConfirmer = new GridBagConstraints();
-		gbc_btnConfirmer.insets = new Insets(0, 0, 0, 5);
-		gbc_btnConfirmer.gridx = 1;
-		gbc_btnConfirmer.gridy = 5;
-		getContentPane().add(btnConfirmer, gbc_btnConfirmer);
+		GridBagConstraints gbcBtnConfirmer = new GridBagConstraints();
+		gbcBtnConfirmer.insets = new Insets(0, 0, 0, 5);
+		gbcBtnConfirmer.gridx = 1;
+		gbcBtnConfirmer.gridy = 5;
+		getContentPane().add(btnConfirmer, gbcBtnConfirmer);
 
 		
 		btnAnnuler = new JButton("Quitter");
 		
-		GridBagConstraints gbc_btnAnnuler = new GridBagConstraints();
-		gbc_btnAnnuler.gridx = 4;
-		gbc_btnAnnuler.gridy = 5;
-		getContentPane().add(btnAnnuler, gbc_btnAnnuler);
+		GridBagConstraints gbcBtnAnnuler = new GridBagConstraints();
+		gbcBtnAnnuler.gridx = 4;
+		gbcBtnAnnuler.gridy = 5;
+		getContentPane().add(btnAnnuler, gbcBtnAnnuler);
 		
 		gest.gestionAnnuler(btnAnnuler);
 		gest.gestionConfirmer(btnConfirmer);

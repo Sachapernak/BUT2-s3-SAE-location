@@ -14,8 +14,6 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-
 import modele.Bail;
 import modele.BienLocatif;
 import modele.Contracter;
@@ -59,14 +57,11 @@ public class GestionAfficherAnciensLocataires implements ActionListener {
      */
     public void gestionActionComboBatiment() {
         JComboBox<String> comboBoxBatiment = this.fenAfficherAnciensLocataires.getComboBoxBatiment();
-        comboBoxBatiment.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent evt) {
-                if (evt.getStateChange() == ItemEvent.SELECTED) {
-                    String batimentSelectionne = (String) comboBoxBatiment.getSelectedItem();
-                    remplirComboBoxBienLocatif(batimentSelectionne);
-                    remplirTableAnciensLocatairesParBatiment(batimentSelectionne);
-                }
+        comboBoxBatiment.addItemListener(evt -> {
+            if (evt.getStateChange() == ItemEvent.SELECTED) {
+                String batimentSelectionne = (String) comboBoxBatiment.getSelectedItem();
+                remplirComboBoxBienLocatif(batimentSelectionne);
+                remplirTableAnciensLocatairesParBatiment(batimentSelectionne);
             }
         });
     }
@@ -81,24 +76,22 @@ public class GestionAfficherAnciensLocataires implements ActionListener {
         JComboBox<String> comboBoxBienLocatif = this.fenAfficherAnciensLocataires.getComboBoxBienLocatif();
         JComboBox<String> comboBoxBatiment = this.fenAfficherAnciensLocataires.getComboBoxBatiment();
 
-        comboBoxBienLocatif.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent evt) {
-                if (evt.getStateChange() == ItemEvent.SELECTED) {
-                    String bienSelectionne = (String) comboBoxBienLocatif.getSelectedItem();
-                    String batimentSelectionne = (String) comboBoxBatiment.getSelectedItem();
+        comboBoxBienLocatif.addItemListener(evt -> {
+            if (evt.getStateChange() == ItemEvent.SELECTED) {
+                String bienSelectionne = (String) comboBoxBienLocatif.getSelectedItem();
+                String batimentSelectionne = (String) comboBoxBatiment.getSelectedItem();
 
-                    // Affiche les anciens locataires d'un bien spécifique
-                    remplirTableAnciensLocataires(bienSelectionne);
+                // Affiche les anciens locataires d'un bien spécifique
+                remplirTableAnciensLocataires(bienSelectionne);
 
-                    // Si "Tous" est sélectionné, on affiche tous les anciens locataires du bâtiment
-                    if ("Tous".equals(bienSelectionne)) {
-                        remplirTableAnciensLocatairesParBatiment(batimentSelectionne);
-                    }
+                // Si "Tous" est sélectionné, on affiche tous les anciens locataires du bâtiment
+                if ("Tous".equals(bienSelectionne)) {
+                    remplirTableAnciensLocatairesParBatiment(batimentSelectionne);
                 }
             }
         });
     }
+
 
     /**
      * Gère les actions sur les boutons de la vue {@link AfficherAnciensLocataires}.
@@ -110,14 +103,11 @@ public class GestionAfficherAnciensLocataires implements ActionListener {
         JButton btnActif = (JButton) e.getSource();
         String btnLibelle = btnActif.getText();
 
-        switch (btnLibelle) {
-            case "Retour":
+        if ("Retour".equals(btnLibelle)) {
                 this.fenAfficherAnciensLocataires.dispose();
-                break;
-            default:
-                // Aucune autre action à gérer pour le moment
-                break;
         }
+               
+        
     }
 
     /**
@@ -131,7 +121,7 @@ public class GestionAfficherAnciensLocataires implements ActionListener {
             // Récupération des bâtiments et conversion en tableau
             List<String> batiments = new DaoBatiment().findAll().stream()
                     .map(b -> b.getIdBat())
-                    .collect(Collectors.toList());
+                    .toList();
 
             comboBoxBatiment.setModel(new DefaultComboBoxModel<>(batiments.toArray(new String[0])));
         } catch (SQLException | IOException e) {

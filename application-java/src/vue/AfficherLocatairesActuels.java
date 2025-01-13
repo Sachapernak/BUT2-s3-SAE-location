@@ -44,9 +44,9 @@ public class AfficherLocatairesActuels extends JInternalFrame {
     private static final long serialVersionUID = 1L;
 
     // Contrôleurs
-    private final GestionAfficherLocataireActuel gestionClic;
-    private final GestionChampsLocataireActuel gestionChampsLoc;
-    private final GestionChampsMontantAfficherLocataire gestionChampsMontant;
+    private final transient GestionAfficherLocataireActuel gestionClic;
+    private final transient GestionChampsLocataireActuel gestionChampsLoc;
+    private final transient GestionChampsMontantAfficherLocataire gestionChampsMontant;
 
     // Composants UI
     private JTable tableLocatairesActuels;
@@ -117,7 +117,8 @@ public class AfficherLocatairesActuels extends JInternalFrame {
             Class[] columnTypes = new Class[] {
                 String.class, String.class, String.class
             };
-            @SuppressWarnings("unchecked")
+            @Override
+            @SuppressWarnings({ "unchecked", "rawtypes" })
             public Class getColumnClass(int columnIndex) {
                 return columnTypes[columnIndex];
             }

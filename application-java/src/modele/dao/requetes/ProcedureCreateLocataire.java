@@ -48,7 +48,6 @@ public class ProcedureCreateLocataire extends Procedure<Locataire> {
         
         
 		for (Contracter c : donnee.getContrats()) {
-			System.out.println(c.getDateEntree());
 			tabContrat.add(new Object[] {
 					c.getLocataire().getIdLocataire(),
 					c.getBail().getIdBail(),
