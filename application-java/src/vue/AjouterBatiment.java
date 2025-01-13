@@ -16,6 +16,7 @@ import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JButton;
+import java.awt.Font;
 
 public class AjouterBatiment extends JInternalFrame {
 
@@ -92,6 +93,7 @@ public class AjouterBatiment extends JInternalFrame {
 		getContentPane().add(panelNorth, BorderLayout.NORTH);
 		
 		JLabel lblTitre = new JLabel("Ajouter un bâtiment");
+		lblTitre.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panelNorth.add(lblTitre);
 		
 		JPanel panelCentre = new JPanel();
@@ -144,7 +146,7 @@ public class AjouterBatiment extends JInternalFrame {
 		panelAdresse.add(textFieldComplement);
 		textFieldComplement.setColumns(10);
 		
-		JLabel lblVille = new JLabel("Ville : ");
+		JLabel lblVille = new JLabel("Ville* : ");
 		lblVille.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblVille.setBounds(21, 150, 97, 13);
 		panelAdresse.add(lblVille);
@@ -159,7 +161,7 @@ public class AjouterBatiment extends JInternalFrame {
 		textFieldCodePostal.setBounds(128, 118, 96, 19);
 		panelAdresse.add(textFieldCodePostal);
 		
-		JLabel lblCodePostal = new JLabel("Code postal : ");
+		JLabel lblCodePostal = new JLabel("Code postal* : ");
 		lblCodePostal.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblCodePostal.setBounds(15, 121, 103, 13);
 		panelAdresse.add(lblCodePostal);
@@ -179,18 +181,7 @@ public class AjouterBatiment extends JInternalFrame {
 
 	}
 
-
-
-
-	public void afficherMessageErreur(String message) {
-		JOptionPane.showMessageDialog(this,message, "Erreur",JOptionPane.ERROR_MESSAGE);
-	}
-
-
-
-
-	public void afficherMessageSucces(String message) {
-		JOptionPane.showMessageDialog(this,message, "Batiment ajouté",JOptionPane.INFORMATION_MESSAGE);
-		
+	public void afficherMessage(String message, String titre, int typeMessage) {
+	    JOptionPane.showMessageDialog(this, message, titre, typeMessage);
 	}
 }

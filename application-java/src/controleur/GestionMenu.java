@@ -11,6 +11,7 @@ import javax.swing.JMenuItem;
 
 import vue.AfficherAnciensLocataires;
 import vue.AfficherLocatairesActuels;
+import vue.AjouterEntreprise;
 import vue.ArchiverDocuments;
 import vue.FenetrePrincipale;
 import vue.PageConnexion;
@@ -73,6 +74,15 @@ public class GestionMenu implements ActionListener{
 				JLayeredPane layeredPaneArchiverDoc = this.fenPrincipale.getLayeredPane();
 				layeredPaneArchiverDoc.add(ad, JLayeredPane.PALETTE_LAYER);
 				ad.setVisible(true);
+				break;
+			case "Ajouter une entreprise": 
+				AjouterEntreprise ae = new AjouterEntreprise();
+				JLayeredPane layeredPaneAjouterEntreprise = this.fenPrincipale.getLayeredPane();
+				layeredPaneAjouterEntreprise.add(ae, JLayeredPane.PALETTE_LAYER);
+				ae.setVisible(true);
+				break; 
+			default: 
+				break;
 				
 		}
 		

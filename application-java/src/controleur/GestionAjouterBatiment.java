@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
+
 import modele.Adresse;
 import modele.Batiment;
 import modele.dao.DaoAdresse;
@@ -49,10 +51,11 @@ public class GestionAjouterBatiment implements ActionListener {
         try {
             Batiment batiment = creerBatiment();
             if (batiment != null) {
-                this.fenAjoutBatiment.afficherMessageSucces("Bâtiment créé avec succès");
+                this.fenAjoutBatiment.afficherMessage("Bâtiment ajouté avec succès.", "Succès", JOptionPane.INFORMATION_MESSAGE);
+
             }
         } catch (Exception ex) {
-            this.fenAjoutBatiment.afficherMessageErreur("Erreur lors de la création du bâtiment : " + ex.getMessage());
+            this.fenAjoutBatiment.afficherMessage("Erreur lors de la création du bâtiment : " + ex.getMessage(),"Erreur", JOptionPane.ERROR_MESSAGE);;
             ex.printStackTrace();
         }
 
@@ -63,12 +66,12 @@ public class GestionAjouterBatiment implements ActionListener {
         List<String> champs = this.fenAjoutBatiment.getChampsObligatoires();
 
         if (!this.verifChamps.champsRemplis(champs)) {
-            this.fenAjoutBatiment.afficherMessageErreur("Tous les champs obligatoires doivent être remplis.");
+            this.fenAjoutBatiment.afficherMessage("Tous les champs obligatoires doivent être remplis.", "Erreur", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
         if (!this.verifChamps.validerCodePostal(this.fenAjoutBatiment.getStringTextFieldCodePostal())) {
-            this.fenAjoutBatiment.afficherMessageErreur("Le code postal doit être composé de 5 chiffres.");
+            this.fenAjoutBatiment.afficherMessage("Le code postal doit être composé de 5 chiffres.", "Erreur", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
@@ -79,7 +82,7 @@ public class GestionAjouterBatiment implements ActionListener {
         String idBat = this.fenAjoutBatiment.getStringTextFieldIdentifiant();
         Adresse adresse = creerAdresse();
         if (daoBatiment.findById(idBat) != null) {
-            this.fenAjoutBatiment.afficherMessageErreur("Le bâtiment existe déjà.");
+            this.fenAjoutBatiment.afficherMessage("Le bâtiment existe déjà.", "Erreur", JOptionPane.ERROR_MESSAGE);
             return null;
         }
         if (daoAdresse.findById(adresse.getIdAdresse()) == null) {

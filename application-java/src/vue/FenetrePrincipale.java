@@ -142,6 +142,13 @@ public class FenetrePrincipale extends JFrame {
 		menuBar.add(declarationFiscale);
 		declarationFiscale.addActionListener(this.gestionMenu);
 		
+		JMenu mnEntreprise = new JMenu("Entreprises");
+		menuBar.add(mnEntreprise);
+		
+		JMenuItem mntmAjoutEntreprises = new JMenuItem("Ajouter une entreprise");
+		mnEntreprise.add(mntmAjoutEntreprises);
+		mntmAjoutEntreprises.addActionListener(this.gestionMenu);
+		
 		menuBar.add(Box.createHorizontalGlue());
 		JMenu configurationConnexion = new JMenu(" ");
 		ImageIcon originalIcon = new ImageIcon("images/iconeEngrenage.png");
