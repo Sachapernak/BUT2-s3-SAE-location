@@ -49,7 +49,7 @@ public abstract class DaoModele<T> implements Dao<T> {
      * @throws IOException Si une erreur survient lors de la lecture des données.
      */
     public List<T> select(PreparedStatement prSt) throws SQLException, IOException {
-        List<T> results = new ArrayList<T>();
+        List<T> results = new ArrayList<>();
 
         ResultSet rs = prSt.executeQuery();
 
@@ -80,9 +80,7 @@ public abstract class DaoModele<T> implements Dao<T> {
         CallableStatement clSt = cn.prepareCall(pro.procedure());
         pro.parametres(clSt, donnee);
 
-        int res = clSt.executeUpdate();
-
-        return res;
+        return clSt.executeUpdate();
     }
 
     /**
@@ -102,9 +100,7 @@ public abstract class DaoModele<T> implements Dao<T> {
         PreparedStatement prSt = cn.prepareStatement(req.requete());
         req.parametres(prSt, donnee);
 
-        int res = prSt.executeUpdate();
-
-        return res;
+        return prSt.executeUpdate();
     }
 
     /**
@@ -120,7 +116,7 @@ public abstract class DaoModele<T> implements Dao<T> {
      * @throws IOException Si une erreur survient lors de la lecture des données.
      */
     public List<T> find(Requete<T> req, String...id) throws SQLException, IOException {
-        List<T> res = new ArrayList<>();
+        List<T> res;
 
         Connection cn = ConnexionBD.getInstance().getConnexion();
         PreparedStatement prSt = cn.prepareStatement(req.requete());

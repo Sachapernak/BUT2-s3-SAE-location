@@ -67,10 +67,9 @@ public class GestionDetailLoyers {
                     List<Loyer> loyers = get();
                     
                     // Transformation de la liste en structure exploitable par la table
-                    List<Object[]> data = loyers.stream().map(l -> {
-                                            	
-                        return new Object[] {l.getDateDeChangement(), l.getMontantLoyer()};
-                    }).toList();
+                    List<Object[]> data = loyers.stream().map(l -> 
+                    	new Object[] {l.getDateDeChangement(), l.getMontantLoyer()}
+                    ).toList();
 
                     fen.chargerTableLoyers(data);
 

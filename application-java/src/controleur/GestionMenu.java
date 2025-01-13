@@ -72,7 +72,6 @@ public class GestionMenu implements ActionListener{
 				break;
 
 			case "Consulter les charges" : 
-				System.out.println("ok");
 				AfficherCharges ad = new AfficherCharges();
 				ad.setVisible(true);
 				break;

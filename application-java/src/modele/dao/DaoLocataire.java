@@ -1,18 +1,14 @@
 package modele.dao;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
 import modele.Adresse;
-import modele.ConnexionBD;
 import modele.Contracter;
 import modele.Locataire;
 import modele.dao.requetes.ProcedureCreateLocataire;
-import modele.dao.requetes.RequeteCountNbLogementsBatiment;
 import modele.dao.requetes.RequeteDeleteLocataire;
 import modele.dao.requetes.RequeteSelectLocataire;
 import modele.dao.requetes.RequeteSelectLocataireById;

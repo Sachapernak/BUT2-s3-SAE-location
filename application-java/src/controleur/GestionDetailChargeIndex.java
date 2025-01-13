@@ -1,7 +1,5 @@
 package controleur;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.JButton;
 
 import modele.ChargeIndex;
@@ -44,11 +42,6 @@ public class GestionDetailChargeIndex {
      * @param cancelButton Le bouton Annuler.
      */
     public void gestionAnnuler(JButton cancelButton) {
-        cancelButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                fen.dispose();
-            }
-        });
+        cancelButton.addActionListener(e -> fen.dispose());
     }
 }

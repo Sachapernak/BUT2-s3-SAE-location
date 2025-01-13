@@ -52,7 +52,6 @@ public class GestionTablesAjouterBail implements ListSelectionListener, KeyListe
 	public void remplirTableBauxExistant(JTable tableBauxExistant) {
 		List<Bail> baux;
 		try {
-			DaoBail daoBail = new DaoBail();
 			baux = daoBail.findAll();
 		
 		DefaultTableModel model = (DefaultTableModel) tableBauxExistant.getModel();
@@ -63,11 +62,10 @@ public class GestionTablesAjouterBail implements ListSelectionListener, KeyListe
             model.addRow(new Object[] {bail.getIdBail(), complement, adresse, bail.getDateDeDebut(), bail.getDateDeFin()});
         }
         
-		} catch (SQLException e) {
+		} catch (SQLException | IOException e) {
+			fenAjouterBail.afficherMessageErreur(e.getMessage());
 			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		} 
 					
 	}
 	
@@ -83,8 +81,8 @@ public class GestionTablesAjouterBail implements ListSelectionListener, KeyListe
 			for (Contracter contrat : contrats) {
 				modelTableParts.addRow(new Object[] {contrat.getLocataire().getIdLocataire(), contrat.getPartLoyer()});
 			}
-			String id_new_loc = this.fenAjouterLocataire.getTextFieldIdLocataire();
-			modelTableParts.addRow(new Object[] {id_new_loc, 0F});
+			String idNewLoc = this.fenAjouterLocataire.getTextFieldIdLocataire();
+			modelTableParts.addRow(new Object[] {idNewLoc, 0F});
 						
 			modelTableParts.addRow(new Object[] {" ",calculerPartsTotal(tablePartsLoyer)});
 			modelTotal.setRowCount(contrats.size()+1);
@@ -105,8 +103,7 @@ public class GestionTablesAjouterBail implements ListSelectionListener, KeyListe
 	}
 	
 	
-	public void keyPressed(KeyEvent e) {
-	}
+
 	
 	public void keyReleased(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_ENTER || e.getKeyCode() == KeyEvent.VK_ESCAPE ) {
@@ -119,7 +116,13 @@ public class GestionTablesAjouterBail implements ListSelectionListener, KeyListe
 		}
 	}
 	public void keyTyped(KeyEvent e) {
-	
+		// Uniquement pour keyReleased
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		// Uniquement pour keyRelease aussi
+		
 	}
 	
 

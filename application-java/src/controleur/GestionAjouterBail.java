@@ -24,111 +24,194 @@ import vue.AjouterBail;
 import vue.AjouterCautionnaire;
 import vue.AjouterLocataire;
 
-public class GestionAjouterBail implements ActionListener{
-	
-	private AjouterBail fenAjouterBail;
-	private AfficherLocatairesActuels fenAfficherLocataires;
-	private AjouterLocataire fenAjouterLocataire;
-	private DaoBienLocatif daoBien;
-	
-	private VerificationChamps verifChamps;
-	
-	public GestionAjouterBail(AjouterBail ab, AjouterLocataire al, AfficherLocatairesActuels afl) {
-		this.fenAjouterBail = ab;
-		this.fenAjouterLocataire = al;
-		this.fenAfficherLocataires = afl;
-		this.daoBien = new DaoBienLocatif();
-		
-		this.verifChamps = new VerificationChamps();
-	}
-	
-	
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		Object btn = e.getSource();
-		
-		if (btn instanceof JRadioButton) {
-	    	actionPerformedRadio(e);
-			
-		} else if (btn instanceof JButton) {
-	    	JButton btnActif = (JButton) e.getSource();
-	        String btnLibelle = btnActif.getText();
-			
-			switch (btnLibelle) {
-				case "Annuler" :
-					this.fenAjouterBail.dispose();
-					break;
-				case "Continuer" : 
-					if (!gererErreurs()) {
-						ouvrirFenAjoutCautionnaire();
-					}
-					break;
-				case "Vider" : 
-					this.fenAjouterBail.textFieldIdBail.setText("");
-					this.fenAjouterBail.textFieldDateDebut.setText("");
-					this.fenAjouterBail.textFieldDateFin.setText("");		
-					break;
-			}
+/**
+ * Contrôleur pour la gestion de l'ajout d'un bail.
+ * <p>
+ * Il gère les interactions utilisateur dans la vue {@link AjouterBail}
+ * et interagit avec les DAO pour accéder aux données.
+ */
+public class GestionAjouterBail implements ActionListener {
 
-		
-	}
-	
-	private boolean gererErreurs() {
-		boolean erreurTrouvee = false;
-		
-		if (!verifChamps.verifierDates(this.fenAjouterBail.getChampsDate())) {
-			this.fenAjouterBail.afficherMessageErreur("Les dates doivent être au format YYYY-MM-dd");
-		} else if (this.fenAjouterBail.getRdbtnBailExistant().isSelected()) {
-			
-			if (this.fenAjouterBail.getTextFieldDateArrivee().isEmpty()) {
-				this.fenAjouterBail.afficherMessageErreur("Les champs obligatoires (dotés d'une étoile) doivent être renseignés");
-				erreurTrouvee = true;
-			}
-			if(!totalPartEgalAUn()) {
-				this.fenAjouterBail.afficherMessageErreur("Le total des parts n'est pas égal à 1");
-				erreurTrouvee = true;
-			}
-		}else if(this.fenAjouterBail.getRdbtnNouveauBail().isSelected()) {
-			if (!this.verifChamps.champsRemplis(this.fenAjouterBail.getChampsObligatoiresNouveauBail())){
-				this.fenAjouterBail.afficherMessageErreur("Les champs obligatoires (dotés d'une étoile) doivent être renseignés");
-				erreurTrouvee = true;
-			} 
-		}
-		return erreurTrouvee;
-	}
+    private final AjouterBail fenAjouterBail;
+    private final AfficherLocatairesActuels fenAfficherLocataires;
+    private final AjouterLocataire fenAjouterLocataire;
+    private final DaoBienLocatif daoBien;
+    private final VerificationChamps verifChamps;
 
-	private void ouvrirFenAjoutCautionnaire() {
-		AjouterCautionnaire ac = new AjouterCautionnaire(this.fenAjouterBail, this.fenAjouterLocataire, this.fenAfficherLocataires) ;
-		JLayeredPane layeredPaneAjoutCautionnaire = this.fenAfficherLocataires.getLayeredPane();
-		layeredPaneAjoutCautionnaire.add(ac, JLayeredPane.PALETTE_LAYER);
-		ac.setVisible(true);
-	}
-	
-	public void initialiserDateDebut(JTextField textFieldDateDebut) {
-        LocalDate dateActelle = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String formattedDate = dateActelle.format(formatter);
-        textFieldDateDebut.setText(formattedDate);
+    /**
+     * Constructeur principal.
+     *
+     * @param ab  la vue pour ajouter un bail
+     * @param al  la vue pour ajouter un locataire
+     * @param afl la vue pour afficher les locataires actuels
+     */
+    public GestionAjouterBail(AjouterBail ab, AjouterLocataire al, AfficherLocatairesActuels afl) {
+        this.fenAjouterBail = ab;
+        this.fenAjouterLocataire = al;
+        this.fenAfficherLocataires = afl;
+        this.daoBien = new DaoBienLocatif();
+        this.verifChamps = new VerificationChamps();
     }
-	
-	public void remplirJComboBoxBatiment(JComboBox<String> comboBoxBiens) {
-		try {
-			List<BienLocatif> biens = daoBien.findAll();
-			for (BienLocatif bien : biens) {
-	            comboBoxBiens.addItem(bien.getIdentifiantLogement());
-	        }
-		} catch (SQLException | IOException e) {
-			e.printStackTrace();
-		} 
-	}
-	
-	public boolean totalPartEgalAUn() {
-		JTable tableParts = this.fenAjouterBail.getTablePartsLoyer();
-		int indexLastLigne = tableParts.getRowCount() - 1; 
-		float totalParts = (float) tableParts.getValueAt(indexLastLigne,1);
-		
-		return totalParts == 1F;
-	}
-	
 
+    /**
+     * Méthode invoquée lors d'une action sur un composant (bouton, radio).
+     *
+     * @param e l'événement d'action
+     */
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object source = e.getSource();
+
+        // Gestion des boutons radio
+        if (source instanceof JRadioButton) {
+            actionPerformedRadio(e);
+        }
+        // Gestion des boutons (Annuler, Continuer, Vider, etc.)
+        else if (source instanceof JButton btnActif) {
+            String btnLibelle = btnActif.getText();
+            switch (btnLibelle) {
+                case "Annuler":
+                    fenAjouterBail.dispose();
+                    break;
+                case "Continuer":
+                    if (!gererErreurs()) {
+                        ouvrirFenAjoutCautionnaire();
+                    }
+                    break;
+                case "Vider":
+                    viderTextFields();
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    /**
+     * Vérifie les erreurs de saisie dans la vue AjouterBail.
+     *
+     * @return true si une erreur est trouvée, false sinon
+     */
+    private boolean gererErreurs() {
+        boolean erreurTrouvee = false;
+
+        // Vérification du format des dates
+        if (!verifChamps.verifierDates(fenAjouterBail.getChampsDate())) {
+            fenAjouterBail.afficherMessageErreur("Les dates doivent être au format YYYY-MM-dd");
+            erreurTrouvee = true;
+        }
+        // Cas d'un bail existant
+        else if (fenAjouterBail.getRdbtnBailExistant().isSelected()) {
+            // Vérifie la date d'arrivée (champ obligatoire)
+            if (fenAjouterBail.getTextDateArrivee().isEmpty()) {
+                fenAjouterBail.afficherMessageErreur(
+                    "Les champs obligatoires (dotés d'une étoile) doivent être renseignés"
+                );
+                erreurTrouvee = true;
+            }
+            // Vérifie la somme des parts de loyer (doit être égale à 1)
+            if (!totalPartEgalAUn()) {
+                fenAjouterBail.afficherMessageErreur("Le total des parts n'est pas égal à 1");
+                erreurTrouvee = true;
+            }
+        }
+        // Cas d'un nouveau bail
+        else if (fenAjouterBail.getRdbtnNouveauBail().isSelected()
+                && !verifChamps.champsRemplis(fenAjouterBail.getChampsObligatoiresNouveauBail())) {
+            fenAjouterBail.afficherMessageErreur(
+                "Les champs obligatoires (dotés d'une étoile) doivent être renseignés"
+            );
+            erreurTrouvee = true;
+        }
+
+        return erreurTrouvee;
+    }
+
+    /**
+     * Ouvre la fenêtre pour ajouter un cautionnaire.
+     */
+    private void ouvrirFenAjoutCautionnaire() {
+        AjouterCautionnaire ac = new AjouterCautionnaire(
+            fenAjouterBail,
+            fenAjouterLocataire,
+            fenAfficherLocataires
+        );
+        JLayeredPane layeredPaneAjoutCautionnaire = fenAfficherLocataires.getLayeredPane();
+        layeredPaneAjoutCautionnaire.add(ac, JLayeredPane.PALETTE_LAYER);
+        ac.setVisible(true);
+    }
+
+    /**
+     * Initialise la date de début avec la date actuelle.
+     *
+     * @param textFieldDateDebut le champ de texte pour la date de début
+     */
+    public void initialiserDateDebut(JTextField textFieldDateDebut) {
+        LocalDate dateActuelle = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        textFieldDateDebut.setText(dateActuelle.format(formatter));
+    }
+
+    /**
+     * Remplit une JComboBox avec les identifiants des biens locatifs.
+     *
+     * @param comboBoxBiens la JComboBox à remplir
+     */
+    public void remplirJComboBoxBatiment(JComboBox<String> comboBoxBiens) {
+        try {
+            List<BienLocatif> biens = daoBien.findAll();
+            for (BienLocatif bien : biens) {
+                comboBoxBiens.addItem(bien.getIdentifiantLogement());
+            }
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Vérifie que la somme des parts de loyer est égale à 1
+     * dans le tableau des parts.
+     *
+     * @return true si la somme est égale à 1, false sinon
+     */
+    public boolean totalPartEgalAUn() {
+        JTable tableParts = fenAjouterBail.getTablePartsLoyer();
+        int indexLastLigne = tableParts.getRowCount() - 1;
+        float totalParts = (float) tableParts.getValueAt(indexLastLigne, 1);
+        return totalParts == 1F;
+    }
+
+    /**
+     * Vide les champs de saisie dans la vue AjouterBail (ID Bail, Date Début, Date Fin).
+     */
+    private void viderTextFields() {
+        fenAjouterBail.setTextIdBail("");
+        fenAjouterBail.setTextDateDebut("");
+        fenAjouterBail.setTextDateFin("");
+    }
+
+    /**
+     * Gère l'action des boutons radio pour choisir entre
+     * la création d'un nouveau bail et le rattachement à un bail existant.
+     *
+     * @param e l'événement d'action provenant du JRadioButton
+     */
+    private void actionPerformedRadio(ActionEvent e) {
+        JRadioButton rdBtnActif = (JRadioButton) e.getSource();
+        String rdBtnLibelle = rdBtnActif.getText();
+
+        CardLayout cd = fenAjouterBail.getCardLayout();
+        JPanel panelPrincipal = fenAjouterBail.getPanelAssocierBail();
+
+        switch (rdBtnLibelle) {
+            case "Créer un nouveau bail":
+                cd.show(panelPrincipal, "nouveauBail");
+                break;
+            case "Rattacher à un bail existant":
+                cd.show(panelPrincipal, "bauxExistants");
+                break;
+            default:
+                break;
+        }
+    }
 }

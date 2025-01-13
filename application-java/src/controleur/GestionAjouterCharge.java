@@ -2,13 +2,13 @@ package controleur;
 
 import java.awt.Cursor;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -88,13 +88,15 @@ public class GestionAjouterCharge {
             
             @Override
             protected void done() {
-                view.setComboBoxTypes(Arrays.asList(
-                    "FACTURE", 
-                    "FACTURE_CV", 
-                    "FACTURE_CF", 
-                    "DEVIS", 
-                    "QUITTANCE"
-                ));
+            	
+            	List<String> nomEnum = Stream.of(TypeDoc.values())
+            	        .map(Enum::name)
+            	        .filter(name -> !"loyer".equalsIgnoreCase(name)) // Ignorer "loyer" ou "LOYER"
+            	        .collect(Collectors.toList());
+            	
+            	nomEnum.remove("LOYER");
+            	
+                view.setComboBoxTypes(nomEnum);
                 view.setCursor(Cursor.getDefaultCursor());
             }
         };
@@ -115,7 +117,7 @@ public class GestionAjouterCharge {
             protected Void doInBackground() throws Exception {
                 companyNames = new DaoEntreprise().findAll().stream()
                     .map(e -> e.getNom() + " " + e.getSiret())
-                    .collect(Collectors.toList());
+                    .toList();
                 return null;
             }
             
@@ -142,7 +144,7 @@ public class GestionAjouterCharge {
             protected Void doInBackground() throws Exception {
                 buildingIds = new DaoBatiment().findAll().stream()
                     .map(Batiment::getIdBat)
-                    .collect(Collectors.toList());
+                    .toList();
                 return null;
             }
             
@@ -169,7 +171,7 @@ public class GestionAjouterCharge {
             protected Void doInBackground() throws Exception {
                 tenantNames = new DaoLocataire().findAll().stream()
                     .map(e -> e.getNom() + " " + e.getIdLocataire())
-                    .collect(Collectors.toList());
+                    .toList();
                 return null;
             }
             
@@ -265,24 +267,22 @@ public class GestionAjouterCharge {
                 view.setCoutAbonnementVisible(false);
                 view.setIndexVisible(false);
                 view.setIdChargeTotalVisible(false);
-                view.setTextLblCout("Montant quittance :");
+                view.setTextLabelCout("Montant quittance :");
                 break;
                 
-            case "FACTURE":
-                // même logique que FACTURE_CF
-            case "FACTURE_CF":
+            case "FACTURE","FACTURE_CF":
                 view.setLocataireVisible(false);
                 view.setCoutAbonnementVisible(false);
                 view.setIndexVisible(false);
                 view.setIdChargeNomVisible(true);
-                view.setTextLblCout("Montant :");
+                view.setTextLabelCout("Montant :");
                 break;
 
             case "FACTURE_CV":
                 view.setLocataireVisible(false);
                 view.setCoutAbonnementVisible(true);
-                view.setTextLblCout("Cout unitaire | abonnement :");
-                refreshIndex(view.getIDChargeCombo());
+                view.setTextLabelCout("Cout unitaire | abonnement :");
+                refreshIndex(view.getIdChargeCombo());
                 break;
                 
             case "DEVIS":
@@ -291,7 +291,7 @@ public class GestionAjouterCharge {
                 view.setCoutAbonnementVisible(false);
                 view.setIndexVisible(false);
                 view.setIdChargeNomVisible(false);
-                view.setTextLblCout("Montant devis :");
+                view.setTextLabelCout("Montant devis :");
                 break;
                 
             default:
@@ -322,13 +322,10 @@ public class GestionAjouterCharge {
      * @param combo ComboBox concerné
      */
     public void gestionComboID(JComboBox<String> combo) {
-        combo.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent evt) {
+        combo.addItemListener(evt -> {
                 if (evt.getStateChange() == ItemEvent.SELECTED && combo.isVisible()) {
                     refreshIndex(String.valueOf(combo.getSelectedItem()));
                 }
-            }
         });
     }
     
@@ -355,8 +352,8 @@ public class GestionAjouterCharge {
                             .orElse(null);
                 }
 
-                view.setSpinnerCoutVarAbon(chargeIndex == null ? BigDecimal.valueOf(0.0) : chargeIndex.getCoutFixe());
-                view.setSpinnerCoutVarUnit(chargeIndex == null ? BigDecimal.valueOf(0.0) : chargeIndex.getCoutVariable());
+                view.setValSpinnerAbonn(chargeIndex == null ? BigDecimal.valueOf(0.0) : chargeIndex.getCoutFixe());
+                view.setValSpinnerUnit(chargeIndex == null ? BigDecimal.valueOf(0.0) : chargeIndex.getCoutVariable());
                 view.setTextAncienIndex(chargeIndex == null ? "" : String.valueOf(chargeIndex.getValeurCompteur()));
                 view.setNomTypeCharge(chargeIndex == null ? "" : String.valueOf(chargeIndex.getType()));
                 view.clearTextIdCharge();
@@ -401,8 +398,7 @@ public class GestionAjouterCharge {
             final String typeDoc = view.getTypeDoc();
             switch (typeDoc) {
                 case "QUITTANCE": processQuittance(); break;
-                case "FACTURE": 
-                case "FACTURE_CF": processFacture(); break;
+                case "FACTURE", "FACTURE_CF": processFacture(); break;
                 case "FACTURE_CV": processFactureCV(); break;
                 case "DEVIS": processDevis(); break;
                 default:
@@ -522,13 +518,13 @@ public class GestionAjouterCharge {
 
         processParts(daoFacture, daoBien, doc);
 
-        String idChargeVar = view.getTextIDCharge().isEmpty() ? view.getIDChargeCombo() : view.getTextIDCharge();
+        String idChargeVar = view.getTextIDCharge().isEmpty() ? view.getIdChargeCombo() : view.getTextIDCharge();
         ChargeIndex chargeIndex = new ChargeIndex(
                 idChargeVar, view.getTextDateDoc(), view.getNomTypeCharge(),
                 nouvelIndex, view.getCoutVarUnit(), view.getCoutVarAbon(),
                 view.getTextNumDoc(), view.getTextDateDoc()
         );
-        if (!view.getIDChargeCombo().isEmpty()) {
+        if (!view.getIdChargeCombo().isEmpty()) {
             chargeIndex.setDateRelevePrecedent(
                     new DaoChargeIndex().findAllSameId(idChargeVar).get(0).getDateDeReleve()
             );

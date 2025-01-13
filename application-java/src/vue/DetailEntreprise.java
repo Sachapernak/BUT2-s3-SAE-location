@@ -54,86 +54,86 @@ public class DetailEntreprise extends JDialog {
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		GridBagLayout gbl_contentPanel = new GridBagLayout();
-		gbl_contentPanel.columnWidths = new int[]{130, 0, 0};
-		gbl_contentPanel.rowHeights = new int[]{0, 0, 0, 55, 25, 0};
-		gbl_contentPanel.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
-		gbl_contentPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 1.0, 1.0, Double.MIN_VALUE};
-		contentPanel.setLayout(gbl_contentPanel);
+		GridBagLayout gblContentPanel = new GridBagLayout();
+		gblContentPanel.columnWidths = new int[]{130, 0, 0};
+		gblContentPanel.rowHeights = new int[]{0, 0, 0, 55, 25, 0};
+		gblContentPanel.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
+		gblContentPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 1.0, 1.0, Double.MIN_VALUE};
+		contentPanel.setLayout(gblContentPanel);
 		
 		JLabel lblSiret = new JLabel("SIRET :");
-		GridBagConstraints gbc_lblSiret = new GridBagConstraints();
-		gbc_lblSiret.insets = new Insets(0, 0, 5, 5);
-		gbc_lblSiret.anchor = GridBagConstraints.EAST;
-		gbc_lblSiret.gridx = 0;
-		gbc_lblSiret.gridy = 0;
-		contentPanel.add(lblSiret, gbc_lblSiret);
+		GridBagConstraints gbcLblSiret = new GridBagConstraints();
+		gbcLblSiret.insets = new Insets(0, 0, 5, 5);
+		gbcLblSiret.anchor = GridBagConstraints.EAST;
+		gbcLblSiret.gridx = 0;
+		gbcLblSiret.gridy = 0;
+		contentPanel.add(lblSiret, gbcLblSiret);
 	
 	
 		lblTxtSiret = new JLabel("Chargement...");
-		GridBagConstraints gbc_lblTxtSiret = new GridBagConstraints();
-		gbc_lblTxtSiret.insets = new Insets(0, 0, 5, 0);
-		gbc_lblTxtSiret.anchor = GridBagConstraints.WEST;
-		gbc_lblTxtSiret.gridx = 1;
-		gbc_lblTxtSiret.gridy = 0;
-		contentPanel.add(lblTxtSiret, gbc_lblTxtSiret);
+		GridBagConstraints gbcLblTxtSiret = new GridBagConstraints();
+		gbcLblTxtSiret.insets = new Insets(0, 0, 5, 0);
+		gbcLblTxtSiret.anchor = GridBagConstraints.WEST;
+		gbcLblTxtSiret.gridx = 1;
+		gbcLblTxtSiret.gridy = 0;
+		contentPanel.add(lblTxtSiret, gbcLblTxtSiret);
 	
 	
 		JLabel lblNom = new JLabel("Nom :");
-		GridBagConstraints gbc_lblNom = new GridBagConstraints();
-		gbc_lblNom.anchor = GridBagConstraints.EAST;
-		gbc_lblNom.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNom.gridx = 0;
-		gbc_lblNom.gridy = 1;
-		contentPanel.add(lblNom, gbc_lblNom);
+		GridBagConstraints gbcLblNom = new GridBagConstraints();
+		gbcLblNom.anchor = GridBagConstraints.EAST;
+		gbcLblNom.insets = new Insets(0, 0, 5, 5);
+		gbcLblNom.gridx = 0;
+		gbcLblNom.gridy = 1;
+		contentPanel.add(lblNom, gbcLblNom);
 	
 	
 		lblTxtNom = new JLabel("Chargement...");
-		GridBagConstraints gbc_lblTxtNom = new GridBagConstraints();
-		gbc_lblTxtNom.insets = new Insets(0, 0, 5, 0);
-		gbc_lblTxtNom.anchor = GridBagConstraints.WEST;
-		gbc_lblTxtNom.gridx = 1;
-		gbc_lblTxtNom.gridy = 1;
-		contentPanel.add(lblTxtNom, gbc_lblTxtNom);
+		GridBagConstraints gbcLblTxtNom = new GridBagConstraints();
+		gbcLblTxtNom.insets = new Insets(0, 0, 5, 0);
+		gbcLblTxtNom.anchor = GridBagConstraints.WEST;
+		gbcLblTxtNom.gridx = 1;
+		gbcLblTxtNom.gridy = 1;
+		contentPanel.add(lblTxtNom, gbcLblTxtNom);
 	
 	
 		JLabel lblSecteur = new JLabel("Secteur d'activité :");
-		GridBagConstraints gbc_lblSecteur = new GridBagConstraints();
-		gbc_lblSecteur.anchor = GridBagConstraints.EAST;
-		gbc_lblSecteur.insets = new Insets(0, 0, 5, 5);
-		gbc_lblSecteur.gridx = 0;
-		gbc_lblSecteur.gridy = 2;
-		contentPanel.add(lblSecteur, gbc_lblSecteur);
+		GridBagConstraints gbcLblSecteur = new GridBagConstraints();
+		gbcLblSecteur.anchor = GridBagConstraints.EAST;
+		gbcLblSecteur.insets = new Insets(0, 0, 5, 5);
+		gbcLblSecteur.gridx = 0;
+		gbcLblSecteur.gridy = 2;
+		contentPanel.add(lblSecteur, gbcLblSecteur);
 	
 	
 		lblTxtSecteur = new JLabel("Chargement...");
-		GridBagConstraints gbc_lblTxtSecteur = new GridBagConstraints();
-		gbc_lblTxtSecteur.insets = new Insets(0, 0, 5, 0);
-		gbc_lblTxtSecteur.anchor = GridBagConstraints.WEST;
-		gbc_lblTxtSecteur.gridx = 1;
-		gbc_lblTxtSecteur.gridy = 2;
-		contentPanel.add(lblTxtSecteur, gbc_lblTxtSecteur);
+		GridBagConstraints gbcLblTxtSecteur = new GridBagConstraints();
+		gbcLblTxtSecteur.insets = new Insets(0, 0, 5, 0);
+		gbcLblTxtSecteur.anchor = GridBagConstraints.WEST;
+		gbcLblTxtSecteur.gridx = 1;
+		gbcLblTxtSecteur.gridy = 2;
+		contentPanel.add(lblTxtSecteur, gbcLblTxtSecteur);
 	
 	
 		JLabel lblAdresse = new JLabel("Adresse :");
-		GridBagConstraints gbc_lblAdresse = new GridBagConstraints();
-		gbc_lblAdresse.anchor = GridBagConstraints.EAST;
-		gbc_lblAdresse.insets = new Insets(0, 0, 5, 5);
-		gbc_lblAdresse.gridx = 0;
-		gbc_lblAdresse.gridy = 3;
-		contentPanel.add(lblAdresse, gbc_lblAdresse);
+		GridBagConstraints gbcLblAdresse = new GridBagConstraints();
+		gbcLblAdresse.anchor = GridBagConstraints.EAST;
+		gbcLblAdresse.insets = new Insets(0, 0, 5, 5);
+		gbcLblAdresse.gridx = 0;
+		gbcLblAdresse.gridy = 3;
+		contentPanel.add(lblAdresse, gbcLblAdresse);
 	
 	
 		textAreaAdresse = new JTextArea();
 		textAreaAdresse.setLineWrap(true);
 		textAreaAdresse.setWrapStyleWord(true);
 		textAreaAdresse.setEditable(false);
-		GridBagConstraints gbc_textAreaAdresse = new GridBagConstraints();
-		gbc_textAreaAdresse.insets = new Insets(0, 0, 5, 0);
-		gbc_textAreaAdresse.fill = GridBagConstraints.BOTH;
-		gbc_textAreaAdresse.gridx = 1;
-		gbc_textAreaAdresse.gridy = 3;
-		contentPanel.add(textAreaAdresse, gbc_textAreaAdresse);
+		GridBagConstraints gbcTextAreaAdresse = new GridBagConstraints();
+		gbcTextAreaAdresse.insets = new Insets(0, 0, 5, 0);
+		gbcTextAreaAdresse.fill = GridBagConstraints.BOTH;
+		gbcTextAreaAdresse.gridx = 1;
+		gbcTextAreaAdresse.gridy = 3;
+		contentPanel.add(textAreaAdresse, gbcTextAreaAdresse);
 		
 		
 		JPanel buttonPane = new JPanel();

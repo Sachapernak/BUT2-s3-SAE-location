@@ -13,6 +13,7 @@ public class RequeteCountNbLogementsBatiment extends Requete<BienLocatif>{
 	}
 	
 
+	@Override
 	public void parametres(PreparedStatement prSt, String... id) throws SQLException {
 		prSt.setString(1, id[0]);
 	}

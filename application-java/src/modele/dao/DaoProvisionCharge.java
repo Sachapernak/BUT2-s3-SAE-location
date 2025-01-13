@@ -68,8 +68,6 @@ public class DaoProvisionCharge extends DaoModele<ProvisionCharge> implements Da
         
         BigDecimal provisionpourcharge = curseur.getBigDecimal("PROVISION_POUR_CHARGE");
         
-        ProvisionCharge provisionCharge = new ProvisionCharge(idBail, dateChangement, provisionpourcharge);
-
-        return provisionCharge;
+        return new ProvisionCharge(idBail, dateChangement, provisionpourcharge);
     }
 }

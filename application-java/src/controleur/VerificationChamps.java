@@ -56,7 +56,6 @@ public class VerificationChamps {
 	
 	public boolean champsRemplis(List<String> champs) {
 		for (String champ : champs) {
-			System.out.println(champ);
 			if (champ.isEmpty()) {
 				return false;
 			}
@@ -65,10 +64,7 @@ public class VerificationChamps {
 	}
 	
 	public boolean auMoinsUnChampRempli(List<String> champs) {
-		System.out.println(champs.size());
 		for (String champ : champs) {
-			System.out.println(champ);
-			System.out.println(champ.isEmpty());
 			if (!champ.isEmpty()) {
 				 return true;
 			}
@@ -76,12 +72,4 @@ public class VerificationChamps {
 		return false;
 	}
 	
-	
-	public boolean tousLesChampsSaisis(List<String> champsObligatoiresAdr, boolean auMoinsUnRempli) {
-		if (auMoinsUnChampRempli(champsObligatoiresAdr)) {
-			return champsRemplis(champsObligatoiresAdr);
-		}
-		auMoinsUnRempli = false;
-		return false;
-	}
 }

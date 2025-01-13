@@ -68,8 +68,6 @@ public class DaoRegularisation extends DaoModele<Regularisation> implements Dao<
         
         BigDecimal montant = curseur.getBigDecimal("MONTANT");
         
-        Regularisation regularisation = new Regularisation(idBail, dateRegu, montant);
-
-        return regularisation;
+        return new Regularisation(idBail, dateRegu, montant);
     }
 }

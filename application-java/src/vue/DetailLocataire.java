@@ -23,6 +23,7 @@ import controleur.GestionDetailLocataire;
 
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
 
 import modele.Locataire;
 import modele.dao.DaoLocataire;
@@ -61,7 +62,7 @@ public class DetailLocataire extends JDialog {
         try {
             Locataire l = new DaoLocataire().findById("LOC001");
             DetailLocataire dialog = new DetailLocataire(l);
-            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             dialog.setVisible(true);
         } catch (Exception e) {
             e.printStackTrace();
@@ -352,7 +353,7 @@ public class DetailLocataire extends JDialog {
     
         list = new JList<>();
         
-        listModel = new DefaultListModel<String>();
+        listModel = new DefaultListModel<>();
         
         listModel.addElement("Chargement...");
         

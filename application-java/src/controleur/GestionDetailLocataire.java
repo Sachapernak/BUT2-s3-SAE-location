@@ -1,10 +1,6 @@
 package controleur;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
-import java.util.stream.Collectors;
-
 import javax.swing.JButton;
 import javax.swing.SwingWorker;
 
@@ -76,10 +72,6 @@ public class GestionDetailLocataire {
 	}
 	
 	public void gestionBtnFermer(JButton cancelButton) {
-		cancelButton.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		fen.dispose();
-        	}
-        });
+		cancelButton.addActionListener(e ->fen.dispose());
 	}
 }
