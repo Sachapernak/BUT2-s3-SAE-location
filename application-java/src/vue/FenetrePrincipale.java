@@ -30,6 +30,8 @@ import java.awt.Font;
 import java.awt.Color;
 import javax.swing.JSeparator;
 import javax.swing.ListSelectionModel;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class FenetrePrincipale extends JFrame {
 
@@ -150,6 +152,14 @@ public class FenetrePrincipale extends JFrame {
 		menuBar.add(declarationFiscale);
 		declarationFiscale.addActionListener(this.gestionMenu);
 		
+		JMenu mnEntreprises = new JMenu("Entreprises");
+		mnEntreprises.setForeground(new Color(255, 255, 255));
+		menuBar.add(mnEntreprises);
+		
+		JMenuItem mntmAfficherEntreprises = new JMenuItem("Afficher les entreprises");
+		mnEntreprises.add(mntmAfficherEntreprises);
+		mntmAfficherEntreprises.addActionListener(this.gestionMenu);
+		
 		menuBar.add(Box.createHorizontalGlue());
 		JMenu configurationConnexion = new JMenu(" ");
 		ImageIcon originalIcon = new ImageIcon("images/iconeEngrenage.png");
@@ -244,9 +254,10 @@ public class FenetrePrincipale extends JFrame {
 		tableBatiment.getSelectionModel().addListSelectionListener(this.gestionTable);
 		scrollPaneBatiment.setViewportView(tableBatiment);
 		
-		JButton btnAjoutBien = new JButton("Ajouter un bien");
-		btnAjoutBien.setBounds(488, 36, 156, 21);
-		panelBien.add(btnAjoutBien);
+		JButton btnAjoutBatiment = new JButton("Ajouter un batiment");
+		btnAjoutBatiment.addActionListener(this.gestionClic);
+		btnAjoutBatiment.setBounds(488, 36, 156, 21);
+		panelBien.add(btnAjoutBatiment);
 		
 		JButton btnCharger = new JButton("Charger");
 		btnCharger.addActionListener(this.gestionClic);
@@ -299,7 +310,4 @@ public class FenetrePrincipale extends JFrame {
     public void afficherMessageErreur(String message) {
         JOptionPane.showMessageDialog(this, message, "Erreur", JOptionPane.ERROR_MESSAGE);
     }
-
-	
-
 }
