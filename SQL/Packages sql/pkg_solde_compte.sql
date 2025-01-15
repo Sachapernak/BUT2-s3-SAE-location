@@ -2,16 +2,17 @@
 --               VUES              ---
 --------------------------------------
 
+select * from sae_cf_par_loc;
 
 -- Recuperer les charges fixes des locataires
 CREATE OR REPLACE VIEW SAE_CF_PAR_LOC AS
 SELECT
-    doc.date_document as "dateDoc", 
-    l.identifiant_locataire as "idLoc", 
-    b.identifiant_logement  as "idLog",
-    bai.id_bail as "idBai",
-    cf.Type as "typeDoc", 
-    (doc.montant * sc.part_de_loyer * fdb.part_des_charges) as "montant"
+    doc.date_document as dateDoc, 
+    l.identifiant_locataire as idLoc, 
+    b.identifiant_logement  as idLog,
+    bai.id_bail as idBai,
+    cf.Type as typeDoc, 
+    (doc.montant * sc.part_de_loyer * fdb.part_des_charges) as montant
 
 
 from sae_locataire l, sae_bien_locatif b, sae_document_comptable doc, 
@@ -27,7 +28,6 @@ and fdb.date_document = doc.date_document
 and fdb.identifiant_logement = b.identifiant_logement
 and bai.identifiant_logement = b.identifiant_logement
 and bai.date_de_fin is null
--- ajouter valeur1 < date < valeur2 pour avoir que les charges pendant une periode
 and sc.id_bail = bai.id_bail
 order by doc.date_document DESC;
 --
@@ -35,12 +35,12 @@ order by doc.date_document DESC;
 -- Recup charge variables
 CREATE OR REPLACE VIEW SAE_CV_PAR_LOC AS
 SELECT
-    doc.date_document as "dateDoc", 
-    l.identifiant_locataire as "idLoc", 
-    b.identifiant_logement  as "idLog",
-    bai.id_bail as "idBai",
-    cv.Type as "typeDoc", 
-    doc.montant * sc.part_de_loyer * fdb.part_des_charges AS "montant locataire",
+    doc.date_document as dateDoc, 
+    l.identifiant_locataire as idLoc, 
+    b.identifiant_logement  as idLog,
+    bai.id_bail as idBai,
+    cv.Type as typeDoc, 
+    doc.montant * sc.part_de_loyer * fdb.part_des_charges AS montant,
 
     '('
       || TO_CHAR(cv.valeur_compteur)
@@ -117,10 +117,73 @@ CREATE OR REPLACE PACKAGE pkg_solde_compte AS
     p_total OUT NUMBER,
     p_calc OUT VARCHAR
   );
+  
+    PROCEDURE sous_total(
+        p_id_bail    IN SAE_Provision_charge.Id_bail%TYPE,
+        p_id_loc     IN SAE_Locataire.identifiant_locataire%TYPE,
+        p_date_debut IN DATE DEFAULT TO_DATE('1900-01-01', 'yyyy-MM-dd'),
+        p_date_fin   IN DATE DEFAULT SYSDATE,  -- Date de fin optionnelle
+        p_total_charge OUT NUMBER,
+        p_total_deduc  OUT NUMBER);
+    
 END pkg_solde_compte;
 /
 
 CREATE OR REPLACE PACKAGE BODY pkg_solde_compte AS
+
+    PROCEDURE sous_total(
+        p_id_bail    IN SAE_Provision_charge.Id_bail%TYPE,
+        p_id_loc     IN SAE_Locataire.identifiant_locataire%TYPE,
+        p_date_debut IN DATE DEFAULT TO_DATE('1900-01-01', 'yyyy-MM-dd'),
+        p_date_fin   IN DATE DEFAULT SYSDATE,  -- Date de fin optionnelle
+        p_total_charge OUT NUMBER,
+        p_total_deduc  OUT NUMBER
+    ) AS
+        v_cf      NUMBER(10,3);
+        v_cv      NUMBER(10,3);
+        v_prov    NUMBER(10,3);
+        v_mult    NUMBER(3,2);
+        v_caution NUMBER(10,3);
+        v_temp_calc VARCHAR2(512);
+        
+    BEGIN
+        SELECT NVL(SUM(montant), 0) INTO v_cf
+        FROM sae_cf_par_loc
+        WHERE idBai = p_id_bail
+          AND idLoc = p_id_loc
+          AND dateDoc >= p_date_debut
+          AND dateDoc <= p_date_fin;
+        
+        SELECT NVL(SUM(montant), 0) INTO v_cv
+        FROM sae_cv_par_loc
+        WHERE idBai = p_id_bail
+          AND idLoc = p_id_loc
+          AND dateDoc >= p_date_debut
+          AND dateDoc <= p_date_fin;
+        
+        p_total_charge := v_cf + v_cv;
+            
+        calculer_somme_provision(
+            p_id_bail  => p_id_bail,
+            p_date_debut => p_date_debut,
+            p_date_fin => p_date_fin,
+            p_total    => v_prov,
+            p_calc     => v_temp_calc  -- utiliser une variable pour récupérer ce paramètre OUT
+        );
+        
+        SELECT part_de_loyer INTO v_mult
+        FROM sae_contracter
+        WHERE identifiant_locataire = p_id_loc
+          AND id_bail = p_id_bail;
+        
+        v_prov := v_prov * v_mult;
+        
+        SELECT montantLoc INTO v_caution
+        FROM SAE_CAUTION_BAIL_PAR_PERSON
+        WHERE idBail = p_id_bail;
+        
+        p_total_deduc := v_prov + v_caution;
+    END sous_total;
 
   PROCEDURE calculer_somme_provision(
     p_id_bail  IN SAE_Provision_charge.Id_bail%TYPE,

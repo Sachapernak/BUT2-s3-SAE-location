@@ -65,6 +65,75 @@ BEGIN
 END;
 /
 
+-- TEST
+SET SERVEROUTPUT ON;
+DECLARE
+    v_total NUMBER;
+    v_calc  NUMBER;
+BEGIN
+    -- Appel de la procédure avec le bail BAI01 et date de fin NULL
+    pkg_solde_compte.sous_total(
+        p_id_bail  => 'BAI02',
+        p_id_loc => 'LOC002',
+        p_total_charge   => v_total,
+        p_total_deduc    => v_calc
+    );
+    -- Affichage des résultats
+    DBMS_OUTPUT.PUT_LINE('Sous total charge : ' || v_total);
+    DBMS_OUTPUT.PUT_LINE('Sous total deduc : ' || v_calc);
+    DBMS_OUTPUT.PUT_LINE('Total : ' || (v_total - v_calc));
+END;
+/
+
+SELECT * FROM sae_cf_par_loc;
+SELECT * FROM sae_cv_par_loc;
+
+SELECT * FROM sae_cf_par_loc
+WHERE idBai = 'BAI02'
+  AND idLoc = 'LOC002'
+  AND dateDoc >= TO_DATE('1900-01-01', 'yyyy-MM-dd')
+  AND dateDoc <= SYSDATE; 
+-- 300
+  
+SELECT * FROM sae_cv_par_loc
+WHERE idBai = 'BAI02'
+  AND idLoc = 'LOC002'
+  AND dateDoc >= TO_DATE('1900-01-01', 'yyyy-MM-dd')
+  AND dateDoc <= SYSDATE;  
+-- 130.32
+
+-- DEDUCTIONS : 
+
+SET SERVEROUTPUT ON;
+DECLARE
+    v_total NUMBER;
+    v_calc  VARCHAR2(512);
+BEGIN
+    -- Appel de la procédure avec le bail BAI01 et date de fin NULL
+    pkg_solde_compte.calculer_somme_provision(
+        p_id_bail  => 'BAI02',
+        p_date_fin => SYSDATE,
+        p_date_debut => TO_DATE('1900-01-01', 'yyyy-MM-dd'),
+        p_total    => v_total,
+        p_calc     => v_calc
+    );
+    
+    -- Affichage des résultats
+    DBMS_OUTPUT.PUT_LINE('Somme totale : ' || v_total);
+END;
+-- 2760
+/
+        
+SELECT part_de_loyer INTO v_mult
+FROM sae_contracter
+WHERE identifiant_locataire = 'LOC002'
+  AND id_bail = 'BAI02';
+    
+    v_prov := v_prov * v_mult;
+    
+    SELECT montantLoc INTO v_caution
+    FROM SAE_CAUTION_BAIL_PAR_PERSON
+    WHERE idBail = p_id_bail;
     
 
 
