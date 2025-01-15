@@ -4,6 +4,9 @@ import java.awt.Cursor;
 import java.awt.event.ItemEvent;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -141,12 +144,50 @@ public class GestionSoldeToutCompteSelection {
 	public void gestionBtnGenerer(JButton btnGenerer) {
 		btnGenerer.addActionListener(e -> 
 		{
-			JDialog dialog = new VoirSoldeToutCompte(fen.getSelectedLoc(), fen.getSelectedBail());
-			dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
+			if (checkInput()) {
+				JDialog dialog = new VoirSoldeToutCompte(fen.getSelectedLoc(), fen.getSelectedBail(), 
+						fen.getDateDebut(), fen.getDateFin());
+				dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+				dialog.setVisible(true);
+			} else {
+				fen.afficherMessageErreur("Les dates doivent etre vides ou au format yyyy-MM-dd."
+						+ "\nExemple : 2024-12-24");
+			}
+
 			
 		});
 		
+	}
+	
+	/**
+	 * Vérifie si les dates sont soit nulles, soit du format yyyy-MM-dd
+	 * @return vrai si les deux dates sont nulles ou du bon format et dateDebut < dateFin.
+	 */
+	private boolean checkInput() {
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	    try {
+	        String dateDebut = fen.getDateDebut();
+	        String dateFin = fen.getDateFin();
+
+	        LocalDate deb = null;
+	        LocalDate fin = null;
+
+	        if (!dateDebut.isEmpty()) {
+	            deb = LocalDate.parse(dateDebut, formatter);
+	        }
+
+	        if (!dateFin.isEmpty()) {
+	            fin = LocalDate.parse(dateFin, formatter);
+	        }
+
+	        if (deb != null && fin != null) {
+	            return deb.isBefore(fin);
+	        }
+
+	        return true;
+	    } catch (DateTimeParseException e) {
+	        return false;
+	    }
 	}
 
 

@@ -94,28 +94,34 @@ ORDER BY doc.date_document DESC;
 -- Selectionner le montant de caution / locataire
 CREATE OR REPLACE VIEW SAE_CAUTION_BAIL_PAR_PERSON AS
 SELECT 
-    cau.id_bail as idBail, 
-    sum(cau.montant) / count(co.identifiant_locataire) AS montantLoc
+    cau.id_bail AS idBail, 
+    CASE 
+      WHEN (SELECT COUNT(*) 
+            FROM sae_contracter co 
+            WHERE co.id_bail = cau.id_bail) = 0 
+      THEN 0
+      ELSE ROUND(
+             SUM(cau.montant) / 
+             (SELECT COUNT(*) 
+              FROM sae_contracter co 
+              WHERE co.id_bail = cau.id_bail
+             ), 2)
+    END AS montantLoc
 FROM 
-    sae_cautionner cau,
-    sae_bail bai,
-    sae_contracter co
-WHERE
-    cau.id_bail = bai.id_bail
-    AND bai.id_bail = co.id_bail
+    sae_cautionner cau
 GROUP BY 
     cau.id_bail;
-/
 
 
 CREATE OR REPLACE PACKAGE pkg_solde_compte AS
   -- Déclaration de la procédure calculer_somme_provision
   PROCEDURE calculer_somme_provision(
     p_id_bail  IN SAE_Provision_charge.Id_bail%TYPE,
+    p_id_loc     IN SAE_Locataire.identifiant_locataire%TYPE,
     p_date_debut IN DATE DEFAULT TO_DATE('1900-01-01', 'yyyy-MM-dd'),
     p_date_fin IN DATE DEFAULT NULL,  -- Date de fin optionnelle
     p_total OUT NUMBER,
-    p_calc OUT VARCHAR
+    p_calc OUT VARCHAR2
   );
   
     PROCEDURE sous_total(
@@ -165,18 +171,12 @@ CREATE OR REPLACE PACKAGE BODY pkg_solde_compte AS
             
         calculer_somme_provision(
             p_id_bail  => p_id_bail,
+            p_id_loc => p_id_loc,
             p_date_debut => p_date_debut,
             p_date_fin => p_date_fin,
             p_total    => v_prov,
             p_calc     => v_temp_calc  -- utiliser une variable pour récupérer ce paramètre OUT
         );
-        
-        SELECT part_de_loyer INTO v_mult
-        FROM sae_contracter
-        WHERE identifiant_locataire = p_id_loc
-          AND id_bail = p_id_bail;
-        
-        v_prov := v_prov * v_mult;
         
         SELECT montantLoc INTO v_caution
         FROM SAE_CAUTION_BAIL_PAR_PERSON
@@ -187,14 +187,16 @@ CREATE OR REPLACE PACKAGE BODY pkg_solde_compte AS
 
   PROCEDURE calculer_somme_provision(
     p_id_bail  IN SAE_Provision_charge.Id_bail%TYPE,
+    p_id_loc     IN SAE_Locataire.identifiant_locataire%TYPE,
     p_date_debut IN DATE DEFAULT TO_DATE('1900-01-01', 'yyyy-MM-dd'),
     p_date_fin IN DATE DEFAULT NULL,  -- Date de fin optionnelle
     p_total OUT NUMBER,
-    p_calc OUT VARCHAR
+    p_calc OUT VARCHAR2
   ) AS
   
+    v_mult NUMBER;
     v_total_somme NUMBER := 0;
-    v_calcul      VARCHAR2(512) := '';
+    v_calcul      VARCHAR2(255) := '';
     v_date_debut DATE;
     
   BEGIN
@@ -217,9 +219,14 @@ CREATE OR REPLACE PACKAGE BODY pkg_solde_compte AS
                         WHERE ID_BAIL = p_id_bail
                             AND date_changement > v_date_debut) LOOP
                             
+        SELECT part_de_loyer INTO v_mult
+        FROM sae_contracter
+        WHERE identifiant_locataire = p_id_loc
+          AND id_bail = p_id_bail;
+                            
       v_total_somme := v_total_somme 
-                       + (vProvision.provision_pour_charge * vProvision.difference_en_mois);
-      v_calcul := v_calcul || ' ' || vProvision.provision_pour_charge || ' * ' 
+                       + (vProvision.provision_pour_charge * vProvision.difference_en_mois * v_mult);
+      v_calcul := v_calcul || ' ' || vProvision.provision_pour_charge * v_mult || ' * ' 
                   || vProvision.difference_en_mois || ' +';
     END LOOP;
     

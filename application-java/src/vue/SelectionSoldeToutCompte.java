@@ -19,6 +19,7 @@ import javax.swing.JButton;
 import java.beans.PropertyChangeListener;
 import java.util.List;
 import java.beans.PropertyChangeEvent;
+import javax.swing.JTextField;
 
 public class SelectionSoldeToutCompte extends JInternalFrame {
 
@@ -30,6 +31,8 @@ public class SelectionSoldeToutCompte extends JInternalFrame {
 	private JButton btnQuitter;
 	
 	private GestionSoldeToutCompteSelection gest;
+	private JTextField textFieldDeb;
+	private JTextField textFieldFin;
 
 	/**
 	 * Launch the application.
@@ -56,9 +59,9 @@ public class SelectionSoldeToutCompte extends JInternalFrame {
 		setBounds(100, 100, 500, 220);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{30, 0, 105, 70, 62, 0, 30, 0};
-		gridBagLayout.rowHeights = new int[]{30, 0, 0, 100, 0, 0};
-		gridBagLayout.columnWeights = new double[]{0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
+		gridBagLayout.rowHeights = new int[]{30, 0, 0, 0, 100, 0, 0};
+		gridBagLayout.columnWeights = new double[]{0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, Double.MIN_VALUE};
+		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
 		getContentPane().setLayout(gridBagLayout);
 		
 		JLabel lblTitre = new JLabel("Solde de tout compte");
@@ -72,7 +75,7 @@ public class SelectionSoldeToutCompte extends JInternalFrame {
 		JLabel lblBienLocatif = new JLabel("Bien locatif :");
 		GridBagConstraints gbc_lblBienLocatif = new GridBagConstraints();
 		gbc_lblBienLocatif.insets = new Insets(0, 0, 5, 5);
-		gbc_lblBienLocatif.anchor = GridBagConstraints.EAST;
+		gbc_lblBienLocatif.anchor = GridBagConstraints.WEST;
 		gbc_lblBienLocatif.gridx = 1;
 		gbc_lblBienLocatif.gridy = 1;
 		getContentPane().add(lblBienLocatif, gbc_lblBienLocatif);
@@ -107,23 +110,57 @@ public class SelectionSoldeToutCompte extends JInternalFrame {
 		gbc_comboBoxLoc.gridy = 1;
 		getContentPane().add(comboBoxLoc, gbc_comboBoxLoc);
 		
+		JLabel lblDebut = new JLabel("Du :");
+		GridBagConstraints gbc_lblDebut = new GridBagConstraints();
+		gbc_lblDebut.anchor = GridBagConstraints.EAST;
+		gbc_lblDebut.insets = new Insets(0, 0, 5, 5);
+		gbc_lblDebut.gridx = 1;
+		gbc_lblDebut.gridy = 2;
+		getContentPane().add(lblDebut, gbc_lblDebut);
+		
+		textFieldDeb = new JTextField();
+		GridBagConstraints gbc_textFieldDeb = new GridBagConstraints();
+		gbc_textFieldDeb.insets = new Insets(0, 0, 5, 5);
+		gbc_textFieldDeb.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textFieldDeb.gridx = 2;
+		gbc_textFieldDeb.gridy = 2;
+		getContentPane().add(textFieldDeb, gbc_textFieldDeb);
+		textFieldDeb.setColumns(10);
+		
+		JLabel lblFin = new JLabel("au :");
+		GridBagConstraints gbc_lblFin = new GridBagConstraints();
+		gbc_lblFin.insets = new Insets(0, 0, 5, 5);
+		gbc_lblFin.anchor = GridBagConstraints.EAST;
+		gbc_lblFin.gridx = 3;
+		gbc_lblFin.gridy = 2;
+		getContentPane().add(lblFin, gbc_lblFin);
+		
+		textFieldFin = new JTextField();
+		GridBagConstraints gbc_textFieldFin = new GridBagConstraints();
+		gbc_textFieldFin.gridwidth = 2;
+		gbc_textFieldFin.insets = new Insets(0, 0, 5, 5);
+		gbc_textFieldFin.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textFieldFin.gridx = 4;
+		gbc_textFieldFin.gridy = 2;
+		getContentPane().add(textFieldFin, gbc_textFieldFin);
+		textFieldFin.setColumns(10);
+		
 		JLabel lblListBail = new JLabel("Bail :");
 		GridBagConstraints gbc_lblListBail = new GridBagConstraints();
-		gbc_lblListBail.anchor = GridBagConstraints.WEST;
-		gbc_lblListBail.gridwidth = 5;
+		gbc_lblListBail.anchor = GridBagConstraints.NORTHEAST;
 		gbc_lblListBail.insets = new Insets(0, 0, 5, 5);
 		gbc_lblListBail.gridx = 1;
-		gbc_lblListBail.gridy = 2;
+		gbc_lblListBail.gridy = 4;
 		getContentPane().add(lblListBail, gbc_lblListBail);
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setPreferredSize(new Dimension(200, 300));
 		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
-		gbc_scrollPane.gridwidth = 5;
+		gbc_scrollPane.gridwidth = 4;
 		gbc_scrollPane.insets = new Insets(0, 0, 5, 5);
 		gbc_scrollPane.fill = GridBagConstraints.BOTH;
-		gbc_scrollPane.gridx = 1;
-		gbc_scrollPane.gridy = 3;
+		gbc_scrollPane.gridx = 2;
+		gbc_scrollPane.gridy = 4;
 		getContentPane().add(scrollPane, gbc_scrollPane);
 		
 		listBail = new JList<>();
@@ -133,7 +170,7 @@ public class SelectionSoldeToutCompte extends JInternalFrame {
 		GridBagConstraints gbc_btnGenerer = new GridBagConstraints();
 		gbc_btnGenerer.insets = new Insets(0, 0, 0, 5);
 		gbc_btnGenerer.gridx = 4;
-		gbc_btnGenerer.gridy = 4;
+		gbc_btnGenerer.gridy = 5;
 		getContentPane().add(btnGenerer, gbc_btnGenerer);
 		
 		btnQuitter = new JButton("Quitter");
@@ -141,7 +178,7 @@ public class SelectionSoldeToutCompte extends JInternalFrame {
 		gbc_btnQuitter.anchor = GridBagConstraints.EAST;
 		gbc_btnQuitter.insets = new Insets(0, 0, 0, 5);
 		gbc_btnQuitter.gridx = 5;
-		gbc_btnQuitter.gridy = 4;
+		gbc_btnQuitter.gridy = 5;
 		getContentPane().add(btnQuitter, gbc_btnQuitter);
 		
 
@@ -166,6 +203,14 @@ public class SelectionSoldeToutCompte extends JInternalFrame {
 	
 	public String getSelectedBail() {
 		return String.valueOf(listBail.getSelectedValue());
+	}
+	
+	public String getDateDebut() {
+		return String.valueOf(textFieldDeb.getText());
+	}
+	
+	public String getDateFin() {
+		return String.valueOf(textFieldFin.getText());
 	}
 	
 	
