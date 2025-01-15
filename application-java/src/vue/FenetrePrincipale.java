@@ -30,10 +30,8 @@ import java.awt.Font;
 import java.awt.Color;
 import javax.swing.JSeparator;
 import javax.swing.ListSelectionModel;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
-public class FenetrePrincipale extends JFrame {
+public class FenetrePrincipale extends JFrame{
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -152,12 +150,16 @@ public class FenetrePrincipale extends JFrame {
 		menuBar.add(declarationFiscale);
 		declarationFiscale.addActionListener(this.gestionMenu);
 		
-		JMenu mnEntreprises = new JMenu("Entreprises");
-		mnEntreprises.setForeground(new Color(255, 255, 255));
-		menuBar.add(mnEntreprises);
+		JMenu mnAdministratif = new JMenu("Administratif");
+		mnAdministratif.setForeground(new Color(255, 255, 255));
+		menuBar.add(mnAdministratif);
 		
 		JMenuItem mntmAfficherEntreprises = new JMenuItem("Afficher les entreprises");
-		mnEntreprises.add(mntmAfficherEntreprises);
+		mnAdministratif.add(mntmAfficherEntreprises);
+		
+		JMenuItem mntmAssurances = new JMenuItem("Afficher les assurances");
+		mntmAssurances.addActionListener(this.gestionMenu);
+		mnAdministratif.add(mntmAssurances);
 		mntmAfficherEntreprises.addActionListener(this.gestionMenu);
 		
 		menuBar.add(Box.createHorizontalGlue());
