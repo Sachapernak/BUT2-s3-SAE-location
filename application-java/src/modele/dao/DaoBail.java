@@ -265,7 +265,6 @@ public class DaoBail extends DaoModele<Bail> implements Dao<Bail> {
 
 		Connection cn = ConnexionBD.getInstance().getConnexion();
 		CallableStatement prCl;
-        ResultSet rs;
     	
 		// Provisions pour charges
 		RequeteSelectTotalChargeDeduc reqTot= new RequeteSelectTotalChargeDeduc();

@@ -1,11 +1,14 @@
 package controleur;
 
 import java.awt.Cursor;
+import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -16,7 +19,9 @@ import javax.swing.SwingWorker;
 import modele.Locataire;
 import modele.dao.DaoBail;
 import modele.dao.DaoLocataire;
+import rapport.RapportSoldeToutCompte;
 import vue.VoirSoldeToutCompte;
+
 
 /**
  * Contrôleur pour la gestion de l'affichage du solde de tous les comptes d'un locataire.
@@ -25,6 +30,8 @@ import vue.VoirSoldeToutCompte;
  * l'interface utilisateur lors des opérations de lecture en base de données.
  */
 public class GestionVoirSoldeToutCompte {
+	
+
 
     private static final String ERREUR_INATTENDUE = "Erreur inattendue : ";
 	private static final String OP_INTERROMPUE = "Opération interrompue.";
@@ -32,6 +39,11 @@ public class GestionVoirSoldeToutCompte {
     private Locataire loc;
     /** La vue associée pour l'affichage des soldes et des informations du locataire. */
     private VoirSoldeToutCompte fen;
+    
+    private RapportSoldeToutCompte rap;
+    
+    	
+    
 
     /**
      * Constructeur du contrôleur.
@@ -40,6 +52,7 @@ public class GestionVoirSoldeToutCompte {
      */
     public GestionVoirSoldeToutCompte(VoirSoldeToutCompte fen) {
         this.fen = fen;
+        this.rap = new RapportSoldeToutCompte();
     }
 
     /**
@@ -77,6 +90,7 @@ public class GestionVoirSoldeToutCompte {
                 } finally {
                     // Réinitialise le curseur et met à jour l'affichage avec les informations du locataire.
                     fen.setCursor(Cursor.getDefaultCursor());
+                    
                     setInfoLoc();
                 }
             }
@@ -98,6 +112,14 @@ public class GestionVoirSoldeToutCompte {
         fen.setNomLoc(loc.getNom());
         fen.setPrenom(loc.getPrenom());
         fen.setAdresse(loc.getAdresse().toString());
+        
+        rap.setNom(loc.getNom());
+        rap.setPrenom(loc.getPrenom());
+        
+        rap.setAdresse(loc.getAdresse().getAdressePostale());
+        rap.setComplement(loc.getAdresse().getComplementAdresse());
+        rap.setCodePostal(String.valueOf(loc.getAdresse().getCodePostal()));
+        rap.setVille(loc.getAdresse().getVille());
     }
 
     /**
@@ -108,15 +130,22 @@ public class GestionVoirSoldeToutCompte {
     public void setDates() {
         if (fen.getDateDebut() == null || fen.getDateDebut().isEmpty()) {
             fen.setDateDebut("Début");
+            rap.setDateDebut("début du bail");
         } else {
             fen.setDateDebut(fen.getDateDebut());
+            rap.setDateDebut(fen.getDateDebut());
         }
 
         if (fen.getDateFin() == null || fen.getDateFin().isEmpty()) {
             fen.setDateFin("Aujourd'hui");
+            rap.setDateFin(LocalDate.now().toString());
+            
         } else {
             fen.setDateFin(fen.getDateFin());
+            rap.setDateFin(fen.getDateFin());
         }
+        
+        rap.setDateCourante(LocalDate.now().toString());
     }
 
     /**
@@ -140,9 +169,13 @@ public class GestionVoirSoldeToutCompte {
             @Override
             protected void done() {
                 try {
+                	
                     // Récupération et traitement des résultats une fois l'opération terminée.
                     List<String[]> lignes = get();
                     fen.chargerTableCharges(lignes);
+                    
+                    rap.setCharges(lignes);
+                    
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     fen.afficherMessageErreur(OP_INTERROMPUE);
@@ -190,9 +223,15 @@ public class GestionVoirSoldeToutCompte {
             @Override
             protected void done() {
                 try {
+                	
                     // Récupération des lignes formatées et mise à jour de la table des déductions.
                     List<String[]> lignes = get();
                     fen.chargerTableDeduc(lignes);
+                    
+                    rap.setCalcProv(lignes.get(0)[1]);
+                    rap.setTotalProv(lignes.get(0)[2]);
+                    rap.setCaution(lignes.get(1)[2]);
+                    
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     fen.afficherMessageErreur(OP_INTERROMPUE);
@@ -238,6 +277,12 @@ public class GestionVoirSoldeToutCompte {
                     fen.setSousTotCharge(sousTot[0].toString());
                     fen.setSousTotDeduc(sousTot[1].toString());
                     fen.setTotal(sousTot[2].toString());
+                    
+                    rap.setTotalCharge(sousTot[0].toString());
+                    rap.setTotalDeduc(sousTot[1].toString());
+                    rap.setTotal(sousTot[2].toString());
+                    
+                    
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     fen.afficherMessageErreur(OP_INTERROMPUE);
@@ -257,11 +302,32 @@ public class GestionVoirSoldeToutCompte {
     }
     
     
-	public void gestionBtnGenerer(JButton btnGenerer) {
-		btnGenerer.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		//TODO
-        	}
+    public void gestionBtnGenerer(JButton btnGenerer) {
+        btnGenerer.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    // Générer le fichier
+                    String nomFichier = loc.getNom() + "-SOLDECOMPTE-" + LocalDate.now().toString();
+                    String cheminFichier = rap.genererSoldeToutCompte(nomFichier);
+
+                    // Ouvrir le fichier une fois créé
+                    File fichier = new File(cheminFichier);
+                    
+                    
+                    // TODO : generer une regularisation ?
+                    
+                    if (fichier.exists()) {
+                        Desktop.getDesktop().open(fichier);
+                        fen.dispose();
+                    } else {
+                        fen.afficherMessageErreur("Le fichier n'a pas été trouvé : " + cheminFichier);
+                    }
+                } catch (IOException e1) {
+                    fen.afficherMessageErreur("Erreur lors de la génération ou de l'ouverture du fichier : " + e1.getMessage());
+                    e1.printStackTrace();
+                }
+            }
         });
-	}
+    }
+
 }

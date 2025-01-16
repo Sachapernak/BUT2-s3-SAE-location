@@ -52,6 +52,7 @@ SELECT
       || TO_CHAR(cv.cout_fixe * sc.part_de_loyer * fdb.part_des_charges, 'FM9999990.00') 
       || ' = '
       || TO_CHAR(doc.montant * sc.part_de_loyer * fdb.part_des_charges, 'FM9999990.00')
+      || '€'
       AS detail_calcul
 
 FROM       sae_charge_index cv
@@ -180,7 +181,7 @@ CREATE OR REPLACE PACKAGE BODY pkg_solde_compte AS
           AND dateDoc >= v_date_debut
           AND dateDoc <= v_date_fin;
         
-        p_total_charge := v_cf + v_cv;
+        p_total_charge := ROUND(v_cf + v_cv, 2);
             
         calculer_somme_provision(
             p_id_bail  => p_id_bail,
@@ -195,7 +196,7 @@ CREATE OR REPLACE PACKAGE BODY pkg_solde_compte AS
         FROM SAE_CAUTION_BAIL_PAR_PERSON
         WHERE idBail = p_id_bail;
         
-        p_total_deduc := v_prov + v_caution;
+        p_total_deduc := ROUND(v_prov + v_caution, 2);
     END sous_total;
 
   PROCEDURE calculer_somme_provision(
@@ -251,7 +252,7 @@ CREATE OR REPLACE PACKAGE BODY pkg_solde_compte AS
     
     -- Supprimer le dernier '+' ajouté
     v_calcul := RTRIM(v_calcul, '+');
-    v_calcul := v_calcul || ' = ' || v_total_somme;
+    v_calcul := v_calcul || ' = ' || v_total_somme || '€';
     
     p_total := v_total_somme;
     p_calc  := v_calcul;

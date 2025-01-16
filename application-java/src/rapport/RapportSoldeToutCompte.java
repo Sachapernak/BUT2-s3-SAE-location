@@ -1,0 +1,258 @@
+package rapport;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
+
+/**
+ * Classe pour générer un rapport de solde de tout compte avec insertion
+ * de charges fixes (CF) et variables (CV) dans un document Word.
+ */
+public class RapportSoldeToutCompte {
+
+    private static final String FORMATDOC = ".docx";
+	private static final String STYLECHARGE = "charge";
+	// --- Champs simples pour le locataire / bail ---
+    private String nom;
+    private String prenom;
+    private String adresse;
+    private String complement;
+    private String codePostal;
+    private String ville;
+    private String dateCourante;
+    private String dateDebut;
+    private String dateFin;
+
+    // --- Champs montants / calculs divers ---
+    private String totalCharge;
+    private String totalDeduc;
+    private String total;
+    private String caution;
+    private String calcProv;
+    private String totalProv;
+
+    /**
+     * Liste de charges variables (CV).
+     * Chaque String[] = { date, nomCharge, calcul, montantTotal }.
+     */
+    private List<String[]> charges;
+
+
+    public RapportSoldeToutCompte() {
+        this.charges = new ArrayList<>();
+    }
+
+    /**
+     * Construit la map de tous les placeholders de base à utiliser pour le remplacement.
+     *
+     * @return une map contenant les placeholders et leurs valeurs associées.
+     */
+    private Map<String, String> construirePlaceholderMap() {
+        Map<String, String> map = new HashMap<>();
+        map.put("[NOM]",            safeStr(nom));
+        map.put("[PRENOM]",         safeStr(prenom));
+        map.put("[ADRESSE]",        safeStr(adresse));
+        map.put("[COMPLEMENT]",     safeStr(complement));
+        map.put("[CODEP]",          safeStr(codePostal));
+        map.put("[VILLE]",          safeStr(ville));
+        map.put("[DATE]",           safeStr(dateCourante));
+        map.put("[DATEDEBUT]",      safeStr(dateDebut));
+        map.put("[DATEFIN]",        safeStr(dateFin));
+        map.put("[TOTALCHARGE]",    safeStr(totalCharge));
+        map.put("[TOTALDEDUC]",     safeStr(totalDeduc));
+        map.put("[TOTALPROV]",      safeStr(totalProv));
+        map.put("[CAUTION]",        safeStr(caution));
+        map.put("[TOTAL]",          safeStr(total));
+        map.put("[PROVISIONS]",     safeStr(calcProv));
+        // Placeholders pour insertion de charges : remplacés par vide.
+        map.put("[CHARGES]", "");
+        return map;
+    }
+
+    /**
+     * Génère le document final en remplaçant les placeholders et en insérant les charges.
+     *
+     * @param nomFichierSortie Nom du fichier de sortie sans extension.
+     * @throws IOException en cas d'erreur d'entrée/sortie.
+     */
+    public String genererSoldeToutCompte(String nomFichierSortie) throws IOException {
+        // 1) Construction de la map de placeholders
+        Map<String, String> placeholders = construirePlaceholderMap();
+
+        // 2) Charger le modèle Word
+        try (InputStream modele = new FileInputStream("./src/rapport/modeleToutCompte.docx");
+             XWPFDocument document = new XWPFDocument(modele)) {
+            // Récupérer la liste des paragraphes du document
+            List<XWPFParagraph> paragraphs = document.getParagraphs();
+
+            for (int i = 0; i < paragraphs.size(); i++) {
+                XWPFParagraph paragraph = paragraphs.get(i);
+                // Obtenir le texte complet du paragraphe malgré la segmentation en runs
+                // Remplacer les placeholders dans ce paragraphe
+                remplacerPlaceholdersDansParagraphe(document, paragraph, placeholders);
+            }
+
+            // 4) Écriture du document final
+            try (OutputStream fileOut = new FileOutputStream(nomFichierSortie + FORMATDOC)) {
+                document.write(fileOut);
+                System.out.println("Fichier généré: " + nomFichierSortie + FORMATDOC);
+                
+                return nomFichierSortie + FORMATDOC;
+            }
+        }
+    }
+
+
+    /**
+     * Remplace tous les placeholders standard dans un paragraphe donné et insère 
+     * les charges variables ou fixes si détectées.
+     *
+     * @param document Le document Word.
+     * @param paragraph Le paragraphe à traiter.
+     * @param placeholders La map des placeholders et valeurs.
+     */
+    private void remplacerPlaceholdersDansParagraphe(XWPFDocument document, XWPFParagraph paragraph, Map<String, String> placeholders) {
+        List<XWPFRun> runs = paragraph.getRuns();
+        if (runs == null) {
+            return;
+        }
+
+        for (XWPFRun run : runs) {
+            String text = run.getText(0);
+            if (text != null) {
+                // Détection des placeholders de charges
+                boolean cg = text.contains("[CHARGES]");
+
+                text = remplacePlaceholder(placeholders, text);
+                run.setText(text, 0);
+
+                // Insertion des charges si les marqueurs ont été détectés
+                if (cg) {
+                    insertionCharge(document, paragraph);
+                }
+
+            }
+        }
+    }
+
+	public String remplacePlaceholder(Map<String, String> placeholders, String text) {
+		// Remplacer les placeholders standards dans le texte courant
+		for (Map.Entry<String, String> e : placeholders.entrySet()) {
+		    if (text.contains(e.getKey())) {
+		        text = text.replace(e.getKey(), e.getValue());
+		    }
+		}
+		return text;
+	}
+
+
+
+    /**
+     * Insère les paragraphes pour les charges variables dans le document.
+     * Applique le style "charge" sur les paragraphes insérés.
+     *
+     * @param document Le document Word.
+     * @param paragraph Le paragraphe de référence pour l'insertion.
+     */
+    public void insertionCharge(XWPFDocument document, XWPFParagraph paragraph) {
+        for (String[] charge : charges) {
+        	
+        	String montant;
+        	
+        	montant = charge[2].isEmpty() ? charge[3] + "€" : charge[2];
+        	
+            // Nom de la charge (à gauche)
+            XWPFParagraph pNom = document.insertNewParagraph(paragraph.getCTP().newCursor());
+            pNom.setAlignment(ParagraphAlignment.LEFT);
+            pNom.setStyle(STYLECHARGE);  // Application du style "charge"
+            XWPFRun runNom = pNom.createRun();
+            runNom.setText(charge[1]);
+
+            // Calcul (à droite)
+            XWPFParagraph pCalc = document.insertNewParagraph(paragraph.getCTP().newCursor());
+            pCalc.setAlignment(ParagraphAlignment.RIGHT);
+            pCalc.setStyle(STYLECHARGE);  // Application du style "charge"
+            XWPFRun runCalc = pCalc.createRun();
+            runCalc.setText(montant);
+        }
+    }
+
+    private static String safeStr(String val) {
+        return val != null ? val : "";
+    }
+
+    // --- Setters ---
+
+    public void setNom(String nom)                     { this.nom = nom; }
+    public void setPrenom(String prenom)               { this.prenom = prenom; }
+    public void setAdresse(String adresse)             { this.adresse = adresse; }
+    public void setComplement(String complement)       { this.complement = complement; }
+    public void setCodePostal(String codePostal)       { this.codePostal = codePostal; }
+    public void setVille(String ville)                 { this.ville = ville; }
+    public void setDateCourante(String dateCourante)   { this.dateCourante = dateCourante; }
+    public void setDateDebut(String dateDebut)         { this.dateDebut = dateDebut; }
+    public void setDateFin(String dateFin)             { this.dateFin = dateFin; }
+    public void setTotalCharge(String totalCharge)     { this.totalCharge = totalCharge; }
+    public void setTotalDeduc(String totalDeduc)       { this.totalDeduc = totalDeduc; }
+    public void setTotal(String total)                 { this.total = total; }
+    public void setCaution(String caution)             { this.caution = caution; }
+    public void setTotalProv(String totalProv)         { this.totalProv = totalProv; }
+    public void setCalcProv(String calcProv)           { this.calcProv = calcProv; }
+    public void setCharges(List<String[]> charges)     { this.charges = charges; }
+
+    /**
+     * Méthode principale pour tester la génération du document.
+     */
+    public static void main(String[] args) {
+        try {
+            RapportSoldeToutCompte rapport = new RapportSoldeToutCompte();
+
+            // Initialisation des champs
+            rapport.setNom("Dupont");
+            rapport.setPrenom("Jean");
+            rapport.setAdresse("10 rue des Fleurs");
+            rapport.setComplement("Rés. Les Rosiers");
+            rapport.setCodePostal("75001");
+            rapport.setVille("Paris");
+            rapport.setDateCourante("16/01/2025");
+            rapport.setDateDebut("01/01/2025");
+            rapport.setDateFin("31/01/2025");
+            rapport.setTotalCharge("150");
+            rapport.setTotalProv("200");
+            rapport.setCaution("400");
+            rapport.setTotalDeduc("600");
+            rapport.setTotal("-450");
+            rapport.setCalcProv("4*30 = 1234");
+
+            // Charges variables (CV)
+            List<String[]> listCV = new ArrayList<>();
+            listCV.add(new String[]{"", "Eau", "15 m³ x 3€ = 45€", ""});
+            listCV.add(new String[]{"", "Électricité", "80 kWh x 0.15€ = 12€", ""});
+
+
+            // Charges fixes (CF)
+            List<String[]> listCF = new ArrayList<>();
+            listCF.add(new String[]{"", "Taxe ordures ménagères", "", "80€"});
+            listCF.add(new String[]{"", "Frais d'entretien immeuble", "", "70€"});
+            
+            listCV.addAll(listCF);
+            rapport.setCharges(listCV);
+
+            rapport.genererSoldeToutCompte("testRap");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
