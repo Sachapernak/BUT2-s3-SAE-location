@@ -1,6 +1,7 @@
 package controleur;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -83,6 +84,23 @@ public class GestionVoirSoldeToutCompte {
 			lignes.add(caution);
 			
 			fen.chargerTableDeduc(lignes);
+			
+		} catch (SQLException | IOException e) {
+			fen.afficherMessageErreur(e.getMessage());
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void loadSousTotaux() {
+		try {
+			BigDecimal[] sousTot = new DaoBail().findTotalChargeDeduc(fen.getIdBail(), fen.getIdLoc(), 
+															fen.getDateDebut(), fen.getDateFin());
+			
+			fen.setSousTotCharge(sousTot[0].toString());
+			fen.setSousTotDeduc(sousTot[1].toString());
+			fen.setTotal(sousTot[2].toString());
+			
 			
 		} catch (SQLException | IOException e) {
 			fen.afficherMessageErreur(e.getMessage());

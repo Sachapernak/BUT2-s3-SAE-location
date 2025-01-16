@@ -288,6 +288,7 @@ public class VoirSoldeToutCompte extends JDialog {
         gest.setDates();
         gest.loadCharges();
         gest.loadDeduc();
+        gest.loadSousTotaux();
     }
 
     // Getters et setters selon le modèle fourni

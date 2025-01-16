@@ -151,21 +151,34 @@ CREATE OR REPLACE PACKAGE BODY pkg_solde_compte AS
         v_mult    NUMBER(3,2);
         v_caution NUMBER(10,3);
         v_temp_calc VARCHAR2(512);
+        v_date_debut DATE;
+        v_date_fin DATE;
         
     BEGIN
+    
+        v_date_debut := p_date_debut;
+        IF p_date_debut IS NULL THEN
+          v_date_debut := TO_DATE('1900-01-01', 'yyyy-MM-dd');
+        END IF;
+        
+        v_date_fin := p_date_fin;
+        IF p_date_fin IS NULL THEN
+          v_date_fin := SYSDATE;
+        END IF;
+    
         SELECT NVL(SUM(montant), 0) INTO v_cf
         FROM sae_cf_par_loc
         WHERE idBai = p_id_bail
           AND idLoc = p_id_loc
-          AND dateDoc >= p_date_debut
-          AND dateDoc <= p_date_fin;
+          AND dateDoc >= v_date_debut
+          AND dateDoc <= v_date_fin;
         
         SELECT NVL(SUM(montant), 0) INTO v_cv
         FROM sae_cv_par_loc
         WHERE idBai = p_id_bail
           AND idLoc = p_id_loc
-          AND dateDoc >= p_date_debut
-          AND dateDoc <= p_date_fin;
+          AND dateDoc >= v_date_debut
+          AND dateDoc <= v_date_fin;
         
         p_total_charge := v_cf + v_cv;
             
@@ -198,6 +211,7 @@ CREATE OR REPLACE PACKAGE BODY pkg_solde_compte AS
     v_total_somme NUMBER := 0;
     v_calcul      VARCHAR2(255) := '';
     v_date_debut DATE;
+    v_date_fin DATE;
     
   BEGIN
     -- Si p_date_debut est null, on le fixe à la date par défaut
@@ -206,13 +220,18 @@ CREATE OR REPLACE PACKAGE BODY pkg_solde_compte AS
       v_date_debut := TO_DATE('1900-01-01', 'yyyy-MM-dd');
     END IF;
     
+    v_date_fin := p_date_fin;
+    IF p_date_fin IS NULL THEN
+      v_date_fin := SYSDATE;
+    END IF;
+    
     FOR vProvision IN (SELECT 
                             id_bail,
                             date_changement,
                             provision_pour_charge, 
                             TRUNC(ABS(MONTHS_BETWEEN(
                               NVL(LEAD(date_changement) OVER (PARTITION BY id_bail ORDER BY date_changement),
-                                  NVL(p_date_fin, SYSDATE)),
+                                  v_date_fin),
                               date_changement
                             ))) AS difference_en_mois
                         FROM sae_provision_charge

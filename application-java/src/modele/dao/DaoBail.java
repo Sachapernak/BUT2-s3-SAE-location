@@ -1,6 +1,7 @@
 package modele.dao;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -24,6 +25,7 @@ import modele.dao.requetes.RequeteSelectBailById;
 import modele.dao.requetes.RequeteSelectBailByIdLogement;
 import modele.dao.requetes.RequeteSelectCautionParLocBai;
 import modele.dao.requetes.RequeteSelectSommeProvBaiLoc;
+import modele.dao.requetes.RequeteSelectTotalChargeDeduc;
 import modele.dao.requetes.RequeteUpdateBail;
 
 /**
@@ -251,5 +253,36 @@ public class DaoBail extends DaoModele<Bail> implements Dao<Bail> {
         
         
     	return res;
+    }
+    
+    public BigDecimal[] findTotalChargeDeduc(String idBail, String idLoc, String dateDeb, String dateFin) throws SQLException, IOException {
+    	
+    	BigDecimal totalCharge;
+    	BigDecimal totalDeduc;
+    	
+    	BigDecimal total;
+    	
+
+		Connection cn = ConnexionBD.getInstance().getConnexion();
+		CallableStatement prCl;
+        ResultSet rs;
+    	
+		// Provisions pour charges
+		RequeteSelectTotalChargeDeduc reqTot= new RequeteSelectTotalChargeDeduc();
+        
+		prCl = cn.prepareCall(reqTot.requete());
+		reqTot.parametres(prCl, idBail, idLoc, dateDeb, dateFin);
+        prCl.execute();
+        
+        totalCharge = prCl.getBigDecimal(5);
+        totalDeduc = prCl.getBigDecimal(6);
+        
+        total = totalCharge.subtract(totalDeduc);
+        
+        prCl.close();
+        
+        BigDecimal[] resultat = {totalCharge, totalDeduc, total};
+        
+        return resultat;
     }
 }
