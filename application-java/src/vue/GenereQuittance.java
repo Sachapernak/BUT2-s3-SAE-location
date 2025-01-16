@@ -7,10 +7,22 @@ import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 
 import modele.Adresse;
+import modele.Bail;
 import modele.BienLocatif;
+import modele.Contracter;
 import modele.DocumentComptable;
+import modele.FactureBien;
+import modele.Locataire;
 import modele.Loyer;
 import modele.ProvisionCharge;
+import modele.dao.DaoBail;
+import modele.dao.DaoBienLocatif;
+import modele.dao.DaoContracter;
+import modele.dao.DaoDocumentComptable;
+import modele.dao.DaoFactureBien;
+import modele.dao.DaoLocataire;
+import modele.dao.DaoLoyer;
+import modele.dao.DaoProvisionCharge;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -18,12 +30,35 @@ import java.math.BigDecimal;
 import java.sql.SQLException;
 
 public class GenereQuittance {
-
+	
+	
+	
     public GenereQuittance() {
+		
+		
+		
+		
+		
     }
 
-    public static void generateQuittanceWord(DocumentComptable dcQuittance, BigDecimal montant, BienLocatif bienLocatif, Loyer loyer, ProvisionCharge pc) throws SQLException, IOException {
-        // Création du document Word
+    public static void generateQuittanceWord(DocumentComptable dcQuittance) throws SQLException, IOException {
+    	DaoBienLocatif dbl = new DaoBienLocatif();
+    	DaoLoyer dl = new DaoLoyer();
+    	DaoProvisionCharge dpc = new DaoProvisionCharge();
+    	DaoBail db = new DaoBail();
+    	DaoContracter dc = new DaoContracter();
+    	
+    	Locataire locataire = dcQuittance.getLocataire();
+    	BienLocatif bien = dbl.findByIdDocQuit(dcQuittance.getDateDoc(),dcQuittance.getNumeroDoc());
+    	Bail bail = db.findByIdDocCompQuittance(dcQuittance.getDateDoc(),dcQuittance.getNumeroDoc());
+    	ProvisionCharge charge = dpc.findById(bail.getIdBail(),dcQuittance.getDateDoc());
+    	Contracter contrat = dc.findById(locataire.getIdLocataire(),bail.getIdBail());
+    	
+    	// variable utilisé dans le word
+    	BigDecimal montantLoyer = dl.getDernierLoyer(bien.getIdentifiantLogement()).multiply(new BigDecimal(contrat.getPartLoyer()));
+    	BigDecimal montantCharge = charge.getProvisionPourCharge().multiply(new BigDecimal(contrat.getPartLoyer()));
+    	BigDecimal montantPaye = dcQuittance.getMontant();
+    	// Création du document Word
         XWPFDocument document = new XWPFDocument();
 
         // Ajouter le texte "Locataire" en haut à droite
@@ -44,7 +79,7 @@ public class GenereQuittance {
         // Ajouter les détails de la quittance
         XWPFParagraph detailsParagraph = document.createParagraph();
         XWPFRun detailsRun = detailsParagraph.createRun();
-        Adresse adresse = bienLocatif.getBat() != null ? bienLocatif.getBat().getAdresse() : null;
+        Adresse adresse = bien.getBat() != null ? bien.getBat().getAdresse() : null;
         detailsRun.setText("Quittance de loyer n° " + dcQuittance.getNumeroDoc());
         detailsRun.addBreak();
         detailsRun.setText("Reçu de : " + dcQuittance.getLocataire().getNom());
@@ -65,13 +100,13 @@ public class GenereQuittance {
         XWPFTable amountsToPayTable = document.createTable();
         XWPFTableRow loyerRow = amountsToPayTable.getRow(0);
         loyerRow.getCell(0).setText("Loyer dû :");
-        loyerRow.addNewTableCell().setText(loyer.getMontantLoyer() + " €");
+        loyerRow.addNewTableCell().setText(montantLoyer + " €");
 
         XWPFTableRow chargeRow = amountsToPayTable.createRow();
         chargeRow.getCell(0).setText("Provision pour charges :");
-        chargeRow.getCell(1).setText(pc.getProvisionPourCharge() + " €");
+        chargeRow.getCell(1).setText(montantCharge + " €");
 
-        BigDecimal totalDues = loyer.getMontantLoyer().add(pc.getProvisionPourCharge());
+        BigDecimal totalDues = montantLoyer.add(montantCharge);
         XWPFTableRow totalDueRow = amountsToPayTable.createRow();
         totalDueRow.getCell(0).setText("Total dû :");
         totalDueRow.getCell(1).setText(totalDues + " €");
@@ -85,14 +120,14 @@ public class GenereQuittance {
         XWPFTable amountsPaidTable = document.createTable();
         XWPFTableRow paidRow = amountsPaidTable.getRow(0);
         paidRow.getCell(0).setText("Montant payé par le locataire :");
-        paidRow.addNewTableCell().setText(montant + " €");
+        paidRow.addNewTableCell().setText(montantPaye + " €");
 
-        BigDecimal differenceLoyer = montant.subtract(loyer.getMontantLoyer());
+        BigDecimal differenceLoyer = montantPaye.subtract(montantLoyer);
         XWPFTableRow differenceLoyerRow = amountsPaidTable.createRow();
         differenceLoyerRow.getCell(0).setText("Montant - Loyer :");
         differenceLoyerRow.getCell(1).setText(differenceLoyer + " €");
 
-        BigDecimal differenceTotal = montant.subtract(totalDues);
+        BigDecimal differenceTotal = montantPaye.subtract(totalDues);
         XWPFTableRow differenceTotalRow = amountsPaidTable.createRow();
         differenceTotalRow.getCell(0).setText("Montant - (Loyer + Charges) :");
         differenceTotalRow.getCell(1).setText(differenceTotal + " €");
@@ -101,7 +136,7 @@ public class GenereQuittance {
         String observation;
         if (differenceTotal.compareTo(BigDecimal.ZERO) >= 0) {
             observation = "Tout a été payé pour ce mois.";
-        } else if (montant.compareTo(loyer.getMontantLoyer()) < 0) {
+        } else if (montantPaye.compareTo(montantLoyer) < 0) {
             observation = "Le locataire n'a pas terminé de payer le loyer.";
         } else {
             observation = "Il manque des charges à payer.";

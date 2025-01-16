@@ -1,6 +1,7 @@
 package modele.dao;
 
 import java.io.IOException;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,6 +17,8 @@ import modele.dao.requetes.Requete;
 import modele.dao.requetes.RequeteSelectContracterByIdLogement;
 import modele.dao.requetes.RequeteSelectContratByIdLocataire;
 import modele.dao.requetes.RequeteSelectContratByIdBail;
+import modele.dao.requetes.RequeteSelectContracterById;
+
 
 /**
  * Classe DaoContracter qui gère l'accès aux données relatives aux contrats (contracter) dans la base de données.
@@ -23,7 +26,7 @@ import modele.dao.requetes.RequeteSelectContratByIdBail;
  * Cette classe contient des méthodes pour récupérer les contrats associés à un locataire spécifique.
  * Elle utilise des requêtes SQL spécifiques pour interagir avec la base de données et obtenir des informations sur les contrats.
  */
-public class DaoContracter {
+public class DaoContracter extends DaoModele<Contracter>{
 
     /**
      * Crée une instance de l'objet Contracter à partir d'un ResultSet.
@@ -195,6 +198,35 @@ public class DaoContracter {
         rs.close();
         prSt.close();
         return res;
+	}
+    
+    
+    public Contracter findById(String... id) throws SQLException, IOException{
+    	return findById(new RequeteSelectContracterById(), id);
+    }
+
+	@Override
+	public void create(Contracter donnees) throws SQLException, IOException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void update(Contracter donnees) throws SQLException, IOException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void delete(Contracter donnees) throws SQLException, IOException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public List<Contracter> findAll() throws SQLException, IOException {
+		// TODO Auto-generated method stub
+		return null;
 	}
     
 }

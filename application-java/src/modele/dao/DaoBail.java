@@ -1,6 +1,7 @@
 package modele.dao;
 
 import java.io.IOException;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,6 +21,8 @@ import modele.dao.requetes.RequeteSelectBail;
 import modele.dao.requetes.RequeteSelectBailById;
 import modele.dao.requetes.RequeteSelectBailByIdLogement;
 import modele.dao.requetes.RequeteUpdateBail;
+import modele.dao.requetes.RequeteSelectBailByIdDocComptQuittance;
+
 
 /**
  * Classe DaoBail qui implémente les opérations CRUD pour l'entité Bail.
@@ -99,7 +102,11 @@ public class DaoBail extends DaoModele<Bail> implements Dao<Bail> {
     public List<Bail> findAll() throws SQLException, IOException {
         return find(new RequeteSelectBail());
     }
-
+    
+    public Bail findByIdDocCompQuittance(String... id) throws SQLException, IOException{
+    	return findById(new RequeteSelectBailByIdDocComptQuittance(), id);
+    }
+    
     /**
      * Crée une instance d'un bail à partir des données récupérées d'un ResultSet.
      * 

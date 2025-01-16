@@ -20,7 +20,6 @@ public class QuittanceLoyerPrincipal extends JInternalFrame {
     private JTable tableLocataires;
     private JTable tableBiensActuels;
     private JTable tableBiensAnciens;
-    private JTable loyerTable;
     private JTextField searchField;
     private GestionTableQuittance gestionTableQuittance;
     private GestionQuittanceLoyerLocataire gestionQuittanceLoyerLocataire;
@@ -34,9 +33,6 @@ public class QuittanceLoyerPrincipal extends JInternalFrame {
 	private JSpinner yearSpinner;
 	private JSpinner monthSpinner;
 
-	public JTable getLoyerTable() {
-		return loyerTable;
-	}
 
     public JSpinner getYearSpinner() {
 		return yearSpinner;
@@ -129,10 +125,6 @@ public QuittanceLoyerPrincipal() {
     
     DefaultTableModel biensAnciensModel = new DefaultTableModel(bienColumns, 0);
     tableBiensAnciens = new JTable(biensAnciensModel);
-    
-    String[] loyerColumns = {"Identifiant Logement", "Date de Changement", "Montant Loyer"};
-    DefaultTableModel loyerTableModel = new DefaultTableModel(loyerColumns, 0);
-    loyerTable = new JTable(loyerTableModel);
     
     String[] chargeIndexColumns = {"ID", "Date de Changement", "Montant"};
     DefaultTableModel chargeIndexTableModel = new DefaultTableModel(chargeIndexColumns, 0);
@@ -348,25 +340,12 @@ public QuittanceLoyerPrincipal() {
     gbcLoyerLabel.anchor = GridBagConstraints.WEST;
     quittancePanel.add(loyerLabel, gbcLoyerLabel);
 
-    
-    this.gestionTableQuittance.remplirTableLoyer(null);
-    JScrollPane loyerScrollPane = new JScrollPane(loyerTable);
-
-    GridBagConstraints gbcLoyerTable = new GridBagConstraints();
-    gbcLoyerTable.gridx = 0;
-    gbcLoyerTable.gridy = 4;
-    gbcLoyerTable.gridwidth = 2;
-    gbcLoyerTable.weightx = 1;
-    gbcLoyerTable.weighty = 0.3;
-    gbcLoyerTable.insets = new Insets(5, 5, 5, 5);
-    gbcLoyerTable.fill = GridBagConstraints.BOTH;
-    quittancePanel.add(loyerScrollPane, gbcLoyerTable);
 
     // Tableau des charges indexées
     JLabel chargeLabel = new JLabel("Charges :");
     GridBagConstraints gbcChargeLabel = new GridBagConstraints();
     gbcChargeLabel.gridx = 0;
-    gbcChargeLabel.gridy = 5;
+    gbcChargeLabel.gridy = 4;
     gbcChargeLabel.gridwidth = 2;
     gbcChargeLabel.insets = new Insets(5, 5, 5, 5);
     gbcChargeLabel.anchor = GridBagConstraints.WEST;
@@ -378,7 +357,7 @@ public QuittanceLoyerPrincipal() {
 
     GridBagConstraints gbcChargeTable = new GridBagConstraints();
     gbcChargeTable.gridx = 0;
-    gbcChargeTable.gridy = 6;
+    gbcChargeTable.gridy = 5;
     gbcChargeTable.gridwidth = 2;
     gbcChargeTable.weightx = 1;
     gbcChargeTable.weighty = 0.3;
@@ -396,13 +375,13 @@ public QuittanceLoyerPrincipal() {
     GridBagConstraints gbcRetourButton2 = new GridBagConstraints();
     gbcRetourButton2.insets = new Insets(0, 0, 0, 5);
     gbcRetourButton2.gridx = 0;
-    gbcRetourButton2.gridy = 7;
+    gbcRetourButton2.gridy = 6;
     gbcRetourButton2.anchor = GridBagConstraints.CENTER;
     quittancePanel.add(retourButton2, gbcRetourButton2);
     
     GridBagConstraints gbcSaveButton = new GridBagConstraints();
     gbcSaveButton.gridx = 1;
-    gbcSaveButton.gridy = 7;
+    gbcSaveButton.gridy = 6;
     gbcSaveButton.insets = new Insets(10, 5, 0, 5);
     gbcSaveButton.anchor = GridBagConstraints.CENTER;
     quittancePanel.add(saveButton, gbcSaveButton);

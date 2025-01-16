@@ -3,6 +3,7 @@ package modele.dao;
 import java.io.IOException;
 
 
+
 import java.math.BigDecimal;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -47,8 +48,8 @@ public class DaoLoyer extends DaoModele<Loyer> {
         return find(new RequeteSelectLoyer());
     }
     
-    public List<Loyer> findByIdLocBienDocComptable(String... id) throws SQLException, IOException{
-		return find(new RequeteSelectLoyerByIdLocBien(), id);
+    public Loyer findByIdLocBienDocComptable(String... id) throws SQLException, IOException{
+		return findById(new RequeteSelectLoyerByIdLocBien(), id);
 	}
 
     public List<Loyer> findByIdLogement(String id) throws SQLException, IOException {

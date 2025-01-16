@@ -3,6 +3,7 @@ package modele.dao;
 import java.io.IOException;
 
 
+
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,7 +16,6 @@ import modele.dao.requetes.RequeteSelectCfByIdDocComptable;
 import modele.dao.requetes.RequeteSelectChargeFixe;
 import modele.dao.requetes.RequeteSelectChargeFixeById;
 import modele.dao.requetes.RequeteUpdateChargeFixe;
-import modele.dao.requetes.RequeteSelectChargeFixeByIdLocBienDocComptable;
 
 public class DaoChargeFixe extends DaoModele<ChargeFixe>{
 
@@ -46,11 +46,6 @@ public class DaoChargeFixe extends DaoModele<ChargeFixe>{
 	public List<ChargeFixe> findAll() throws SQLException, IOException {
 		return find(new RequeteSelectChargeFixe());
 	}
-	
-	public List<ChargeFixe> findByIdLocBienDocComptable(String... id) throws SQLException, IOException{
-		return find(new RequeteSelectChargeFixeByIdLocBienDocComptable(), id);
-	}
-	
 	
 	public ChargeFixe findByIdDocumentComptable(String...id) throws SQLException, IOException {
 		return findById(new RequeteSelectCfByIdDocComptable(), id);

@@ -17,9 +17,10 @@ public class RequeteSelectLoyerByIdLocBien extends Requete<Loyer> {
 	          AND sb.id_bail = sc.id_bail
 	          AND sc.identifiant_locataire = sloc.identifiant_locataire
 	          AND sl.identifiant_logement = sbl.identifiant_logement
-	          AND TO_CHAR(sl.DATE_DE_CHANGEMENT, 'YYYY') = ?
+	          AND TO_CHAR(sl.date_de_changement, 'MM-YYYY') = TO_CHAR(TO_DATE(?, 'DD-MM-YYYY'), 'MM-YYYY')
 	          AND sloc.identifiant_locataire = ?
 	          AND sbl.identifiant_logement = ?
+	        ORDER BY sl.date_de_changement desc
 	    """;
 	}
 	

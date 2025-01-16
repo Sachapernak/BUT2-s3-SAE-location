@@ -13,14 +13,14 @@ public class RequeteCreateFactureBien extends Requete<FactureBien> {
 		return "INSERT INTO SAE_FACTURE_DU_BIEN "
 				+ "(IDENTIFIANT_LOGEMENT, NUMERO_DOCUMENT, "
 				+ "DATE_DOCUMENT, PART_DES_CHARGES) "
-				+ "VALUES (?, ?, ?, ?) ";
+				+ "VALUES (?, ?, to_date(?,'DD-MM-YYYY'), ?) ";
 	}
 	
 	@Override
 	public void parametres(PreparedStatement prSt, FactureBien donnee) throws SQLException {
 		prSt.setString(1, donnee.getBien().getIdentifiantLogement());
 		prSt.setString(2, donnee.getDocument().getNumeroDoc());
-		prSt.setDate(3, Date.valueOf(donnee.getDocument().getDateDoc()));
+		prSt.setString(3, donnee.getDocument().getDateDoc());
 		prSt.setFloat(4, donnee.getPartDesCharges());
 	}
 	

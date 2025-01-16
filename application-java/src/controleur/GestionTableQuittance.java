@@ -1,41 +1,27 @@
 	package controleur;
 	
-	import java.io.IOException;
-import java.math.BigDecimal;
+	
+import java.io.IOException;
 import java.sql.SQLException;
 	import java.time.LocalDate;
 	import java.time.format.DateTimeFormatter;
-	import java.util.Date;
 	import java.util.List;
 	
 	
-	import javax.swing.JOptionPane;
 	import javax.swing.JTable;
-	import javax.swing.JTextField;
-import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 	import javax.swing.event.ListSelectionListener;
 	import javax.swing.table.DefaultTableModel;
 	
-	import modele.Adresse;
 	import modele.Bail;
-import modele.ChargeFixe;
-import modele.ChargeIndex;
 import modele.Contracter;
 	import modele.Locataire;
 	import modele.Loyer;
 import modele.ProvisionCharge;
-import modele.dao.DaoChargeFixe;
-import modele.dao.DaoChargeIndex;
 import modele.dao.DaoLocataire;
-import modele.dao.DaoLoyer;
 import modele.dao.DaoProvisionCharge;
-import vue.AfficherLocatairesActuels;
 	
 	import vue.QuittanceLoyerPrincipal;
 	
@@ -45,11 +31,9 @@ import vue.AfficherLocatairesActuels;
 		private QuittanceLoyerPrincipal fenQuittanceLoyerPrincipal;
 		private DaoLocataire daoLocataire;
 		private DaoProvisionCharge dpc;
-		private DaoLoyer dl;
 		private JTable tableLocataires;
 		private JTable tableBiensActuels;
 		private JTable tableBiensAnciens;
-		private JTable tableLoyer;
 		private JTable tableChargeIndex;
 		
 		public GestionTableQuittance(QuittanceLoyerPrincipal qlp)  {
@@ -57,10 +41,8 @@ import vue.AfficherLocatairesActuels;
 			this.tableLocataires = fenQuittanceLoyerPrincipal.getTableLocataires();
 			this.tableBiensActuels = fenQuittanceLoyerPrincipal.getTableBiensActuels();
 			this.tableBiensAnciens = fenQuittanceLoyerPrincipal.getTableBiensAnciens();
-			this.tableLoyer = fenQuittanceLoyerPrincipal.getLoyerTable();
 			this.tableChargeIndex = fenQuittanceLoyerPrincipal.getChargeTable();
 			this.daoLocataire = new DaoLocataire();
-			this.dl = new DaoLoyer();
 			this.dpc = new DaoProvisionCharge();
 			
 			
@@ -147,31 +129,6 @@ import vue.AfficherLocatairesActuels;
 	}
 
 	
-	public void remplirTableLoyer(List<Loyer> listLoyer) {
-		
-	    UtilitaireTable.viderTable(tableLoyer);
-	    DefaultTableModel model = (DefaultTableModel) tableLoyer.getModel();
-	    model.setRowCount(0);
-	    List<Loyer> listeLoyer;
-		try {
-			if (listLoyer == null) {
-				listeLoyer = dl.findAll();
-			}else {
-				listeLoyer =listLoyer;
-			}
-	        for (Loyer loyer:listeLoyer) {
-	        	model.addRow(new String[] { loyer.getIdBien(), loyer.getDateDeChangement(),	loyer.getMontantLoyer().toString()});
-	        }
-		} catch (SQLException | IOException e) {
-			// TODO Auto-generated catch block
-				e.printStackTrace();
-			} 
-		
-	}
-	
-	
-	
-	
 	public void remplirTableLocataires() {
 	    JTable tableLocataires = fenQuittanceLoyerPrincipal.getTableLocataires();
 	    UtilitaireTable.viderTable(tableLocataires);
@@ -222,7 +179,6 @@ import vue.AfficherLocatairesActuels;
 			int dateMois = (int)fenQuittanceLoyerPrincipal.getMonthSpinner().getValue();
 		    
 		    String dateDocCharge = String.format("%02d-%04d", dateMois,dateAnnee);
-		    String dateDocLoyer = String.format("%04d", dateAnnee);
 		    String idBien;
 			int ligneSelectLoc = tableLocataires.getSelectedRow();
 			int ligneSelectBien = tableBiensActuels.getSelectedRow();
@@ -236,8 +192,7 @@ import vue.AfficherLocatairesActuels;
 		    	List<ProvisionCharge> listeProvisionCharge = dpc.findByIdPPC(dateDocCharge,idLoc,idBien);
 		    	remplirTableCharge(listeProvisionCharge);
 		    	
-				List<Loyer> listeLoyer = dl.findByIdLocBienDocComptable(dateDocLoyer,idLoc,idBien);
-				remplirTableLoyer(listeLoyer);
+				
 			} catch (SQLException | IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

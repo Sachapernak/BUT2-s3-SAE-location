@@ -2,6 +2,7 @@ package modele.dao;
 
 import java.io.IOException;
 
+
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,7 +19,6 @@ import modele.dao.requetes.RequeteSelectChargeIndexById;
 import modele.dao.requetes.RequeteSelectChargeIndexSameId;
 import modele.dao.requetes.RequeteSelectCiByIdDocComptable;
 import modele.dao.requetes.RequeteUpdateChargeIndex;
-import modele.dao.requetes.RequeteSelectChargeIndexByIdLocBienDocComptable;
 
 public class DaoChargeIndex extends DaoModele<ChargeIndex>{
 
@@ -43,10 +43,6 @@ public class DaoChargeIndex extends DaoModele<ChargeIndex>{
 	@Override
 	public ChargeIndex findById(String... id) throws SQLException, IOException {
 		return findById(new RequeteSelectChargeIndexById(), id);
-	}
-	
-	public List<ChargeIndex> findByIdLocBienDocComptable(String... id) throws SQLException, IOException{
-		return find(new RequeteSelectChargeIndexByIdLocBienDocComptable(), id);
 	}
 	
 	public List<ChargeIndex> findAllSameId(String...id) throws SQLException, IOException {

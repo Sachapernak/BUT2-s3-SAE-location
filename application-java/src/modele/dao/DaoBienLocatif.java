@@ -1,6 +1,7 @@
 package modele.dao;
 
 import java.io.IOException;
+
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,6 +19,7 @@ import modele.dao.requetes.RequeteCountNbLogementsBatiment;
 import modele.dao.requetes.RequeteCreateBienLocatif;
 import modele.dao.requetes.RequeteDeleteBienLocatif;
 import modele.dao.requetes.RequeteUpdateBienLocatif;
+import modele.dao.requetes.RequeteSelectBienLocatifByIdDocComptQuittance;
 import modele.TypeDeBien;
 
 public class DaoBienLocatif extends DaoModele<BienLocatif> {
@@ -43,7 +45,11 @@ public class DaoBienLocatif extends DaoModele<BienLocatif> {
 	public BienLocatif findById(String... id) throws SQLException, IOException {
 		return findById(new RequeteSelectBienLocatifById(), id);
 	}
-
+	
+	
+	public BienLocatif findByIdDocQuit(String... id) throws SQLException, IOException {
+		return findById(new RequeteSelectBienLocatifByIdDocComptQuittance(), id);
+	}
 	@Override
 	public List<BienLocatif> findAll() throws SQLException, IOException {
 		return find(new RequeteSelectBienLocatif());
