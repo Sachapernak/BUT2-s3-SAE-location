@@ -16,13 +16,14 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import java.beans.PropertyChangeListener;
 import java.util.List;
-import java.beans.PropertyChangeEvent;
 import javax.swing.JTextField;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.AbstractListModel;
 
 public class SelectionSoldeToutCompte extends JInternalFrame {
 
+	private static final String CHARGEMENT = "Chargement...";
 	private static final long serialVersionUID = 1L;
 	private JComboBox<String> comboBoxBien;
 	private JList<String> listBail;
@@ -34,21 +35,7 @@ public class SelectionSoldeToutCompte extends JInternalFrame {
 	private JTextField textFieldDeb;
 	private JTextField textFieldFin;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					SelectionSoldeToutCompte frame = new SelectionSoldeToutCompte();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+
 
 	/**
 	 * Create the frame.
@@ -65,127 +52,136 @@ public class SelectionSoldeToutCompte extends JInternalFrame {
 		getContentPane().setLayout(gridBagLayout);
 		
 		JLabel lblTitre = new JLabel("Solde de tout compte");
-		GridBagConstraints gbc_lblTitre = new GridBagConstraints();
-		gbc_lblTitre.gridwidth = 5;
-		gbc_lblTitre.insets = new Insets(0, 0, 5, 5);
-		gbc_lblTitre.gridx = 1;
-		gbc_lblTitre.gridy = 0;
-		getContentPane().add(lblTitre, gbc_lblTitre);
+		GridBagConstraints gbcLblTitre = new GridBagConstraints();
+		gbcLblTitre.gridwidth = 5;
+		gbcLblTitre.insets = new Insets(0, 0, 5, 5);
+		gbcLblTitre.gridx = 1;
+		gbcLblTitre.gridy = 0;
+		getContentPane().add(lblTitre, gbcLblTitre);
 		
 		JLabel lblBienLocatif = new JLabel("Bien locatif :");
-		GridBagConstraints gbc_lblBienLocatif = new GridBagConstraints();
-		gbc_lblBienLocatif.insets = new Insets(0, 0, 5, 5);
-		gbc_lblBienLocatif.anchor = GridBagConstraints.WEST;
-		gbc_lblBienLocatif.gridx = 1;
-		gbc_lblBienLocatif.gridy = 1;
-		getContentPane().add(lblBienLocatif, gbc_lblBienLocatif);
+		GridBagConstraints gbcLblBienLocatif = new GridBagConstraints();
+		gbcLblBienLocatif.insets = new Insets(0, 0, 5, 5);
+		gbcLblBienLocatif.anchor = GridBagConstraints.WEST;
+		gbcLblBienLocatif.gridx = 1;
+		gbcLblBienLocatif.gridy = 1;
+		getContentPane().add(lblBienLocatif, gbcLblBienLocatif);
 		
 		comboBoxBien = new JComboBox<>();
-		comboBoxBien.addPropertyChangeListener(new PropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent evt) {
-			}
-		});
-		GridBagConstraints gbc_comboBoxBien = new GridBagConstraints();
-		gbc_comboBoxBien.insets = new Insets(0, 0, 5, 5);
-		gbc_comboBoxBien.fill = GridBagConstraints.HORIZONTAL;
-		gbc_comboBoxBien.gridx = 2;
-		gbc_comboBoxBien.gridy = 1;
-		getContentPane().add(comboBoxBien, gbc_comboBoxBien);
+		comboBoxBien.setModel(new DefaultComboBoxModel<>(new String[] {CHARGEMENT}));
+
+		GridBagConstraints gbcComboBoxBien = new GridBagConstraints();
+		gbcComboBoxBien.insets = new Insets(0, 0, 5, 5);
+		gbcComboBoxBien.fill = GridBagConstraints.HORIZONTAL;
+		gbcComboBoxBien.gridx = 2;
+		gbcComboBoxBien.gridy = 1;
+		getContentPane().add(comboBoxBien, gbcComboBoxBien);
 		
 		JLabel lbBail = new JLabel("Locataire");
-		GridBagConstraints gbc_lbBail = new GridBagConstraints();
-		gbc_lbBail.anchor = GridBagConstraints.EAST;
-		gbc_lbBail.insets = new Insets(0, 0, 5, 5);
-		gbc_lbBail.gridx = 3;
-		gbc_lbBail.gridy = 1;
-		getContentPane().add(lbBail, gbc_lbBail);
+		GridBagConstraints gbcLbBail = new GridBagConstraints();
+		gbcLbBail.anchor = GridBagConstraints.EAST;
+		gbcLbBail.insets = new Insets(0, 0, 5, 5);
+		gbcLbBail.gridx = 3;
+		gbcLbBail.gridy = 1;
+		getContentPane().add(lbBail, gbcLbBail);
 		
-		comboBoxLoc = new JComboBox<String>();
+		comboBoxLoc = new JComboBox<>();
+		comboBoxLoc.setModel(new DefaultComboBoxModel<>(new String[] {CHARGEMENT}));
 
-		GridBagConstraints gbc_comboBoxLoc = new GridBagConstraints();
-		gbc_comboBoxLoc.gridwidth = 2;
-		gbc_comboBoxLoc.insets = new Insets(0, 0, 5, 5);
-		gbc_comboBoxLoc.fill = GridBagConstraints.HORIZONTAL;
-		gbc_comboBoxLoc.gridx = 4;
-		gbc_comboBoxLoc.gridy = 1;
-		getContentPane().add(comboBoxLoc, gbc_comboBoxLoc);
+		GridBagConstraints gbcComboBoxLoc = new GridBagConstraints();
+		gbcComboBoxLoc.gridwidth = 2;
+		gbcComboBoxLoc.insets = new Insets(0, 0, 5, 5);
+		gbcComboBoxLoc.fill = GridBagConstraints.HORIZONTAL;
+		gbcComboBoxLoc.gridx = 4;
+		gbcComboBoxLoc.gridy = 1;
+		getContentPane().add(comboBoxLoc, gbcComboBoxLoc);
 		
 		JLabel lblDebut = new JLabel("Du :");
-		GridBagConstraints gbc_lblDebut = new GridBagConstraints();
-		gbc_lblDebut.anchor = GridBagConstraints.EAST;
-		gbc_lblDebut.insets = new Insets(0, 0, 5, 5);
-		gbc_lblDebut.gridx = 1;
-		gbc_lblDebut.gridy = 2;
-		getContentPane().add(lblDebut, gbc_lblDebut);
+		GridBagConstraints gbcLblDebut = new GridBagConstraints();
+		gbcLblDebut.anchor = GridBagConstraints.EAST;
+		gbcLblDebut.insets = new Insets(0, 0, 5, 5);
+		gbcLblDebut.gridx = 1;
+		gbcLblDebut.gridy = 2;
+		getContentPane().add(lblDebut, gbcLblDebut);
 		
 		textFieldDeb = new JTextField();
-		GridBagConstraints gbc_textFieldDeb = new GridBagConstraints();
-		gbc_textFieldDeb.insets = new Insets(0, 0, 5, 5);
-		gbc_textFieldDeb.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textFieldDeb.gridx = 2;
-		gbc_textFieldDeb.gridy = 2;
-		getContentPane().add(textFieldDeb, gbc_textFieldDeb);
+		GridBagConstraints gbcTextFieldDeb = new GridBagConstraints();
+		gbcTextFieldDeb.insets = new Insets(0, 0, 5, 5);
+		gbcTextFieldDeb.fill = GridBagConstraints.HORIZONTAL;
+		gbcTextFieldDeb.gridx = 2;
+		gbcTextFieldDeb.gridy = 2;
+		getContentPane().add(textFieldDeb, gbcTextFieldDeb);
 		textFieldDeb.setColumns(10);
 		
 		JLabel lblFin = new JLabel("au :");
-		GridBagConstraints gbc_lblFin = new GridBagConstraints();
-		gbc_lblFin.insets = new Insets(0, 0, 5, 5);
-		gbc_lblFin.anchor = GridBagConstraints.EAST;
-		gbc_lblFin.gridx = 3;
-		gbc_lblFin.gridy = 2;
-		getContentPane().add(lblFin, gbc_lblFin);
+		GridBagConstraints gbcLblFin = new GridBagConstraints();
+		gbcLblFin.insets = new Insets(0, 0, 5, 5);
+		gbcLblFin.anchor = GridBagConstraints.EAST;
+		gbcLblFin.gridx = 3;
+		gbcLblFin.gridy = 2;
+		getContentPane().add(lblFin, gbcLblFin);
 		
 		textFieldFin = new JTextField();
-		GridBagConstraints gbc_textFieldFin = new GridBagConstraints();
-		gbc_textFieldFin.gridwidth = 2;
-		gbc_textFieldFin.insets = new Insets(0, 0, 5, 5);
-		gbc_textFieldFin.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textFieldFin.gridx = 4;
-		gbc_textFieldFin.gridy = 2;
-		getContentPane().add(textFieldFin, gbc_textFieldFin);
+		GridBagConstraints gbcTextFieldFin = new GridBagConstraints();
+		gbcTextFieldFin.gridwidth = 2;
+		gbcTextFieldFin.insets = new Insets(0, 0, 5, 5);
+		gbcTextFieldFin.fill = GridBagConstraints.HORIZONTAL;
+		gbcTextFieldFin.gridx = 4;
+		gbcTextFieldFin.gridy = 2;
+		getContentPane().add(textFieldFin, gbcTextFieldFin);
 		textFieldFin.setColumns(10);
 		
 		JLabel lblListBail = new JLabel("Bail :");
-		GridBagConstraints gbc_lblListBail = new GridBagConstraints();
-		gbc_lblListBail.anchor = GridBagConstraints.NORTHEAST;
-		gbc_lblListBail.insets = new Insets(0, 0, 5, 5);
-		gbc_lblListBail.gridx = 1;
-		gbc_lblListBail.gridy = 4;
-		getContentPane().add(lblListBail, gbc_lblListBail);
+		GridBagConstraints gbcLblListBail = new GridBagConstraints();
+		gbcLblListBail.anchor = GridBagConstraints.NORTHEAST;
+		gbcLblListBail.insets = new Insets(0, 0, 5, 5);
+		gbcLblListBail.gridx = 1;
+		gbcLblListBail.gridy = 4;
+		getContentPane().add(lblListBail, gbcLblListBail);
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setPreferredSize(new Dimension(200, 300));
-		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
-		gbc_scrollPane.gridwidth = 4;
-		gbc_scrollPane.insets = new Insets(0, 0, 5, 5);
-		gbc_scrollPane.fill = GridBagConstraints.BOTH;
-		gbc_scrollPane.gridx = 2;
-		gbc_scrollPane.gridy = 4;
-		getContentPane().add(scrollPane, gbc_scrollPane);
+		GridBagConstraints gbcScrollPane = new GridBagConstraints();
+		gbcScrollPane.gridwidth = 4;
+		gbcScrollPane.insets = new Insets(0, 0, 5, 5);
+		gbcScrollPane.fill = GridBagConstraints.BOTH;
+		gbcScrollPane.gridx = 2;
+		gbcScrollPane.gridy = 4;
+		getContentPane().add(scrollPane, gbcScrollPane);
 		
 		listBail = new JList<>();
+		listBail.setModel(new AbstractListModel<String>() {
+
+			private static final long serialVersionUID = 1L;
+			String[] values = new String[] {CHARGEMENT};
+			public int getSize() {
+				return values.length;
+			}
+			public String getElementAt(int index) {
+				return values[index];
+			}
+		});
 		scrollPane.setViewportView(listBail);
 		
 		btnGenerer = new JButton("Generer");
-		GridBagConstraints gbc_btnGenerer = new GridBagConstraints();
-		gbc_btnGenerer.insets = new Insets(0, 0, 0, 5);
-		gbc_btnGenerer.gridx = 4;
-		gbc_btnGenerer.gridy = 5;
-		getContentPane().add(btnGenerer, gbc_btnGenerer);
+		GridBagConstraints gbcRbtnGenerer = new GridBagConstraints();
+		gbcRbtnGenerer.insets = new Insets(0, 0, 0, 5);
+		gbcRbtnGenerer.gridx = 4;
+		gbcRbtnGenerer.gridy = 5;
+		getContentPane().add(btnGenerer, gbcRbtnGenerer);
 		
 		btnQuitter = new JButton("Quitter");
-		GridBagConstraints gbc_btnQuitter = new GridBagConstraints();
-		gbc_btnQuitter.anchor = GridBagConstraints.EAST;
-		gbc_btnQuitter.insets = new Insets(0, 0, 0, 5);
-		gbc_btnQuitter.gridx = 5;
-		gbc_btnQuitter.gridy = 5;
-		getContentPane().add(btnQuitter, gbc_btnQuitter);
+		GridBagConstraints gbcBtnQuitter = new GridBagConstraints();
+		gbcBtnQuitter.anchor = GridBagConstraints.EAST;
+		gbcBtnQuitter.insets = new Insets(0, 0, 0, 5);
+		gbcBtnQuitter.gridx = 5;
+		gbcBtnQuitter.gridy = 5;
+		getContentPane().add(btnQuitter, gbcBtnQuitter);
 		
 
 		btnQuitter.addActionListener(e -> dispose());
 		
 		gest.chargerComboBoxLogement();
-		gest.chargerComboBoxLoc();
 
 		gest.gestionComboLoc(comboBoxLoc);
 		gest.gestionComboBien(comboBoxBien);

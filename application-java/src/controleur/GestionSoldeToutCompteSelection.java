@@ -30,7 +30,6 @@ public class GestionSoldeToutCompteSelection {
 	public GestionSoldeToutCompteSelection(SelectionSoldeToutCompte fen) {
 		this.fen = fen;
 	}
-	
     /**
      * Charge la liste des logements pour le bâtiment sélectionné dans la ComboBox.
      */
@@ -129,17 +128,42 @@ public class GestionSoldeToutCompteSelection {
         });
     }
     
-	public void chargerList() {
-		try {
-			fen.setTableBail(new DaoBail().findByIdLogement(fen.getSelectedBien()).stream()
-					.map(Bail::getIdBail)
-					.toList());
-			
-		} catch (Exception e) {
-			fen.afficherMessageErreur(e.getMessage());
-		}
+    /**
+     * Charge la liste des baux pour le logement sélectionné, en utilisant un SwingWorker.
+     * La table est mise à jour avec les résultats.
+     */
+    public void chargerList() {
+        // Change le curseur pour indiquer un chargement en cours
+        fen.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
-	}
+        new SwingWorker<List<String>, Void>() {
+            @Override
+            protected List<String> doInBackground() throws Exception {
+                // Récupère la liste des identifiants de baux associés au logement sélectionné
+                return new DaoBail().findByIdLogement(fen.getSelectedBien()).stream()
+                        .map(Bail::getIdBail)
+                        .toList();
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    // Met à jour la table avec les résultats obtenus
+                    List<String> baux = get();
+                    fen.setTableBail(baux);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    fen.afficherMessageErreur("Opération interrompue.");
+                } catch (ExecutionException e) {
+                    Throwable cause = e.getCause();
+                    fen.afficherMessageErreur(cause != null ? cause.getMessage() : "Erreur inconnue.");
+                } finally {
+                    fen.setCursor(Cursor.getDefaultCursor());
+                }
+            }
+        }.execute();
+    }
+
 
 	public void gestionBtnGenerer(JButton btnGenerer) {
 		btnGenerer.addActionListener(e -> 
