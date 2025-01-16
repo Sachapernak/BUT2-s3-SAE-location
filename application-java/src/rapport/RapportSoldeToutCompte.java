@@ -21,7 +21,8 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
  */
 public class RapportSoldeToutCompte {
 
-    private static final String STYLECHARGE = "charge";
+    private static final String FORMATDOC = ".docx";
+	private static final String STYLECHARGE = "charge";
 	// --- Champs simples pour le locataire / bail ---
     private String nom;
     private String prenom;
@@ -45,17 +46,11 @@ public class RapportSoldeToutCompte {
      * Liste de charges variables (CV).
      * Chaque String[] = { date, nomCharge, calcul, montantTotal }.
      */
-    private List<String[]> chargesCV;
+    private List<String[]> charges;
 
-    /**
-     * Liste de charges fixes (CF).
-     * Chaque String[] = { date, nomCharge, "", montantTotal }.
-     */
-    private List<String[]> chargesCF;
 
     public RapportSoldeToutCompte() {
-        this.chargesCV = new ArrayList<>();
-        this.chargesCF = new ArrayList<>();
+        this.charges = new ArrayList<>();
     }
 
     /**
@@ -81,8 +76,7 @@ public class RapportSoldeToutCompte {
         map.put("[TOTAL]",          safeStr(total));
         map.put("[PROVISIONS]",     safeStr(calcProv));
         // Placeholders pour insertion de charges : remplacés par vide.
-        map.put("[CHARGESV]", "");
-        map.put("[CHARGESF]", "");
+        map.put("[CHARGES]", "");
         return map;
     }
 
@@ -92,7 +86,7 @@ public class RapportSoldeToutCompte {
      * @param nomFichierSortie Nom du fichier de sortie sans extension.
      * @throws IOException en cas d'erreur d'entrée/sortie.
      */
-    public void genererSoldeToutCompte(String nomFichierSortie) throws IOException {
+    public String genererSoldeToutCompte(String nomFichierSortie) throws IOException {
         // 1) Construction de la map de placeholders
         Map<String, String> placeholders = construirePlaceholderMap();
 
@@ -110,9 +104,11 @@ public class RapportSoldeToutCompte {
             }
 
             // 4) Écriture du document final
-            try (OutputStream fileOut = new FileOutputStream(nomFichierSortie + ".docx")) {
+            try (OutputStream fileOut = new FileOutputStream(nomFichierSortie + FORMATDOC)) {
                 document.write(fileOut);
-                System.out.println("Fichier généré: " + nomFichierSortie + ".docx");
+                System.out.println("Fichier généré: " + nomFichierSortie + FORMATDOC);
+                
+                return nomFichierSortie + FORMATDOC;
             }
         }
     }
@@ -136,19 +132,16 @@ public class RapportSoldeToutCompte {
             String text = run.getText(0);
             if (text != null) {
                 // Détection des placeholders de charges
-                boolean cv = text.contains("[CHARGESV]");
-                boolean cf = text.contains("[CHARGESF]");
+                boolean cg = text.contains("[CHARGES]");
 
                 text = remplacePlaceholder(placeholders, text);
                 run.setText(text, 0);
 
                 // Insertion des charges si les marqueurs ont été détectés
-                if (cv) {
-                    insertionCV(document, paragraph);
+                if (cg) {
+                    insertionCharge(document, paragraph);
                 }
-                if (cf) {
-                    insertionCF(document, paragraph);
-                }
+
             }
         }
     }
@@ -163,30 +156,7 @@ public class RapportSoldeToutCompte {
 		return text;
 	}
 
-    /**
-     * Insère les paragraphes pour les charges fixes dans le document.
-     * Applique le style "charge" sur les paragraphes insérés.
-     *
-     * @param document Le document Word.
-     * @param paragraph Le paragraphe de référence pour l'insertion.
-     */
-    public void insertionCF(XWPFDocument document, XWPFParagraph paragraph) {
-        for (String[] charge : chargesCF) {
-            // Nom de la charge (à gauche)
-            XWPFParagraph pNom = document.insertNewParagraph(paragraph.getCTP().newCursor());
-            pNom.setAlignment(ParagraphAlignment.LEFT);
-            pNom.setStyle(STYLECHARGE);  // Application du style "charge"
-            XWPFRun runNom = pNom.createRun();
-            runNom.setText(charge[1]);
 
-            // Montant total (à droite)
-            XWPFParagraph pCalc = document.insertNewParagraph(paragraph.getCTP().newCursor());
-            pCalc.setAlignment(ParagraphAlignment.RIGHT);
-            pCalc.setStyle(STYLECHARGE);  // Application du style "charge"
-            XWPFRun runCalc = pCalc.createRun();
-            runCalc.setText(charge[3]);
-        }
-    }
 
     /**
      * Insère les paragraphes pour les charges variables dans le document.
@@ -195,8 +165,13 @@ public class RapportSoldeToutCompte {
      * @param document Le document Word.
      * @param paragraph Le paragraphe de référence pour l'insertion.
      */
-    public void insertionCV(XWPFDocument document, XWPFParagraph paragraph) {
-        for (String[] charge : chargesCV) {
+    public void insertionCharge(XWPFDocument document, XWPFParagraph paragraph) {
+        for (String[] charge : charges) {
+        	
+        	String montant;
+        	
+        	montant = charge[2].isEmpty() ? charge[3] + "€" : charge[2];
+        	
             // Nom de la charge (à gauche)
             XWPFParagraph pNom = document.insertNewParagraph(paragraph.getCTP().newCursor());
             pNom.setAlignment(ParagraphAlignment.LEFT);
@@ -209,7 +184,7 @@ public class RapportSoldeToutCompte {
             pCalc.setAlignment(ParagraphAlignment.RIGHT);
             pCalc.setStyle(STYLECHARGE);  // Application du style "charge"
             XWPFRun runCalc = pCalc.createRun();
-            runCalc.setText(charge[2]);
+            runCalc.setText(montant);
         }
     }
 
@@ -234,8 +209,7 @@ public class RapportSoldeToutCompte {
     public void setCaution(String caution)             { this.caution = caution; }
     public void setTotalProv(String totalProv)         { this.totalProv = totalProv; }
     public void setCalcProv(String calcProv)           { this.calcProv = calcProv; }
-    public void setChargesCV(List<String[]> chargesCV) { this.chargesCV = chargesCV; }
-    public void setChargesCF(List<String[]> chargesCF) { this.chargesCF = chargesCF; }
+    public void setCharges(List<String[]> charges)     { this.charges = charges; }
 
     /**
      * Méthode principale pour tester la génération du document.
@@ -265,17 +239,17 @@ public class RapportSoldeToutCompte {
             List<String[]> listCV = new ArrayList<>();
             listCV.add(new String[]{"", "Eau", "15 m³ x 3€ = 45€", ""});
             listCV.add(new String[]{"", "Électricité", "80 kWh x 0.15€ = 12€", ""});
-            rapport.setChargesCV(listCV);
+
 
             // Charges fixes (CF)
             List<String[]> listCF = new ArrayList<>();
             listCF.add(new String[]{"", "Taxe ordures ménagères", "", "80€"});
             listCF.add(new String[]{"", "Frais d'entretien immeuble", "", "70€"});
-            rapport.setChargesCF(listCF);
+            
+            listCV.addAll(listCF);
+            rapport.setCharges(listCV);
 
-            System.out.println("Début de la génération...");
             rapport.genererSoldeToutCompte("testRap");
-            System.out.println("Document généré avec succès.");
 
         } catch (IOException e) {
             e.printStackTrace();
