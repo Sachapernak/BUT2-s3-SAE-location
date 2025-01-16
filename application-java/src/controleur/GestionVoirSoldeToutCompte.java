@@ -25,6 +25,8 @@ import vue.VoirSoldeToutCompte;
  * l'interface utilisateur lors des opérations de lecture en base de données.
  */
 public class GestionVoirSoldeToutCompte {
+	
+
 
     private static final String ERREUR_INATTENDUE = "Erreur inattendue : ";
 	private static final String OP_INTERROMPUE = "Opération interrompue.";
@@ -32,6 +34,9 @@ public class GestionVoirSoldeToutCompte {
     private Locataire loc;
     /** La vue associée pour l'affichage des soldes et des informations du locataire. */
     private VoirSoldeToutCompte fen;
+    
+    	
+    
 
     /**
      * Constructeur du contrôleur.
@@ -93,7 +98,9 @@ public class GestionVoirSoldeToutCompte {
             loadLocataire();
             return;
         }
-
+        
+        
+        
         // Met à jour les champs de la vue avec les données du locataire.
         fen.setNomLoc(loc.getNom());
         fen.setPrenom(loc.getPrenom());
