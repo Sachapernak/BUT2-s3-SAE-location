@@ -41,7 +41,7 @@ public class AjouterEntreprise extends JInternalFrame {
 	}
 	
 	public String getStringTextFieldNom() {
-		return textFieldSiret.getText();
+		return textFieldNom.getText();
 	}
 	
 	public String getStringTextFieldIdAdr() {

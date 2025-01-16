@@ -117,6 +117,10 @@ public class FenetrePrincipale extends JFrame {
 		locataires.add(mntmLocatairesActuels);
 		locataires.add(mntmAnciensLocataires);
 		
+		JMenuItem mntnSoldeToutCompte = new JMenuItem("Solde de tout comptes");
+		locataires.add(mntnSoldeToutCompte);
+		mntnSoldeToutCompte.addActionListener(this.gestionMenu);
+		
 		JMenu menuloyersCharges = new JMenu("Charge et loyers");
 		menuloyersCharges.setForeground(new Color(255, 255, 255));
 		menuloyersCharges.setHorizontalAlignment(SwingConstants.CENTER);

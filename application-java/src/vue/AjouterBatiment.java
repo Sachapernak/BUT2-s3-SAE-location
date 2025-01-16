@@ -1,6 +1,5 @@
 package vue;
 
-
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
