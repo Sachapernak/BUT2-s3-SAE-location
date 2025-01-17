@@ -14,7 +14,7 @@ public class CLITestLocataire {
 		try {
 			locataires = new DaoLocataire().findAll();
 		} catch (Exception e) {
-			System.out.println("Erreur du test : " + e.getMessage());;
+			System.out.println("Erreur du test : " + e.getMessage());
 		}
 		
 		for (Locataire locataire : locataires) {

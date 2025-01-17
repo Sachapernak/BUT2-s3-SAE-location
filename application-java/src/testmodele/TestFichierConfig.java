@@ -101,7 +101,7 @@ public class TestFichierConfig {
 
 	    // Test pour vérifier le comportement lorsque la clé est manquante
 	    @Test(expected = IOException.class)
-	    public void testCléManquante() throws IOException {
+	    public void testCleManquante() throws IOException {
 	    	FichierConfig.changerChemin("src/testmodele/test1.properties");
 	        // Supprimer le fichier de clé si il existe
 	        File keyFile = new File(CHEMIN_TEST_KEY_CONFIG);

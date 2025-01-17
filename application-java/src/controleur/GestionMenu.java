@@ -20,6 +20,7 @@ import vue.FenetrePrincipale;
 import vue.PageConnexion;
 import vue.ReglesMetier;
 import vue.SetICC;
+import vue.SelectionSoldeToutCompte;
 
 public class GestionMenu implements ActionListener{
 
@@ -88,7 +89,12 @@ public class GestionMenu implements ActionListener{
 				ChargerLoyers chLoyer = new ChargerLoyers();
 				chLoyer.setVisible(true);
 				break;
-				
+			case "Solde de tout comptes":
+				SelectionSoldeToutCompte sdTc = new SelectionSoldeToutCompte();
+				fenLayerPane.add(sdTc, JLayeredPane.PALETTE_LAYER);
+				sdTc.setVisible(true);
+				break;
+			
 			case "Consulter ICC" : 
 				SetICC stIcc= new SetICC();
 				fenLayerPane.add(stIcc, JLayeredPane.PALETTE_LAYER);
