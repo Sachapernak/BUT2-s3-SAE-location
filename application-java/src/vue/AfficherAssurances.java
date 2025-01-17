@@ -18,8 +18,10 @@ import javax.swing.table.DefaultTableModel;
 import controleur.GestionAfficherAssurances;
 
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
-public class AfficherAssurances extends JInternalFrame {
+public class AfficherAssurances extends JInternalFrame  {
 
 	private static final long serialVersionUID = 1L;
 	private JTable tableAssurances;
@@ -95,10 +97,19 @@ public class AfficherAssurances extends JInternalFrame {
 		
 		JButton btnRetour = new JButton("Retour");
 		btnRetour.addActionListener(this.gestionFen);
-		btnRetour.setBounds(343, 210, 85, 21);
+		btnRetour.setBounds(294, 207, 85, 21);
 		panelAssurances.add(btnRetour);
+		
+		JButton btnAjouter = new JButton("Ajouter");
+		btnAjouter.addActionListener(this.gestionFen);
+		btnAjouter.setBounds(180, 207, 85, 21);
+		panelAssurances.add(btnAjouter);
+		
+		JButton btnSupprimer = new JButton("Supprimer");
+		btnSupprimer.addActionListener(this.gestionFen);
+		btnSupprimer.setBounds(65, 207, 85, 21);
+		panelAssurances.add(btnSupprimer);
 	}
-	
 	
 	
     /**

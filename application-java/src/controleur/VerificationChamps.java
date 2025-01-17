@@ -36,8 +36,20 @@ public class VerificationChamps {
 	// Vérifie si l'identifiant du cautionnaire est bien un entier positif
 	protected boolean validerInteger(String valeur) {
 	    try {
-	        int idCautionnaire = Integer.parseInt(valeur);
-	        return idCautionnaire > 0; 
+	        int entier = Integer.parseInt(valeur);
+	        return entier > 0; 
+	    } catch (NumberFormatException e) {
+	        return false; 
+	    }
+	}
+	
+	protected boolean validerAnnee(String valeur) {
+		if (valeur.length()!=4) {
+			return false;
+		}
+		try {
+	        int annee = Integer.parseInt(valeur);
+	        return annee>0;
 	    } catch (NumberFormatException e) {
 	        return false; 
 	    }

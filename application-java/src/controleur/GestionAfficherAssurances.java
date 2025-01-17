@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JLayeredPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
@@ -16,6 +17,8 @@ import javax.swing.table.DefaultTableModel;
 import modele.Assurance;
 import modele.dao.DaoAssurance;
 import vue.AfficherAssurances;
+import vue.RevalorisationLoyer;
+import vue.AjouterAssurance;
 
 public class GestionAfficherAssurances implements ActionListener, ChangeListener{
 
@@ -68,8 +71,19 @@ public class GestionAfficherAssurances implements ActionListener, ChangeListener
      */
     private void handleButtonClick(JButton btnActif) {
         String btnLibelle = btnActif.getText();
-        if (btnLibelle.equals("Retour")) {
-        	this.fenAfficherAssurances.dispose();
+		
+		switch (btnLibelle) {
+			case "Retour" : 
+				this.fenAfficherAssurances.dispose();
+				break;
+			case "Ajouter" : 
+				AjouterAssurance aa = new AjouterAssurance();
+				aa.setVisible(true);
+				break;
+			case "Supprimer" : 
+				break;
+			default : 
+				break;
         }
     }
     
