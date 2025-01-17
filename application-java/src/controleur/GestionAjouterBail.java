@@ -109,6 +109,7 @@ public class GestionAjouterBail implements ActionListener {
                 );
                 erreurTrouvee = true;
             }
+            
             // Vérifie la somme des parts de loyer (doit être égale à 1)
             if (!totalPartEgalAUn()) {
                 fenAjouterBail.afficherMessageErreur("Le total des parts n'est pas égal à 1");
@@ -121,6 +122,14 @@ public class GestionAjouterBail implements ActionListener {
             fenAjouterBail.afficherMessageErreur(
                 "Les champs obligatoires (dotés d'une étoile) doivent être renseignés"
             );
+            erreurTrouvee = true;
+        }
+        
+        else if (fenAjouterBail.getRdbtnNouveauBail().isSelected()
+                && !verifChamps.validerBigDecimal(fenAjouterBail.getTextCharges())) {
+        	fenAjouterBail.afficherMessageErreur(
+                    "Le montant des charges doit etre un nombre"
+                );
             erreurTrouvee = true;
         }
 
