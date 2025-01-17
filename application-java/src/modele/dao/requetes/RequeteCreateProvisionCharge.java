@@ -27,7 +27,7 @@ public class RequeteCreateProvisionCharge extends Requete<ProvisionCharge>{
 		
 		
 		// Définir le formatter pour le format DD/MM/YY
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-dd-MM");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         // Convertir la chaîne en LocalDate
         LocalDate localDateDebut = LocalDate.parse(donnees.getDateChangement(), formatter);
