@@ -17,8 +17,7 @@ public class GestionAjouterAssurance implements ActionListener{
     private final DaoAssurance daoAssurance;
     private final AjouterAssurance fenAjouterAssurance;
     private VerificationChamps verifChamps;
-
-
+   
     /**
      * Constructeur principal : injecte la vue et instancie les DAO.
      *
@@ -28,6 +27,7 @@ public class GestionAjouterAssurance implements ActionListener{
         this.fenAjouterAssurance = aa;
         this.daoAssurance = new DaoAssurance();
         this.verifChamps = new VerificationChamps();
+        
     }
 
 	/**
@@ -93,7 +93,6 @@ public class GestionAjouterAssurance implements ActionListener{
 			e.printStackTrace();
 		}
     }
-
-    
+        
 	
 }
