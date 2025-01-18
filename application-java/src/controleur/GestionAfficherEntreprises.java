@@ -95,7 +95,7 @@ public class GestionAfficherEntreprises implements ActionListener{
     }
 
     /**
-     * Effectue la suppression de l'entreprise (à implémenter selon votre logique).
+     * Effectue la suppression de l'entreprise.
      */
     private void supprimerEntreprise() {
         int ligneSelect = fenAfficherEntreprises.getTableEntreprises().getSelectedRow();   

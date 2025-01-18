@@ -18,8 +18,10 @@ import javax.swing.table.DefaultTableModel;
 import controleur.GestionAfficherAssurances;
 
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
-public class AfficherAssurances extends JInternalFrame {
+public class AfficherAssurances extends JInternalFrame  {
 
 	private static final long serialVersionUID = 1L;
 	private JTable tableAssurances;
@@ -28,14 +30,6 @@ public class AfficherAssurances extends JInternalFrame {
 
 	private GestionAfficherAssurances gestionFen;
 	
-
-	public int getSpinnerAnnee() {
-		return (int) spinnerAnnee.getValue();
-	}
-
-	public JComboBox<String> getComboBoxTypeContrat() {
-		return comboBoxTypeContrat;
-	}
 
 	/**
 	 * Create the frame.
@@ -62,7 +56,7 @@ public class AfficherAssurances extends JInternalFrame {
 		panelAssurances.add(lblAnneeAssurance);
 		
 		spinnerAnnee = new JSpinner();
-		spinnerAnnee.setModel(new SpinnerNumberModel(Integer.valueOf(2023), Integer.valueOf(1970), null, Integer.valueOf(1)));
+		spinnerAnnee.setModel(new SpinnerNumberModel(Integer.valueOf(2025), Integer.valueOf(1970), null, Integer.valueOf(1)));
 		spinnerAnnee.setBounds(91, 23, 79, 20);
 		panelAssurances.add(spinnerAnnee);
 		spinnerAnnee.addChangeListener(this.gestionFen);
@@ -85,20 +79,43 @@ public class AfficherAssurances extends JInternalFrame {
 		tableAssurances = new JTable();
 		tableAssurances.setModel(new DefaultTableModel(
 			new Object[][] {
+				{null, null, null},
 			},
 			new String[] {
 				"Num\u00E9ro de contrat", "Ann\u00E9e", "Type"
 			}
-		));
+		) {
+			Class[] columnTypes = new Class[] {
+				String.class, String.class, String.class
+			};
+			public Class getColumnClass(int columnIndex) {
+				return columnTypes[columnIndex];
+			}
+			boolean[] columnEditables = new boolean[] {
+				false, false, false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
 		scrollPaneTableAssurance.setViewportView(tableAssurances);
 		this.gestionFen.initialiserTable();
 		
 		JButton btnRetour = new JButton("Retour");
 		btnRetour.addActionListener(this.gestionFen);
-		btnRetour.setBounds(343, 210, 85, 21);
+		btnRetour.setBounds(294, 207, 85, 24);
 		panelAssurances.add(btnRetour);
+		
+		JButton btnAjouter = new JButton("Ajouter");
+		btnAjouter.addActionListener(this.gestionFen);
+		btnAjouter.setBounds(180, 207, 85, 24);
+		panelAssurances.add(btnAjouter);
+		
+		JButton btnSupprimer = new JButton("Supprimer");
+		btnSupprimer.addActionListener(this.gestionFen);
+		btnSupprimer.setBounds(56, 207, 94, 24);
+		panelAssurances.add(btnSupprimer);
 	}
-	
 	
 	
     /**
@@ -123,5 +140,22 @@ public class AfficherAssurances extends JInternalFrame {
     public String getTypeContratCombo() {
         return String.valueOf(comboBoxTypeContrat.getSelectedItem());
     }
+    
+	public int getSpinnerAnnee() {
+		return (int) spinnerAnnee.getValue();
+	}
+
+	public JComboBox<String> getComboBoxTypeContrat() {
+		return comboBoxTypeContrat;
+	}
+	
+	public int getSelectedRow() {
+        return tableAssurances.getSelectedRow();
+    }
+	
+	public Object getValueAt(int ligne, int colonne){
+		return this.tableAssurances.getValueAt(ligne, colonne);
+	}
+	
 
 }

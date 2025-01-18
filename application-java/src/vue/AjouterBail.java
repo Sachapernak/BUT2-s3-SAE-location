@@ -270,7 +270,7 @@ public class AjouterBail extends JInternalFrame {
 
         // ComboBox des biens locatifs
         comboBoxBiensLoc = new JComboBox<>();
-        comboBoxBiensLoc.setBounds(266, 10, 123, 21);
+        comboBoxBiensLoc.setBounds(276, 10, 123, 21);
         panelNouveauBail.add(comboBoxBiensLoc);
 
         JLabel lblBiensLoc = new JLabel("Bien locatif : ");
@@ -284,16 +284,16 @@ public class AjouterBail extends JInternalFrame {
         
         JLabel lblCharge = new JLabel("Montant charges* :");
         lblCharge.setHorizontalAlignment(SwingConstants.RIGHT);
-        lblCharge.setBounds(150, 44, 100, 13);
+        lblCharge.setBounds(127, 44, 123, 16);
         panelNouveauBail.add(lblCharge);
         
         textFieldCharge = new JTextField();
         textFieldCharge.setColumns(10);
-        textFieldCharge.setBounds(266, 41, 100, 19);
+        textFieldCharge.setBounds(276, 41, 100, 19);
         panelNouveauBail.add(textFieldCharge);
         
         JLabel lblEuros = new JLabel("€");
-        lblEuros.setBounds(376, 44, 45, 13);
+        lblEuros.setBounds(386, 44, 45, 13);
         panelNouveauBail.add(lblEuros);
 
         // --------------------------------------------------------------------
