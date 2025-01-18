@@ -3,17 +3,14 @@ package vue;
 
 import javax.swing.*;
 
+
 import javax.swing.table.DefaultTableModel;
 
 import controleur.GestionQuittanceLoyerLocataire;
 import controleur.GestionTableQuittance;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Calendar;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
 
 public class QuittanceLoyerPrincipal extends JInternalFrame {
 
@@ -30,17 +27,54 @@ public class QuittanceLoyerPrincipal extends JInternalFrame {
 	private JTextField dateDocField;
 	private JTextField partChargesField;
 	private JTable chargeTable;
-	private JSpinner yearSpinner;
-	private JSpinner monthSpinner;
+	private JSpinner yearSpinner1;
+	private JSpinner monthSpinner1;
+	private JSpinner daySpinner1;
+	private JSpinner yearSpinner2;
+	private JSpinner monthSpinner2;
+	private JSpinner daySpinner2;
+	private JTable DocComptLoyerTable;
+
+	
+
+    public JTable getDocComptLoyerTable() {
+		return DocComptLoyerTable;
+	}
 
 
-    public JSpinner getYearSpinner() {
-		return yearSpinner;
+	public GestionTableQuittance getGestionTableQuittance() {
+		return gestionTableQuittance;
+	}
+
+	
+
+	public JSpinner getDaySpinner1() {
+		return daySpinner1;
+	}
+
+
+	public JSpinner getMonthSpinner2() {
+		return monthSpinner2;
+	}
+
+
+	public JSpinner getYearSpinner2() {
+		return yearSpinner2;
+	}
+
+
+	public JSpinner getDaySpinner2() {
+		return daySpinner2;
+	}
+
+
+	public JSpinner getYearSpinner() {
+		return yearSpinner1;
 	}
 
 
 	public JSpinner getMonthSpinner() {
-		return monthSpinner;
+		return monthSpinner1;
 	}
 	
 
@@ -129,8 +163,10 @@ public QuittanceLoyerPrincipal() {
     String[] chargeIndexColumns = {"ID", "Date de Changement", "Montant"};
     DefaultTableModel chargeIndexTableModel = new DefaultTableModel(chargeIndexColumns, 0);
     chargeTable = new JTable(chargeIndexTableModel);
-
     
+    String[] docComptLoyerColumns = {"NumDoc","DateDoc","Montant"};
+    DefaultTableModel docComptLoyerTableModel = new DefaultTableModel(docComptLoyerColumns, 0);
+    DocComptLoyerTable = new JTable(docComptLoyerTableModel);
 	gestionTableQuittance = new GestionTableQuittance(this);
 	gestionQuittanceLoyerLocataire = new GestionQuittanceLoyerLocataire(this);
 	mainPanel = new JPanel(new CardLayout());
@@ -138,7 +174,10 @@ public QuittanceLoyerPrincipal() {
 	getContentPane().add(mainPanel, BorderLayout.CENTER);
 	
 	 // Page principale
-    JPanel homePanel = new JPanel(new GridBagLayout());
+    GridBagLayout gbl_homePanel = new GridBagLayout();
+    gbl_homePanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+    gbl_homePanel.rowHeights = new int[]{0, 0, 34, 0, 0, 0};
+    JPanel homePanel = new JPanel(gbl_homePanel);
     mainPanel.add(homePanel, "Home");
     
 	// Champ de recherche
@@ -259,7 +298,12 @@ public QuittanceLoyerPrincipal() {
     cl.show(cardPanel, "Biens Actuels");
     
     // Page de quittance
-    JPanel quittancePanel = new JPanel(new GridBagLayout());
+    GridBagLayout gbl_quittancePanel = new GridBagLayout();
+    gbl_quittancePanel.columnWidths = new int[]{41, 0};
+    gbl_quittancePanel.rowHeights = new int[]{0, 50, 0, 0, 131, 9, 120, 0, 0};
+    gbl_quittancePanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+    gbl_quittancePanel.columnWeights = new double[]{0.0, 1.0};
+    JPanel quittancePanel = new JPanel(gbl_quittancePanel);
     mainPanel.add(quittancePanel, "Quittance");
     
 
@@ -278,7 +322,7 @@ public QuittanceLoyerPrincipal() {
     gbcNumeroDocField.gridx = 1;
     gbcNumeroDocField.gridy = 0;
     gbcNumeroDocField.weightx = 1;
-    gbcNumeroDocField.insets = new Insets(5, 5, 5, 5);
+    gbcNumeroDocField.insets = new Insets(5, 5, 5, 0);
     gbcNumeroDocField.fill = GridBagConstraints.HORIZONTAL;
     quittancePanel.add(numeroDocField, gbcNumeroDocField);
     gbcNumeroDocLabel.gridx = 0;
@@ -290,99 +334,167 @@ public QuittanceLoyerPrincipal() {
     gbcNumeroDocField.weightx = 1;
     gbcNumeroDocField.insets = new Insets(5, 5, 5, 5);
     gbcNumeroDocField.fill = GridBagConstraints.HORIZONTAL;
-    
-    // Champ pour la date du document
-    JLabel dateDocLabel = new JLabel("Date du Document:");
 
     Calendar calendar = Calendar.getInstance();
     int currentYear = calendar.get(Calendar.YEAR);
     int currentMonth = calendar.get(Calendar.MONTH) + 1; // Les mois commencent à 0
-
+    int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
     // JSpinner pour les années
-    SpinnerNumberModel yearModel = new SpinnerNumberModel(currentYear, 1900, 2100, 1);
-    yearSpinner = new JSpinner(yearModel);
-    yearSpinner.addChangeListener(gestionTableQuittance);
+    SpinnerNumberModel yearModel1 = new SpinnerNumberModel(currentYear, 1900, 2100, 1);
     // JSpinner pour les mois
-    SpinnerNumberModel monthModel = new SpinnerNumberModel(currentMonth, 1, 12, 1);
-    monthSpinner = new JSpinner(monthModel);
-    monthSpinner.addChangeListener(gestionTableQuittance);
- 
+    SpinnerNumberModel monthModel1 = new SpinnerNumberModel(currentMonth, 1, 12, 1);
+ // JSpinner pour les années
+    SpinnerNumberModel dayModel1 = new SpinnerNumberModel(currentDay, 1, 31, 1);
+    // JSpinner pour les mois
+    SpinnerNumberModel monthModel2 = new SpinnerNumberModel(currentMonth, 1, 12, 1);
+ // JSpinner pour les années
+    SpinnerNumberModel yearModel2 = new SpinnerNumberModel(currentYear, 1900, 2100, 1);
+    // JSpinner pour les mois
+    SpinnerNumberModel dayModel2 = new SpinnerNumberModel(currentDay+1, 1, 31, 1);
+    
+    // Champ pour la date du document
+    JLabel dateDocLabel = new JLabel("Date du Document entre:");
+    
+       
+       
+       GridBagConstraints gbcDateDocLabel = new GridBagConstraints();
+       gbcDateDocLabel.gridx = 0;
+       gbcDateDocLabel.gridy = 1;
+       gbcDateDocLabel.insets = new Insets(5, 5, 5, 5);
+       gbcDateDocLabel.anchor = GridBagConstraints.WEST;
+       quittancePanel.add(dateDocLabel, gbcDateDocLabel);
+       yearSpinner1 = new JSpinner(yearModel1);
+       yearSpinner1.addChangeListener(gestionTableQuittance);
+       monthSpinner1 = new JSpinner(monthModel1);
+       monthSpinner1.addChangeListener(gestionTableQuittance);
+       daySpinner1 = new JSpinner(dayModel1);
+       daySpinner1.addChangeListener(gestionTableQuittance);
+       yearSpinner2 = new JSpinner(yearModel2);
+       yearSpinner2.addChangeListener(gestionTableQuittance);
+       monthSpinner2 = new JSpinner(monthModel2);
+       monthSpinner2.addChangeListener(gestionTableQuittance);
+       daySpinner2 = new JSpinner(dayModel2);
+       daySpinner2.addChangeListener(gestionTableQuittance);
     
     
-    GridBagConstraints gbcDateDocLabel = new GridBagConstraints();
-    gbcDateDocLabel.gridx = 0;
-    gbcDateDocLabel.gridy = 2;
-    gbcDateDocLabel.insets = new Insets(5, 5, 5, 5);
-    gbcDateDocLabel.anchor = GridBagConstraints.WEST;
-    quittancePanel.add(dateDocLabel, gbcDateDocLabel);
+        JPanel datePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
-    JPanel datePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-    datePanel.add(new JLabel("Mois:"));
-    datePanel.add(monthSpinner);
-    datePanel.add(new JLabel("Année:"));
-    datePanel.add(yearSpinner);
-
-    GridBagConstraints gbcDatePanel = new GridBagConstraints();
-    gbcDatePanel.gridx = 1;
-    gbcDatePanel.gridy = 2;
-    gbcDatePanel.weightx = 1;
-    gbcDatePanel.insets = new Insets(5, 5, 5, 5);
-    gbcDatePanel.fill = GridBagConstraints.HORIZONTAL;
-    quittancePanel.add(datePanel, gbcDatePanel);
-
-    // Tableau des loyers
-    JLabel loyerLabel = new JLabel("Loyers:");
-    GridBagConstraints gbcLoyerLabel = new GridBagConstraints();
-    gbcLoyerLabel.gridx = 0;
-    gbcLoyerLabel.gridy = 3;
-    gbcLoyerLabel.gridwidth = 2;
-    gbcLoyerLabel.insets = new Insets(5, 5, 5, 5);
-    gbcLoyerLabel.anchor = GridBagConstraints.WEST;
-    quittancePanel.add(loyerLabel, gbcLoyerLabel);
-
-
+        datePanel.add(new JLabel("Jour:"));
+        datePanel.add(daySpinner1);
+        datePanel.add(new JLabel("Mois:"));
+        datePanel.add(monthSpinner1);
+        datePanel.add(new JLabel("Année:"));
+        datePanel.add(yearSpinner1);
+        
+        
+        
+        GridBagConstraints gbcDatePanel = new GridBagConstraints();
+        gbcDatePanel.gridx = 1;
+        gbcDatePanel.gridy = 1;
+        gbcDatePanel.weightx = 1;
+        gbcDatePanel.insets = new Insets(5, 5, 5, 0);
+        gbcDatePanel.fill = GridBagConstraints.HORIZONTAL;
+        quittancePanel.add(datePanel, gbcDatePanel);
+    
+    JLabel lblEt = new JLabel(" et :");
+    GridBagConstraints gbc_lblEt = new GridBagConstraints();
+    gbc_lblEt.anchor = GridBagConstraints.WEST;
+    gbc_lblEt.insets = new Insets(0, 0, 5, 5);
+    gbc_lblEt.gridx = 0;
+    gbc_lblEt.gridy = 2;
+    quittancePanel.add(lblEt, gbc_lblEt);
+    
+    JPanel date2panel = new JPanel();
+    GridBagConstraints gbc_panel = new GridBagConstraints();
+    gbc_panel.anchor = GridBagConstraints.WEST;
+    gbc_panel.insets = new Insets(0, 0, 5, 0);
+    gbc_panel.gridx = 1;
+    gbc_panel.gridy = 2;
+    quittancePanel.add(date2panel, gbc_panel);
+    
+    JLabel label = new JLabel(" Jour:");
+    date2panel.add(label);
+    
+    date2panel.add(daySpinner2);
+    
+    JLabel label_1 = new JLabel("Mois:");
+    date2panel.add(label_1);
+    
+    date2panel.add(monthSpinner2);
+    
+    JLabel label_2 = new JLabel("Année:");
+    date2panel.add(label_2);
+    
+    date2panel.add(yearSpinner2);
+    
+    
+    
+    
     // Tableau des charges indexées
     JLabel chargeLabel = new JLabel("Charges :");
     GridBagConstraints gbcChargeLabel = new GridBagConstraints();
     gbcChargeLabel.gridx = 0;
-    gbcChargeLabel.gridy = 4;
+    gbcChargeLabel.gridy = 3;
     gbcChargeLabel.gridwidth = 2;
-    gbcChargeLabel.insets = new Insets(5, 5, 5, 5);
+    gbcChargeLabel.insets = new Insets(5, 5, 5, 0);
     gbcChargeLabel.anchor = GridBagConstraints.WEST;
     quittancePanel.add(chargeLabel, gbcChargeLabel);
-
     
-    this.gestionTableQuittance.remplirTableCharge(null);
+    
+    
+    chargeTable.getSelectionModel().addListSelectionListener(this.gestionTableQuittance);
     JScrollPane chargeScrollPane = new JScrollPane(chargeTable);
-
+    
     GridBagConstraints gbcChargeTable = new GridBagConstraints();
     gbcChargeTable.gridx = 0;
-    gbcChargeTable.gridy = 5;
+    gbcChargeTable.gridy = 4;
     gbcChargeTable.gridwidth = 2;
     gbcChargeTable.weightx = 1;
     gbcChargeTable.weighty = 0.3;
-    gbcChargeTable.insets = new Insets(5, 5, 5, 5);
+    gbcChargeTable.insets = new Insets(5, 5, 5, 0);
     gbcChargeTable.fill = GridBagConstraints.BOTH;
     quittancePanel.add(chargeScrollPane, gbcChargeTable);
-
- 
-    JButton saveButton = new JButton("Voir Quittance de Loyer");
-    saveButton.addActionListener(gestionQuittanceLoyerLocataire);
+    
+    JLabel DocumentComptableLoyer = new JLabel("Document Comptable Loyer :");
+    DocumentComptableLoyer.setHorizontalAlignment(SwingConstants.CENTER);
+    GridBagConstraints gbc_DocumentComptableLoyer = new GridBagConstraints();
+    gbc_DocumentComptableLoyer.anchor = GridBagConstraints.NORTHWEST;
+    gbc_DocumentComptableLoyer.insets = new Insets(0, 0, 5, 5);
+    gbc_DocumentComptableLoyer.gridx = 0;
+    gbc_DocumentComptableLoyer.gridy = 5;
+    quittancePanel.add(DocumentComptableLoyer, gbc_DocumentComptableLoyer);
+    
+    
+    
+    
+    JScrollPane DocComptLoyerScrollPane = new JScrollPane(DocComptLoyerTable);
+    GridBagConstraints gbc_DocComptLoyerScrollPane = new GridBagConstraints();
+    gbc_DocComptLoyerScrollPane.gridx = 0;
+    gbc_DocComptLoyerScrollPane.gridy = 6;
+    gbc_DocComptLoyerScrollPane.gridwidth = 2;
+    gbc_DocComptLoyerScrollPane.weightx = 1;
+    gbc_DocComptLoyerScrollPane.weighty = 0.5;
+    gbc_DocComptLoyerScrollPane.insets = new Insets(5, 5, 5, 0);
+    gbc_DocComptLoyerScrollPane.fill = GridBagConstraints.BOTH;
+    quittancePanel.add(DocComptLoyerScrollPane, gbc_DocComptLoyerScrollPane);
     
     // Boutons
     JButton retourButton2 = new JButton("Precedent");
     retourButton2.addActionListener(gestionQuittanceLoyerLocataire);
-    GridBagConstraints gbcRetourButton2 = new GridBagConstraints();
-    gbcRetourButton2.insets = new Insets(0, 0, 0, 5);
-    gbcRetourButton2.gridx = 0;
-    gbcRetourButton2.gridy = 6;
-    gbcRetourButton2.anchor = GridBagConstraints.CENTER;
-    quittancePanel.add(retourButton2, gbcRetourButton2);
     
+    GridBagConstraints gbcPrecButton = new GridBagConstraints();
+    gbcPrecButton.gridx = 0;
+    gbcPrecButton.gridy = 7;
+    gbcPrecButton.insets = new Insets(10, 5, 5, 5);
+    gbcPrecButton.anchor = GridBagConstraints.CENTER;
+    quittancePanel.add(retourButton2, gbcPrecButton);
+    
+    JButton saveButton = new JButton("Voir Quittance de Loyer");
+    saveButton.addActionListener(gestionQuittanceLoyerLocataire);
     GridBagConstraints gbcSaveButton = new GridBagConstraints();
     gbcSaveButton.gridx = 1;
-    gbcSaveButton.gridy = 6;
-    gbcSaveButton.insets = new Insets(10, 5, 0, 5);
+    gbcSaveButton.gridy = 7;
+    gbcSaveButton.insets = new Insets(10, 5, 5, 0);
     gbcSaveButton.anchor = GridBagConstraints.CENTER;
     quittancePanel.add(saveButton, gbcSaveButton);
 }

@@ -1,11 +1,12 @@
 package modele.dao;
 
 import java.io.IOException;
-
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -21,7 +22,6 @@ import modele.dao.requetes.RequeteSelectBail;
 import modele.dao.requetes.RequeteSelectBailById;
 import modele.dao.requetes.RequeteSelectBailByIdLogement;
 import modele.dao.requetes.RequeteUpdateBail;
-import modele.dao.requetes.RequeteSelectBailByIdDocComptQuittance;
 
 
 /**
@@ -103,8 +103,28 @@ public class DaoBail extends DaoModele<Bail> implements Dao<Bail> {
         return find(new RequeteSelectBail());
     }
     
+    
     public Bail findByIdDocCompQuittance(String... id) throws SQLException, IOException{
-    	return findById(new RequeteSelectBailByIdDocComptQuittance(), id);
+    	
+    	
+    	String plsqlProcedure = "{ call Quittance.GetBailByDocument(?, ?, ?) }";
+		CallableStatement stmt = ConnexionBD.getInstance().getConnexion().prepareCall(plsqlProcedure);
+		 
+	       // Définir les paramètres d'entrée
+	    stmt.setString(1, id[0]);
+	    stmt.setString(2, id[1]);
+	       
+	       // Définir le paramètre de sortie (SYS_REFCURSOR)
+	    stmt.registerOutParameter(3, Types.REF_CURSOR);
+	
+	       // Exécuter la procédure
+	    stmt.execute();
+	    ResultSet rs = (ResultSet) stmt.getObject(3);
+	       
+	       
+	    rs.next();
+		return createInstance(rs);
+    	
     }
     
     /**

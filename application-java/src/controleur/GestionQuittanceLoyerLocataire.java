@@ -4,10 +4,12 @@ package controleur;
 import java.awt.CardLayout;
 
 
+
 import java.awt.event.ActionEvent;
 
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.SQLException;
 
 import javax.swing.JButton;
@@ -36,6 +38,7 @@ public class GestionQuittanceLoyerLocataire  implements ActionListener{
 	private JTable tableBiensActuels;
 	private JTable tableBiensAnciens;
 	private JTable tableCharge;
+	private JTable tableDocLoyer;
 	private DaoLocataire dl;
 	private DaoBienLocatif dbl;
 	private DaoFactureBien dfb; 
@@ -47,6 +50,7 @@ public class GestionQuittanceLoyerLocataire  implements ActionListener{
 		this.tableBiensActuels = fenQuittanceLoyer.getTableBiensActuels();
 		this.tableBiensAnciens = fenQuittanceLoyer.getTableBiensAnciens();
 		this.tableCharge = fenQuittanceLoyer.getChargeTable();
+		this.tableDocLoyer =  fenQuittanceLoyer.getDocComptLoyerTable();
 		this.dl = new DaoLocataire();
 		this.dbl = new DaoBienLocatif();
 		this.dfb = new DaoFactureBien();
@@ -64,41 +68,43 @@ public class GestionQuittanceLoyerLocataire  implements ActionListener{
 			switch (btnLibelle) {
 			case "Voir Quittance de Loyer" : 
 	            if (tableCharge.getSelectedRow() == -1) {
-	                JOptionPane.showMessageDialog(fenQuittanceLoyer, "Veuillez sélectionner une charge index.", "Avertissement", JOptionPane.WARNING_MESSAGE);
+	                JOptionPane.showMessageDialog(fenQuittanceLoyer, "Veuillez sélectionner une charge.", "Avertissement", JOptionPane.WARNING_MESSAGE);
 	                break;
 	            }
-	            
-				
+	            if (tableDocLoyer.getSelectedRow() == -1) {
+	                JOptionPane.showMessageDialog(fenQuittanceLoyer, "Veuillez sélectionner un document comptable.", "Avertissement", JOptionPane.WARNING_MESSAGE);
+	                break;
+	            }
 				String idBien;
 				int ligneSelectLoc = tableLocataires.getSelectedRow();
-				int ligneSelectBien = tableBiensActuels.getSelectedRow();
+				int ligneSelectBienActuel = tableBiensActuels.getSelectedRow();
+				int ligneSelectBienAncien = tableBiensAnciens.getSelectedRow();
+				int ligneSelectDocLoyer = tableDocLoyer.getSelectedRow();
 				
 				String idLoc = (String) tableLocataires.getValueAt(ligneSelectLoc, 0);
 				
 				if (fenQuittanceLoyer.getEstActuel()) {
-					idBien = (String) tableBiensActuels.getValueAt(ligneSelectBien, 0);
+					idBien = (String) tableBiensActuels.getValueAt(ligneSelectBienActuel, 0);
 				}else {
-					idBien = (String) tableBiensAnciens.getValueAt(ligneSelectBien, 0);
+					idBien = (String) tableBiensAnciens.getValueAt(ligneSelectBienAncien, 0);
 				}
 				String numDoc = fenQuittanceLoyer.getNumeroDoc();
 				if (numDoc == null || numDoc.trim().isEmpty()) {
 				    JOptionPane.showMessageDialog(fenQuittanceLoyer, "Veuillez écrire un numéro de document.", "Avertissement", JOptionPane.WARNING_MESSAGE);
 				    break;
 				}
-
-				int dateAnnee = (int)fenQuittanceLoyer.getYearSpinner().getValue();
-				int dateMois = (int)fenQuittanceLoyer.getMonthSpinner().getValue();
-			    
-			    String dateDocCharge = String.format("%02d-%04d",dateMois,dateAnnee);
+				
+				
+		        
+		        String dateDocQuittance = (String) tableDocLoyer.getValueAt(ligneSelectDocLoyer, 1);
+		        BigDecimal montant = new BigDecimal(tableDocLoyer.getValueAt(ligneSelectDocLoyer, 2).toString());
 		        // Formater la date
 				String fichierDoc = "Quittance de Loyer "+numDoc+".word";
 				
 				try {
-					
 					Locataire locataire = dl.findById(idLoc);
-					DocumentComptable dcLoyer = ddc.findByIdtypeloyer(idLoc,idBien,dateDocCharge);
-					dateDocCharge = String.format("%02d-%02d-%04d",1,dateMois,dateAnnee);
-					DocumentComptable dc = new DocumentComptable(numDoc,dateDocCharge,TypeDoc.QUITTANCE,dcLoyer.getMontant(),fichierDoc);
+					
+					DocumentComptable dc = new DocumentComptable(numDoc,dateDocQuittance,TypeDoc.QUITTANCE,montant,fichierDoc);
 					dc.setLocataire(locataire);
 					BienLocatif bien = dbl.findById(idBien);
 					FactureBien facturebien = new FactureBien(bien,dc,1);
@@ -132,6 +138,18 @@ public class GestionQuittanceLoyerLocataire  implements ActionListener{
 	                JOptionPane.showMessageDialog(fenQuittanceLoyer, "Veuillez sélectionner un bien ancien.", "Avertissement", JOptionPane.WARNING_MESSAGE);
 	                break;
 	            }
+	            
+	            int ligneSelectLocSuiv = tableLocataires.getSelectedRow();
+				int ligneSelectBienActuelSuiv = tableBiensActuels.getSelectedRow();
+				int ligneSelectBienAncienSuiv = tableBiensAnciens.getSelectedRow();
+				String idLocSuiv = (String) tableLocataires.getValueAt(ligneSelectLocSuiv, 0);
+				if (fenQuittanceLoyer.getEstActuel()) {
+					idBien = (String) tableBiensActuels.getValueAt(ligneSelectBienActuelSuiv, 0);
+				}else {
+					idBien = (String) tableBiensAnciens.getValueAt(ligneSelectBienAncienSuiv, 0);
+				}
+				
+				fenQuittanceLoyer.getGestionTableQuittance().remplirTableCharge(null,idLocSuiv,idBien);
 				CardLayout cll = (CardLayout) fenQuittanceLoyer.getmainPanel().getLayout();
                 cll.show(fenQuittanceLoyer.getmainPanel(), "Quittance");
 				break;

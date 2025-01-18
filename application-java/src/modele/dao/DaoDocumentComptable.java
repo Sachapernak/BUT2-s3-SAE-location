@@ -2,6 +2,8 @@ package modele.dao;
 
 import java.io.IOException;
 
+
+
 import java.math.BigDecimal;
 import java.sql.CallableStatement;
 import java.sql.Date;
@@ -9,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.ArrayList;
 import java.util.List;
 import modele.ConnexionBD;
 import modele.DocumentComptable;
@@ -17,7 +20,6 @@ import modele.dao.requetes.RequeteCreateDocumentComptable;
 import modele.dao.requetes.RequeteDeleteDocumentComptable;
 import modele.dao.requetes.RequeteSelectDocumentComptable;
 import modele.dao.requetes.RequeteSelectDocumentComptableById;
-import modele.dao.requetes.RequeteSelectDocumentComptableByIdLocBienTypeLoyer;
 import modele.dao.requetes.RequeteSelectDocumentComptableByIdLog;
 import modele.dao.requetes.RequeteSelectDocumentComptableLoyersParLocataire;
 import modele.dao.requetes.RequeteUpdateDocumentComptable;
@@ -90,16 +92,15 @@ public class DaoDocumentComptable extends DaoModele<DocumentComptable> {
 	}
 	
 
-	public DocumentComptable findByIdtypeloyer(String... id) throws SQLException, IOException {
+	public List<DocumentComptable> findByIdtypeloyer(String... id) throws SQLException, IOException {
 		
-		 String plsqlProcedure = "{ call Quittance.GetDocumentsLoyer(?, ?, ?, ?) }";
-		 CallableStatement stmt = ConnexionBD.getInstance().getConnexion().prepareCall(plsqlProcedure);
-
+		String plsqlProcedure = "{ call Quittance.GetDocumentsLoyer(?, ?, ?, ?) }";
+		CallableStatement stmt = ConnexionBD.getInstance().getConnexion().prepareCall(plsqlProcedure);
+		 
         // Définir les paramètres d'entrée
         stmt.setString(1, id[0]);
         stmt.setString(2, id[1]);
         stmt.setString(3, id[2]);
-
         // Définir le paramètre de sortie (SYS_REFCURSOR)
         stmt.registerOutParameter(4, Types.REF_CURSOR);
 
@@ -107,9 +108,11 @@ public class DaoDocumentComptable extends DaoModele<DocumentComptable> {
         stmt.execute();
         ResultSet rs = (ResultSet) stmt.getObject(4);
         
-        
-
-		 return createInstance(rs);
+        List<DocumentComptable> list = new ArrayList<>();
+        while(rs.next()) {
+        	list.add(createInstance(rs));
+        }
+		return list;
 	}
 	
 	

@@ -1,9 +1,7 @@
 package modele.dao;
 
+
 import java.io.IOException;
-
-
-
 import java.math.BigDecimal;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -16,7 +14,6 @@ import modele.Loyer;
 import modele.dao.requetes.RequeteCreateLoyer;
 import modele.dao.requetes.RequeteUpdateLoyer;
 import modele.dao.requetes.RequeteDeleteLoyer;
-import modele.dao.requetes.RequeteSelectLoyerByIdLocBien;
 import modele.dao.requetes.RequeteSelectLoyer;
 import modele.dao.requetes.RequeteSelectLoyerById;
 import modele.dao.requetes.RequeteSelectLoyerByIdLogement;
@@ -47,10 +44,6 @@ public class DaoLoyer extends DaoModele<Loyer> {
     public List<Loyer> findAll() throws SQLException, IOException {
         return find(new RequeteSelectLoyer());
     }
-    
-    public Loyer findByIdLocBienDocComptable(String... id) throws SQLException, IOException{
-		return findById(new RequeteSelectLoyerByIdLocBien(), id);
-	}
 
     public List<Loyer> findByIdLogement(String id) throws SQLException, IOException {
         return find(new RequeteSelectLoyerByIdLogement(), id);

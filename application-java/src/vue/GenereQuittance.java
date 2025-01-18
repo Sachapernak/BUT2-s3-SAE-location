@@ -1,6 +1,7 @@
 package vue;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
@@ -11,16 +12,11 @@ import modele.Bail;
 import modele.BienLocatif;
 import modele.Contracter;
 import modele.DocumentComptable;
-import modele.FactureBien;
 import modele.Locataire;
-import modele.Loyer;
 import modele.ProvisionCharge;
 import modele.dao.DaoBail;
 import modele.dao.DaoBienLocatif;
 import modele.dao.DaoContracter;
-import modele.dao.DaoDocumentComptable;
-import modele.dao.DaoFactureBien;
-import modele.dao.DaoLocataire;
 import modele.dao.DaoLoyer;
 import modele.dao.DaoProvisionCharge;
 
@@ -31,14 +27,7 @@ import java.sql.SQLException;
 
 public class GenereQuittance {
 	
-	
-	
-    public GenereQuittance() {
-		
-		
-		
-		
-		
+    public GenereQuittance() {		
     }
 
     public static void generateQuittanceWord(DocumentComptable dcQuittance) throws SQLException, IOException {
@@ -159,5 +148,6 @@ public class GenereQuittance {
 
         // Fermer le document
         document.close();
+        
     }
 }

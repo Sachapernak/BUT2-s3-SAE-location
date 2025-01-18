@@ -2,11 +2,14 @@ package modele.dao;
 
 import java.io.IOException;
 
+
 import java.math.BigDecimal;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.List;
 
 import modele.Batiment;
@@ -19,7 +22,6 @@ import modele.dao.requetes.RequeteCountNbLogementsBatiment;
 import modele.dao.requetes.RequeteCreateBienLocatif;
 import modele.dao.requetes.RequeteDeleteBienLocatif;
 import modele.dao.requetes.RequeteUpdateBienLocatif;
-import modele.dao.requetes.RequeteSelectBienLocatifByIdDocComptQuittance;
 import modele.TypeDeBien;
 
 public class DaoBienLocatif extends DaoModele<BienLocatif> {
@@ -47,8 +49,29 @@ public class DaoBienLocatif extends DaoModele<BienLocatif> {
 	}
 	
 	
+	
+	
 	public BienLocatif findByIdDocQuit(String... id) throws SQLException, IOException {
-		return findById(new RequeteSelectBienLocatifByIdDocComptQuittance(), id);
+		
+		
+		String plsqlProcedure = "{ call Quittance.GetBienByDocument(?, ?, ?) }";
+		CallableStatement stmt = ConnexionBD.getInstance().getConnexion().prepareCall(plsqlProcedure);
+		 
+        // Définir les paramètres d'entrée
+        stmt.setString(1, id[0]);
+        stmt.setString(2, id[1]);
+        // Définir le paramètre de sortie (SYS_REFCURSOR)
+        stmt.registerOutParameter(3, Types.REF_CURSOR);
+
+        // Exécuter la procédure
+        stmt.execute();
+        ResultSet rs = (ResultSet) stmt.getObject(3);
+        
+        
+        rs.next();
+		return createInstance(rs);
+		
+		
 	}
 	@Override
 	public List<BienLocatif> findAll() throws SQLException, IOException {
