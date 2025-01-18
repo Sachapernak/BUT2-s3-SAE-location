@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -203,12 +204,11 @@ public class DaoBail extends DaoModele<Bail> implements Dao<Bail> {
         }
         rs.close();
         prSt.close();
-        
-        
-        
-        
+
         return res;
     }
+    
+
     
     public String[] findAllDeducBaiLoc(String idBail, String idLoc, String dateDeb, String dateFin) 
     		throws SQLException, IOException{
@@ -300,4 +300,67 @@ public class DaoBail extends DaoModele<Bail> implements Dao<Bail> {
         return  prCl.getInt(1);
     	
     }
+    
+    public BigDecimal findChargeDuMois(String idBail, String date) throws SQLException, IOException {
+		String req = 
+					"""
+					SELECT 
+					    p.id_bail,
+					    p.provision_pour_charge
+					FROM sae_provision_charge p
+					WHERE p.date_changement = (
+					    SELECT MAX(p2.date_changement)
+					    FROM sae_provision_charge p2
+					    WHERE p2.id_bail = p.id_bail
+					      AND p2.date_changement <= ?
+					)
+					AND p.id_bail = ?;
+					""";
+
+
+	
+	try (PreparedStatement prSt = ConnexionBD.getInstance().getConnexion().prepareStatement(req)) {
+		        // Paramétrage de la requête
+	
+	        prSt.setDate(1, Date.valueOf(date));
+	        prSt.setString(2, idBail);
+	
+	        // Exécution de la requête et récupération du résultat
+	        try (ResultSet rs = prSt.executeQuery()) {
+	            if (rs.next()) {
+	
+	                return rs.getBigDecimal(2);
+	            } else {
+	                return BigDecimal.ZERO;
+	            }
+	        }
+	    }
+    }
+    
+    public BigDecimal findPartDesCharges(String idBail, String idLoc) throws SQLException, IOException {
+		String req = """
+					Select part_de_loyer
+					from sae_contracter
+					where identifiant_locataire = ?
+					and id_bail = ?
+					""";
+		
+		try (PreparedStatement prSt = ConnexionBD.getInstance().getConnexion().prepareStatement(req)) {
+			        // Paramétrage de la requête
+		
+		        prSt.setString(1, idLoc);
+		        prSt.setString(2, idBail);
+		
+		        // Exécution de la requête et récupération du résultat
+		        try (ResultSet rs = prSt.executeQuery()) {
+		            if (rs.next()) {
+		
+		                return rs.getBigDecimal(1);
+		            } else {
+		                return BigDecimal.ZERO;
+		            }
+		        }
+		    }
+		
+		}
 }
