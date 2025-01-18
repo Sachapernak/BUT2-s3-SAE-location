@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -172,7 +173,16 @@ public class GestionAfficherAnciensLocataires implements ActionListener {
 
             // On n'affiche que les locataires dont la date de sortie est renseignée
             for (Contracter contrat : contrats) {
-                if (contrat.getDateSortie() != null) {
+            	Bail bai = contrat.getBail();
+            	
+                if ( (bai.getDateDeFin() != null 
+            			&& bai.getDateDeFin().compareTo(LocalDate.now().toString()) < 0)
+                	|| 
+            		 (contrat.getDateSortie() != null 
+            			&& contrat.getDateSortie().compareTo(LocalDate.now().toString()) < 0)
+            		){
+                	
+                	
                     Locataire locataire = contrat.getLocataire();
                     model.addRow(new String[] {
                             locataire.getIdLocataire(),
@@ -217,7 +227,16 @@ public class GestionAfficherAnciensLocataires implements ActionListener {
 
                     // On n'affiche que les locataires dont la date de sortie est renseignée
                     for (Contracter contrat : contrats) {
-                        if (contrat.getDateSortie() != null) {
+                    	Bail bai = contrat.getBail();
+                    	
+                        if ( (bai.getDateDeFin() != null 
+                    			&& bai.getDateDeFin().compareTo(LocalDate.now().toString()) < 0)
+                            	|| 
+                        		 (contrat.getDateSortie() != null 
+                        			&& contrat.getDateSortie().compareTo(LocalDate.now().toString()) < 0)
+                        		){ 
+                        	
+                        	
                             Locataire locataire = contrat.getLocataire();
                             model.addRow(new String[] {
                                     locataire.getIdLocataire(),

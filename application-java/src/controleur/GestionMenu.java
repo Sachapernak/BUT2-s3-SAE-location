@@ -22,6 +22,7 @@ import vue.FenetrePrincipale;
 import vue.PageConnexion;
 import vue.ReglesMetier;
 import vue.RevalorisationLoyer;
+import vue.SelectionQuittance;
 import vue.SetICC;
 import vue.SelectionSoldeToutCompte;
 
@@ -91,6 +92,11 @@ public class GestionMenu implements ActionListener{
 			case "Charger les loyers" : 
 				ChargerLoyers chLoyer = new ChargerLoyers();
 				chLoyer.setVisible(true);
+				break;
+			case "Quittances de loyer" :
+				SelectionQuittance slQ = new SelectionQuittance();
+				fenLayerPane.add(slQ, JLayeredPane.PALETTE_LAYER);
+				slQ.setVisible(true);
 				break;
 			case "Solde de tout comptes":
 				SelectionSoldeToutCompte sdTc = new SelectionSoldeToutCompte();
