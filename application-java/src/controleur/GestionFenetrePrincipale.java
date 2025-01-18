@@ -13,6 +13,7 @@ import javax.swing.JLayeredPane;
 
 import modele.ConnexionBD;
 import vue.AfficherCharges;
+import vue.AjouterBienLocatif;
 import vue.FenetrePrincipale;
 import vue.AjouterBatiment;
 import vue.RevalorisationLoyer;
@@ -52,6 +53,11 @@ public class GestionFenetrePrincipale implements ActionListener{
 				AjouterBatiment ab = new AjouterBatiment();
 				layeredPane.add(ab, JLayeredPane.PALETTE_LAYER);
 				ab.setVisible(true);
+				break;
+			case "Ajouter un bien locatif" : 
+				AjouterBienLocatif abl = new AjouterBienLocatif();
+				layeredPane.add(abl, JLayeredPane.PALETTE_LAYER);
+				abl.setVisible(true);
 				break;
 			default:
 				break;

@@ -228,6 +228,11 @@ public class FenetrePrincipale extends JFrame{
 		btnAfficherLesCharges.setBounds(201, 213, 210, 21);
 		panelBiensLocatifs.add(btnAfficherLesCharges);
 		
+		JButton btnAjouterBienLoc = new JButton("Ajouter un bien locatif");
+		btnAjouterBienLoc.setBounds(442, 212, 154, 23);
+		panelBiensLocatifs.add(btnAjouterBienLoc);
+		btnAjouterBienLoc.addActionListener(this.gestionClic);
+		
 		
 		JLabel lblTitre = new JLabel("Bienvenue");
 		lblTitre.setForeground(new Color(70, 130, 180));
