@@ -65,20 +65,9 @@ public class AjouterEntreprise extends JInternalFrame {
 		return textFieldCodePostal.getText();
 	}
 	
-	
-	public List<String> getChampsObligatoires(){
-		List<String> res = new ArrayList<>();
-		res.add(getStringTextFieldSiret());
-		res.add(getStringTextFieldSecteurActivite());
-		res.add(getStringTextFieldIdAdr());
-		res.add(getStringTextFieldAdresse());
-		res.add(getStringTextFieldVille());
-		res.add(getStringTextFieldCodePostal());
-		return res;
-	}
 
 	public AjouterEntreprise() {
-		setBounds(100, 100, 509, 330);
+		setBounds(0, 0, 509, 330);
 		this.gestionClic = new GestionAjouterEntreprise(this);
 		
 		JPanel panelTitre = new JPanel();
@@ -118,10 +107,10 @@ public class AjouterEntreprise extends JInternalFrame {
 		textFieldAdr.setBounds(128, 57, 96, 19);
 		panelAdresse.add(textFieldAdr);
 		
-		JLabel lblComplément = new JLabel("Complément : ");
-		lblComplément.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblComplément.setBounds(22, 88, 96, 13);
-		panelAdresse.add(lblComplément);
+		JLabel lblComplement = new JLabel("Complement : ");
+		lblComplement.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblComplement.setBounds(22, 88, 96, 13);
+		panelAdresse.add(lblComplement);
 		
 		textFieldComplement = new JTextField();
 		textFieldComplement.setColumns(10);
@@ -162,9 +151,9 @@ public class AjouterEntreprise extends JInternalFrame {
 		panelInfosEntreprise.add(textFieldSiret);
 		textFieldSiret.setColumns(10);
 		
-		JLabel lblSecteurActivité = new JLabel("Secteur d'activité* :");
-		lblSecteurActivité.setBounds(10, 74, 118, 13);
-		panelInfosEntreprise.add(lblSecteurActivité);
+		JLabel lblSecteurActivite = new JLabel("Secteur d'activite* :");
+		lblSecteurActivite.setBounds(10, 74, 118, 13);
+		panelInfosEntreprise.add(lblSecteurActivite);
 		
 		textFieldSecteurActivite = new JTextField();
 		textFieldSecteurActivite.setBounds(10, 97, 96, 19);
@@ -180,21 +169,37 @@ public class AjouterEntreprise extends JInternalFrame {
 		panelInfosEntreprise.add(textFieldNom);
 		textFieldNom.setColumns(10);
 		
-		JPanel panel_1 = new JPanel();
-		getContentPane().add(panel_1, BorderLayout.SOUTH);
+		JPanel panel1 = new JPanel();
+		getContentPane().add(panel1, BorderLayout.SOUTH);
 		
 		JButton btnAjouter = new JButton("Ajouter");
 		btnAjouter.addActionListener(this.gestionClic);
-		panel_1.add(btnAjouter);
+		panel1.add(btnAjouter);
 		
 		JButton btnAnnuler = new JButton("Annuler");
 		btnAnnuler.addActionListener(this.gestionClic);
-		panel_1.add(btnAnnuler);
+		panel1.add(btnAnnuler);
 
 	}
 
+	
+	// -------------------------------------------------------------------------
+    // Methodes d'aide pour le contrôleur
+    // -------------------------------------------------------------------------
+
 	public void afficherMessage(String message, String titre, int typeMessage) {
 	    JOptionPane.showMessageDialog(this, message, titre, typeMessage);
+	}
+	
+	public List<String> getChampsObligatoires(){
+		List<String> res = new ArrayList<>();
+		res.add(getStringTextFieldSiret());
+		res.add(getStringTextFieldSecteurActivite());
+		res.add(getStringTextFieldIdAdr());
+		res.add(getStringTextFieldAdresse());
+		res.add(getStringTextFieldVille());
+		res.add(getStringTextFieldCodePostal());
+		return res;
 	}
 
 }
