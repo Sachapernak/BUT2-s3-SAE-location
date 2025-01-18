@@ -117,7 +117,10 @@ public class FenetrePrincipale extends JFrame{
 		
 		JMenuItem mntnSoldeToutCompte = new JMenuItem("Solde de tout comptes");
 		locataires.add(mntnSoldeToutCompte);
-		mntnSoldeToutCompte.addActionListener(this.gestionMenu);
+		
+		JMenuItem mntnBaux = new JMenuItem("Liste des baux");
+		locataires.add(mntnBaux);
+		mntnBaux.addActionListener(this.gestionMenu);
 		
 		JMenu menuloyersCharges = new JMenu("Charge et loyers");
 		menuloyersCharges.setForeground(new Color(255, 255, 255));
@@ -137,8 +140,13 @@ public class FenetrePrincipale extends JFrame{
 		menuloyersCharges.add(mntmChargerLoyers);
 		
 		JMenuItem mntmICC = new JMenuItem("Consulter ICC");
-		mntmICC.addActionListener(this.gestionMenu);
 		menuloyersCharges.add(mntmICC);
+		mntmICC.addActionListener(this.gestionMenu);
+		
+		JMenuItem mntmAugmenterLoyers = new JMenuItem("Augmenter les loyers");
+		menuloyersCharges.add(mntmAugmenterLoyers);
+		mntmAugmenterLoyers.addActionListener(this.gestionMenu);
+
 		
 		JMenu reglesMetier = new JMenu("Règles métier");
 		reglesMetier.setForeground(new Color(255, 255, 255));

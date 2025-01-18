@@ -1,6 +1,5 @@
 package vue;
 
-import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -15,6 +14,7 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import controleur.GestionRevalorisationLoyer;
+import java.awt.Color;
 
 /**
  * Fenêtre interne pour la revalorisation des loyers.
@@ -37,20 +37,8 @@ public class RevalorisationLoyer extends JInternalFrame {
     private String idLog;
     private GestionRevalorisationLoyer gest;
     private JButton btnHistorique;
+    private JLabel lblLoyerAugmentable;
 
-    /**
-     * Launch the application.
-     */
-    public static void main(String[] args) {
-        EventQueue.invokeLater(() -> {
-            try {
-                RevalorisationLoyer frame = new RevalorisationLoyer();
-                frame.setVisible(true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-    }
 
     public RevalorisationLoyer() {
         this("");
@@ -169,6 +157,15 @@ public class RevalorisationLoyer extends JInternalFrame {
         gbcSpinnerNouveauLoyer.gridy = 5;
         getContentPane().add(spinnerNouveauLoyer, gbcSpinnerNouveauLoyer);
         
+        lblLoyerAugmentable = new JLabel("Attention, le loyer n'est actuellement pas augmentable");
+        lblLoyerAugmentable.setForeground(new Color(255, 0, 0));
+        GridBagConstraints gbc_lblLoyerAugmentable = new GridBagConstraints();
+        gbc_lblLoyerAugmentable.gridwidth = 6;
+        gbc_lblLoyerAugmentable.insets = new Insets(0, 0, 5, 5);
+        gbc_lblLoyerAugmentable.gridx = 0;
+        gbc_lblLoyerAugmentable.gridy = 6;
+        getContentPane().add(lblLoyerAugmentable, gbc_lblLoyerAugmentable);
+        
         btnICC = new JButton("Voir ICC");
         GridBagConstraints gbcBtnICC = new GridBagConstraints();
         gbcBtnICC.gridwidth = 2;
@@ -178,12 +175,12 @@ public class RevalorisationLoyer extends JInternalFrame {
         getContentPane().add(btnICC, gbcBtnICC);
         
         btnHistorique = new JButton("Voir l'historique");
-        GridBagConstraints gbc_btnHistorique = new GridBagConstraints();
-        gbc_btnHistorique.anchor = GridBagConstraints.WEST;
-        gbc_btnHistorique.insets = new Insets(0, 0, 0, 5);
-        gbc_btnHistorique.gridx = 2;
-        gbc_btnHistorique.gridy = 7;
-        getContentPane().add(btnHistorique, gbc_btnHistorique);
+        GridBagConstraints gbcBtnHistorique = new GridBagConstraints();
+        gbcBtnHistorique.anchor = GridBagConstraints.WEST;
+        gbcBtnHistorique.insets = new Insets(0, 0, 0, 5);
+        gbcBtnHistorique.gridx = 2;
+        gbcBtnHistorique.gridy = 7;
+        getContentPane().add(btnHistorique, gbcBtnHistorique);
         
         btnRevaloriser = new JButton("Revaloriser");
         GridBagConstraints gbcBtnRevaloriser = new GridBagConstraints();
@@ -200,6 +197,8 @@ public class RevalorisationLoyer extends JInternalFrame {
         gbcBtnQuitter.gridx = 5;
         gbcBtnQuitter.gridy = 7;
         getContentPane().add(btnQuitter, gbcBtnQuitter);
+        
+        setAugmentInterdite(false);
         
         // Initialiser la gestion des boutons et autres interactions
         gest.gestionBtnVoirICC(btnICC);
@@ -222,6 +221,10 @@ public class RevalorisationLoyer extends JInternalFrame {
      */
     public String getIdLog() {
         return this.idLog;
+    }
+    
+    public void setAugmentInterdite(boolean interdit) {
+    	lblLoyerAugmentable.setVisible(interdit);
     }
     
     /**
@@ -270,7 +273,14 @@ public class RevalorisationLoyer extends JInternalFrame {
         textFieldLoyerMax.setText(loyerMax);
         
         double loyerMaxDouble = Double.parseDouble(loyerMax);
-        spinnerNouveauLoyer.setModel(new SpinnerNumberModel(loyerMaxDouble, 0.0, loyerMaxDouble, 50.0));
+        if (loyerMaxDouble == 0.0) {
+        	spinnerNouveauLoyer.setModel(new SpinnerNumberModel(0, 0.0, 999999.99, 50.0));
+        	
+        } else {
+            spinnerNouveauLoyer.setModel(new SpinnerNumberModel(loyerMaxDouble, 0.0, loyerMaxDouble, 50.0));
+        }
+        
+
     }
     
     /**

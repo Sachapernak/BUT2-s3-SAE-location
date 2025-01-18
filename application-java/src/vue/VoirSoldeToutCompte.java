@@ -22,8 +22,6 @@ import javax.swing.SwingConstants;
 import java.awt.Component;
 import java.awt.Cursor;
 import javax.swing.Box;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 /**
  * Fenêtre de dialogue pour visualiser le solde de tous les comptes d'un locataire.

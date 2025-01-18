@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import modele.Adresse;
+import modele.Bail;
 import modele.Batiment;
 import modele.BienLocatif;
 import modele.Diagnostiques;
@@ -39,6 +40,7 @@ public class TestBienLocatif {
     private BienLocatif bienLocatif;
     private Batiment batiment;
     private Adresse adresse;
+    private Bail bail;
 
     private final String identifiantLogement = "LOG001";
     private final TypeDeBien type = TypeDeBien.LOGEMENT;
@@ -221,7 +223,7 @@ public class TestBienLocatif {
      */
     @Test
     public void testAddLoyerValid() throws SQLException, IOException {
-        Loyer loyer = new Loyer(identifiantLogement, "2024-01-01", new BigDecimal("1300.00"));
+        Loyer loyer = new Loyer(identifiantLogement, "2024-02-01", new BigDecimal("1201.00"));
         bienLocatif.addLoyer(loyer);
         loyersToCleanUp.add(loyer);
 
@@ -256,7 +258,7 @@ public class TestBienLocatif {
     @Test
     public void testRemoveLoyerValid() throws SQLException, IOException {
         // Ajouter un loyer pour le supprimer ensuite
-        Loyer loyer = new Loyer(identifiantLogement, "2024-02-01", new BigDecimal("1400.00"));
+        Loyer loyer = new Loyer(identifiantLogement, "2025-02-01", new BigDecimal("1201.00"));
         bienLocatif.addLoyer(loyer);
         loyersToCleanUp.add(loyer);
 
@@ -290,7 +292,7 @@ public class TestBienLocatif {
     @Test
     public void testRechargerDonnees() throws SQLException, IOException {
         // Ajouter un loyer
-        Loyer loyer = new Loyer(identifiantLogement, "2024-03-01", new BigDecimal("1500.00"));
+        Loyer loyer = new Loyer(identifiantLogement, "2025-03-01", new BigDecimal("1201.00"));
         bienLocatif.addLoyer(loyer);
         loyersToCleanUp.add(loyer);
         assertTrue(bienLocatif.getLoyers().contains(loyer));
@@ -374,7 +376,7 @@ public class TestBienLocatif {
         List<Loyer> loyers = bienLocatif.getLoyers();
 
         // Ajouter un loyer via la méthode addLoyer
-        Loyer loyer = new Loyer(identifiantLogement, "2024-04-01", new BigDecimal("1600.00"));
+        Loyer loyer = new Loyer(identifiantLogement, "2025-04-01", new BigDecimal("1202.00"));
         bienLocatif.addLoyer(loyer);
 
         // Récupérer les loyers et vérifier que le nouveau loyer est présent
@@ -400,19 +402,5 @@ public class TestBienLocatif {
         // Puis vérifiez qu'ils sont bien chargés
     }
 
-    //TODO : enlever le @Ignore
-    /**
-     * Test de la méthode {@code getDiagnostiques} avec lazy-loading.
-     * <p>
-     * Ignoré car {@code DaoDiagnostique} n'est pas fonctionnel.
-     * </p>
-     */
-    @Ignore("DAO Diagnostique non fonctionnel")
-    @Test
-    public void testGetDiagnostiquesLazyLoading() throws SQLException, IOException {
-        List<Diagnostiques> diagnostiques = bienLocatif.getDiagnostiques();
-        assertNotNull(diagnostiques);
-        // Ajoutez des diagnostics via le DAO si nécessaire
-        // Puis vérifiez qu'ils sont bien chargés
-    }
+
 }
