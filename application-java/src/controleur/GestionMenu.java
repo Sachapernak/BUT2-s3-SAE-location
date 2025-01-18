@@ -10,7 +10,9 @@ import javax.swing.JLayeredPane;
 import javax.swing.JMenuItem;
 
 import vue.AfficherAnciensLocataires;
+
 import vue.AfficherBaux;
+import vue.AfficherAssurances;
 import vue.AfficherCharges;
 import vue.AfficherEntreprises;
 import vue.AfficherLocatairesActuels;
@@ -109,6 +111,11 @@ public class GestionMenu implements ActionListener{
 				AfficherBaux afBaux = new AfficherBaux();
 				fenLayerPane.add(afBaux, JLayeredPane.PALETTE_LAYER);
 				afBaux.setVisible(true);
+			case "Afficher les assurances" : 
+				AfficherAssurances aa = new AfficherAssurances();
+				fenLayerPane.add(aa, JLayeredPane.PALETTE_LAYER);
+				aa.setVisible(true);
+				break;
 			default:
 				break;
 				

@@ -7,7 +7,8 @@ public class VerificationChamps {
 	
 	private static final int TAILLE_CODE_POSTAL = 5;
 	
-	// Vérifie si un montant est bien un nombre valide (entier ou décimal) et supérieur à 0
+	// Vérifie si le montant de la caution est bien un nombre valide (entier ou décimal), supérieur à 0
+	// et qu'il n'excède pas le triple du loyer
 	protected boolean validerMontant(String montantStr, String loyerStr) {
 	    
 		try {
@@ -20,12 +21,35 @@ public class VerificationChamps {
 	        return false; 
 	    }
 	}
+	
+	// Vérifie si un montant est bien un nombre valide (entier ou décimal) et supérieur à 0
+	protected boolean validerBigDecimal(String montantStr) {
+		try {
+	        BigDecimal montant = new BigDecimal(montantStr);
+	        return montant.compareTo(BigDecimal.ZERO) >= 0;
+	    } catch (NumberFormatException e) {
+	        return false; 
+	        
+	    }
+	}
 
 	// Vérifie si l'identifiant du cautionnaire est bien un entier positif
 	protected boolean validerInteger(String valeur) {
 	    try {
-	        int idCautionnaire = Integer.parseInt(valeur);
-	        return idCautionnaire > 0; 
+	        int entier = Integer.parseInt(valeur);
+	        return entier > 0; 
+	    } catch (NumberFormatException e) {
+	        return false; 
+	    }
+	}
+	
+	protected boolean validerAnnee(String valeur) {
+		if (valeur.length()!=4) {
+			return false;
+		}
+		try {
+	        int annee = Integer.parseInt(valeur);
+	        return annee>0;
 	    } catch (NumberFormatException e) {
 	        return false; 
 	    }

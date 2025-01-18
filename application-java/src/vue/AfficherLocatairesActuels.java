@@ -103,25 +103,21 @@ public class AfficherLocatairesActuels extends JInternalFrame {
         // Table des locataires actuels
         tableLocatairesActuels = new JTable();
         tableLocatairesActuels.setModel(new DefaultTableModel(
-            new Object[][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
-            },
-            new String[] {
-                "Identifiant", "Nom", "Prénom"
-            }
+        	new Object[][] {
+        		{null, null, null},
+        		{null, null, null},
+        		{null, null, null},
+        	},
+        	new String[] {
+        		"Identifiant", "Nom", "Pr\u00E9nom"
+        	}
         ) {
-            private static final long serialVersionUID = 1L;
-            @SuppressWarnings("rawtypes")
-            Class[] columnTypes = new Class[] {
-                String.class, String.class, String.class
-            };
-            @Override
-            @SuppressWarnings({ "unchecked", "rawtypes" })
-            public Class getColumnClass(int columnIndex) {
-                return columnTypes[columnIndex];
-            }
+        	boolean[] columnEditables = new boolean[] {
+        		false, true, true
+        	};
+        	public boolean isCellEditable(int row, int column) {
+        		return columnEditables[column];
+        	}
         });
         scrollPaneLocatairesActuels.setViewportView(tableLocatairesActuels);
 

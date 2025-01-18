@@ -64,6 +64,7 @@ public class AjouterBail extends JInternalFrame {
 
     // Vue précédente
     private AjouterLocataire fenPrecedente;
+    private JTextField textFieldCharge;
 
     /**
      * Constructeur principal de la fenêtre "AjouterBail".
@@ -121,21 +122,19 @@ public class AjouterBail extends JInternalFrame {
         tableBauxActuels = new JTable();
         tableBauxActuels.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tableBauxActuels.setModel(new DefaultTableModel(
-            new Object[][] {
-                {null, null, null, null, null},
-            },
-            new String[] {
-                "Identifiant bail", "Complément", "Adresse", "Date de début", "Date de fin"
-            }
+        	new Object[][] {
+        		{null, null, null, null, null},
+        	},
+        	new String[] {
+        		"Identifiant bail", "Compl\u00E9ment", "Adresse", "Date de d\u00E9but", "Date de fin"
+        	}
         ) {
-            private static final long serialVersionUID = 1L;
-            final boolean[] columnEditables = new boolean[] {
-                false, false, false, false, false
-            };
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return columnEditables[column];
-            }
+        	boolean[] columnEditables = new boolean[] {
+        		false, false, false, false, false
+        	};
+        	public boolean isCellEditable(int row, int column) {
+        		return columnEditables[column];
+        	}
         });
         scrollPaneBauxActuels.setViewportView(tableBauxActuels);
 
@@ -152,28 +151,19 @@ public class AjouterBail extends JInternalFrame {
         tablePartsLoyer.setToolTipText("Veuillez mettre à jour les parts de loyer");
         tablePartsLoyer.addKeyListener(gestionTableAjoutBail);
         tablePartsLoyer.setModel(new DefaultTableModel(
-            new Object[][] {
-                {null, null},
-            },
-            new String[] {
-                "Locataire", "Part de loyer en %"
-            }
+        	new Object[][] {
+        		{null, null},
+        	},
+        	new String[] {
+        		"Locataire", "Part de loyer en %"
+        	}
         ) {
-            private static final long serialVersionUID = 1L;
-            @SuppressWarnings("rawtypes")
-            Class[] columnTypes = new Class[] {
-                Object.class, Float.class
-            };
-            @Override
-            @SuppressWarnings({ "unchecked", "rawtypes" })
-            public Class getColumnClass(int columnIndex) {
-                return columnTypes[columnIndex];
-            }
-            final boolean[] columnEditables = new boolean[] { false, true };
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return columnEditables[column];
-            }
+        	boolean[] columnEditables = new boolean[] {
+        		false, false
+        	};
+        	public boolean isCellEditable(int row, int column) {
+        		return columnEditables[column];
+        	}
         });
         tablePartsLoyer.getColumnModel().getColumn(0).setPreferredWidth(150);
         tablePartsLoyer.getColumnModel().getColumn(1).setPreferredWidth(150);
@@ -181,7 +171,21 @@ public class AjouterBail extends JInternalFrame {
 
         // Table "total" en en-tête de ligne
         tableTotal = new JTable();
-        tableTotal.setModel(new DefaultTableModel(new Object[][] { {""}, }, new String[] { "" }));
+        tableTotal.setModel(new DefaultTableModel(
+        	new Object[][] {
+        		{""},
+        	},
+        	new String[] {
+        		""
+        	}
+        ) {
+        	boolean[] columnEditables = new boolean[] {
+        		false
+        	};
+        	public boolean isCellEditable(int row, int column) {
+        		return columnEditables[column];
+        	}
+        });
         tableTotal.getColumnModel().getColumn(0).setResizable(false);
         scrollPanePartsLoyer.setRowHeaderView(tableTotal);
         tableTotal.setRowSelectionAllowed(false);
@@ -189,7 +193,8 @@ public class AjouterBail extends JInternalFrame {
         tableTotal.setEnabled(false);
 
         JLabel lblDateArrivee = new JLabel("Date d'arrivée* :");
-        lblDateArrivee.setBounds(316, 162, 119, 20);
+        lblDateArrivee.setHorizontalAlignment(SwingConstants.RIGHT);
+        lblDateArrivee.setBounds(280, 160, 119, 20);
         panelBauxExistants.add(lblDateArrivee);
 
         textFieldDateArrivee = new JTextField();
@@ -220,27 +225,27 @@ public class AjouterBail extends JInternalFrame {
         // Sous-panel pour les champs du nouveau bail
         JPanel panelNouveauBailChamps = new JPanel();
         panelNouveauBailChamps.setBorder(new TitledBorder(null, "Nouveau Bail", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-        panelNouveauBailChamps.setBounds(181, 49, 256, 200);
+        panelNouveauBailChamps.setBounds(181, 85, 256, 148);
         panelNouveauBail.add(panelNouveauBailChamps);
         panelNouveauBailChamps.setLayout(null);
 
         // ID Bail
         JLabel lblIdBail = new JLabel("ID Bail* :");
-        lblIdBail.setBounds(10, 25, 58, 13);
+        lblIdBail.setBounds(10, 27, 58, 13);
         panelNouveauBailChamps.add(lblIdBail);
 
         textFieldIdBail = new JTextField();
-        textFieldIdBail.setBounds(135, 22, 100, 20);
+        textFieldIdBail.setBounds(135, 24, 100, 20);
         textFieldIdBail.setColumns(10);
         panelNouveauBailChamps.add(textFieldIdBail);
 
         // Date de début
         JLabel lblDateDebut = new JLabel("Date de début* :");
-        lblDateDebut.setBounds(10, 65, 100, 20);
+        lblDateDebut.setBounds(10, 53, 100, 20);
         panelNouveauBailChamps.add(lblDateDebut);
 
         textFieldDateDebut = new JTextField();
-        textFieldDateDebut.setBounds(135, 66, 100, 20);
+        textFieldDateDebut.setBounds(135, 54, 100, 20);
         textFieldDateDebut.setColumns(10);
         panelNouveauBailChamps.add(textFieldDateDebut);
 
@@ -249,32 +254,47 @@ public class AjouterBail extends JInternalFrame {
 
         // Date de fin
         JLabel lblDateFin = new JLabel("Date de fin :");
-        lblDateFin.setBounds(10, 111, 100, 20);
+        lblDateFin.setBounds(10, 83, 100, 20);
         panelNouveauBailChamps.add(lblDateFin);
 
         textFieldDateFin = new JTextField();
-        textFieldDateFin.setBounds(135, 112, 100, 20);
+        textFieldDateFin.setBounds(135, 84, 100, 20);
         textFieldDateFin.setColumns(10);
         panelNouveauBailChamps.add(textFieldDateFin);
 
         // Bouton "Vider"
         JButton btnVider = new JButton("Vider");
-        btnVider.setBounds(161, 158, 74, 20);
+        btnVider.setBounds(161, 114, 74, 20);
         panelNouveauBailChamps.add(btnVider);
         btnVider.addActionListener(gestionFen);
 
         // ComboBox des biens locatifs
         comboBoxBiensLoc = new JComboBox<>();
-        comboBoxBiensLoc.setBounds(302, 10, 123, 21);
+        comboBoxBiensLoc.setBounds(276, 10, 123, 21);
         panelNouveauBail.add(comboBoxBiensLoc);
 
         JLabel lblBiensLoc = new JLabel("Bien locatif : ");
+        lblBiensLoc.setHorizontalAlignment(SwingConstants.RIGHT);
         lblBiensLoc.setLabelFor(comboBoxBiensLoc);
-        lblBiensLoc.setBounds(192, 14, 117, 13);
+        lblBiensLoc.setBounds(136, 14, 117, 13);
         panelNouveauBail.add(lblBiensLoc);
 
         // Le contrôleur remplit la comboBox
         gestionFen.remplirJComboBoxBatiment(comboBoxBiensLoc);
+        
+        JLabel lblCharge = new JLabel("Montant charges* :");
+        lblCharge.setHorizontalAlignment(SwingConstants.RIGHT);
+        lblCharge.setBounds(127, 44, 123, 16);
+        panelNouveauBail.add(lblCharge);
+        
+        textFieldCharge = new JTextField();
+        textFieldCharge.setColumns(10);
+        textFieldCharge.setBounds(276, 41, 100, 19);
+        panelNouveauBail.add(textFieldCharge);
+        
+        JLabel lblEuros = new JLabel("€");
+        lblEuros.setBounds(386, 44, 45, 13);
+        panelNouveauBail.add(lblEuros);
 
         // --------------------------------------------------------------------
         // Panel pour les boutons en bas (Continuer, Annuler)
@@ -356,6 +376,14 @@ public class AjouterBail extends JInternalFrame {
     public void setTextDateFin(String text) {
         textFieldDateFin.setText(text);
     }
+    
+    public String getTextCharges() {
+        return textFieldCharge.getText();
+    }
+
+    public void setTextCharges(String text) {
+        textFieldCharge.setText(text);
+    }
 
     public String getTextDateArrivee() {
         return textFieldDateArrivee.getText();
@@ -415,6 +443,7 @@ public class AjouterBail extends JInternalFrame {
      */
     public List<String> getChampsObligatoiresNouveauBail() {
         List<String> res = new ArrayList<>();
+        res.add(getTextCharges());
         res.add(getTextIdBail());
         res.add(getTextDateDebut());
         return res;

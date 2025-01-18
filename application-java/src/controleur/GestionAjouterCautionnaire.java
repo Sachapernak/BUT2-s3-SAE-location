@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -19,12 +20,14 @@ import modele.Cautionner;
 import modele.Contracter;
 import modele.Locataire;
 import modele.Loyer;
+import modele.ProvisionCharge;
 import modele.dao.DaoAdresse;
 import modele.dao.DaoBail;
 import modele.dao.DaoBienLocatif;
 import modele.dao.DaoCautionnaire;
 import modele.dao.DaoCautionner;
 import modele.dao.DaoLocataire;
+import modele.dao.DaoProvisionCharge;
 import vue.AfficherLocatairesActuels;
 import vue.AjouterBail;
 import vue.AjouterCautionnaire;
@@ -50,6 +53,7 @@ public class GestionAjouterCautionnaire implements ActionListener {
 	private DaoAdresse daoAdresse;
 	private DaoBail daoBail;
 	private DaoBienLocatif daoBien;
+	private DaoProvisionCharge daoProvision;
 
 	private VerificationChamps verifChamps;
 
@@ -77,6 +81,7 @@ public class GestionAjouterCautionnaire implements ActionListener {
 		this.daoCautionner = new DaoCautionner();
 		this.daoLocataire = new DaoLocataire();
 		this.daoAdresse = new DaoAdresse();
+		this.daoProvision = new DaoProvisionCharge();
 
 		// Service de vérification des champs
 		this.verifChamps = new VerificationChamps();
@@ -225,6 +230,8 @@ public class GestionAjouterCautionnaire implements ActionListener {
 
 		// Création en base du bail s’il est nouveau
 		creationBail(bail);
+		
+		//Recupération et creation de la provision pour charge lors de l'ajout d'un nouveau bail
 
 		// Persistance locataire, cautionnaire, etc.
 		try {
@@ -359,15 +366,19 @@ public class GestionAjouterCautionnaire implements ActionListener {
 		}
 		return bail;
 	}
+	
 
 	/**
 	 * Crée le bail en base de données si c'est un nouveau bail.
 	 * Sinon, met à jour les parts de loyer des locataires déjà existants.
 	 */
 	public void creationBail(Bail bail) {
+		
 		if (this.fenAjouterBail.getRdbtnNouveauBail().isSelected()) {
+			ProvisionCharge provisionCharge = recupererMontantProvisionPourCharges(bail.getIdBail());
 			try {
 				daoBail.create(bail);
+				creationProvision(provisionCharge);
 			} catch (SQLException | IOException e1) {
 				e1.printStackTrace();
 			}
@@ -376,6 +387,32 @@ public class GestionAjouterCautionnaire implements ActionListener {
 		}
 	}
 
+	/**
+	 * Recupere a partir des informations saisies la provision pour charge.
+	 * @return provisionCharge : la provision pour charge associé au bail et au locataire
+	 */
+	public ProvisionCharge recupererMontantProvisionPourCharges(String idBail) {
+		String montantProvisionStr =  this.fenAjouterBail.getTextCharges();
+		BigDecimal montantProvision = new BigDecimal(montantProvisionStr);
+		
+		LocalDate dateProvision = LocalDate.now();
+        String dateProvisionStr = dateProvision.toString();
+		
+		
+		return new ProvisionCharge(idBail,dateProvisionStr, montantProvision );
+	}
+	
+	/**
+	 * Ajoute la provision pour charge à la base de données
+	 */
+	public void creationProvision(ProvisionCharge provision) {
+		try {
+			daoProvision.create(provision);
+		} catch (SQLException | IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * Récupère le montant du loyer actuel du bien.
 	 * @return montant du loyer sous forme de String
