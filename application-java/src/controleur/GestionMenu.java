@@ -21,6 +21,7 @@ import vue.ChargerLoyers;
 import vue.FenetrePrincipale;
 import vue.PageConnexion;
 import vue.ReglesMetier;
+import vue.RevalorisationLoyer;
 import vue.SetICC;
 import vue.SelectionSoldeToutCompte;
 
@@ -111,10 +112,16 @@ public class GestionMenu implements ActionListener{
 				AfficherBaux afBaux = new AfficherBaux();
 				fenLayerPane.add(afBaux, JLayeredPane.PALETTE_LAYER);
 				afBaux.setVisible(true);
+				break;
 			case "Afficher les assurances" : 
 				AfficherAssurances aa = new AfficherAssurances();
 				fenLayerPane.add(aa, JLayeredPane.PALETTE_LAYER);
 				aa.setVisible(true);
+				break;
+			case "Augmenter les loyers" : 
+				RevalorisationLoyer reval = new RevalorisationLoyer();
+				fenLayerPane.add(reval, JLayeredPane.PALETTE_LAYER);
+				reval.setVisible(true);
 				break;
 			default:
 				break;
