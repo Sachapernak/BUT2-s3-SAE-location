@@ -36,12 +36,13 @@ public class GestionAfficherEntreprises implements ActionListener{
 	/**
 	 * Méthode déclenchée par les actions sur la vue. On décompose selon le bouton cliqué.
 	 */
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() instanceof JComboBox) {
             handleSecteurSelection((JComboBox<String>) e.getSource());
-        } else if (e.getSource() instanceof JButton) {
-            handleButtonClick((JButton) e.getSource());
+        } else if (e.getSource() instanceof JButton jbutton) {
+            handleButtonClick(jbutton);
         }
     }
 

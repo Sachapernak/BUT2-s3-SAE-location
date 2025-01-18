@@ -3,6 +3,9 @@ package controleur;
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -18,6 +21,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 
 import modele.BienLocatif;
+import modele.dao.DaoBail;
 import modele.dao.DaoBienLocatif;
 import vue.AfficherLocatairesActuels;
 import vue.AjouterBail;
@@ -46,9 +50,11 @@ public class GestionAjouterBail implements ActionListener {
      * @param afl la vue pour afficher les locataires actuels
      */
     public GestionAjouterBail(AjouterBail ab, AjouterLocataire al, AfficherLocatairesActuels afl) {
-        this.fenAjouterBail = ab;
+    	
+    	this.fenAjouterBail = ab;
         this.fenAjouterLocataire = al;
         this.fenAfficherLocataires = afl;
+        
         this.daoBien = new DaoBienLocatif();
         this.verifChamps = new VerificationChamps();
     }
@@ -166,12 +172,13 @@ public class GestionAjouterBail implements ActionListener {
      *
      * @param comboBoxBiens la JComboBox à remplir
      */
-    public void remplirJComboBoxBatiment(JComboBox<String> comboBoxBiens) {
+    public void remplirJComboBoxBiens(JComboBox<String> comboBoxBiens) {
         try {
             List<BienLocatif> biens = daoBien.findAll();
             for (BienLocatif bien : biens) {
                 comboBoxBiens.addItem(bien.getIdentifiantLogement());
             }
+            verifierDispoNouveauBail();
         } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
@@ -198,6 +205,22 @@ public class GestionAjouterBail implements ActionListener {
         fenAjouterBail.setTextDateDebut("");
         fenAjouterBail.setTextDateFin("");
     }
+    
+    public void verifierDispoNouveauBail() {
+    	
+    	
+    	try {
+    		DaoBail dao = new DaoBail();
+			int nbBail = dao.findNbBailActifParLogement(String.valueOf(fenAjouterBail.getComboBoxBiensLoc().getSelectedItem()));
+			fenAjouterBail.setNouveauBailEnable(nbBail == 0);
+			
+		} catch (SQLException | IOException e) {
+			fenAjouterBail.afficherMessageErreur(e.getMessage());
+			e.printStackTrace();
+		} 
+    	
+    	
+    }
 
     /**
      * Gère l'action des boutons radio pour choisir entre
@@ -214,13 +237,23 @@ public class GestionAjouterBail implements ActionListener {
 
         switch (rdBtnLibelle) {
             case "Créer un nouveau bail":
+                verifierDispoNouveauBail();
                 cd.show(panelPrincipal, "nouveauBail");
                 break;
             case "Rattacher à un bail existant":
                 cd.show(panelPrincipal, "bauxExistants");
+            	fenAjouterBail.enableContinuer(true);
                 break;
             default:
                 break;
         }
     }
+
+	public void gestionChangementLog(JComboBox<String> combo) {
+        combo.addItemListener(evt -> {
+            if (evt.getStateChange() == ItemEvent.SELECTED && combo.isVisible()) {
+                verifierDispoNouveauBail();
+            }
+    });
+	}
 }
