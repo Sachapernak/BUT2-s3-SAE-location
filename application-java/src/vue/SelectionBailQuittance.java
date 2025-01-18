@@ -40,7 +40,7 @@ public class SelectionBailQuittance extends JDialog {
 	private JButton btnQuitter;
 	
 	private GestionSelectionBailQuittance gest;
-	private RapportQuittance rapport;
+
 
 	
 	/**
@@ -48,7 +48,7 @@ public class SelectionBailQuittance extends JDialog {
 	 */
 	public SelectionBailQuittance(String idLoc) {
 		
-		this.rapport = new RapportQuittance();
+
 		
 		gest = new GestionSelectionBailQuittance(this);
 		

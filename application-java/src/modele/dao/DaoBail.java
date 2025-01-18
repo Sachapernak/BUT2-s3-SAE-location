@@ -314,7 +314,7 @@ public class DaoBail extends DaoModele<Bail> implements Dao<Bail> {
 					    WHERE p2.id_bail = p.id_bail
 					      AND p2.date_changement <= ?
 					)
-					AND p.id_bail = ?;
+					AND p.id_bail = ?
 					""";
 
 

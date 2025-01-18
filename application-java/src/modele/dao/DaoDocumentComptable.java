@@ -78,7 +78,7 @@ public class DaoDocumentComptable extends DaoModele<DocumentComptable> {
 	public BigDecimal findTotalLoyerMois(String idLoc, String idBai, String date) throws SQLException, IOException {
 		
 		String req = """
-						SELECT SUM(dc.montant) 
+						SELECT NVL(SUM(dc.montant), 0) 
 						FROM sae_document_comptable dc
 						JOIN sae_facture_du_bien fdb ON dc.numero_document = fdb.numero_document 
 						                             AND dc.date_document = fdb.date_document
@@ -88,7 +88,7 @@ public class DaoDocumentComptable extends DaoModele<DocumentComptable> {
 						  AND TO_CHAR(dc.date_document, 'yyyy-MM') = TO_CHAR(? , 'yyyy-MM')
 						  AND dc.identifiant_locataire = ?
 						  AND bai.id_bail = ?
-						  AND bai.identifiant_logement = fdb.identifiant_logement;
+						  AND bai.identifiant_logement = fdb.identifiant_logement
 						""";
 		 try (PreparedStatement prSt = ConnexionBD.getInstance().getConnexion().prepareStatement(req)) {
 			        // Paramétrage de la requête

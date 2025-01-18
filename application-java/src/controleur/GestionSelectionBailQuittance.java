@@ -1,5 +1,7 @@
 package controleur;
 
+import java.awt.Desktop;
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
@@ -52,7 +54,8 @@ public class GestionSelectionBailQuittance {
 	            String nomLoc = loc.getNom();
 	            String prenomLoc = loc.getPrenom();
 	            String adresseBien = adresse.getAdressePostale();
-	            String complement = adresse.getComplementAdresse() + " " + bien.getComplementAdresse();
+	            String complement = (adresse.getComplementAdresse()== null ? "" : adresse.getComplementAdresse())+ 
+	            		            (bien.getComplementAdresse() == null ? "" :" " + bien.getComplementAdresse());
 	            String codePostal = String.valueOf(adresse.getCodePostal());
 	            String ville = adresse.getVille();
 
@@ -76,7 +79,21 @@ public class GestionSelectionBailQuittance {
 	            rapport.setTotalCharges(montants.get("chargeDuMoisString"));
 	            rapport.setExcedent(montants.get("restText"));
 
-	            // ... (vous pouvez ensuite générer le rapport ou continuer le traitement)
+
+	           
+                String cheminFichier = rapport.genererSoldeToutCompte(nomLoc + "-QUITTANCE-" + fen.getDate());
+
+                // Ouvrir le fichier une fois créé
+                File fichier = new File(cheminFichier);
+                
+                // TODO : generer la quittance dans document comptable
+                
+                if (fichier.exists()) {
+                    Desktop.getDesktop().open(fichier);
+                    fen.dispose();
+                } else {
+                    fen.afficherMessageErreur("Le fichier n'a pas été trouvé : " + cheminFichier);
+                }
 
 	        } catch (SQLException | IOException ex) {
 	            fen.afficherMessageErreur(ex.getMessage());
@@ -102,6 +119,7 @@ public class GestionSelectionBailQuittance {
 	    BigDecimal montantTotal = daoDoc.findTotalLoyerMois(idLocataire, idBail, date);
 	    BigDecimal loyerDuMois = daoBien.findLoyerDuMois(bien.getIdentifiantLogement(), date)
 	                                      .multiply(mult);
+	    
 	    BigDecimal chargeDuMois = daoBail.findChargeDuMois(idBail, date).multiply(mult);
 
 	    BigDecimal rest = montantTotal.subtract(loyerDuMois);

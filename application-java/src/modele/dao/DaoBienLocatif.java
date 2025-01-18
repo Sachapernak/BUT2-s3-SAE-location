@@ -83,7 +83,7 @@ public class DaoBienLocatif extends DaoModele<BienLocatif> {
 	        // Exécution de la requête et récupération du résultat
 	        try (ResultSet rs = prSt.executeQuery()) {
 	            if (rs.next()) {
-	                return rs.getBigDecimal(1);
+	                return rs.getBigDecimal(2);
 	            } else {
 	                return BigDecimal.ZERO;
 	            }
