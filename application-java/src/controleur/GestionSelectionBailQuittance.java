@@ -6,7 +6,10 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.swing.JButton;
 
@@ -25,7 +28,6 @@ public class GestionSelectionBailQuittance {
 	
 	private SelectionBailQuittance fen;
 	private Locataire loc;
-	private Bail bai;
 	private RapportQuittance rapport;
 
 	
@@ -36,112 +38,118 @@ public class GestionSelectionBailQuittance {
 	}
 	
 	public void gestionBoutonSuivant(JButton btn) {
-		
-		
-		btn.addActionListener(clic -> {
-			try {
-				DaoBail daoBail = new DaoBail(); 
-				DaoBienLocatif daoBien = new DaoBienLocatif();
-				DaoDocumentComptable daoDoc = new DaoDocumentComptable();
-				
-				Bail bai = daoBail.findById(fen.getSelectedIdBail());
-				
-				BienLocatif bien = bai.getBien();
-				Adresse adresse = bien.getBat().getAdresse();
-				
-				String nomLoc = loc.getNom();
-				String prenomLoc = loc.getPrenom();
-				String AdresseBien = adresse.getAdressePostale();
-				String Complement = adresse.getComplementAdresse() + " " + bien.getComplementAdresse();
-				String codeP = String.valueOf(adresse.getCodePostal());
-				String ville = adresse.getVille();
-			
-				BigDecimal mult = daoBail.findPartDesCharges(fen.getSelectedIdBail(), loc.getIdLocataire());
-				
-				BigDecimal montantTotal = daoDoc.findTotalLoyerMois(loc.getIdLocataire(), fen.getSelectedIdBail(), 
-																						fen.getDate());
-				BigDecimal loyerDuMois = daoBien.findLoyerDuMois(bien.getIdentifiantLogement(),fen.getDate())
-																				.multiply(mult);
-				
-				BigDecimal chargeDuMois = daoBail.findChargeDuMois(fen.getSelectedIdBail(), fen.getDate())
-																			.multiply(mult);
-				
-				// Calcul initial du reste après déduction du loyer
-				BigDecimal rest = montantTotal.subtract(loyerDuMois);
+	    btn.addActionListener(clic -> {
+	        try {
+	            DaoBail daoBail = new DaoBail(); 
+	            DaoBienLocatif daoBien = new DaoBienLocatif();
+	            DaoDocumentComptable daoDoc = new DaoDocumentComptable();
 
-				// Traitement pour le loyer
-				String loyerDuMoisString;
-				
+	            Bail bai = daoBail.findById(fen.getSelectedIdBail());
+	            BienLocatif bien = bai.getBien();
+	            Adresse adresse = bien.getBat().getAdresse();
 
-				if (rest.compareTo(BigDecimal.ZERO) > 0) {
-				    // Si montantTotal - loyer > 0, on prend le loyer complet
-				    loyerDuMoisString = loyerDuMois.toString();
-				
-				} else {
-					
-				    // Sinon, on calcule la différence négative (loyer - montantTotal)
-				    loyerDuMoisString = loyerDuMois.subtract(montantTotal).toString();
-				    
-				    // Dans ce cas, le montantTotal est insuffisant pour couvrir le loyer,
-				    // le reste reste négatif ou nul, pas besoin de continuer plus loin.
-				    rest = BigDecimal.ZERO;
-				}
+	            // Extraction des informations de l'adresse et du locataire
+	            String nomLoc = loc.getNom();
+	            String prenomLoc = loc.getPrenom();
+	            String adresseBien = adresse.getAdressePostale();
+	            String complement = adresse.getComplementAdresse() + " " + bien.getComplementAdresse();
+	            String codePostal = String.valueOf(adresse.getCodePostal());
+	            String ville = adresse.getVille();
 
-				// Traitement pour la charge si le reste est positif
-				String chargeDuMoisString = "0";
-				String restText = "0";
+	            // Calcul des montants financiers
+	            Map<String, String> montants = calculerMontants(
+	                    daoDoc, daoBien, daoBail,
+	                    bien, rapport);
 
-				if (rest.compareTo(BigDecimal.ZERO) > 0) {
-				    // Si après le loyer il reste un montant positif
-				    BigDecimal restApresLoyer = rest; 
-				    BigDecimal differenceCharge = restApresLoyer.subtract(chargeDuMois);
-				    
-				    if (differenceCharge.compareTo(BigDecimal.ZERO) > 0) {
-				        // Si rest - charge > 0, on prend la charge complète
-				        chargeDuMoisString = chargeDuMois.toString();
-				        
-				    } else {
-				        // Sinon, on calcule charge - rest
-				        chargeDuMoisString = chargeDuMois.subtract(restApresLoyer).toString();
-				    }
-				    
-				    // Mise à jour du reste après déduction de la charge
-				    rest = restApresLoyer.subtract(chargeDuMois);
-				    
-				    if (rest.compareTo(BigDecimal.ZERO) > 0) {
-				        restText = rest.toString();
-				    } else {
-				        restText = "0";
-				    }
-				} else {
-				    // Si pas de reste après le loyer, aucune charge n'est déduite
-				    chargeDuMoisString = "0";
-				    restText = "0";
-				}
-				
+	            // Assignation aux attributs du rapport
 	            rapport.setNom(nomLoc);
 	            rapport.setPrenom(prenomLoc);
-	            rapport.setAdresse(AdresseBien);
-	            rapport.setComplement(Complement);  // Exemple : aucun complément
-	            rapport.setCodePostal(codeP);
+	            rapport.setAdresse(adresseBien);
+	            rapport.setComplement(complement);
+	            rapport.setCodePostal(codePostal);
 	            rapport.setVille(ville);
 	            rapport.setDateCourante(LocalDate.now().toString());
-	            rapport.setDatePaiement(fen.getDate());    // Date du paiement
-	            rapport.setTotalPaiement(montantTotal.toString());      // Exemple de total payé
-	            rapport.setMois(fen.getDate());
-	            rapport.setTotalLoyer(loyerDuMoisString);         // Exemple de loyer
-	            rapport.setTotalCharges(chargeDuMoisString);        // Exemple de charges
-	            rapport.setExcedent(restText);   
-				
-				
-				
-			} catch (SQLException | IOException ex) {
-				fen.afficherMessageErreur(ex.getMessage());
-				ex.printStackTrace();
-			}
+	            rapport.setDatePaiement(fen.getDate());
+	            rapport.setTotalPaiement(montants.get("montantTotal"));
+	            rapport.setMois(formatMoisAnnee(fen.getDate()));
+	            rapport.setTotalLoyer(montants.get("loyerDuMoisString"));
+	            rapport.setTotalCharges(montants.get("chargeDuMoisString"));
+	            rapport.setExcedent(montants.get("restText"));
 
-		});
+	            // ... (vous pouvez ensuite générer le rapport ou continuer le traitement)
+
+	        } catch (SQLException | IOException ex) {
+	            fen.afficherMessageErreur(ex.getMessage());
+	            ex.printStackTrace();
+	        }
+	    });
 	}
+
+	
+	private Map<String, String> calculerMontants(
+	        DaoDocumentComptable daoDoc, 
+	        DaoBienLocatif daoBien, 
+	        DaoBail daoBail,
+	        BienLocatif bien, RapportQuittance rapport) throws SQLException, IOException {
+
+		
+        String idLocataire = loc.getIdLocataire(); 
+        String date = fen.getDate();
+		String idBail = fen.getSelectedIdBail();
+		
+	    BigDecimal mult = daoBail.findPartDesCharges(idBail, idLocataire);
+
+	    BigDecimal montantTotal = daoDoc.findTotalLoyerMois(idLocataire, idBail, date);
+	    BigDecimal loyerDuMois = daoBien.findLoyerDuMois(bien.getIdentifiantLogement(), date)
+	                                      .multiply(mult);
+	    BigDecimal chargeDuMois = daoBail.findChargeDuMois(idBail, date).multiply(mult);
+
+	    BigDecimal rest = montantTotal.subtract(loyerDuMois);
+	    String loyerDuMoisString;
+
+	    if (rest.compareTo(BigDecimal.ZERO) > 0) {
+	        loyerDuMoisString = loyerDuMois.toString();
+	    } else {
+	        loyerDuMoisString = loyerDuMois.subtract(montantTotal).toString();
+	        rest = BigDecimal.ZERO;
+	    }
+
+	    String chargeDuMoisString = "0";
+	    String restText = "0";
+
+	    if (rest.compareTo(BigDecimal.ZERO) > 0) {
+	        BigDecimal restApresLoyer = rest;
+	        BigDecimal differenceCharge = restApresLoyer.subtract(chargeDuMois);
+
+	        if (differenceCharge.compareTo(BigDecimal.ZERO) > 0) {
+	            chargeDuMoisString = chargeDuMois.toString();
+	        } else {
+	            chargeDuMoisString = chargeDuMois.subtract(restApresLoyer).toString();
+	        }
+
+	        rest = restApresLoyer.subtract(chargeDuMois);
+	        restText = (rest.compareTo(BigDecimal.ZERO) > 0) ? rest.toString() : "0";
+	    }
+
+	    Map<String, String> result = new HashMap<>();
+	    result.put("loyerDuMoisString", loyerDuMoisString);
+	    result.put("chargeDuMoisString", chargeDuMoisString);
+	    result.put("restText", restText);
+	    result.put("montantTotal", montantTotal.toString());
+
+	    return result;
+	}
+
+	
+	
+	
+	private String formatMoisAnnee(String dateStr) {
+	    LocalDate date = LocalDate.parse(dateStr); 
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM yyyy", Locale.FRENCH);
+	    return date.format(formatter);
+	}
+	
+	
 	
 	public void gestionBoutonValiderDate(JButton btn) {
 	    btn.addActionListener(e -> {
