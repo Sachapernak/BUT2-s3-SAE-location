@@ -14,6 +14,7 @@ import modele.dao.requetes.RequeteSelectLocataire;
 import modele.dao.requetes.RequeteSelectLocataireById;
 import modele.dao.requetes.RequeteUpdateLocataire;
 import modele.dao.requetes.requeteSelectLocataireByBienActif;
+import modele.dao.requetes.RequeteSelectLocataireByNomPrenom;
 
 /**
  * Classe DaoLocataire qui gère l'accès aux données relatives aux locataires dans la base de données.
@@ -90,6 +91,10 @@ public class DaoLocataire extends DaoModele<Locataire> {
     
     public List<Locataire> findByIdBien(String...id) throws SQLException, IOException {
     	return find(new requeteSelectLocataireByBienActif(), id);
+    }
+    
+    public List<Locataire> findByNomOuPrenom(String...id) throws SQLException, IOException {
+    	return find(new RequeteSelectLocataireByNomPrenom(), id);
     }
 
     /**

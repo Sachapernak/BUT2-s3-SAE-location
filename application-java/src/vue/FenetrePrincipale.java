@@ -109,15 +109,20 @@ public class FenetrePrincipale extends JFrame{
 		
 		JMenuItem mntmAnciensLocataires = new JMenuItem("Liste des anciens locataires");
 		mntmAnciensLocataires.addActionListener(this.gestionMenu);
+		locataires.add(mntmAnciensLocataires);
 		
 		JMenuItem mntmLocatairesActuels = new JMenuItem("Liste des locataires actuels");
 		mntmLocatairesActuels.addActionListener(this.gestionMenu);
 		locataires.add(mntmLocatairesActuels);
-		locataires.add(mntmAnciensLocataires);
+
+		JMenuItem mntnQuittances = new JMenuItem("Quittances de loyer");
+		mntnQuittances.addActionListener(this.gestionMenu);
+		locataires.add(mntnQuittances);
 		
 		JMenuItem mntnSoldeToutCompte = new JMenuItem("Solde de tout comptes");
+		mntnSoldeToutCompte.addActionListener(this.gestionMenu);
 		locataires.add(mntnSoldeToutCompte);
-		
+
 		JMenuItem mntnBaux = new JMenuItem("Liste des baux");
 		locataires.add(mntnBaux);
 		mntnBaux.addActionListener(this.gestionMenu);

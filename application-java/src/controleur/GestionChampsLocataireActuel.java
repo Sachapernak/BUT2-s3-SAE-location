@@ -2,6 +2,7 @@ package controleur;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -152,7 +153,16 @@ public class GestionChampsLocataireActuel implements ListSelectionListener {
                     DefaultTableModel model = (DefaultTableModel) tableLocations.getModel();
 
                     for (Contracter contrat : contrats) {
-                    	if (contrat.getDateSortie() == null || contrat.getDateSortie().isEmpty()) {
+                    	Bail bai = contrat.getBail();
+                    	
+                    	if ((bai.getDateDeFin() == null 
+                    			|| bai.getDateDeFin().compareTo(LocalDate.now().toString()) > 0)
+                    		 && 
+                    		 (contrat.getDateSortie() == null 
+                    		 	|| contrat.getDateSortie().isEmpty() 
+                    			|| contrat.getDateSortie().compareTo(LocalDate.now().toString()) > 0)
+                    		){
+                    		
 	                        String dateEntree = contrat.getDateEntree();
 	                        String partLoyer = String.valueOf(contrat.getPartLoyer());
 	                        Bail bail = contrat.getBail();
@@ -264,7 +274,15 @@ public class GestionChampsLocataireActuel implements ListSelectionListener {
                     for (Locataire loc : locataires) {
                         // On affiche uniquement les locataires dont un contrat n'a pas de date de sortie
                         boolean estActif = daoContracter.getContrats(loc).stream()
-                                .anyMatch(e -> e.getDateSortie() == null);
+                                .anyMatch(e -> {
+                                	Bail bai = e.getBail();
+                                	
+                                	return (e.getDateSortie() == null ||
+                                		   e.getDateSortie().compareTo(LocalDate.now().toString()) > 0)
+                                		   &&
+                                		   (bai.getDateDeFin() == null ||
+                                		    bai.getDateDeFin().compareTo(LocalDate.now().toString()) > 0);
+                                	});
 
                         if (estActif) {
                             model.addRow(new String[]{
