@@ -26,6 +26,8 @@ import javax.swing.table.DefaultTableModel;
 
 import controleur.GestionAjouterBail;
 import controleur.GestionTablesAjouterBail;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
 
 /**
  * Vue permettant l'ajout/rattachement d'un bail pour un nouveau locataire.
@@ -65,6 +67,8 @@ public class AjouterBail extends JInternalFrame {
     // Vue précédente
     private AjouterLocataire fenPrecedente;
     private JTextField textFieldCharge;
+    private JButton btnContinuer;
+    private JLabel lblBailDejaExiste;
 
     /**
      * Constructeur principal de la fenêtre "AjouterBail".
@@ -158,11 +162,8 @@ public class AjouterBail extends JInternalFrame {
         		"Locataire", "Part de loyer en %"
         	}
         ) {
-        	boolean[] columnEditables = new boolean[] {
-        		false, false
-        	};
         	public boolean isCellEditable(int row, int column) {
-        		return columnEditables[column];
+        		return false;
         	}
         });
         tablePartsLoyer.getColumnModel().getColumn(0).setPreferredWidth(150);
@@ -179,11 +180,9 @@ public class AjouterBail extends JInternalFrame {
         		""
         	}
         ) {
-        	boolean[] columnEditables = new boolean[] {
-        		false
-        	};
+        	@Override
         	public boolean isCellEditable(int row, int column) {
-        		return columnEditables[column];
+        		return false;
         	}
         });
         tableTotal.getColumnModel().getColumn(0).setResizable(false);
@@ -215,12 +214,20 @@ public class AjouterBail extends JInternalFrame {
         lblMessageErreur.setBounds(9, 240, 390, 13);
         panelBauxExistants.add(lblMessageErreur);
 
+        
+        
         // --------------------------------------------------------------------
         // 2. Panel "Nouveau Bail"
         // --------------------------------------------------------------------
         JPanel panelNouveauBail = new JPanel();
         panelNouveauBail.setLayout(null);
         panelAssocierBail.add(panelNouveauBail, "nouveauBail");
+        
+        lblBailDejaExiste = new JLabel("Ajout impossible : Un bail est déja en cours sur ce bien");
+        lblBailDejaExiste.setForeground(new Color(255, 0, 0));
+        lblBailDejaExiste.setHorizontalAlignment(SwingConstants.CENTER);
+        lblBailDejaExiste.setBounds(152, 68, 329, 13);
+        panelNouveauBail.add(lblBailDejaExiste);
 
         // Sous-panel pour les champs du nouveau bail
         JPanel panelNouveauBailChamps = new JPanel();
@@ -270,6 +277,7 @@ public class AjouterBail extends JInternalFrame {
 
         // ComboBox des biens locatifs
         comboBoxBiensLoc = new JComboBox<>();
+
         comboBoxBiensLoc.setBounds(276, 10, 123, 21);
         panelNouveauBail.add(comboBoxBiensLoc);
 
@@ -279,8 +287,7 @@ public class AjouterBail extends JInternalFrame {
         lblBiensLoc.setBounds(136, 14, 117, 13);
         panelNouveauBail.add(lblBiensLoc);
 
-        // Le contrôleur remplit la comboBox
-        gestionFen.remplirJComboBoxBatiment(comboBoxBiensLoc);
+
         
         JLabel lblCharge = new JLabel("Montant charges* :");
         lblCharge.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -303,7 +310,7 @@ public class AjouterBail extends JInternalFrame {
         panelBoutons.setBounds(0, 371, 658, 37);
         contentPane.add(panelBoutons);
 
-        JButton btnContinuer = new JButton("Continuer");
+        btnContinuer = new JButton("Continuer");
         panelBoutons.add(btnContinuer);
 
         JButton btnAnnuler = new JButton("Annuler");
@@ -331,7 +338,14 @@ public class AjouterBail extends JInternalFrame {
         rdbtnNouveauBail.addActionListener(gestionFen);
         btnAnnuler.addActionListener(gestionFen);
         btnContinuer.addActionListener(gestionFen);
+        // Le contrôleur remplit la comboBox
+        gestionFen.remplirJComboBoxBiens(comboBoxBiensLoc);
+        gestionFen.gestionChangementLog(comboBoxBiensLoc);
+        
+
     }
+
+
 
     /**
      * Retourne la vue précédente, {@link AjouterLocataire}.
@@ -353,6 +367,28 @@ public class AjouterBail extends JInternalFrame {
     // Getters/Setters uniques pour les champs (ÉVITER LES DOUBLONS)
     // -------------------------------------------------------------------------
 
+    /**
+     * Active / désactive le choix de creation d'un nouveau bail
+     * 
+     * Si le bouton radio est désactivé, on selectionne l'autre.
+     * 
+     * @param enabled : si on active le bouton radio
+     */
+    public void setNouveauBailEnable(boolean enabled) {
+    	setTextIdBail("");
+    	lblBailDejaExiste.setVisible(!enabled);
+    	textFieldIdBail.setEnabled(enabled);
+    	textFieldDateDebut.setEnabled(enabled);
+    	textFieldDateFin.setEnabled(enabled);
+    	
+    	enableContinuer(enabled);
+
+    }
+    
+    public void enableContinuer(boolean enabled) {
+    	btnContinuer.setEnabled(enabled);
+    }
+    
     public String getTextIdBail() {
         return textFieldIdBail.getText();
     }
