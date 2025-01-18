@@ -31,7 +31,7 @@ import java.awt.Color;
 import javax.swing.JSeparator;
 import javax.swing.ListSelectionModel;
 
-public class FenetrePrincipale extends JFrame {
+public class FenetrePrincipale extends JFrame{
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -123,6 +123,10 @@ public class FenetrePrincipale extends JFrame {
 		locataires.add(mntmAnciensLocataires);
 		locataires.add(mntmQuittanceLoyer);
 		
+		JMenuItem mntnSoldeToutCompte = new JMenuItem("Solde de tout comptes");
+		locataires.add(mntnSoldeToutCompte);
+		mntnSoldeToutCompte.addActionListener(this.gestionMenu);
+		
 		JMenu menuloyersCharges = new JMenu("Charge et loyers");
 		menuloyersCharges.setForeground(new Color(255, 255, 255));
 		menuloyersCharges.setHorizontalAlignment(SwingConstants.CENTER);
@@ -157,6 +161,18 @@ public class FenetrePrincipale extends JFrame {
 		declarationFiscale.setHorizontalAlignment(SwingConstants.CENTER);
 		menuBar.add(declarationFiscale);
 		declarationFiscale.addActionListener(this.gestionMenu);
+		
+		JMenu mnAdministratif = new JMenu("Administratif");
+		mnAdministratif.setForeground(new Color(255, 255, 255));
+		menuBar.add(mnAdministratif);
+		
+		JMenuItem mntmAfficherEntreprises = new JMenuItem("Afficher les entreprises");
+		mnAdministratif.add(mntmAfficherEntreprises);
+		
+		JMenuItem mntmAssurances = new JMenuItem("Afficher les assurances");
+		mntmAssurances.addActionListener(this.gestionMenu);
+		mnAdministratif.add(mntmAssurances);
+		mntmAfficherEntreprises.addActionListener(this.gestionMenu);
 		
 		menuBar.add(Box.createHorizontalGlue());
 		JMenu configurationConnexion = new JMenu(" ");
@@ -256,6 +272,11 @@ public class FenetrePrincipale extends JFrame {
 		btnAjoutBien.setBounds(488, 36, 156, 21);
 		panelBien.add(btnAjoutBien);
 		
+		JButton btnAjoutBatiment = new JButton("Ajouter un batiment");
+		btnAjoutBatiment.addActionListener(this.gestionClic);
+		btnAjoutBatiment.setBounds(488, 36, 156, 21);
+		panelBien.add(btnAjoutBatiment);
+		
 		JButton btnCharger = new JButton("Charger");
 		btnCharger.addActionListener(this.gestionClic);
 		btnCharger.setBounds(488, 73, 156, 21);
@@ -307,7 +328,4 @@ public class FenetrePrincipale extends JFrame {
     public void afficherMessageErreur(String message) {
         JOptionPane.showMessageDialog(this, message, "Erreur", JOptionPane.ERROR_MESSAGE);
     }
-
-	
-
 }

@@ -8,7 +8,9 @@ import javax.swing.JInternalFrame;
 import javax.swing.JLayeredPane;
 import javax.swing.JMenuItem;
 import vue.AfficherAnciensLocataires;
+import vue.AfficherAssurances;
 import vue.AfficherCharges;
+import vue.AfficherEntreprises;
 import vue.AfficherLocatairesActuels;
 import vue.AfficherLoyers;
 import vue.ChargerLoyers;
@@ -17,6 +19,7 @@ import vue.PageConnexion;
 import vue.QuittanceLoyerPrincipal;
 import vue.ReglesMetier;
 import vue.SetICC;
+import vue.SelectionSoldeToutCompte;
 
 public class GestionMenu implements ActionListener{
 
@@ -91,13 +94,27 @@ public class GestionMenu implements ActionListener{
 				ChargerLoyers chLoyer = new ChargerLoyers();
 				chLoyer.setVisible(true);
 				break;
-				
+			case "Solde de tout comptes":
+				SelectionSoldeToutCompte sdTc = new SelectionSoldeToutCompte();
+				fenLayerPane.add(sdTc, JLayeredPane.PALETTE_LAYER);
+				sdTc.setVisible(true);
+				break;
+			
 			case "Consulter ICC" : 
 				SetICC stIcc= new SetICC();
 				fenLayerPane.add(stIcc, JLayeredPane.PALETTE_LAYER);
 				stIcc.setVisible(true);
 				break;
-				
+			case "Afficher les entreprises":
+				AfficherEntreprises ae = new AfficherEntreprises();
+				fenLayerPane.add(ae, JLayeredPane.PALETTE_LAYER);
+				ae.setVisible(true);
+				break;
+			case "Afficher les assurances" : 
+				AfficherAssurances aa = new AfficherAssurances();
+				fenLayerPane.add(aa, JLayeredPane.PALETTE_LAYER);
+				aa.setVisible(true);
+				break;
 			default:
 				break;
 				

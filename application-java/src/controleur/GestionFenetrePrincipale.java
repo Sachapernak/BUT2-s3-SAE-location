@@ -15,6 +15,8 @@ import modele.ConnexionBD;
 import vue.AfficherCharges;
 import vue.AjouterBien;
 import vue.FenetrePrincipale;
+import vue.AjouterBatiment;
+import vue.RevalorisationLoyer;
 import vue.PageConnexion;
 import vue.RevalorisationLoyer;
 
@@ -38,14 +40,14 @@ public class GestionFenetrePrincipale implements ActionListener{
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		JLayeredPane layeredPane= this.fenPrincipale.getLayeredPane();
 		JButton btnActif = (JButton) e.getSource();
         String btnLibelle = btnActif.getText();
 		
 		switch (btnLibelle) {
 			case "Augmenter le loyer" : 
 				RevalorisationLoyer rl = new RevalorisationLoyer(fenPrincipale.getValeurIdTableLogement());
-				JLayeredPane layeredPaneRevalorisationLoyer= this.fenPrincipale.getLayeredPane();
-				layeredPaneRevalorisationLoyer.add(rl, JLayeredPane.PALETTE_LAYER);
+				layeredPane.add(rl, JLayeredPane.PALETTE_LAYER);
 				rl.setVisible(true);
 				break;
 			case "Charger" : 
@@ -58,7 +60,6 @@ public class GestionFenetrePrincipale implements ActionListener{
 				break;
 
 			case "Ajouter un bien":
-                if (tableBatiment.getSelectedRow() == -1) {
                     JOptionPane.showMessageDialog(fenPrincipale, "Veuillez sélectionner une ligne du tableau avant d'ajouter un bien.", "Aucune sélection", JOptionPane.WARNING_MESSAGE);
                 } else {
                 	
@@ -69,9 +70,12 @@ public class GestionFenetrePrincipale implements ActionListener{
                 }
                 break;
 
+			case "Ajouter un batiment" : 
+				AjouterBatiment ab = new AjouterBatiment();
+				ab.setVisible(true);
+				break;
 			default:
 				break;
-
 		}
 		
 	}

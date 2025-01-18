@@ -715,21 +715,21 @@ public class AjouterCharge extends JDialog {
      * @return la valeur unitaire (float) convertie en BigDecimal
      */
     public BigDecimal getCoutVarUnit() {
-        return BigDecimal.valueOf((float) spinnerCoutVarUnit.getValue());
+        return new BigDecimal(String.valueOf (spinnerCoutVarUnit.getValue()));
     }
 
     /**
      * @return la valeur d'abonnement (float) convertie en BigDecimal
      */
     public BigDecimal getCoutVarAbon() {
-        return BigDecimal.valueOf((float) spinnerCoutVarAbon.getValue());
+        return new BigDecimal(String.valueOf(spinnerCoutVarAbon.getValue()));
     }
 
     /**
      * @return le nouvel index (double) converti en BigDecimal
      */
     public BigDecimal getValIndex() {
-        return BigDecimal.valueOf((double) spinnerNouveauIndex.getValue());
+        return new BigDecimal( String.valueOf(spinnerNouveauIndex.getValue()));
     }
 
     /**

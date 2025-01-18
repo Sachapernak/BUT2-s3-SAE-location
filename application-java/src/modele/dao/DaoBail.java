@@ -1,6 +1,7 @@
 package modele.dao;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,15 +13,19 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-
 import modele.Bail;
 import modele.BienLocatif;
 import modele.ConnexionBD;
 import modele.dao.requetes.RequeteCreateBail;
 import modele.dao.requetes.RequeteDeleteBail;
+import modele.dao.requetes.RequeteSelectAllCIBaiLoc;
+import modele.dao.requetes.RequeteSelectAllCfBaiLoc;
 import modele.dao.requetes.RequeteSelectBail;
 import modele.dao.requetes.RequeteSelectBailById;
 import modele.dao.requetes.RequeteSelectBailByIdLogement;
+import modele.dao.requetes.RequeteSelectCautionParLocBai;
+import modele.dao.requetes.RequeteSelectSommeProvBaiLoc;
+import modele.dao.requetes.RequeteSelectTotalChargeDeduc;
 import modele.dao.requetes.RequeteUpdateBail;
 
 
@@ -184,4 +189,124 @@ public class DaoBail extends DaoModele<Bail> implements Dao<Bail> {
         prSt.close();
         return res;
 	}
+    
+    public List<String[]> findAllChargesBaiLoc(String idBail, String idLoc, String dateDeb, String dateFin) 
+    		throws SQLException, IOException{
+    	
+    	
+    	List<String[]> res = new ArrayList<>();
+		Connection cn = ConnexionBD.getInstance().getConnexion();
+		PreparedStatement prSt;
+        ResultSet rs;
+    	
+		// Charges Index
+		RequeteSelectAllCIBaiLoc reqCI = new RequeteSelectAllCIBaiLoc();
+        
+		prSt = cn.prepareStatement(reqCI.requete());
+        reqCI.parametres(prSt, idBail, idLoc, dateDeb, dateFin);
+        rs = prSt.executeQuery();
+        
+        while (rs.next()) {
+        	// " " en 3eme pos car on a pas de calcul, pour harmoniser avec les charges a index
+        	String[] str = {rs.getDate("dateDoc").toString(), rs.getString("typeDoc"), rs.getString("Detail_Calcul"), rs.getBigDecimal("montant").toString()};
+            res.add(str);
+        }
+        rs.close();
+        prSt.close();
+        
+    	
+		RequeteSelectAllCfBaiLoc reqCf = new RequeteSelectAllCfBaiLoc();
+        prSt = cn.prepareStatement(reqCf.requete());
+        reqCf.parametres(prSt, idBail, idLoc, dateDeb, dateFin);
+        rs = prSt.executeQuery();
+        
+        while (rs.next()) {
+        	// " " en 3eme pos car on a pas de calcul, pour harmoniser avec les charges a index
+        	String[] str = {rs.getDate("dateDoc").toString(), rs.getString("typeDoc"), "", rs.getBigDecimal("montant").toString()};
+            res.add(str);
+        }
+        rs.close();
+        prSt.close();
+        
+        
+        
+        
+        return res;
+    }
+    
+    public String[] findAllDeducBaiLoc(String idBail, String idLoc, String dateDeb, String dateFin) 
+    		throws SQLException, IOException{
+    	
+    	String calc = "";
+    	String totalProv = ""; 
+    	String caution = "";
+    	
+
+		Connection cn = ConnexionBD.getInstance().getConnexion();
+		CallableStatement prCl;
+        ResultSet rs;
+    	
+		// Provisions pour charges
+		RequeteSelectSommeProvBaiLoc reqProv = new RequeteSelectSommeProvBaiLoc();
+        
+		prCl = cn.prepareCall(reqProv.requete());
+        reqProv.parametres(prCl, idBail, idLoc, dateDeb, dateFin);
+        prCl.execute();
+        
+        totalProv = prCl.getBigDecimal(5).toString();
+        calc = prCl.getString(6);
+        
+        prCl.close();
+        
+    	// Caution
+        
+		RequeteSelectCautionParLocBai reqCau = new RequeteSelectCautionParLocBai();
+        
+		PreparedStatement prSt = cn.prepareStatement(reqCau.requete());
+		reqCau.parametres(prSt, idBail, idLoc, dateDeb, dateFin);
+        rs = prSt.executeQuery();
+        
+        if (rs.next()) {
+        	caution = rs.getBigDecimal("MONTANTLOC").toString();
+        }
+        rs.close();
+        prSt.close();
+        
+
+        
+        String[] res = {totalProv, calc, caution};
+        
+        
+    	return res;
+    }
+    
+    public BigDecimal[] findTotalChargeDeduc(String idBail, String idLoc, String dateDeb, String dateFin) throws SQLException, IOException {
+    	
+    	BigDecimal totalCharge;
+    	BigDecimal totalDeduc;
+    	
+    	BigDecimal total;
+    	
+
+		Connection cn = ConnexionBD.getInstance().getConnexion();
+		CallableStatement prCl;
+    	
+		// Provisions pour charges
+		RequeteSelectTotalChargeDeduc reqTot= new RequeteSelectTotalChargeDeduc();
+        
+		prCl = cn.prepareCall(reqTot.requete());
+		reqTot.parametres(prCl, idBail, idLoc, dateDeb, dateFin);
+        prCl.execute();
+        
+        totalCharge = prCl.getBigDecimal(5);
+        totalDeduc = prCl.getBigDecimal(6);
+        
+        total = totalCharge.subtract(totalDeduc);
+        
+        prCl.close();
+        
+        BigDecimal[] resultat = {totalCharge, totalDeduc, total};
+        
+        return resultat;
+    }
 }
