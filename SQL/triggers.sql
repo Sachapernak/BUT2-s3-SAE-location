@@ -73,7 +73,8 @@ BEGIN
     pkg_icc.calculer_nouveau_loyer(:NEW.IDENTIFIANT_LOGEMENT, v_max_loyer);
 
     -- Vérification si le montant du nouveau loyer dépasse le maximum autorisé
-    IF :NEW.montant_loyer > v_max_loyer THEN
+    -- verifie si le loyer max n'est pas 0 (loyer augmentable sans maximum)
+    IF v_max_loyer > 1 AND :NEW.montant_loyer > v_max_loyer THEN
         RAISE_APPLICATION_ERROR(-20002, 
             'Le nouveau loyer (' || :NEW.montant_loyer || ') ne peut pas être légalement supérieur à : ' || v_max_loyer);
     END IF;

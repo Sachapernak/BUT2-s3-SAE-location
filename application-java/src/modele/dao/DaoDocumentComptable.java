@@ -74,6 +74,41 @@ public class DaoDocumentComptable extends DaoModele<DocumentComptable> {
 	        }
 	    }
 	}
+	
+	public BigDecimal findTotalLoyerMois(String idLoc, String idBai, String date) throws SQLException, IOException {
+		
+		String req = """
+						SELECT NVL(SUM(dc.montant), 0) 
+						FROM sae_document_comptable dc
+						JOIN sae_facture_du_bien fdb ON dc.numero_document = fdb.numero_document 
+						                             AND dc.date_document = fdb.date_document
+						JOIN sae_contracter co ON co.identifiant_locataire = dc.identifiant_locataire
+						JOIN sae_bail bai ON co.id_bail = bai.id_bail
+						WHERE dc.type_de_document = 'loyer'
+						  AND TO_CHAR(dc.date_document, 'yyyy-MM') = TO_CHAR(? , 'yyyy-MM')
+						  AND dc.identifiant_locataire = ?
+						  AND bai.id_bail = ?
+						  AND bai.identifiant_logement = fdb.identifiant_logement
+						""";
+		 try (PreparedStatement prSt = ConnexionBD.getInstance().getConnexion().prepareStatement(req)) {
+			        // Paramétrage de la requête
+		        	prSt.setDate(1, Date.valueOf(date));
+			        prSt.setString(2, idLoc);
+			        prSt.setString(3, idBai);
+
+			        // Exécution de la requête et récupération du résultat
+			        try (ResultSet rs = prSt.executeQuery()) {
+			            if (rs.next()) {
+
+			                return rs.getBigDecimal(1);
+			            } else {
+			                return BigDecimal.ZERO;
+			            }
+			        }
+			    }
+		
+		
+	}
 
 	
 	public List<DocumentComptable> findLoyersByIdLocataire (String idLocataire) throws SQLException, IOException {

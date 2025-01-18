@@ -10,6 +10,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import controleur.GestionSelectionBailQuittance;
+import rapport.RapportQuittance;
 
 import java.awt.GridBagLayout;
 import javax.swing.JLabel;
@@ -40,11 +41,14 @@ public class SelectionBailQuittance extends JDialog {
 	
 	private GestionSelectionBailQuittance gest;
 
+
 	
 	/**
 	 * Create the dialog.
 	 */
 	public SelectionBailQuittance(String idLoc) {
+		
+
 		
 		gest = new GestionSelectionBailQuittance(this);
 		
