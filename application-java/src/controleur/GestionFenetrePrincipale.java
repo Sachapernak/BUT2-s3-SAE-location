@@ -60,6 +60,7 @@ public class GestionFenetrePrincipale implements ActionListener{
 				break;
 
 			case "Ajouter un bien":
+				if (tableBatiment.getSelectedRow() == -1) {
                     JOptionPane.showMessageDialog(fenPrincipale, "Veuillez sélectionner une ligne du tableau avant d'ajouter un bien.", "Aucune sélection", JOptionPane.WARNING_MESSAGE);
                 } else {
                 	
