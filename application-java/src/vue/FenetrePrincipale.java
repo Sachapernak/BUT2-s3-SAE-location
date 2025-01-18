@@ -78,7 +78,7 @@ public class FenetrePrincipale extends JFrame{
 		tableBatiment = new JTable();
 		JButton btnAjoutBien = new JButton("Ajouter un bien");
 		this.gestionTable = new GestionTablesFenetrePrincipale(this);
-		this.gestionClic = new GestionFenetrePrincipale(this, btnAjoutBien,gestionTable);
+		this.gestionClic = new GestionFenetrePrincipale(this);
 		this.gestionMenu = new GestionMenu(this);
 		
 		

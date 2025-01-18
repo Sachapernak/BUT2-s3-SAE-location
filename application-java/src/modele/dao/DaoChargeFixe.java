@@ -1,9 +1,6 @@
 package modele.dao;
 
 import java.io.IOException;
-
-
-
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,19 +19,16 @@ public class DaoChargeFixe extends DaoModele<ChargeFixe>{
 	@Override
 	public void create(ChargeFixe donnees) throws SQLException, IOException {
 		miseAJour(new RequeteCreateChargeFixe(), donnees);
-		
 	}
-
+	
 	@Override
 	public void update(ChargeFixe donnees) throws SQLException, IOException {
 		miseAJour(new RequeteUpdateChargeFixe(), donnees);
-		
 	}
 
 	@Override
 	public void delete(ChargeFixe donnees) throws SQLException, IOException {
 		 miseAJour(new RequeteDeleteChargeFixe(), donnees);
-		
 	}
 
 	@Override

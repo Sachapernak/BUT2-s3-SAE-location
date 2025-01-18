@@ -205,28 +205,27 @@ public class DaoContracter extends DaoModele<Contracter>{
     	return findById(new RequeteSelectContracterById(), id);
     }
 
-	@Override
-	public void create(Contracter donnees) throws SQLException, IOException {
-		// TODO Auto-generated method stub
-		
-	}
+    // Pas utilisé mais obligatoire pour pouvoir utiliser le code DaoModele.
+    @Override
+    public void create(Contracter donnees) throws SQLException, IOException {
+        throw new UnsupportedOperationException("la méthode create n'est pas prise en charge pour contracter");
+    }
 
-	@Override
-	public void update(Contracter donnees) throws SQLException, IOException {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void update(Contracter donnees) throws SQLException, IOException {
+        throw new UnsupportedOperationException("la méthode update n'est pas prise en charge pour contracter");
+    }
 
-	@Override
-	public void delete(Contracter donnees) throws SQLException, IOException {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void delete(Contracter donnees) throws SQLException, IOException {
+        throw new UnsupportedOperationException("la méthode delete n'est pas prise en charge pour contracter");
+    }
 
-	@Override
-	public List<Contracter> findAll() throws SQLException, IOException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public List<Contracter> findAll() throws SQLException, IOException {
+        throw new UnsupportedOperationException("la méthode findAll n'est pas prise en charge pour contracter");
+    }
+
+
     
 }

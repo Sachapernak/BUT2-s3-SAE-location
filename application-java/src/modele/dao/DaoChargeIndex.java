@@ -2,7 +2,6 @@ package modele.dao;
 
 import java.io.IOException;
 
-
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

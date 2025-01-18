@@ -14,13 +14,13 @@ public class RequeteCreateDocumentComptable extends Requete<DocumentComptable> {
         		+ "type_de_document, montant, fichier_document, recuperable_locataire, "
         		+ "identifiant_locataire, identifiant_batiment, siret, numero_de_contrat, "
         		+ "annee_du_contrat) " 
-        		+ "VALUES (?, to_date(?,'DD-MM-YYYY'), ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        		+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     }
 
     @Override
     public void parametres(PreparedStatement prSt, DocumentComptable document) throws SQLException {
         prSt.setString(1, document.getNumeroDoc());
-        prSt.setString(2, document.getDateDoc());
+        prSt.setDate(2, Date.valueOf(document.getDateDoc()));
         String type = document.getTypeDoc().name().toLowerCase();
         prSt.setString(3, type); // Utilisation de l'enum TypeDoc
         prSt.setBigDecimal(4, document.getMontant());

@@ -1,6 +1,7 @@
 package modele.dao.requetes;
 
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -12,13 +13,13 @@ public class RequeteSelectProvisionChargeById extends Requete<ProvisionCharge> {
 	public String requete() {
 		return "select * from SAE_PROVISION_CHARGE "
 				+ "where ID_Bail = ? "
-				+ "AND to_char(DATE_CHANGEMENT, 'DD-MM-YYYY') = ?";
+				+ "AND DATE_CHANGEMENT = ?";
 	}
 	
 	@Override
 	public void parametres(PreparedStatement prSt, String... id) throws SQLException {
 		
 		prSt.setString(1, id[0]);
-		prSt.setString(2, id[1]);
+		prSt.setDate(2, Date.valueOf(id[1]));
 	}
 }
