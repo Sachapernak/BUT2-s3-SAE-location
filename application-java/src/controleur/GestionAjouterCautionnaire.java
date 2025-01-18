@@ -426,9 +426,11 @@ public class GestionAjouterCautionnaire implements ActionListener {
 				return String.valueOf(montant);
 			}
 			loyers = bail.getBien().getLoyers();
-			if (loyers != null && !loyers.isEmpty()) {
+			if (!loyers.isEmpty()) {
 				Loyer dernierLoyer = loyers.get(loyers.size() - 1);
 				montant = dernierLoyer.getMontantLoyer();
+			}else {
+				montant = bail.getBien().getLoyerBase();
 			}
 		} catch (SQLException | IOException e) {
 			e.printStackTrace();
