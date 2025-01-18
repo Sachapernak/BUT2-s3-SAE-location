@@ -217,14 +217,14 @@ public class GestionAfficherLocataireActuel implements ActionListener {
      * @throws SQLException si erreur en base
      * @throws IOException si erreur d'E/S
      */
-    private Locataire lireLocataireDepuisTable(JTable tableLoc, int rowIndex) { 
+    public Locataire lireLocataireDepuisTable(JTable tableLoc, int rowIndex) { 
         return gestionChampsLocLireLigneTable(tableLoc, rowIndex);
     }
 
     /**
      * Méthode déléguant à {@link GestionChampsLocataireActuel#lireLigneTable(JTable, int)}.
      */
-    private Locataire gestionChampsLocLireLigneTable(JTable tableLoc, int rowIndex) {
+    public Locataire gestionChampsLocLireLigneTable(JTable tableLoc, int rowIndex) {
         try {
 			return this.gestionChampsLoc
 			           .getClass()

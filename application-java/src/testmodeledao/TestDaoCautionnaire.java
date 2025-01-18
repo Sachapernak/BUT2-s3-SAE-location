@@ -140,10 +140,10 @@ public class TestDaoCautionnaire {
 
     @Test
     public void testDeleteNonExistent() throws SQLException, IOException, IllegalArgumentException {
-        Cautionnaire fakeCautionnaire = new Cautionnaire(9999, "FauxNom", "FauxPrenom", "DescriptionFausse");
+        Cautionnaire fakeCautionnaire = new Cautionnaire(8888, "FauxNom", "FauxPrenom", "DescriptionFausse");
         fakeCautionnaire.setAdresse(adresseTest);
         daoC.delete(fakeCautionnaire);
-        Cautionnaire cautionnaire = daoC.findById("9999");
+        Cautionnaire cautionnaire = daoC.findById("8888");
         assertNull("La suppression d'un cautionnaire inexistant ne devrait pas lever une erreur.", cautionnaire);
     }
 

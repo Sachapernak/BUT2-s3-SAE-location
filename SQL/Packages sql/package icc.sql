@@ -17,6 +17,10 @@ CREATE OR REPLACE PACKAGE pkg_icc AS
     FUNCTION loyer_augmentable(
         p_logement IN VARCHAR2
     ) RETURN NUMBER;
+    
+        FUNCTION loyer_augmentable_exact(
+        p_logement IN VARCHAR2
+    ) RETURN NUMBER;
 
 END pkg_icc;
 /
@@ -34,8 +38,15 @@ CREATE OR REPLACE PACKAGE BODY pkg_icc AS
         v_indice_new      NUMBER;
         v_indice_old      NUMBER;
     BEGIN
-
-
+        
+        ----------------------------------------------------------------------
+        -- 0) Verification préalables
+        ----------------------------------------------------------------------
+        if (pkg_bail.nombre_bail_actif(p_logement) = 0) THEN
+            p_nouveau_loyer := 0;
+            RETURN;
+        END IF;
+        
         ----------------------------------------------------------------------
         -- 1) Obtention de la date du dernier bail
         ----------------------------------------------------------------------
@@ -170,8 +181,13 @@ CREATE OR REPLACE PACKAGE BODY pkg_icc AS
         END;
     END date_debut_bail;
     
-    
-    FUNCTION loyer_augmentable(
+    /** renvoie vrai si et seulement si on est au mois anniversaire du bail
+        ET qu'au moins un an est passé depuis la dernière augmentation.
+        
+        Fonction stricte qui interdit d'augementer le loyer si on est pas 
+        dans le mois anniversaire du contrat. Pas pratique pour les demos
+    **/
+    FUNCTION loyer_augmentable_exact(
         p_logement IN VARCHAR2
     ) RETURN NUMBER AS
         v_date_bail       DATE;
@@ -179,6 +195,13 @@ CREATE OR REPLACE PACKAGE BODY pkg_icc AS
         v_last_increase   DATE;
         v_annees          NUMBER;
     BEGIN
+    
+        ----------------------------------------------------------------------
+        -- 0) Verification préalables
+        ----------------------------------------------------------------------
+        if (pkg_bail.nombre_bail_actif(p_logement) = 0) THEN
+            RETURN 1;
+        END IF;
         ----------------------------------------------------------------------
         -- 1) Obtention de la date du dernier bail
         ----------------------------------------------------------------------
@@ -224,10 +247,51 @@ CREATE OR REPLACE PACKAGE BODY pkg_icc AS
         -- 6) Sinon, le loyer est augmentable
         ----------------------------------------------------------------------
         RETURN 1;
-    END loyer_augmentable;
+    END loyer_augmentable_exact;
 
+
+    FUNCTION loyer_augmentable(
+        p_logement IN VARCHAR2
+        ) RETURN NUMBER AS
+        v_date_bail       DATE;
+        v_last_increase   DATE;
+        v_effective_date  DATE;  -- Date de debut : debut du bail ou dernière augmentation
+    BEGIN
+    
+        ----------------------------------------------------------------------
+        -- 0) Verification préalables
+        ----------------------------------------------------------------------
+        if (pkg_bail.nombre_bail_actif(p_logement) = 0) THEN
+            RETURN 1;
+        END IF;
+    
+        -- 1) Date de début du bail
+        date_debut_bail(p_logement, v_date_bail);
+    
+        -- 2) Dernière augmentation
+        SELECT MAX(date_de_changement)
+          INTO v_last_increase
+          FROM sae_loyer
+         WHERE identifiant_logement = p_logement;
+         
+        IF v_last_increase IS NULL THEN
+            v_effective_date := v_date_bail;
+        ELSE
+            v_effective_date := v_last_increase;
+        END IF;
+    
+        -- 3) SI plus de 12 mois => augmentable
+        IF ADD_MONTHS(v_effective_date, 12) <= SYSDATE THEN
+            RETURN 1;
+        ELSE
+            RETURN 0;
+        END IF;
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            -- Pas de bail ? augmentable
+            RETURN 1; 
+    END;
         
-
 END pkg_icc;
 /
 

@@ -97,6 +97,7 @@ public class GestionRevalorisationLoyer {
                 try {
                 	
                     LoyerInfo info = get();
+                    fen.setAugmentInterdite(!info.estAugmentable);
                     fen.setAncienLoyer(info.ancienLoyer);
                     fen.setLoyerMax(info.loyerMax);
                     
@@ -137,7 +138,10 @@ public class GestionRevalorisationLoyer {
         info.ancienLoyer = (dernierLoyer != null) ? dernierLoyer.toString() : "N/A";
         
         // Vérifie si le loyer est augmentable et obtient le loyer maximum selon le cas
-        if (!dao.estLoyerAugmentable(idLog)) {
+        
+        info.estAugmentable = dao.estLoyerAugmentable(idLog);
+
+        if (!info.estAugmentable) {
             info.loyerMax = info.ancienLoyer;
         } else {
             BigDecimal maxLoyerBD = dao.getMaxLoyer(idLog);
@@ -153,6 +157,7 @@ public class GestionRevalorisationLoyer {
     private static class LoyerInfo {
         String ancienLoyer;
         String loyerMax;
+        boolean estAugmentable;
     }
 
     /**

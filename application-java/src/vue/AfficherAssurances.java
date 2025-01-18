@@ -117,8 +117,8 @@ public class AfficherAssurances extends JInternalFrame  {
 	
 	
     /**
-     * Remplit la combo des locataires.
-     * @param locataires la liste d'IDs locataires
+     * Remplit la combo des types de contrat d'assurance.
+     * @param locataires la liste de type de contrat d'assurance
      */
     public void setComboBoxTypeContrat(List<String> typeContrats) {
     	comboBoxTypeContrat.removeAllItems();

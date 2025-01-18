@@ -18,6 +18,7 @@ import modele.BienLocatif;
 import modele.ConnexionBD;
 import modele.dao.requetes.RequeteCreateBail;
 import modele.dao.requetes.RequeteDeleteBail;
+import modele.dao.requetes.RequeteFindNbBailActif;
 import modele.dao.requetes.RequeteSelectAllCfBaiLoc;
 import modele.dao.requetes.RequeteSelectAllCIBaiLoc;
 import modele.dao.requetes.RequeteSelectBail;
@@ -283,5 +284,20 @@ public class DaoBail extends DaoModele<Bail> implements Dao<Bail> {
         BigDecimal[] resultat = {totalCharge, totalDeduc, total};
         
         return resultat;
+    }
+    
+    public int findNbBailActifParLogement(String idLog) throws SQLException, IOException {
+    	
+		Connection cn = ConnexionBD.getInstance().getConnexion();
+		CallableStatement prCl;
+
+		RequeteFindNbBailActif reqTot= new RequeteFindNbBailActif();
+        
+		prCl = cn.prepareCall(reqTot.requete());
+		reqTot.parametres(prCl, idLog);
+        prCl.execute();
+               
+        return  prCl.getInt(1);
+    	
     }
 }

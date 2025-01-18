@@ -2,6 +2,7 @@ package controleur;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -141,7 +142,6 @@ public class GestionChampsLocataireActuel implements ListSelectionListener {
         new SwingWorker<List<Contracter>, Void>() {
             @Override
             protected List<Contracter> doInBackground() throws Exception {
-                // Hypothèse : getContrats() peut déclencher une requête en BD.
                 return locSelect.getContrats();
             }
 
@@ -153,30 +153,43 @@ public class GestionChampsLocataireActuel implements ListSelectionListener {
                     DefaultTableModel model = (DefaultTableModel) tableLocations.getModel();
 
                     for (Contracter contrat : contrats) {
-                        String dateEntree = contrat.getDateEntree();
-                        String partLoyer = String.valueOf(contrat.getPartLoyer());
-                        Bail bail = contrat.getBail();
-                        String idBail = bail.getIdBail();
+                    	Bail bai = contrat.getBail();
+                    	
+                    	if ((bai.getDateDeFin() == null 
+                    			|| bai.getDateDeFin().compareTo(LocalDate.now().toString()) > 0)
+                    		 && 
+                    		 (contrat.getDateSortie() == null 
+                    		 	|| contrat.getDateSortie().isEmpty() 
+                    			|| contrat.getDateSortie().compareTo(LocalDate.now().toString()) > 0)
+                    		){
+                    		
+	                        String dateEntree = contrat.getDateEntree();
+	                        String partLoyer = String.valueOf(contrat.getPartLoyer());
+	                        Bail bail = contrat.getBail();
+	                        String idBail = bail.getIdBail();
+                        
+                            // Dernière régularisation
+                            String dateDerniereRegularisation = extraireDerniereRegularisation(bail);
+                            // Loyer actuel
+                            String loyerActuel = extraireLoyerActuel(bail);
 
-                        // Dernière régularisation
-                        String dateDerniereRegularisation = extraireDerniereRegularisation(bail);
-                        // Loyer actuel
-                        String loyerActuel = extraireLoyerActuel(bail);
+                            String batiment = bail.getBien().getBat().getIdBat();
+                            String complementAdr = bail.getBien().getComplementAdresse();
+                            String type = bail.getBien().getType().getValeur();
 
-                        String batiment = bail.getBien().getBat().getIdBat();
-                        String complementAdr = bail.getBien().getComplementAdresse();
-                        String type = bail.getBien().getType().getValeur();
+                            model.addRow(new Object[]{
+                                idBail,
+                                dateEntree,
+                                type,
+                                batiment,
+                                complementAdr,
+                                loyerActuel,
+                                partLoyer,
+                                dateDerniereRegularisation
+                            });
+                        }
 
-                        model.addRow(new Object[]{
-                            idBail,
-                            dateEntree,
-                            type,
-                            batiment,
-                            complementAdr,
-                            loyerActuel,
-                            partLoyer,
-                            dateDerniereRegularisation
-                        });
+
                     }
                 } catch (InterruptedException ex) {
                     Thread.currentThread().interrupt();
@@ -261,7 +274,15 @@ public class GestionChampsLocataireActuel implements ListSelectionListener {
                     for (Locataire loc : locataires) {
                         // On affiche uniquement les locataires dont un contrat n'a pas de date de sortie
                         boolean estActif = daoContracter.getContrats(loc).stream()
-                                .anyMatch(e -> e.getDateSortie() == null);
+                                .anyMatch(e -> {
+                                	Bail bai = e.getBail();
+                                	
+                                	return (e.getDateSortie() == null ||
+                                		   e.getDateSortie().compareTo(LocalDate.now().toString()) > 0)
+                                		   &&
+                                		   (bai.getDateDeFin() == null ||
+                                		    bai.getDateDeFin().compareTo(LocalDate.now().toString()) > 0);
+                                	});
 
                         if (estActif) {
                             model.addRow(new String[]{
@@ -293,7 +314,7 @@ public class GestionChampsLocataireActuel implements ListSelectionListener {
      * @param selectedRow l'indice de la ligne sélectionnée
      * @return le {@link Locataire} correspondant, ou null si erreur
      */
-    private Locataire lireLigneTable(JTable tableLocatairesActuels, int selectedRow) {
+    public Locataire lireLigneTable(JTable tableLocatairesActuels, int selectedRow) {
         String idLoc = (String) tableLocatairesActuels.getValueAt(selectedRow, 0);
         try {
             return daoLocataire.findById(idLoc);

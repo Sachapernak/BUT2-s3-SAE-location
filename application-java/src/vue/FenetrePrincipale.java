@@ -109,15 +109,23 @@ public class FenetrePrincipale extends JFrame{
 		
 		JMenuItem mntmAnciensLocataires = new JMenuItem("Liste des anciens locataires");
 		mntmAnciensLocataires.addActionListener(this.gestionMenu);
+		locataires.add(mntmAnciensLocataires);
 		
 		JMenuItem mntmLocatairesActuels = new JMenuItem("Liste des locataires actuels");
 		mntmLocatairesActuels.addActionListener(this.gestionMenu);
 		locataires.add(mntmLocatairesActuels);
-		locataires.add(mntmAnciensLocataires);
+
+		JMenuItem mntnQuittances = new JMenuItem("Quittances de loyer");
+		mntnQuittances.addActionListener(this.gestionMenu);
+		locataires.add(mntnQuittances);
 		
 		JMenuItem mntnSoldeToutCompte = new JMenuItem("Solde de tout comptes");
-		locataires.add(mntnSoldeToutCompte);
 		mntnSoldeToutCompte.addActionListener(this.gestionMenu);
+		locataires.add(mntnSoldeToutCompte);
+
+		JMenuItem mntnBaux = new JMenuItem("Liste des baux");
+		locataires.add(mntnBaux);
+		mntnBaux.addActionListener(this.gestionMenu);
 		
 		JMenu menuloyersCharges = new JMenu("Charge et loyers");
 		menuloyersCharges.setForeground(new Color(255, 255, 255));
@@ -137,8 +145,13 @@ public class FenetrePrincipale extends JFrame{
 		menuloyersCharges.add(mntmChargerLoyers);
 		
 		JMenuItem mntmICC = new JMenuItem("Consulter ICC");
-		mntmICC.addActionListener(this.gestionMenu);
 		menuloyersCharges.add(mntmICC);
+		mntmICC.addActionListener(this.gestionMenu);
+		
+		JMenuItem mntmAugmenterLoyers = new JMenuItem("Augmenter les loyers");
+		menuloyersCharges.add(mntmAugmenterLoyers);
+		mntmAugmenterLoyers.addActionListener(this.gestionMenu);
+
 		
 		JMenu reglesMetier = new JMenu("Règles métier");
 		reglesMetier.setForeground(new Color(255, 255, 255));
@@ -214,6 +227,11 @@ public class FenetrePrincipale extends JFrame{
 		btnAfficherLesCharges.addActionListener(this.gestionClic);
 		btnAfficherLesCharges.setBounds(201, 213, 210, 21);
 		panelBiensLocatifs.add(btnAfficherLesCharges);
+		
+		JButton btnAjouterBienLoc = new JButton("Ajouter un bien locatif");
+		btnAjouterBienLoc.setBounds(442, 212, 154, 23);
+		panelBiensLocatifs.add(btnAjouterBienLoc);
+		btnAjouterBienLoc.addActionListener(this.gestionClic);
 		
 		
 		JLabel lblTitre = new JLabel("Bienvenue");
