@@ -65,20 +65,9 @@ public class AjouterEntreprise extends JInternalFrame {
 		return textFieldCodePostal.getText();
 	}
 	
-	
-	public List<String> getChampsObligatoires(){
-		List<String> res = new ArrayList<>();
-		res.add(getStringTextFieldSiret());
-		res.add(getStringTextFieldSecteurActivite());
-		res.add(getStringTextFieldIdAdr());
-		res.add(getStringTextFieldAdresse());
-		res.add(getStringTextFieldVille());
-		res.add(getStringTextFieldCodePostal());
-		return res;
-	}
 
 	public AjouterEntreprise() {
-		setBounds(100, 100, 509, 330);
+		setBounds(0, 0, 509, 330);
 		this.gestionClic = new GestionAjouterEntreprise(this);
 		
 		JPanel panelTitre = new JPanel();
@@ -193,8 +182,24 @@ public class AjouterEntreprise extends JInternalFrame {
 
 	}
 
+	
+	// -------------------------------------------------------------------------
+    // Methodes d'aide pour le contrôleur
+    // -------------------------------------------------------------------------
+
 	public void afficherMessage(String message, String titre, int typeMessage) {
 	    JOptionPane.showMessageDialog(this, message, titre, typeMessage);
+	}
+	
+	public List<String> getChampsObligatoires(){
+		List<String> res = new ArrayList<>();
+		res.add(getStringTextFieldSiret());
+		res.add(getStringTextFieldSecteurActivite());
+		res.add(getStringTextFieldIdAdr());
+		res.add(getStringTextFieldAdresse());
+		res.add(getStringTextFieldVille());
+		res.add(getStringTextFieldCodePostal());
+		return res;
 	}
 
 }

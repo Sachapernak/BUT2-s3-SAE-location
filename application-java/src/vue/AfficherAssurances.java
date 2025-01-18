@@ -18,8 +18,6 @@ import javax.swing.table.DefaultTableModel;
 import controleur.GestionAfficherAssurances;
 
 import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class AfficherAssurances extends JInternalFrame  {
 

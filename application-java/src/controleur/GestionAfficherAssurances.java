@@ -86,6 +86,11 @@ public class GestionAfficherAssurances implements ActionListener, ChangeListener
         }
     }
     
+    
+    // --------------------------------------------------------------------
+   	//           Méthodes privées de gestion de la table et de la JComboBox
+   	// --------------------------------------------------------------------
+    
     /**
      * Récupère une liste d'assurances filtrées en fonction d'un type de contrat et d'une année.
      * 
@@ -134,6 +139,15 @@ public class GestionAfficherAssurances implements ActionListener, ChangeListener
     }
     
     /**
+     * Initialise la table des assurances en affichant toutes les assurances de l'année 2025.
+     * Utilise un modèle de table généré à partir des données récupérées.
+     */
+	public void initialiserTable() {
+		DefaultTableModel model = getTableModelAssurances("Tous", 2025);
+		this.fenAfficherAssurances.setTableAssurances(model);
+	}
+	   
+    /**
      * Remplit la comboBox avec les différents types de contrats disponibles.
      * Ajoute une option "Tous" pour permettre la sélection de tous les types.
      */
@@ -152,16 +166,11 @@ public class GestionAfficherAssurances implements ActionListener, ChangeListener
 		} 
     }
 
-    /**
-     * Initialise la table des assurances en affichant toutes les assurances de l'année 2025.
-     * Utilise un modèle de table généré à partir des données récupérées.
-     */
-	public void initialiserTable() {
-		DefaultTableModel model = getTableModelAssurances("Tous", 2025);
-		this.fenAfficherAssurances.setTableAssurances(model);
-		
-	}
 	
+	// --------------------------------------------------------------------
+   	//                 Méthodes privées de gestion de la suppression
+   	// --------------------------------------------------------------------
+    
 	/**
 	 * Cette méthode affiche une boîte de dialogue pour confirmer la suppression d'une entreprise.
 	 * Si l'utilisateur confirme, la méthode de suppression de l'assurance est appelée.

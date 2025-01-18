@@ -4,6 +4,8 @@ import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import java.awt.BorderLayout;
 import java.awt.Font;
+import java.util.List;
+
 import javax.swing.SwingConstants;
 import javax.swing.JPanel;
 import javax.swing.JComboBox;
@@ -21,11 +23,7 @@ public class AfficherEntreprises extends JInternalFrame {
 	private JTable tableEntreprises;
 	
 	private GestionAfficherEntreprises gestionFen;
-
-	
-	public JTable getTableEntreprises() {
-		return tableEntreprises;
-	}
+	private JComboBox<String> comboBoxSecteursActivite;
 
 
 	/**
@@ -45,10 +43,10 @@ public class AfficherEntreprises extends JInternalFrame {
 		getContentPane().add(pCentre, BorderLayout.CENTER);
 		pCentre.setLayout(null);
 		
-		JComboBox<String> comboBoxSecteursActivite = new JComboBox<String>();
+		comboBoxSecteursActivite = new JComboBox<>();
 		comboBoxSecteursActivite.setBounds(218, 26, 113, 21);
 		pCentre.add(comboBoxSecteursActivite);
-		this.gestionFen.remplirComboBox(comboBoxSecteursActivite);
+		this.gestionFen.remplirComboBox();
 		comboBoxSecteursActivite.addActionListener(this.gestionFen);
 		
 		JLabel lblSecteurActivite = new JLabel("Secteur d'activité :");
@@ -76,7 +74,7 @@ public class AfficherEntreprises extends JInternalFrame {
 			}
 		});
 		scrollPane.setViewportView(tableEntreprises);
-		this.gestionFen.remplirTable(tableEntreprises, (String) comboBoxSecteursActivite.getSelectedItem());
+		this.gestionFen.initialiserTable();
 		
 		JPanel pBtns = new JPanel();
 		pBtns.setBounds(0, 267, 502, 39);
@@ -94,5 +92,36 @@ public class AfficherEntreprises extends JInternalFrame {
 		btnQuitter.addActionListener(this.gestionFen);
 		pBtns.add(btnQuitter);
 
+	}
+	
+	// -------------------------------------------------------------------------
+    // Methodes d'aide pour le contrôleur
+    // -------------------------------------------------------------------------
+	
+	public void setComboBoxSecteursActivite(List<String> typeContrats) {
+    	comboBoxSecteursActivite.removeAllItems();
+        for(String type : typeContrats) {
+        	comboBoxSecteursActivite.addItem(type);
+        }
+    }
+    
+    public void setTableEntreprises(DefaultTableModel tableModel) {
+        tableEntreprises.setModel(tableModel);
+    }
+    
+    
+    /**
+     * @return la valeur sélectionnée dans la combo 'secteur d'activité'
+     */
+    public String getTypeSecteurActivitetCombo() {
+        return String.valueOf(comboBoxSecteursActivite.getSelectedItem());
+    }
+    
+	public int getSelectedRow() {
+        return tableEntreprises.getSelectedRow();
+    }
+	
+	public Object getValueAt(int ligne, int colonne){
+		return this.tableEntreprises.getValueAt(ligne, colonne);
 	}
 }

@@ -4,12 +4,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLayeredPane;
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import modele.Entreprise;
@@ -36,13 +36,12 @@ public class GestionAfficherEntreprises implements ActionListener{
 	/**
 	 * Méthode déclenchée par les actions sur la vue. On décompose selon le bouton cliqué.
 	 */
-    @SuppressWarnings("unchecked")
 	@Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() instanceof JComboBox) {
-            handleSecteurSelection((JComboBox<String>) e.getSource());
-        } else if (e.getSource() instanceof JButton jbutton) {
-            handleButtonClick(jbutton);
+            handleSecteurSelection();
+        } else if (e.getSource() instanceof JButton btnActif) {
+            handleButtonClick(btnActif);
         }
     }
 
@@ -56,9 +55,9 @@ public class GestionAfficherEntreprises implements ActionListener{
     /**
      * Gère l'événement de sélection dans la JComboBox pour filtrer les entreprises par secteur.
      */
-    private void handleSecteurSelection(JComboBox<String> comboBoxSecteur) {
-        String secteurSelectionne = (String) comboBoxSecteur.getSelectedItem();
-        remplirTable(fenAfficherEntreprises.getTableEntreprises(), secteurSelectionne);
+    private void handleSecteurSelection() {
+        String secteurSelectionne =  this.fenAfficherEntreprises.getTypeSecteurActivitetCombo();
+        remplirTable(secteurSelectionne);
     }
 
     /**
@@ -99,13 +98,14 @@ public class GestionAfficherEntreprises implements ActionListener{
      * Effectue la suppression de l'entreprise.
      */
     private void supprimerEntreprise() {
-        int ligneSelect = fenAfficherEntreprises.getTableEntreprises().getSelectedRow();   
+        int ligneSelect = fenAfficherEntreprises.getSelectedRow();   
         if (ligneSelect != -1) {
-            String siret = (String) fenAfficherEntreprises.getTableEntreprises().getValueAt(ligneSelect, 0);
+            String siret = (String) fenAfficherEntreprises.getValueAt(ligneSelect, 0);
             try {
             	Entreprise entreprise = daoEntreprise.findById(siret);
                 daoEntreprise.delete(entreprise);
-                remplirTable(fenAfficherEntreprises.getTableEntreprises(), "Tous");  
+                remplirTable(this.fenAfficherEntreprises.getTypeSecteurActivitetCombo());
+                
             } catch (SQLException | IOException ex) {
                 ex.printStackTrace();
             }
@@ -123,38 +123,82 @@ public class GestionAfficherEntreprises implements ActionListener{
     }
 
     
-    /**
-     * Remplit une table Swing (JTable) avec les données des entreprises.
-     * Les données sont récupérées depuis la base de données via le DAO et affichées dans le tableau.
-     * 
-     * @param tableEntreprises la JTable à remplir avec les données des entreprises.
-     */
     
-    public void remplirTable(JTable tableEntreprises, String secteurSelectionne) {
-    	UtilitaireTable.viderTable(tableEntreprises);
-    	try{
+    /**
+     * Récupère une liste d'assurances filtrées en fonction d'un secteur d'activité.
+     * 
+     * @param valeurComboBox la valeur sélectionnée dans la comboBox (peut être "Tous" ou un secteur spécifique).
+     * @return une liste d'assurances correspondant aux critères spécifiés.
+     */
+    public List<Entreprise> recupererEntreprises(String valeurComboBox) {
+    	List<Entreprise> entreprisesFiltre = new ArrayList<>();
+    	try {
 			List<Entreprise> entreprises = daoEntreprise.findAll();
-			DefaultTableModel model = (DefaultTableModel) tableEntreprises.getModel();
-			model.setRowCount(0);
-		    for (Entreprise entreprise : entreprises) {
-		    	if (secteurSelectionne.equals("Tous") || entreprise.getSecteur().equals(secteurSelectionne))
-		        model.addRow(new Object[] { entreprise.getSiret(), entreprise.getNom(), entreprise.getAdresse().getAdressePostale()});
-		    }
-    	} catch (SQLException | IOException e) {
+			for (Entreprise entreprise : entreprises) {
+				if (valeurComboBox.equals("Tous") || entreprise.getSecteur().equals(valeurComboBox)) {
+					entreprisesFiltre.add(entreprise);
+				}
+			}
+		} catch (SQLException | IOException e) {
 			e.printStackTrace();
-		} 
+		}
+    	return entreprisesFiltre;	
     }
     
-    public void remplirComboBox(JComboBox<String> comboBoxSecteur) {
-    	 comboBoxSecteur.addItem("Tous");
-    	try {
-            List<Entreprise> entreprises = daoEntreprise.findAll();
-            for (Entreprise entreprise : entreprises) {
-                comboBoxSecteur.addItem(entreprise.getSecteur());
-            }
-        } catch (SQLException | IOException e) {
-            e.printStackTrace();
+    /**
+     * Génère un modèle de table contenant les données des entreprises filtrées.
+     * 
+     * @param valeurComboBox Le secteur d'activité sélectionné dans la comboBox ("Tous" ou un secteur spécifique).
+     * @return Un objet DefaultTableModel contenant les données formatées pour affichage dans une JTable.
+     */
+    public DefaultTableModel getTableModelEntreprises(String valeurComboBox) {
+    	List<Entreprise> entreprises = recupererEntreprises(valeurComboBox);
+    	
+        DefaultTableModel tableModel = new DefaultTableModel();
+        tableModel.setColumnIdentifiers(new String[] { "Siret", "Nom", "Adresse" });
+
+        for (Entreprise entreprise : entreprises) {
+            tableModel.addRow(new Object[] {
+                entreprise.getSiret(),
+                entreprise.getNom(), 
+                entreprise.getSecteur()
+            });
         }
+        return tableModel;
+    }
+    
+    /**
+     * Initialise la table des assurances en affichant toutes les assurances de l'année 2025.
+     * Utilise un modèle de table généré à partir des données récupérées.
+     */
+	public void initialiserTable() {
+		DefaultTableModel model = getTableModelEntreprises("Tous");
+		this.fenAfficherEntreprises.setTableEntreprises(model);
+	}
+	
+	public void remplirTable(String valeurComboBox) {
+		DefaultTableModel model = getTableModelEntreprises(valeurComboBox);
+		this.fenAfficherEntreprises.setTableEntreprises(model);
+	}
+	   
+    
+    /**
+     * Remplit la comboBox avec les différents secteurs  d'activité des entreprises.
+     * Ajoute une option "Tous" pour permettre la sélection de tous les secteurs.
+     */
+    public void remplirComboBox() {
+    	List<Entreprise> entreprises;
+		try {
+			entreprises = daoEntreprise.findAll();
+	    	List<String> secteur = new ArrayList<>();
+	    	secteur.add("Tous");
+	    	for (Entreprise entreprise : entreprises) {
+	    		secteur.add(entreprise.getSecteur());
+	    	}
+	    	this.fenAfficherEntreprises.setComboBoxSecteursActivite(secteur);
+		} catch (SQLException | IOException e) {
+			e.printStackTrace();
+		} 
     }
     
     
