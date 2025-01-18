@@ -755,13 +755,16 @@ INSERT INTO SAE_document_comptable (
   montant_devis, recuperable_locataire, identifiant_locataire, identifiant_batiment,
   SIRET, numero_de_contrat, annee_du_contrat
 ) VALUES (
-  'LOYER_LOC002_4', DATE '2023-04-01', 'loyer', 500, NULL,
+  'LOYER_LOC002_5', DATE '2023-04-01', 'loyer', 500, NULL,
   NULL, 1, 'LOC002', 'BAT001', NULL, NULL, NULL
 );
 
 INSERT INTO sae_facture_du_bien (
   identifiant_logement, numero_document, Date_document, part_des_charges
 ) VALUES (
-  'LOG002', 'LOYER_LOC002_4', DATE '2023-05-01', 1
+  'LOG002', 'LOYER_LOC002_5', DATE '2023-04-01', 1
 );
+
+
+
 

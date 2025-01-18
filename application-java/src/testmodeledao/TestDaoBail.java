@@ -110,7 +110,7 @@ public class TestDaoBail {
 
     @Test
     public void testDaoFindAll() throws SQLException, IOException {
-        Bail findAllBail = new Bail("TEST04", "2024-21-05", "2025-01-03", bien);
+        Bail findAllBail = new Bail("TEST04", "2024-05-25", "2025-01-03", bien);
         ajouterBail(findAllBail);
 
         List<Bail> list = daoB.findAll();

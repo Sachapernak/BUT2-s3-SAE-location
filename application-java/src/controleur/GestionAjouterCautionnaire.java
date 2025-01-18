@@ -238,22 +238,26 @@ public class GestionAjouterCautionnaire implements ActionListener {
 			daoCautionnaire.create(cautionnaire);
 			daoCautionner.create(cautionner);
 
+			
+			// Mise à jour de la vue
+			DefaultTableModel modelTableLoc = (DefaultTableModel) tableLoc.getModel();
+			modelTableLoc.addRow(new String[] { 
+					nouveauLocataire.getIdLocataire(), 
+					nouveauLocataire.getNom(),
+					nouveauLocataire.getPrenom() 
+			});
+
+			// Fermeture des fenêtres
+			this.fenAjouterCautionnaire.dispose();
+			this.fenAjouterCautionnaire.getFenPrecedente().dispose();
+			this.fenAjouterBail.getFenPrecedente().dispose();
+		
+		
 		} catch (SQLException | IOException e1) {
+			fenAjouterCautionnaire.afficherMessageErreur(e1.getMessage());
 			e1.printStackTrace();
 		}
 		
-		// Mise à jour de la vue
-		DefaultTableModel modelTableLoc = (DefaultTableModel) tableLoc.getModel();
-		modelTableLoc.addRow(new String[] { 
-				nouveauLocataire.getIdLocataire(), 
-				nouveauLocataire.getNom(),
-				nouveauLocataire.getPrenom() 
-		});
-
-		// Fermeture des fenêtres
-		this.fenAjouterCautionnaire.dispose();
-		this.fenAjouterCautionnaire.getFenPrecedente().dispose();
-		this.fenAjouterBail.getFenPrecedente().dispose();
 	}
 
 	// --------------------------------------------------------------------

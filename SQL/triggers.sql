@@ -1,3 +1,45 @@
+CREATE OR REPLACE PROCEDURE setTriggerEnable(p_state NUMBER) AS
+  CURSOR trigger_cursor IS
+    SELECT trigger_name FROM user_triggers;
+  sql_command VARCHAR2(1000);
+BEGIN
+  -- Vérification du paramètre
+  IF p_state NOT IN (0, 1) THEN
+    RAISE_APPLICATION_ERROR(-20001, 'Le paramètre doit être 0 (désactiver) ou 1 (activer).');
+  END IF;
+
+  FOR rec IN trigger_cursor LOOP
+    BEGIN
+      -- Construction de la commande SQL en fonction du paramètre
+      IF p_state = 1 THEN
+        sql_command := 'ALTER TRIGGER ' || rec.trigger_name || ' ENABLE';
+      ELSE
+        sql_command := 'ALTER TRIGGER ' || rec.trigger_name || ' DISABLE';
+      END IF;
+
+      -- Exécution de la commande
+      EXECUTE IMMEDIATE sql_command;
+      DBMS_OUTPUT.PUT_LINE('Trigger ' || rec.trigger_name || 
+                           (CASE WHEN p_state = 1 THEN ' activé.' ELSE ' désactivé.' END));
+    EXCEPTION
+      WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Erreur sur le trigger ' || rec.trigger_name || ' : ' || SQLERRM);
+        -- Continuer avec le prochain trigger en cas d'erreur
+    END;
+  END LOOP;
+END setTriggerEnable;
+/
+
+BEGIN
+  setTriggerEnable(0);
+END;
+/
+
+BEGIN
+  setTriggerEnable(1);
+END;
+/
+
 
 -- verifie que la date de releve precedente correspond bien a une charge precedente
 CREATE OR REPLACE TRIGGER TBIU_ch_indx_releve_preced
@@ -63,4 +105,3 @@ EXCEPTION
 END;
 /
 
-/

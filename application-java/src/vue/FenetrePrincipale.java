@@ -30,8 +30,6 @@ import java.awt.Font;
 import java.awt.Color;
 import javax.swing.JSeparator;
 import javax.swing.ListSelectionModel;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class FenetrePrincipale extends JFrame {
 
@@ -119,7 +117,10 @@ public class FenetrePrincipale extends JFrame {
 		
 		JMenuItem mntnSoldeToutCompte = new JMenuItem("Solde de tout comptes");
 		locataires.add(mntnSoldeToutCompte);
-		mntnSoldeToutCompte.addActionListener(this.gestionMenu);
+		
+		JMenuItem mntnBaux = new JMenuItem("Liste des baux");
+		locataires.add(mntnBaux);
+		mntnBaux.addActionListener(this.gestionMenu);
 		
 		JMenu menuloyersCharges = new JMenu("Charge et loyers");
 		menuloyersCharges.setForeground(new Color(255, 255, 255));
