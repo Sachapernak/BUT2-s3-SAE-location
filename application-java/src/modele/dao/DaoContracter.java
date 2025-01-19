@@ -2,6 +2,7 @@ package modele.dao;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -196,5 +197,51 @@ public class DaoContracter {
         prSt.close();
         return res;
 	}
+    
+    public String findDate(String idLoc, String idBail) throws SQLException, IOException{
+
+    	String res = "";
+    	
+		Connection cn = ConnexionBD.getInstance().getConnexion();
+		
+		String req = "Select date_d_entree from sae_contracter "
+				+ "where identifiant_locataire = ? "
+				+ "and id_Bail = ? ";
+				
+        PreparedStatement prSt = cn.prepareStatement(req);
+        prSt.setString(1, idLoc);
+        prSt.setString(2, idBail);
+        
+        ResultSet rs = prSt.executeQuery();
+        
+        if (rs.next()) {
+            res = rs.getDate(1).toString();
+        }
+        
+        rs.close();
+        prSt.close();
+        
+        return res;
+	}
+    
+    public int updateDateDeSortie(String idBail, String idLog, String dateDeFin) throws SQLException, IOException {
+    	String req = "update sae_contracter set date_de_sortie = ? "
+    			   + "where id_bail = ? "
+    			   + "and identifiant_locataire = ? ";
+    	
+    	Connection cn = ConnexionBD.getInstance().getConnexion();
+    	
+    	try(PreparedStatement prSt = cn.prepareStatement(req)){
+    	   	prSt.setDate(1, Date.valueOf(dateDeFin));
+        	prSt.setString(2, idBail);
+        	prSt.setString(3, idLog);
+        	
+        	return prSt.executeUpdate();
+        	
+    	}
+    	
+ 
+    	
+    }
     
 }

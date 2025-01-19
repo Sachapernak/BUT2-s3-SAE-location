@@ -176,10 +176,10 @@ public class GestionAfficherAnciensLocataires implements ActionListener {
             	Bail bai = contrat.getBail();
             	
                 if ( (bai.getDateDeFin() != null 
-            			&& bai.getDateDeFin().compareTo(LocalDate.now().toString()) < 0)
+            			&& bai.getDateDeFin().compareTo(LocalDate.now().toString()) <= 0)
                 	|| 
             		 (contrat.getDateSortie() != null 
-            			&& contrat.getDateSortie().compareTo(LocalDate.now().toString()) < 0)
+            			&& contrat.getDateSortie().compareTo(LocalDate.now().toString()) <= 0)
             		){
                 	
                 	
@@ -230,10 +230,10 @@ public class GestionAfficherAnciensLocataires implements ActionListener {
                     	Bail bai = contrat.getBail();
                     	
                         if ( (bai.getDateDeFin() != null 
-                    			&& bai.getDateDeFin().compareTo(LocalDate.now().toString()) < 0)
+                    			&& bai.getDateDeFin().compareTo(LocalDate.now().toString()) <= 0)
                             	|| 
                         		 (contrat.getDateSortie() != null 
-                        			&& contrat.getDateSortie().compareTo(LocalDate.now().toString()) < 0)
+                        			&& contrat.getDateSortie().compareTo(LocalDate.now().toString()) <= 0)
                         		){ 
                         	
                         	

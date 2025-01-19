@@ -346,6 +346,24 @@ public class AfficherLocatairesActuels extends JInternalFrame {
     public void setTextFieldCaution(JTextField textFieldCaution) {
         this.textFieldCaution = textFieldCaution;
     }
+    
+    public String getSelectedIdBail() {
+    	int row = tableBiensLoues.getSelectedRow();
+    	if (row >= 0) {
+    		return String.valueOf(tableBiensLoues.getModel().getValueAt(row, 0));
+    	} else {
+    		return "";
+    	}
+    }
+    
+    public String getSelectedIdLoc() {
+    	int row = tableLocatairesActuels.getSelectedRow();
+    	if (row >= 0) {
+    		return String.valueOf(tableLocatairesActuels.getModel().getValueAt(row, 0));
+    	} else {
+    		return "";
+    	}
+    }
 
     // -----------------------------------------------------------------------
     // Méthodes utilitaires
