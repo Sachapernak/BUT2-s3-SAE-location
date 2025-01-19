@@ -310,7 +310,7 @@ public class GestionVoirRegularisationCharges {
     public void gestionBtnGenerer(JButton btnGenerer) {
         btnGenerer.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                try {
+           
                     // Générer le fichier
                     String nomFichier = loc.getNom() + "-REGULARISATIONCHARGES-" + LocalDate.now().toString();
              
@@ -320,32 +320,17 @@ public class GestionVoirRegularisationCharges {
                    
                     
                     // AU LIEU DE GENERE : ouvrir la fenetre
-                   ouvrirRevalorisationCharges();
+                   ouvrirRevalorisationCharges(idBail, sugCharge, rap, nomFichier);
                    
-                    
-                    
-                    // EN BAS : A INTEGRER DANS LA FENETRE CHARGE
-                    String cheminFichier = rap.genererSoldeToutCompte(nomFichier);
-                    // Ouvrir le fichier une fois créé
-                    File fichier = new File(cheminFichier);
-                    
-                    if (fichier.exists()) {
-                        Desktop.getDesktop().open(fichier);
-                        fen.dispose();
-                    } else {
-                        fen.afficherMessageErreur("Le fichier n'a pas été trouvé : " + cheminFichier);
-                    }
-                } catch (IOException e1) {
-                    fen.afficherMessageErreur("Erreur lors de la génération ou de l'ouverture du fichier : " + e1.getMessage());
-                    e1.printStackTrace();
-                }
+
             }
         });
     }
     
-    public void ouvrirRevalorisationCharges(String idBail, BigDecimal newVal, RapportRegularisation rap) {
+    public void ouvrirRevalorisationCharges(String idBail, BigDecimal newVal, RapportRegularisation rap, String nomFichier) {
     	FenetrePrincipale fp = fen.getFenPrincipale();
     	JLayeredPane fenLayerPane = fp.getLayeredPane();
+    	rap.setNomFichier(nomFichier);
     	RevalorisationCharge reval = new RevalorisationCharge(idBail, newVal, rap);
 		fenLayerPane.add(reval, JLayeredPane.PALETTE_LAYER);
 		reval.setVisible(true);

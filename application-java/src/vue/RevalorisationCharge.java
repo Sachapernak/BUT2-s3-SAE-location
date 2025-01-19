@@ -45,12 +45,13 @@ public class RevalorisationCharge extends JInternalFrame {
     private JLabel lblEuro2;
     private JLabel lblBienLoc;
 
+    private RapportRegularisation rap;
 
     public RevalorisationCharge() {
         this("", null, null);
     }
     
-    /**
+	/**
      * Crée la fenêtre de revalorisation avec un identifiant de logement initial.
      * @param idLog l'identifiant du logement initialement sélectionné
      */
@@ -58,6 +59,7 @@ public class RevalorisationCharge extends JInternalFrame {
     	
         this.gest = new GestionRevalorisationCharges(this);
         this.idBail= idBail;
+        this.rap = rap;
         this.nouvelleValeur = nouvelleValeur;
         
         setBounds(100, 100, 490, 230);
@@ -292,6 +294,11 @@ public class RevalorisationCharge extends JInternalFrame {
     public String getDate() {
     	return textFieldDate.getText();
     }
+    
+    public RapportRegularisation getRap() {
+		return rap;
+	}
+
     
     /**
      * Affiche un message d'erreur dans une boîte de dialogue.

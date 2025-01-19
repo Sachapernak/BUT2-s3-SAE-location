@@ -51,10 +51,24 @@ public class RapportRegularisation {
      * Chaque String[] = { date, nomCharge, calcul, montantTotal }.
      */
     private List<String[]> charges;
+    
+    /**
+     * Nom du fichier
+     */
+    private String nomFichier;
 
 
     public RapportRegularisation() {
         this.charges = new ArrayList<>();
+        this.nomFichier = "";
+    }
+    
+    public String getNomFichier() {
+    	return this.nomFichier;
+    }
+    
+    public void setNomFichier(String nomFichier) {
+    	this.nomFichier = nomFichier;
     }
 
     /**
