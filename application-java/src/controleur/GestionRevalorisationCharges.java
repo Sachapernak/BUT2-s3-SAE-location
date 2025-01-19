@@ -153,12 +153,12 @@ public class GestionRevalorisationCharges {
 	
 	
 	public void gestionAffichageChamps() {
-		if (this.fen.getNouvelleValeur() == null && this.fen.getNouvelleValeur().isEmpty()) {
-			this.fen.setEnabledComboBoxBail(true);
-			this.fen.setEnabledChampsValeurConseillee(false);
+		if (this.fen.getNouvelleValeur() == null || this.fen.getNouvelleValeur().isEmpty()) {
+			this.fen.setVisibleComboBoxBail(true);
+			this.fen.setVisibleChampsValeurConseillee(false);
 		} else {
-			this.fen.setEnabledComboBoxBail(false);
-			this.fen.setEnabledChampsValeurConseillee(true);
+			this.fen.setVisibleComboBoxBail(false);
+			this.fen.setVisibleChampsValeurConseillee(true);
 		}
 	}
 
