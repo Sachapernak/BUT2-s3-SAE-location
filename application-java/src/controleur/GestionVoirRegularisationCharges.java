@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.JButton;
+import javax.swing.JLayeredPane;
 import javax.swing.SwingWorker;
 
 import modele.Locataire;
@@ -21,7 +22,10 @@ import modele.dao.DaoBail;
 import modele.dao.DaoLocataire;
 import rapport.RapportRegularisation;
 import rapport.RapportSoldeToutCompte;
+import vue.FenetrePrincipale;
+import vue.SelectionRegularisationCharges;
 import vue.VoirRegularisationCharges;
+import vue.RevalorisationCharge;
 
 
 /**
@@ -309,16 +313,16 @@ public class GestionVoirRegularisationCharges {
                 try {
                     // Générer le fichier
                     String nomFichier = loc.getNom() + "-REGULARISATIONCHARGES-" + LocalDate.now().toString();
-
-                    
-                    
-                    
+             
                     String idBail = fen.getIdBail();
                     // La suggestion de charge @Erine
                     BigDecimal sugCharge = total.divide(new BigDecimal("12"));
                    
                     
                     // AU LIEU DE GENERE : ouvrir la fenetre
+                   ouvrirRevalorisationCharges();
+                   
+                    
                     
                     // EN BAS : A INTEGRER DANS LA FENETRE CHARGE
                     String cheminFichier = rap.genererSoldeToutCompte(nomFichier);
@@ -337,6 +341,17 @@ public class GestionVoirRegularisationCharges {
                 }
             }
         });
+    }
+    
+    public void ouvrirRevalorisationCharges(String idBail, BigDecimal newVal, RapportRegularisation rap) {
+    	FenetrePrincipale fp = fen.getFenPrincipale();
+    	JLayeredPane fenLayerPane = fp.getLayeredPane();
+    	RevalorisationCharge reval = new RevalorisationCharge(idBail, newVal, rap);
+		fenLayerPane.add(reval, JLayeredPane.PALETTE_LAYER);
+		reval.setVisible(true);
+
+        
+        fen.dispose();
     }
 
 }

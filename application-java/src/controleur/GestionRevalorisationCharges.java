@@ -153,7 +153,7 @@ public class GestionRevalorisationCharges {
 	
 	
 	public void gestionAffichageChamps() {
-		if (this.fen.getNouvelleValeur() == null || this.fen.getNouvelleValeur().isEmpty()) {
+		if (this.fen.getNouvelleValeur() == null) {
 			this.fen.setVisibleComboBoxBail(true);
 			this.fen.setVisibleChampsValeurConseillee(false);
 		} else {

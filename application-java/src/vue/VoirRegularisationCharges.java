@@ -56,8 +56,8 @@ public class VoirRegularisationCharges extends JDialog {
     private JTextField textFieldAdresse;
 
     private FenetrePrincipale fenPrincipale;
-    
-    /**
+
+	/**
      * Constructeur de la fenêtre de dialogue.
      * 
      * @param idLoc identifiant du locataire
@@ -477,6 +477,11 @@ public class VoirRegularisationCharges extends JDialog {
     public String getDateFin() {
         return dateFin;
     }
+    
+    
+    public FenetrePrincipale getFenPrincipale() {
+		return fenPrincipale;
+	}
 
     /**
      * Met à jour le curseur de la fenêtre pour indiquer un état d'attente ou non.

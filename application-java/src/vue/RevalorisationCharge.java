@@ -3,6 +3,7 @@ package vue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.math.BigDecimal;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -34,7 +35,7 @@ public class RevalorisationCharge extends JInternalFrame {
     private JComboBox<String> comboBoxBail;
     
     private String idBail;
-    private String nouvelleValeur;
+    private BigDecimal nouvelleValeur;
     private GestionRevalorisationCharges gest;
     private JButton btnHistorique;
     private JLabel lblDate;
@@ -46,14 +47,14 @@ public class RevalorisationCharge extends JInternalFrame {
 
 
     public RevalorisationCharge() {
-        this("", "", null);
+        this("", null, null);
     }
     
     /**
      * Crée la fenêtre de revalorisation avec un identifiant de logement initial.
      * @param idLog l'identifiant du logement initialement sélectionné
      */
-    public RevalorisationCharge(String idBail, String nouvelleValeur, RapportRegularisation rap) {
+    public RevalorisationCharge(String idBail, BigDecimal nouvelleValeur, RapportRegularisation rap) {
     	
         this.gest = new GestionRevalorisationCharges(this);
         this.idBail= idBail;
@@ -237,7 +238,7 @@ public class RevalorisationCharge extends JInternalFrame {
      * Retourne la nouvelle valeur passée en paramètres.
      * @return nouvelleValeur
      */
-    public String getNouvelleValeur() {
+    public BigDecimal getNouvelleValeur() {
         return this.nouvelleValeur;
     }
     
