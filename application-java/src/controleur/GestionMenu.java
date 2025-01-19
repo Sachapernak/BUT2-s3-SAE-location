@@ -131,7 +131,7 @@ public class GestionMenu implements ActionListener{
 				reval.setVisible(true);
 				break;
 			case "Régulariser les charges" : 
-				SelectionRegularisationCharges regul = new SelectionRegularisationCharges();
+				SelectionRegularisationCharges regul = new SelectionRegularisationCharges(this.fenPrincipale);
 				fenLayerPane.add(regul, JLayeredPane.PALETTE_LAYER);
 				regul.setVisible(true);
 				break;

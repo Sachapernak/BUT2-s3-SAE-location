@@ -21,6 +21,7 @@ import modele.Bail;
 import modele.dao.DaoBail;
 import modele.dao.DaoBienLocatif;
 import modele.dao.DaoLocataire;
+import vue.FenetrePrincipale;
 import vue.SelectionRegularisationCharges;
 import vue.VoirRegularisationCharges;
 import vue.VoirSoldeToutCompte;
@@ -28,9 +29,11 @@ import vue.VoirSoldeToutCompte;
 public class GestionSelectionRegularisationCharges {
 	
 	private SelectionRegularisationCharges fen;
+	private FenetrePrincipale fenPrincipale;
 	
-	public GestionSelectionRegularisationCharges(SelectionRegularisationCharges selectionRegularisationCharges) {
+	public GestionSelectionRegularisationCharges(SelectionRegularisationCharges selectionRegularisationCharges, FenetrePrincipale fp) {
 		this.fen = selectionRegularisationCharges;
+		this.fenPrincipale = fp;
 	}
     /**
      * Charge la liste des logements pour le bâtiment sélectionné dans la ComboBox.
@@ -174,7 +177,7 @@ public class GestionSelectionRegularisationCharges {
 				String dateFin = this.getDateFin();
 				String dateDebut = this.getDateDebut(dateFin);
 				JDialog dialog = new VoirRegularisationCharges(fen.getSelectedLoc(), fen.getSelectedBail(), 
-						dateDebut, dateFin);
+						dateDebut, dateFin, this.fenPrincipale);
 				dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				dialog.setVisible(true);
 			} else {

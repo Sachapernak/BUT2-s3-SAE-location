@@ -15,8 +15,7 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 
 import controleur.GestionRevalorisationCharges;
-import controleur.GestionRevalorisationLoyer;
-import java.awt.Color;
+import rapport.RapportRegularisation;
 
 /**
  * Fenêtre interne pour la revalorisation des loyers.
@@ -42,19 +41,19 @@ public class RevalorisationCharge extends JInternalFrame {
     private JTextField textFieldDate;
     private JTextField textFieldValeurConseillee;
     private JLabel lblValeurConseillee;
-    private JLabel lblEuro_1;
+    private JLabel lblEuro2;
     private JLabel lblBienLoc;
 
 
     public RevalorisationCharge() {
-        this("", "");
+        this("", "", null);
     }
     
     /**
      * Crée la fenêtre de revalorisation avec un identifiant de logement initial.
      * @param idLog l'identifiant du logement initialement sélectionné
      */
-    public RevalorisationCharge(String idBail, String nouvelleValeur) {
+    public RevalorisationCharge(String idBail, String nouvelleValeur, RapportRegularisation rap) {
     	
         this.gest = new GestionRevalorisationCharges(this);
         this.idBail= idBail;
@@ -141,12 +140,12 @@ public class RevalorisationCharge extends JInternalFrame {
         getContentPane().add(textFieldValeurConseillee, gbcTextFieldValeurConseillee);
         textFieldValeurConseillee.setColumns(10);
         
-        lblEuro_1 = new JLabel("€");
-        GridBagConstraints gbcLblEuro_1 = new GridBagConstraints();
-        gbcLblEuro_1.insets = new Insets(0, 0, 5, 5);
-        gbcLblEuro_1.gridx = 3;
-        gbcLblEuro_1.gridy = 3;
-        getContentPane().add(lblEuro_1, gbcLblEuro_1);
+        lblEuro2 = new JLabel("€");
+        GridBagConstraints gbclblEuro2 = new GridBagConstraints();
+        gbclblEuro2.insets = new Insets(0, 0, 5, 5);
+        gbclblEuro2.gridx = 3;
+        gbclblEuro2.gridy = 3;
+        getContentPane().add(lblEuro2, gbclblEuro2);
         
         JLabel lblNouvCharges = new JLabel("Nouvelles provisions :");
         GridBagConstraints gbcLblNouvCharges = new GridBagConstraints();
@@ -310,7 +309,7 @@ public class RevalorisationCharge extends JInternalFrame {
     public void setVisibleChampsValeurConseillee(boolean bool) {
     	this.lblValeurConseillee.setVisible(bool);
     	this.textFieldValeurConseillee.setVisible(bool);
-    	this.lblEuro_1.setVisible(bool);
+    	this.lblEuro2.setVisible(bool);
     }
 
 }

@@ -37,9 +37,9 @@ public class SelectionRegularisationCharges extends JInternalFrame {
 	/**
 	 * Create the frame.
 	 */
-	public SelectionRegularisationCharges() {
+	public SelectionRegularisationCharges(FenetrePrincipale fp) {
 		
-		gest = new GestionSelectionRegularisationCharges(this);
+		gest = new GestionSelectionRegularisationCharges(this, fp);
 		setBounds(100, 100, 500, 220);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{30, 0, 105, 70, 62, 0, 30, 0};

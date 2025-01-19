@@ -55,6 +55,8 @@ public class VoirRegularisationCharges extends JDialog {
     private JTable tableDeduc;
     private JTextField textFieldAdresse;
 
+    private FenetrePrincipale fenPrincipale;
+    
     /**
      * Constructeur de la fenêtre de dialogue.
      * 
@@ -63,11 +65,12 @@ public class VoirRegularisationCharges extends JDialog {
      * @param dateDebut date de début de la période
      * @param dateFin date de fin de la période
      */
-    public VoirRegularisationCharges(String idLoc, String idBail, String dateDebut, String dateFin) {
+    public VoirRegularisationCharges(String idLoc, String idBail, String dateDebut, String dateFin, FenetrePrincipale fp) {
         this.idLoc = idLoc;
         this.idBail = idBail;
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
+        this.fenPrincipale = fp;
         
         // Initialisation du contrôleur associé à cette vue
         this.gest = new GestionVoirRegularisationCharges(this);
