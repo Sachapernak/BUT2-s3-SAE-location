@@ -18,10 +18,14 @@ import javax.swing.JButton;
 import modele.Adresse;
 import modele.Bail;
 import modele.BienLocatif;
+import modele.DocumentComptable;
+import modele.FactureBien;
 import modele.Locataire;
+import modele.TypeDoc;
 import modele.dao.DaoBail;
 import modele.dao.DaoBienLocatif;
 import modele.dao.DaoDocumentComptable;
+import modele.dao.DaoFactureBien;
 import modele.dao.DaoLocataire;
 import rapport.RapportQuittance;
 import vue.SelectionBailQuittance;
@@ -86,7 +90,14 @@ public class GestionSelectionBailQuittance {
                 // Ouvrir le fichier une fois créé
                 File fichier = new File(cheminFichier);
                 
-                // TODO : generer la quittance dans document comptable
+                DocumentComptable doc = new DocumentComptable("QUIT"+nomLoc+fen.getDate(), fen.getDate(), TypeDoc.QUITTANCE, 
+                						new BigDecimal(montants.get("montantTotal")), cheminFichier);
+                doc.setLocataire(loc);
+                
+                if (daoDoc.findById(doc.getNumeroDoc(), doc.getDateDoc()) == null) {
+                    new DaoDocumentComptable().create(doc);
+                    new DaoFactureBien().create(new FactureBien(bien, doc, 1));
+                }
                 
                 if (fichier.exists()) {
                     Desktop.getDesktop().open(fichier);
