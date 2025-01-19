@@ -30,6 +30,8 @@ import java.awt.Font;
 import java.awt.Color;
 import javax.swing.JSeparator;
 import javax.swing.ListSelectionModel;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class FenetrePrincipale extends JFrame{
 
@@ -109,11 +111,11 @@ public class FenetrePrincipale extends JFrame{
 		
 		JMenuItem mntmAnciensLocataires = new JMenuItem("Liste des anciens locataires");
 		mntmAnciensLocataires.addActionListener(this.gestionMenu);
-		locataires.add(mntmAnciensLocataires);
 		
 		JMenuItem mntmLocatairesActuels = new JMenuItem("Liste des locataires actuels");
 		mntmLocatairesActuels.addActionListener(this.gestionMenu);
 		locataires.add(mntmLocatairesActuels);
+		locataires.add(mntmAnciensLocataires);
 
 		JMenuItem mntnQuittances = new JMenuItem("Quittances de loyer");
 		mntnQuittances.addActionListener(this.gestionMenu);
@@ -142,15 +144,15 @@ public class FenetrePrincipale extends JFrame{
 		
 		JMenuItem mntmChargerLoyers = new JMenuItem("Charger les loyers");
 		mntmChargerLoyers.addActionListener(this.gestionMenu);
+		
+		JMenuItem mntmAugmenterLoyers = new JMenuItem("Augmenter les loyers");
+		menuloyersCharges.add(mntmAugmenterLoyers);
+		mntmAugmenterLoyers.addActionListener(this.gestionMenu);
 		menuloyersCharges.add(mntmChargerLoyers);
 		
 		JMenuItem mntmICC = new JMenuItem("Consulter ICC");
 		menuloyersCharges.add(mntmICC);
 		mntmICC.addActionListener(this.gestionMenu);
-		
-		JMenuItem mntmAugmenterLoyers = new JMenuItem("Augmenter les loyers");
-		menuloyersCharges.add(mntmAugmenterLoyers);
-		mntmAugmenterLoyers.addActionListener(this.gestionMenu);
 
 		
 		JMenu reglesMetier = new JMenu("Règles métier");
@@ -220,18 +222,18 @@ public class FenetrePrincipale extends JFrame{
 		
 		JButton btnAugmenterLoyer = new JButton("Augmenter le loyer");
 		btnAugmenterLoyer.addActionListener(this.gestionClic);
-		btnAugmenterLoyer.setBounds(10, 213, 165, 21);
+		btnAugmenterLoyer.setBounds(0, 213, 190, 21);
 		panelBiensLocatifs.add(btnAugmenterLoyer);
 		
 		JButton btnAfficherLesCharges = new JButton("Consulter charges");
 		btnAfficherLesCharges.addActionListener(this.gestionClic);
-		btnAfficherLesCharges.setBounds(201, 213, 210, 21);
+		btnAfficherLesCharges.setBounds(406, 213, 190, 21);
 		panelBiensLocatifs.add(btnAfficherLesCharges);
 		
-		JButton btnAjouterBienLoc = new JButton("Ajouter un bien locatif");
-		btnAjouterBienLoc.setBounds(442, 212, 154, 23);
-		panelBiensLocatifs.add(btnAjouterBienLoc);
-		btnAjouterBienLoc.addActionListener(this.gestionClic);
+		JButton btnModifierCharges = new JButton("Modifier charges");
+		btnModifierCharges.addActionListener(this.gestionClic);
+		btnModifierCharges.setBounds(206, 212, 190, 23);
+		panelBiensLocatifs.add(btnModifierCharges);
 		
 		
 		JLabel lblTitre = new JLabel("Bienvenue");
@@ -280,13 +282,18 @@ public class FenetrePrincipale extends JFrame{
 		
 		JButton btnAjoutBatiment = new JButton("Ajouter un batiment");
 		btnAjoutBatiment.addActionListener(this.gestionClic);
-		btnAjoutBatiment.setBounds(488, 36, 156, 21);
+		btnAjoutBatiment.setBounds(488, 36, 178, 21);
 		panelBien.add(btnAjoutBatiment);
 		
 		JButton btnCharger = new JButton("Charger");
 		btnCharger.addActionListener(this.gestionClic);
-		btnCharger.setBounds(488, 73, 156, 21);
+		btnCharger.setBounds(488, 100, 178, 21);
 		panelBien.add(btnCharger);
+		
+		JButton btnAjouterBienLoc = new JButton("Ajouter un bien locatif");
+		btnAjouterBienLoc.setBounds(488, 68, 178, 23);
+		panelBien.add(btnAjouterBienLoc);
+		btnAjouterBienLoc.addActionListener(this.gestionClic);
 		
 		JSeparator separator = new JSeparator();
 		separator.setBounds(25, 253, 679, 2);

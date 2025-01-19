@@ -32,6 +32,9 @@ public class GestionRevalorisationLoyer {
 
     private RevalorisationLoyer fen;
 
+    
+
+    
     public GestionRevalorisationLoyer(RevalorisationLoyer rl)  {
         this.fen = rl;
     }
