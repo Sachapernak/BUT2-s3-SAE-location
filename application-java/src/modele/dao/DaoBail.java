@@ -317,8 +317,8 @@ public class DaoBail extends DaoModele<Bail> implements Dao<Bail> {
         reqProv.parametres(prCl, idBail, dateDeb, dateFin);
         prCl.execute();
         
-        totalProv = prCl.getBigDecimal(5).toString();
-        calc = prCl.getString(6);
+        totalProv = prCl.getBigDecimal(4).toString();
+        calc = prCl.getString(5);
         
         prCl.close();
     
@@ -376,8 +376,8 @@ public class DaoBail extends DaoModele<Bail> implements Dao<Bail> {
 		reqTot.parametres(prCl, idBail, dateDeb, dateFin);
         prCl.execute();
         
-        totalCharge = prCl.getBigDecimal(5);
-        totalDeduc = prCl.getBigDecimal(6);
+        totalCharge = prCl.getBigDecimal(4);
+        totalDeduc = prCl.getBigDecimal(5);
         
         total = totalCharge.subtract(totalDeduc);
         

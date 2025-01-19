@@ -80,6 +80,8 @@ public class GestionVoirRegularisationCharges {
                     Thread.currentThread().interrupt();
                     fen.afficherMessageErreur(OP_INTERROMPUE + " ligne 81");
                 } catch (ExecutionException e) {
+                	
+                	e.printStackTrace();
                     // Gérer les exceptions éventuelles survenues pendant l'exécution.
                     Throwable cause = e.getCause();
                     if (cause instanceof SQLException || cause instanceof IOException) {
@@ -147,6 +149,9 @@ public class GestionVoirRegularisationCharges {
             @Override
             protected List<String[]> doInBackground() throws Exception {
                 // Récupération de la liste des charges depuis la base de données.
+            	
+            	System.out.println(fen.getDateFin().toString());
+            	
                 return new DaoBail().findAllChargesBail(
                         fen.getIdBail(),
                         fen.getDateDebut(),
@@ -167,6 +172,9 @@ public class GestionVoirRegularisationCharges {
                     Thread.currentThread().interrupt();
                     fen.afficherMessageErreur(OP_INTERROMPUE +" ligne 168");
                 } catch (ExecutionException e) {
+                	
+                	e.printStackTrace();
+                	
                     Throwable cause = e.getCause();
                     if (cause instanceof SQLException || cause instanceof IOException) {
                         fen.afficherMessageErreur(cause.getMessage()+" ligne 172");
@@ -221,6 +229,9 @@ public class GestionVoirRegularisationCharges {
                     Thread.currentThread().interrupt();
                     fen.afficherMessageErreur(OP_INTERROMPUE);
                 } catch (ExecutionException e) {
+                	
+                	e.printStackTrace();
+                	
                     Throwable cause = e.getCause();
                     if (cause instanceof SQLException || cause instanceof IOException) {
                         fen.afficherMessageErreur(cause.getMessage() + " ligne 224"); //PB ICI 
@@ -272,6 +283,9 @@ public class GestionVoirRegularisationCharges {
                     Thread.currentThread().interrupt();
                     fen.afficherMessageErreur(OP_INTERROMPUE);
                 } catch (ExecutionException e) {
+                	
+                	e.printStackTrace();
+                	
                     Throwable cause = e.getCause();
                     if (cause instanceof SQLException || cause instanceof IOException) {
                         fen.afficherMessageErreur(cause.getMessage() + " ligne 274");

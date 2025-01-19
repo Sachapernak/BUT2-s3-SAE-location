@@ -27,7 +27,7 @@ public class RequeteSelectAllCIBail extends Requete<Bail> {
 	        prSt.setNull(2, java.sql.Types.DATE);
 	    }
 
-	    if (!id[3].isEmpty()) {
+	    if (!id[2].isEmpty()) {
 	        prSt.setDate(3, java.sql.Date.valueOf(id[2])); 
 	    } else {
 	        prSt.setNull(3, java.sql.Types.DATE);
