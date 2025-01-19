@@ -10,13 +10,10 @@ public class RequeteSelectSommeProvBail extends Requete<Bail>{
 
 	@Override
 	public String requete() {
-	    return "{call pkg_regularisation_charge.calculer_somme_provision(?, ?, ?, ?, ?)}";
+	    return "{call pkg_regularisation_charge.calculer_somme_provision_bail(?, ?, ?, ?, ?)}";
 	}
 
 	public void parametres(CallableStatement prSt, String... id) throws SQLException {
-		System.out.println("RequeteSelectSommeProvBail ligne 16 : ");
-		System.out.println("idBail: " + id[0] + ", dateDeb: " + id[1] + ", dateFin: " + id[2]);
-
 		// Paramètre 1 : p_id_bail
 	    prSt.setString(1, id[0]);
 

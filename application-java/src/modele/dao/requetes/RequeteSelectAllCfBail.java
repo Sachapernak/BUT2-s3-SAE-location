@@ -11,7 +11,7 @@ public class RequeteSelectAllCfBail extends Requete<Bail> {
 	public String requete() {
 		return "SELECT * FROM sae_cf_par_bail " +
 	             "WHERE idBai = ? " +
-	             "  AND dateDoc >= NVL(?, TO_DATE('1900-01-01', 'YYYY-MM-DD')) " +
+	             "  AND dateDoc >= ? " +
 	             "  AND dateDoc <= NVL(?, SYSDATE)";
 	}
 	

@@ -171,8 +171,8 @@ public class GestionSelectionRegularisationCharges {
 		btnGenerer.addActionListener(e -> 
 		{
 			if (checkInput()) {
-				String dateFin = this.fen.getDate();
-				String dateDebut = getDateDebut(dateFin);
+				String dateFin = this.getDateFin();
+				String dateDebut = this.getDateDebut(dateFin);
 				JDialog dialog = new VoirRegularisationCharges(fen.getSelectedLoc(), fen.getSelectedBail(), 
 						dateDebut, dateFin);
 				dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -188,8 +188,8 @@ public class GestionSelectionRegularisationCharges {
 	}
 	
 	/**
-	 * Vérifie si les dates sont soit nulles, soit du format yyyy-MM-dd
-	 * @return vrai si les deux dates sont nulles ou du bon format et dateDebut < dateFin.
+	 * Vérifie si la date est soit nulle, soit au format yyyy-MM-dd
+	 * @return vrai si la date est nulle ou au bon format .
 	 */
 	private boolean checkInput() {
 	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -198,17 +198,11 @@ public class GestionSelectionRegularisationCharges {
 
 	        LocalDate fin = null;
 
-	        if (dateFin.isEmpty()) {
-	            return false;
+	        if (!dateFin.isEmpty()) {
+	            fin = LocalDate.parse(dateFin, formatter);
 	        }
 
-	        fin = LocalDate.parse(dateFin, formatter);
-	 
-	        if (fin != null) {
-	            return true;
-	        }
-
-	        return false;
+	        return true;
 	    } catch (DateTimeParseException e) {
 	        return false;
 	    }
@@ -218,6 +212,14 @@ public class GestionSelectionRegularisationCharges {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		LocalDate fin = LocalDate.parse(dateFin, formatter);
 		return String.valueOf(fin.minusDays(365));
+	}
+	
+	private String getDateFin() {
+		String date = this.fen.getDate();
+		if (date.isEmpty()) {
+			return String.valueOf(LocalDate.now());
+		}
+		return date;
 	}
 
 }
