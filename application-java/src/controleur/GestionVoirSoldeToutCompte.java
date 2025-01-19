@@ -14,10 +14,14 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 
+import modele.Adresse;
+import modele.Bail;
 import modele.Locataire;
 import modele.dao.DaoBail;
+import modele.dao.DaoContracter;
 import modele.dao.DaoLocataire;
 import rapport.RapportSoldeToutCompte;
 import vue.VoirSoldeToutCompte;
@@ -37,6 +41,7 @@ public class GestionVoirSoldeToutCompte {
 	private static final String OP_INTERROMPUE = "Opération interrompue.";
 	/** Le locataire dont on affiche les détails. */
     private Locataire loc;
+    private Bail bail;
     /** La vue associée pour l'affichage des soldes et des informations du locataire. */
     private VoirSoldeToutCompte fen;
     
@@ -90,12 +95,54 @@ public class GestionVoirSoldeToutCompte {
                 } finally {
                     // Réinitialise le curseur et met à jour l'affichage avec les informations du locataire.
                     fen.setCursor(Cursor.getDefaultCursor());
-                    
+                    loadBail();
+
+                }
+            }
+        }.execute();
+    }
+    
+    /**
+     * Charge les informations d'un locataire à partir de la base de données en utilisant un SwingWorker.
+     * Le curseur est mis en sablier pendant le chargement.
+     */
+    public void loadBail() {
+        // Change le curseur pour indiquer une opération en cours.
+        fen.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
+        new SwingWorker<Bail, Void>() {
+            @Override
+            protected Bail doInBackground() throws Exception {
+                // Recherche le locataire par son identifiant.
+                return new DaoBail().findById(fen.getIdBail());
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    // Récupère le résultat de l'opération en arrière-plan.
+                    bail = get();
+                } catch (InterruptedException e) {
+                    // Réinterrompre le thread si l'opération a été interrompue.
+                    Thread.currentThread().interrupt();
+                    fen.afficherMessageErreur(OP_INTERROMPUE);
+                } catch (ExecutionException e) {
+                    // Gérer les exceptions éventuelles survenues pendant l'exécution.
+                    Throwable cause = e.getCause();
+                    if (cause instanceof SQLException || cause instanceof IOException) {
+                        fen.afficherMessageErreur(cause.getMessage());
+                    } else {
+                        fen.afficherMessageErreur(ERREUR_INATTENDUE + cause.getMessage());
+                    }
+                } finally {
+                    // Réinitialise le curseur et met à jour l'affichage avec les informations du locataire.
+                    fen.setCursor(Cursor.getDefaultCursor());
                     setInfoLoc();
                 }
             }
         }.execute();
     }
+
 
     /**
      * Met à jour la vue avec les informations du locataire.
@@ -111,15 +158,32 @@ public class GestionVoirSoldeToutCompte {
         // Met à jour les champs de la vue avec les données du locataire.
         fen.setNomLoc(loc.getNom());
         fen.setPrenom(loc.getPrenom());
-        fen.setAdresse(loc.getAdresse().toString());
+        
+        if (loc.getAdresse() != null){
+        	
+        	
+            fen.setAdresse(loc.getAdresse().toString());
+            rap.setAdresse(loc.getAdresse().getAdressePostale());
+            rap.setComplement(loc.getAdresse().getComplementAdresse());
+            rap.setCodePostal(String.valueOf(loc.getAdresse().getCodePostal()));
+            rap.setVille(loc.getAdresse().getVille());
+        } else {
+        	
+        	Adresse adresse = bail.getBien().getBat().getAdresse();
+        	
+            fen.setAdresse(adresse.toString());
+            rap.setAdresse(adresse.getAdressePostale());
+            rap.setComplement(adresse.getComplementAdresse());
+            rap.setCodePostal(String.valueOf(adresse.getCodePostal()));
+            rap.setVille(adresse.getVille());
+        }
+        
+
         
         rap.setNom(loc.getNom());
         rap.setPrenom(loc.getPrenom());
         
-        rap.setAdresse(loc.getAdresse().getAdressePostale());
-        rap.setComplement(loc.getAdresse().getComplementAdresse());
-        rap.setCodePostal(String.valueOf(loc.getAdresse().getCodePostal()));
-        rap.setVille(loc.getAdresse().getVille());
+
     }
 
     /**
@@ -303,9 +367,14 @@ public class GestionVoirSoldeToutCompte {
     
     
     public void gestionBtnGenerer(JButton btnGenerer) {
-        btnGenerer.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                try {
+        btnGenerer.addActionListener(e -> {
+            try {
+            	
+        		int nbLignes = new DaoContracter().updateDateDeSortie(fen.getIdBail(),
+						fen.getIdLoc(), fen.getDateFin());
+        		
+        		if ( nbLignes == 1) {
+
                     // Générer le fichier
                     String nomFichier = loc.getNom() + "-SOLDECOMPTE-" + LocalDate.now().toString();
                     String cheminFichier = rap.genererSoldeToutCompte(nomFichier);
@@ -313,19 +382,30 @@ public class GestionVoirSoldeToutCompte {
                     // Ouvrir le fichier une fois créé
                     File fichier = new File(cheminFichier);
                     
-                    
-                    // TODO : generer une regularisation ?
-                    
                     if (fichier.exists()) {
                         Desktop.getDesktop().open(fichier);
                         fen.dispose();
                     } else {
                         fen.afficherMessageErreur("Le fichier n'a pas été trouvé : " + cheminFichier);
                     }
-                } catch (IOException e1) {
-                    fen.afficherMessageErreur("Erreur lors de la génération ou de l'ouverture du fichier : " + e1.getMessage());
-                    e1.printStackTrace();
-                }
+                    
+        		} else {
+                    JOptionPane.showMessageDialog(
+                            fen,
+                            "Erreur lors de la résiliation. "
+                            + "\nNombre de ligne affectée : "
+                            + nbLignes + " (devrait etre 1)",
+                            "Information",
+                            JOptionPane.INFORMATION_MESSAGE);
+        		}
+        		
+
+                // TODO : Régu ? 
+                
+
+            } catch (IOException | SQLException e1) {
+                fen.afficherMessageErreur("Erreur lors de la génération ou de l'ouverture du fichier : " + e1.getMessage());
+                e1.printStackTrace();
             }
         });
     }

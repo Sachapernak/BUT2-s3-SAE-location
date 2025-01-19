@@ -106,3 +106,76 @@ EXCEPTION
 END;
 /
 
+
+/**
+  Verifie si tous les locataires ont une date de sortie.
+  Si c'est le cas, met fin au bail a la dernière date de sortie.
+    
+  Si un nouveau locataire arrive, sans date de fin,
+  met la date de fin a null
+**/
+CREATE OR REPLACE TRIGGER TAU_date_fin_contrat
+FOR UPDATE ON SAE_CONTRACTER
+COMPOUND TRIGGER
+
+  -- Utiliser une table associative pour stocker les ID_BAIL modifiés comme clés
+  TYPE BailIdAssocArray IS TABLE OF BOOLEAN INDEX BY SAE_CONTRACTER.ID_BAIL%TYPE;
+  g_bail_ids BailIdAssocArray;
+
+  BEFORE EACH ROW IS
+  BEGIN
+    -- Ajouter l'ID_BAIL à la collection s'il n'est pas déjà présent
+    IF NOT g_bail_ids.EXISTS(:NEW.ID_BAIL) THEN
+      g_bail_ids(:NEW.ID_BAIL) := TRUE;
+    END IF;
+  END BEFORE EACH ROW;
+
+  AFTER STATEMENT IS
+    v_nb_loc_actif       NUMBER;
+    v_nb_loc_total       NUMBER;
+    v_date_dernier_depart DATE;
+    bail_key             SAE_CONTRACTER.ID_BAIL%TYPE;
+  BEGIN
+    -- Parcourir chaque clé (ID_BAIL) présente dans la table associative
+    bail_key := g_bail_ids.FIRST;
+    WHILE bail_key IS NOT NULL LOOP
+      -- Compter les locataires actifs pour cet ID_BAIL
+      SELECT COUNT(*)
+        INTO v_nb_loc_actif
+        FROM SAE_CONTRACTER
+       WHERE ID_BAIL = bail_key
+         AND date_de_sortie IS NULL;
+
+      -- Compter le nombre total de locataires pour cet ID_BAIL
+      SELECT COUNT(*)
+        INTO v_nb_loc_total
+        FROM SAE_CONTRACTER
+       WHERE ID_BAIL = bail_key;
+
+      IF (v_nb_loc_actif = 0 AND v_nb_loc_total > 0) THEN
+        -- Récupérer la dernière date de sortie si aucun locataire actif
+        SELECT MAX(date_de_sortie)
+          INTO v_date_dernier_depart
+          FROM SAE_CONTRACTER
+         WHERE ID_BAIL = bail_key;
+
+        UPDATE SAE_BAIL
+           SET DATE_DE_FIN = v_date_dernier_depart
+         WHERE ID_BAIL = bail_key;
+      ELSE
+        UPDATE SAE_BAIL
+           SET DATE_DE_FIN = NULL
+         WHERE ID_BAIL = bail_key;
+      END IF;
+
+      -- Passer à la clé suivante
+      bail_key := g_bail_ids.NEXT(bail_key);
+    END LOOP;
+    -- Réinitialiser la collection après traitement
+    g_bail_ids.DELETE;
+  END AFTER STATEMENT;
+
+END TAU_date_fin_contrat;
+/
+
+

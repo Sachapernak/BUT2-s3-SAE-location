@@ -20,6 +20,7 @@ import modele.ChargeFixe;
 import modele.ChargeIndex;
 import modele.ConnexionBD;
 import modele.DocumentComptable;
+import modele.Entreprise;
 import modele.FactureBien;
 import modele.TypeDoc;
 import modele.dao.DaoAssurance;
@@ -91,7 +92,8 @@ public class GestionAjouterCharge {
             	
             	List<String> nomEnum = Stream.of(TypeDoc.values())
             	        .map(Enum::name)
-            	        .filter(name -> !"loyer".equalsIgnoreCase(name)) // Ignorer "loyer" ou "LOYER"
+            	        .filter(name -> !"loyer".equalsIgnoreCase(name) 
+            	        		&& !"quittance".equalsIgnoreCase(name)) // Ignorer "loyer" ou "quittance"
             	        .collect(Collectors.toList());
             	
             	nomEnum.remove("LOYER");
@@ -397,7 +399,6 @@ public class GestionAjouterCharge {
 
             final String typeDoc = view.getTypeDoc();
             switch (typeDoc) {
-                case "QUITTANCE": processQuittance(); break;
                 case "FACTURE", "FACTURE_CF": processFacture(); break;
                 case "FACTURE_CV": processFactureCV(); break;
                 case "DEVIS": processDevis(); break;
@@ -417,31 +418,6 @@ public class GestionAjouterCharge {
         }
     }
 
-    /**
-     * Traite le cas où le type de document est "QUITTANCE".
-     * @throws IOException 
-     * @throws SQLException en cas d'erreur de bd
-     */
-    private void processQuittance() throws SQLException, IOException {
-        DaoDocumentComptable daoDoc = new DaoDocumentComptable();
-        DaoFactureBien daoFacture = new DaoFactureBien();
-        DaoBienLocatif daoBien = new DaoBienLocatif();
-
-        DocumentComptable doc = new DocumentComptable(
-                view.getTextNumDoc(), view.getTextDateDoc(), 
-                TypeDoc.valueOf(view.getTypeDoc()),
-                view.getCoutVarUnit(), view.getLienFichier()
-        );
-        doc.setRecuperableLoc(view.estRecupLoc());
-        doc.setBatiment(new DaoBatiment().findById(view.getIDBat()));
-        doc.setLocataire(new DaoLocataire().findById(view.getIDLocataire()));
-        daoDoc.create(doc);
-
-        List<Object> logement = view.getListeLogement().get(0);
-        String bienId = String.valueOf(logement.get(0));
-        BigDecimal part = (BigDecimal) logement.get(1);
-        daoFacture.create(new FactureBien(daoBien.findById(bienId), doc, part.floatValue()));
-    }
 
     /**
      * Traite le cas où le type de document est "FACTURE" ou "FACTURE_CF".
@@ -453,9 +429,11 @@ public class GestionAjouterCharge {
         DaoFactureBien daoFacture = new DaoFactureBien();
         DaoBienLocatif daoBien = new DaoBienLocatif();
 
-        String idEntreprise = view.getIDEntreprise().split(" ")[1];
+        String idEntreprise = getSiretEntreprise(view.getIDEntreprise());
         String idBat = view.getIDBat();
         String idAssurance = view.getIDAssu();
+        
+        System.out.println(idEntreprise);
 
         DocumentComptable doc = new DocumentComptable(
                 view.getTextNumDoc(), view.getTextDateDoc(), 
@@ -464,11 +442,17 @@ public class GestionAjouterCharge {
         );
         doc.setRecuperableLoc(view.estRecupLoc());
         doc.setBatiment(new DaoBatiment().findById(idBat));
+        
+
         doc.setEntreprise(new DaoEntreprise().findById(idEntreprise));
+        
         if (!idAssurance.equalsIgnoreCase("aucune")) {
             String[] parts = idAssurance.split(" ");
             doc.setAssurance(new DaoAssurance().findById(parts[0], parts[1]));
         }
+        
+
+        
         daoDoc.create(doc);
 
         processParts(daoFacture, daoBien, doc);
@@ -498,7 +482,10 @@ public class GestionAjouterCharge {
                 .multiply(nouvelIndex.subtract(ancienIndex))
                 .add(view.getCoutVarAbon());
 
-        String idEntreprise = view.getIDEntreprise().split(" ")[1];
+        String idEntreprise = getSiretEntreprise(view.getIDEntreprise());
+        
+        System.out.println(idEntreprise);
+        
         String idBat = view.getIDBat();
         String idAssurance = view.getIDAssu();
 
@@ -509,11 +496,14 @@ public class GestionAjouterCharge {
         );
         doc.setRecuperableLoc(view.estRecupLoc());
         doc.setBatiment(new DaoBatiment().findById(idBat));
+        
         doc.setEntreprise(new DaoEntreprise().findById(idEntreprise));
         if (!idAssurance.equalsIgnoreCase("aucune")) {
             String[] parts = idAssurance.split(" ");
             doc.setAssurance(new DaoAssurance().findById(parts[0], parts[1]));
         }
+        
+        
         daoDoc.create(doc);
 
         processParts(daoFacture, daoBien, doc);
@@ -529,6 +519,7 @@ public class GestionAjouterCharge {
                     new DaoChargeIndex().findAllSameId(idChargeVar).get(0).getDateDeReleve()
             );
         }
+        
         new DaoChargeIndex().create(chargeIndex);
     }
 
@@ -544,6 +535,8 @@ public class GestionAjouterCharge {
 
         String idEntreprise = view.getIDEntreprise().split(" ")[1];
         String idBat = view.getIDBat();
+        
+        System.out.println(idEntreprise);
 
         DocumentComptable doc = new DocumentComptable(
                 view.getTextNumDoc(), view.getTextDateDoc(), 
@@ -612,5 +605,25 @@ public class GestionAjouterCharge {
         // Les autres champs comme l'entreprise ou l'assurance peuvent être optionnels
         // suivant le type de document choisi, donc on ne les force pas ici.
     }
+    
+    
+    /**
+     * Extrait le dernier mot d'une chaîne de caractères (qui devrait correspondre au Siret) et le renvoie.
+     * 
+     * @param input La chaîne de caractères contenant les informations de l'entreprise.
+     * @return Le dernier mot de la chaîne (siret), ou une chaîne vide si l'entrée est nulle ou vide.
+     */
+    private static String getSiretEntreprise(String input) {
+        // Vérifier si l'entrée est nulle ou vide
+        if (input == null || input.trim().isEmpty()) {
+            return "";
+        }
+        
+        // Découper la chaîne par les espaces
+        String[] parts = input.split("\\s+"); // Utilisation de "\\s+" pour gérer plusieurs espaces
+
+        return parts[parts.length - 1];
+    }
+    
 
 }
