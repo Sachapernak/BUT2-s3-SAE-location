@@ -60,6 +60,8 @@ public class GestionRevalorisationCharges {
 				
 				new DaoProvisionCharge().create(prov);
 				
+				genererRapport();
+				
 			} catch (SQLException | IOException ex) {
 				ex.printStackTrace();
 				fen.afficherMessageErreur(ex.getMessage());
