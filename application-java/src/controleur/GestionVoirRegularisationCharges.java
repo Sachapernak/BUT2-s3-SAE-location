@@ -19,6 +19,7 @@ import javax.swing.SwingWorker;
 import modele.Locataire;
 import modele.dao.DaoBail;
 import modele.dao.DaoLocataire;
+import rapport.RapportRegularisation;
 import rapport.RapportSoldeToutCompte;
 import vue.VoirRegularisationCharges;
 
@@ -31,6 +32,7 @@ import vue.VoirRegularisationCharges;
  */
 public class GestionVoirRegularisationCharges {
 	
+	private BigDecimal total;
 
 
     private static final String ERREUR_INATTENDUE = "Erreur inattendue : ";
@@ -40,7 +42,7 @@ public class GestionVoirRegularisationCharges {
     /** La vue associée pour l'affichage des soldes et des informations du locataire. */
     private VoirRegularisationCharges fen;
     
-    private RapportSoldeToutCompte rap;
+    private RapportRegularisation rap;
     
     	
     
@@ -52,7 +54,7 @@ public class GestionVoirRegularisationCharges {
      */
     public GestionVoirRegularisationCharges(VoirRegularisationCharges voirRegulariserCharges) {
         this.fen = voirRegulariserCharges;
-        this.rap = new RapportSoldeToutCompte();
+        this.rap = new RapportRegularisation();
     }
 
     /**
@@ -219,7 +221,6 @@ public class GestionVoirRegularisationCharges {
                 	
                     // Récupération des lignes formatées et mise à jour de la table des déductions.
                     List<String[]> lignes = get();
-                    System.out.println("ligne 214 gestionVoirReguCharge : " + lignes);
                     fen.chargerTableDeduc(lignes);
                     
                     rap.setCalcProv(lignes.get(0)[1]);
@@ -269,7 +270,6 @@ public class GestionVoirRegularisationCharges {
                 try {
                     // Mise à jour des champs de la vue avec les sous-totaux calculés.
                     BigDecimal[] sousTot = get();
-                    System.out.println("ligne 261: gestionVoir Regu : " + sousTot.length);
                     fen.setSousTotCharge(sousTot[0].toString());
                     fen.setSousTotDeduc(sousTot[1].toString());
                     fen.setTotal(sousTot[2].toString());
@@ -277,6 +277,8 @@ public class GestionVoirRegularisationCharges {
                     rap.setTotalCharge(sousTot[0].toString());
                     rap.setTotalDeduc(sousTot[1].toString());
                     rap.setTotal(sousTot[2].toString());
+                    
+                    total = sousTot[2];
                     
                     
                 } catch (InterruptedException e) {
@@ -307,8 +309,16 @@ public class GestionVoirRegularisationCharges {
                 try {
                     // Générer le fichier
                     String nomFichier = loc.getNom() + "-REGULARISATIONCHARGES-" + LocalDate.now().toString();
-                    String cheminFichier = rap.genererSoldeToutCompte(nomFichier);
 
+                    
+                    // La suggestion de charge @Erine
+                    BigDecimal sugCharge = total.divide(new BigDecimal("12"));
+                   
+                    
+                    // AU LIEU DE GENERE : ouvrir la fenetre
+                    
+                    // EN BAS : A INTEGRER DANS LA FENETRE CHARGE
+                    String cheminFichier = rap.genererSoldeToutCompte(nomFichier);
                     // Ouvrir le fichier une fois créé
                     File fichier = new File(cheminFichier);
                     

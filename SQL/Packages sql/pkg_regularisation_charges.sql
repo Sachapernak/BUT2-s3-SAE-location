@@ -4,7 +4,7 @@
 
 -- Recuperer les charges fixes a partir d'un bail
 CREATE OR REPLACE VIEW SAE_CF_PAR_BAIL AS
-SELECT
+SELECT DISTINCT
     doc.date_document as dateDoc, 
     b.identifiant_logement  as idLog,
     bai.id_bail as idBai,
@@ -29,7 +29,7 @@ order by doc.date_document DESC;
 
 -- Recup charge variables
 CREATE OR REPLACE VIEW SAE_CV_PAR_BAIL AS
-SELECT
+SELECT DISTINCT
     doc.date_document as dateDoc,  
     b.identifiant_logement  as idLog,
     bai.id_bail as idBai,
@@ -46,7 +46,7 @@ SELECT
       || TO_CHAR(cv.cout_fixe * fdb.part_des_charges, 'FM9999990.00') 
       || ' = '
       || TO_CHAR(doc.montant * fdb.part_des_charges, 'FM9999990.00')
-      || '?'
+      || '€'
       AS detail_calcul
 
 FROM       sae_charge_index cv
@@ -152,144 +152,127 @@ CREATE OR REPLACE PACKAGE BODY pkg_regularisation_charge AS
         p_total_deduc := v_prov;
     END sous_total;
 
-    PROCEDURE calculer_somme_provision_bail (
-        p_id_bail    IN  SAE_Provision_charge.Id_bail%TYPE,
-        p_date_debut IN  DATE DEFAULT TO_DATE('1900-01-01', 'yyyy-MM-dd'),
-        p_date_fin   IN  DATE DEFAULT NULL,
-        p_total      OUT NUMBER,
-        p_calc       OUT VARCHAR2
-    ) AS
-        v_total_somme    NUMBER := 0;
-        v_calcul         VARCHAR2(512) := '';
-        v_date_debut     DATE;
-        v_date_fin       DATE;
-        v_last_prov_date DATE;
-        v_last_prov_val  NUMBER;
-    BEGIN
-        -- 1) D?termine les dates de d?but et de fin effectives
-        v_date_debut := NVL(p_date_debut, TO_DATE('1900-01-01', 'yyyy-MM-dd'));
-        v_date_fin   := NVL(p_date_fin, SYSDATE);
-    
-        /*
-           2) R?cup?rer la derni?re provision avant ou ?gale ? la date de d?but.
-              Cette provision servira de base pour le calcul ? partir de la date de d?but.
-        */
-        BEGIN
-            SELECT MAX(date_changement),
-                   MAX(provision_pour_charge) KEEP (DENSE_RANK LAST ORDER BY date_changement)
-              INTO v_last_prov_date, v_last_prov_val
-              FROM sae_provision_charge
-             WHERE id_bail = p_id_bail
-               AND date_changement <= v_date_debut;
-        EXCEPTION
-            WHEN NO_DATA_FOUND THEN
-                -- Aucun enregistrement trouv? avant la date de d?but
-                v_last_prov_date := NULL;
-                v_last_prov_val  := 0;
-        END;
-    
-        /*
-           3) Parcourir toutes les provisions depuis la derni?re trouv?e (s'il existe) 
-              jusqu'? la date de fin, pour en calculer la somme en fonction 
-              de la dur?e (en mois) entre chaque date_changement (ou la fin).
-        */
-        FOR vProvision IN (
-            SELECT
-                id_bail,
-                date_changement,
-                provision_pour_charge,
-                TRUNC(
-                    ABS(
-                        MONTHS_BETWEEN(
-                            NVL(
-                                LEAD(date_changement) OVER (PARTITION BY id_bail ORDER BY date_changement),
-                                v_date_fin
-                            ),
-                            date_changement
-                        )
-                    )
-                ) AS difference_en_mois
-            FROM sae_provision_charge
-            WHERE id_bail         = p_id_bail
-              AND date_changement >= NVL(v_last_prov_date, v_date_debut)
-              AND date_changement <= v_date_fin
-            ORDER BY date_changement
-        )
-        LOOP
-            DECLARE
-                v_start_date DATE;
-                v_end_date   DATE;
-                v_effective_months NUMBER;
-            BEGIN
-                /*
-                  D?terminer la p?riode effective pour le calcul :
-                  - La date de d?but est soit la date de d?but de calcul (pour la premi?re it?ration),
-                    soit la date de changement de la boucle (vProvision.date_changement).
-                  - La date de fin est le minimum entre la date de changement suivante et v_date_fin.
-                */
-                IF vProvision.date_changement < v_date_debut THEN
-                    v_start_date := v_date_debut;
-                ELSE
-                    v_start_date := vProvision.date_changement;
-                END IF;
-    
-                -- Calculer la date de fin pour la p?riode en cours
-                IF vProvision.difference_en_mois IS NULL OR vProvision.difference_en_mois = 0 THEN
-                    v_end_date := v_date_fin;
-                ELSE
-                    -- On se base sur la date de la provision suivante ou la date de fin
-                    SELECT NVL(MIN(date_changement), v_date_fin)
-                      INTO v_end_date
-                      FROM sae_provision_charge
-                     WHERE id_bail = p_id_bail
-                       AND date_changement > vProvision.date_changement;
-    
-                    IF v_end_date > v_date_fin THEN
-                        v_end_date := v_date_fin;
-                    END IF;
-                END IF;
-    
-                -- Calculer le nombre de mois effectifs pour la p?riode
-                v_effective_months := TRUNC(ABS(MONTHS_BETWEEN(v_end_date, v_start_date)));
-    
-                -- Gestion de la premi?re it?ration (si provision ant?rieure trouv?e)
-                IF v_last_prov_date IS NOT NULL 
-                   AND v_last_prov_date <= v_date_debut
-                THEN
-                    -- Utiliser la provision ant?rieure pour la p?riode entre la date_debut 
-                    -- et la prochaine date_changement (ou date_fin)
-                    v_total_somme := v_total_somme + (v_last_prov_val * v_effective_months);
-                    v_calcul := v_calcul 
-                                || ' ' || v_last_prov_val
-                                || ' * ' || v_effective_months 
-                                || ' +';
-    
-                    -- On r?initialise pour ne pas r?utiliser la m?me provision
-                    v_last_prov_date := NULL;
-                ELSE
-                    -- Pour les it?rations suivantes, utiliser la provision actuelle
-                    v_total_somme := v_total_somme 
-                                     + (vProvision.provision_pour_charge * v_effective_months);
-                    v_calcul := v_calcul 
-                                || ' ' || vProvision.provision_pour_charge
-                                || ' * ' || v_effective_months 
-                                || ' +';
-                END IF;
-            END;
-        END LOOP;
-    
-        -- Supprimer le dernier '+' ?ventuel, puis finaliser la cha?ne de calcul
-        IF v_calcul IS NOT NULL THEN
-            v_calcul := RTRIM(v_calcul, '+');
-        END IF;
-        v_calcul := v_calcul || ' = ' || v_total_somme || '€';
-    
-        p_total := v_total_somme;
-        p_calc  := v_calcul;
-    END calculer_somme_provision_bail;
+  PROCEDURE calculer_somme_provision_bail (
+    p_id_bail    IN  SAE_Provision_charge.Id_bail%TYPE,
+    p_date_debut IN  DATE DEFAULT TO_DATE('1900-01-01', 'yyyy-MM-dd'),
+    p_date_fin   IN  DATE DEFAULT NULL,
+    p_total      OUT NUMBER,
+    p_calc       OUT VARCHAR2
+  ) AS
+    v_total_somme    NUMBER := 0;
+    v_calcul         VARCHAR2(512) := '';
+    v_date_debut     DATE;
+    v_date_fin       DATE;
+    v_last_prov_date DATE;
+    v_last_prov_val  NUMBER;
+  BEGIN
+    v_date_debut := NVL(p_date_debut, TO_DATE('1900-01-01', 'yyyy-MM-dd'));
+    v_date_fin   := NVL(p_date_fin, SYSDATE);
 
+    BEGIN
+      SELECT MAX(date_changement),
+             MAX(provision_pour_charge) KEEP (DENSE_RANK LAST ORDER BY date_changement)
+        INTO v_last_prov_date, v_last_prov_val
+        FROM sae_provision_charge
+       WHERE id_bail = p_id_bail
+         AND date_changement <= v_date_debut;
+    EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        v_last_prov_date := NULL;
+        v_last_prov_val  := 0;
+    END;
+
+    FOR vProvision IN (
+      SELECT
+        id_bail,
+        date_changement,
+        provision_pour_charge,
+        TRUNC(
+          ABS(
+            MONTHS_BETWEEN(
+              NVL(
+                LEAD(date_changement) OVER (PARTITION BY id_bail ORDER BY date_changement),
+                v_date_fin
+              ),
+              date_changement
+            )
+          )
+        ) AS difference_en_mois
+      FROM sae_provision_charge
+      WHERE id_bail         = p_id_bail
+        AND date_changement >= NVL(v_last_prov_date, v_date_debut)
+        AND date_changement <= v_date_fin
+      ORDER BY date_changement
+    ) LOOP
+      DECLARE
+        v_start_date       DATE;
+        v_end_date         DATE;
+        v_effective_months NUMBER;
+        tmp_months         NUMBER;
+      BEGIN
+        IF vProvision.date_changement < v_date_debut THEN
+          v_start_date := v_date_debut;
+        ELSE
+          v_start_date := vProvision.date_changement;
+        END IF;
+
+        IF vProvision.difference_en_mois IS NULL OR vProvision.difference_en_mois = 0 THEN
+          v_end_date := v_date_fin;
+        ELSE
+          SELECT NVL(MIN(date_changement), v_date_fin)
+            INTO v_end_date
+          FROM sae_provision_charge
+          WHERE id_bail = p_id_bail
+            AND date_changement > vProvision.date_changement;
+
+          IF v_end_date > v_date_fin THEN
+            v_end_date := v_date_fin;
+          END IF;
+        END IF;
+
+        tmp_months := MONTHS_BETWEEN(v_end_date, v_start_date);
+        IF tmp_months < 0 THEN
+          tmp_months := -tmp_months;
+        END IF;
+        v_effective_months := TRUNC(tmp_months);
+
+        -- Si cette itération atteint la fin de la période globale, 
+        -- on soustrait 1 pour ignorer le dernier mois partiel.
+        IF v_end_date = v_date_fin AND v_effective_months > 0 THEN
+          v_effective_months := v_effective_months - 1;
+        END IF;
+
+        IF v_last_prov_date IS NOT NULL 
+           AND v_last_prov_date <= v_date_debut
+        THEN
+          v_total_somme := v_total_somme + (v_last_prov_val * v_effective_months);
+          v_calcul := v_calcul 
+                    || ' ' || v_last_prov_val
+                    || ' * ' || v_effective_months 
+                    || ' +';
+          v_last_prov_date := NULL;
+        ELSE
+          v_total_somme := v_total_somme 
+                           + (vProvision.provision_pour_charge * v_effective_months);
+          v_calcul := v_calcul 
+                    || ' ' || vProvision.provision_pour_charge
+                    || ' * ' || v_effective_months 
+                    || ' +';
+        END IF;
+      END;
+    END LOOP;
+
+    IF v_calcul IS NOT NULL THEN
+      v_calcul := RTRIM(v_calcul, '+');
+    END IF;
+    v_calcul := v_calcul || ' = ' || v_total_somme || '€';
+
+    p_total := v_total_somme;
+    p_calc  := v_calcul;
+  END calculer_somme_provision_bail;
 
 END pkg_regularisation_charge;
 /
+
 
 
