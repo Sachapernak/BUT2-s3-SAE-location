@@ -311,6 +311,9 @@ public class GestionVoirRegularisationCharges {
                     String nomFichier = loc.getNom() + "-REGULARISATIONCHARGES-" + LocalDate.now().toString();
 
                     
+                    
+                    
+                    String idBail = fen.getIdBail();
                     // La suggestion de charge @Erine
                     BigDecimal sugCharge = total.divide(new BigDecimal("12"));
                    
