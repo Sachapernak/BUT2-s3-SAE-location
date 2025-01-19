@@ -280,7 +280,7 @@ public class GestionVoirRegularisationCharges {
                     rap.setTotalDeduc(sousTot[1].toString());
                     rap.setTotal(sousTot[2].toString());
                     
-                    total = sousTot[2];
+                    total = sousTot[0];
                     
                     
                 } catch (InterruptedException e) {
@@ -314,7 +314,7 @@ public class GestionVoirRegularisationCharges {
              
                     String idBail = fen.getIdBail();
                     // La suggestion de charge @Erine
-                    BigDecimal sugCharge = total.divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP);
+                    BigDecimal sugCharge = total.divide(new BigDecimal("12"), 1, RoundingMode.HALF_UP);
                    
                     
                     // AU LIEU DE GENERE : ouvrir la fenetre
