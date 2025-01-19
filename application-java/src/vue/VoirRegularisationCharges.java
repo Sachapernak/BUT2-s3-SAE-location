@@ -83,7 +83,7 @@ public class VoirRegularisationCharges extends JDialog {
         gblContentPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
         contentPanel.setLayout(gblContentPanel);
 
-        JLabel lblTitre = new JLabel("Solde de tout comtpes");
+        JLabel lblTitre = new JLabel("Régulariser les charges");
         GridBagConstraints gbcLblTitre = new GridBagConstraints();
         gbcLblTitre.gridwidth = 7;
         gbcLblTitre.insets = new Insets(0, 0, 5, 0);
