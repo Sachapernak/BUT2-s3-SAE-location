@@ -9,7 +9,7 @@ public class RequeteSelectTotalChargeDeducBail extends Requete<Bail>{
 
 	@Override
 	public String requete() {
-	    return "{call pkg_regularisation_charges.sous_total(?, ?, ?, ?, ?)}";
+	    return "{call pkg_regularisation_charge.sous_total(?, ?, ?, ?, ?)}";
 	}
 
 	public void parametres(CallableStatement prSt, String... id) throws SQLException {

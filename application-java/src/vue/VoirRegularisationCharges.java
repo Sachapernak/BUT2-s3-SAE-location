@@ -7,7 +7,8 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import controleur.GestionRegulariserCharges;
+import controleur.GestionVoirRegularisationCharges;
+
 import java.awt.GridBagLayout;
 import javax.swing.JLabel;
 import java.awt.GridBagConstraints;
@@ -28,7 +29,7 @@ import javax.swing.Box;
  * Fenêtre de dialogue pour visualiser le solde de tous les comptes d'un locataire.
  * Cette classe gère l'interface utilisateur et délègue le chargement des données au contrôleur associé.
  */
-public class RegulariserCharges extends JDialog {
+public class VoirRegularisationCharges extends JDialog {
 
     private static final String CHARGEMENT = "Chargement...";
     
@@ -49,7 +50,7 @@ public class RegulariserCharges extends JDialog {
     private String dateDebut;
     private String dateFin;
     
-    private GestionRegulariserCharges gest;
+    private GestionVoirRegularisationCharges gest;
     private JTable tableCharges;
     private JTable tableDeduc;
     private JTextField textFieldAdresse;
@@ -62,14 +63,14 @@ public class RegulariserCharges extends JDialog {
      * @param dateDebut date de début de la période
      * @param dateFin date de fin de la période
      */
-    public RegulariserCharges(String idLoc, String idBail, String dateDebut, String dateFin) {
+    public VoirRegularisationCharges(String idLoc, String idBail, String dateDebut, String dateFin) {
         this.idLoc = idLoc;
         this.idBail = idBail;
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
         
         // Initialisation du contrôleur associé à cette vue
-        this.gest = new GestionRegulariserCharges(this);
+        this.gest = new GestionVoirRegularisationCharges(this);
         
         setBounds(100, 100, 810, 600);
         getContentPane().setLayout(new BorderLayout());

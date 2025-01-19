@@ -2,7 +2,7 @@
 --               VUES              ---
 --------------------------------------
 
--- Recuperer les charges fixes des locataires
+-- Recuperer les charges fixes a partir d'un bail
 CREATE OR REPLACE VIEW SAE_CF_PAR_BAIL AS
 SELECT
     doc.date_document as dateDoc, 

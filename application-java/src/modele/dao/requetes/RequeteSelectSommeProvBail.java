@@ -10,7 +10,7 @@ public class RequeteSelectSommeProvBail extends Requete<Bail>{
 
 	@Override
 	public String requete() {
-	    return "{call pkg_regularisation_charges.calculer_somme_provision(?, ?, ?, ?, ?)}";
+	    return "{call pkg_regularisation_charge.calculer_somme_provision(?, ?, ?, ?, ?)}";
 	}
 
 	public void parametres(CallableStatement prSt, String... id) throws SQLException {

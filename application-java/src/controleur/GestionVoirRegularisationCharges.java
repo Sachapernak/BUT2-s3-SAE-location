@@ -20,7 +20,7 @@ import modele.Locataire;
 import modele.dao.DaoBail;
 import modele.dao.DaoLocataire;
 import rapport.RapportSoldeToutCompte;
-import vue.RegulariserCharges;
+import vue.VoirRegularisationCharges;
 
 
 /**
@@ -29,7 +29,7 @@ import vue.RegulariserCharges;
  * Cette classe utilise des SwingWorker pour charger les données en arrière-plan afin de ne pas bloquer
  * l'interface utilisateur lors des opérations de lecture en base de données.
  */
-public class GestionRegulariserCharges {
+public class GestionVoirRegularisationCharges {
 	
 
 
@@ -38,7 +38,7 @@ public class GestionRegulariserCharges {
 	/** Le locataire dont on affiche les détails. */
     private Locataire loc;
     /** La vue associée pour l'affichage des soldes et des informations du locataire. */
-    private RegulariserCharges fen;
+    private VoirRegularisationCharges fen;
     
     private RapportSoldeToutCompte rap;
     
@@ -50,8 +50,8 @@ public class GestionRegulariserCharges {
      * 
      * @param regulariserCharges la vue associée à ce contrôleur
      */
-    public GestionRegulariserCharges(RegulariserCharges regulariserCharges) {
-        this.fen = regulariserCharges;
+    public GestionVoirRegularisationCharges(VoirRegularisationCharges voirRegulariserCharges) {
+        this.fen = voirRegulariserCharges;
         this.rap = new RapportSoldeToutCompte();
     }
 
@@ -159,9 +159,8 @@ public class GestionRegulariserCharges {
             @Override
             protected List<String[]> doInBackground() throws Exception {
                 // Récupération de la liste des charges depuis la base de données.
-                return new DaoBail().findAllChargesBaiLoc(
+                return new DaoBail().findAllChargesBail(
                         fen.getIdBail(),
-                        fen.getIdLoc(),
                         fen.getDateDebut(),
                         fen.getDateFin());
             }
@@ -205,9 +204,8 @@ public class GestionRegulariserCharges {
             @Override
             protected List<String[]> doInBackground() throws Exception {
                 // Récupération des données de déduction depuis la base de données.
-                String[] res = new DaoBail().findAllDeducBaiLoc(
+                String[] res = new DaoBail().findAllDeducBail(
                         fen.getIdBail(),
-                        fen.getIdLoc(),
                         fen.getDateDebut(),
                         fen.getDateFin());
 
@@ -259,9 +257,8 @@ public class GestionRegulariserCharges {
             @Override
             protected BigDecimal[] doInBackground() throws Exception {
                 // Calcul des totaux à partir de la base de données.
-                return new DaoBail().findTotalChargeDeduc(
+                return new DaoBail().findTotalChargeDeducBail(
                         fen.getIdBail(),
-                        fen.getIdLoc(),
                         fen.getDateDebut(),
                         fen.getDateFin());
             }
@@ -304,14 +301,11 @@ public class GestionRegulariserCharges {
             public void actionPerformed(ActionEvent e) {
                 try {
                     // Générer le fichier
-                    String nomFichier = loc.getNom() + "-SOLDECOMPTE-" + LocalDate.now().toString();
+                    String nomFichier = loc.getNom() + "-REGULARISATIONCHARGES-" + LocalDate.now().toString();
                     String cheminFichier = rap.genererSoldeToutCompte(nomFichier);
 
                     // Ouvrir le fichier une fois créé
                     File fichier = new File(cheminFichier);
-                    
-                    
-                    // TODO : generer une regularisation ?
                     
                     if (fichier.exists()) {
                         Desktop.getDesktop().open(fichier);

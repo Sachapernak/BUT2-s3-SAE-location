@@ -151,6 +151,10 @@ public class FenetrePrincipale extends JFrame{
 		JMenuItem mntmAugmenterLoyers = new JMenuItem("Augmenter les loyers");
 		menuloyersCharges.add(mntmAugmenterLoyers);
 		mntmAugmenterLoyers.addActionListener(this.gestionMenu);
+		
+		JMenuItem mntmRegulariserCharges = new JMenuItem("Régulariser les charges");
+		menuloyersCharges.add(mntmRegulariserCharges);
+		mntmRegulariserCharges.addActionListener(this.gestionMenu);
 
 		
 		JMenu reglesMetier = new JMenu("Règles métier");
