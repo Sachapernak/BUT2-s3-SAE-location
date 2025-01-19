@@ -295,6 +295,10 @@ public class RevalorisationCharge extends JInternalFrame {
     	return textFieldDate.getText();
     }
     
+    public void setDate(String date) {
+    	textFieldDate.setText(date);
+    }
+    
     public RapportRegularisation getRap() {
 		return rap;
 	}

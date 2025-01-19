@@ -17,9 +17,11 @@ import javax.swing.SwingWorker;
 
 import java.math.RoundingMode;
 
+import modele.Bail;
 import modele.Locataire;
 import modele.dao.DaoBail;
 import modele.dao.DaoLocataire;
+import modele.dao.DaoLoyer;
 import rapport.RapportRegularisation;
 import vue.FenetrePrincipale;
 import vue.VoirRegularisationCharges;
@@ -47,7 +49,6 @@ public class GestionVoirRegularisationCharges {
     private RapportRegularisation rap;
     
     	
-    
 
     /**
      * Constructeur du contrôleur.
@@ -153,8 +154,6 @@ public class GestionVoirRegularisationCharges {
             @Override
             protected List<String[]> doInBackground() throws Exception {
                 // Récupération de la liste des charges depuis la base de données.
-            	
-            	System.out.println(fen.getDateFin().toString());
             	
                 return new DaoBail().findAllChargesBail(
                         fen.getIdBail(),
@@ -282,6 +281,8 @@ public class GestionVoirRegularisationCharges {
                     
                     total = sousTot[0];
                     
+                    loadLoyerIntoRapport();
+                    
                     
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
@@ -308,21 +309,35 @@ public class GestionVoirRegularisationCharges {
     public void gestionBtnGenerer(JButton btnGenerer) {
         btnGenerer.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-           
-                    // Générer le fichier
+
                     String nomFichier = loc.getNom() + "-REGULARISATIONCHARGES-" + LocalDate.now().toString();
-             
                     String idBail = fen.getIdBail();
-                    // La suggestion de charge @Erine
                     BigDecimal sugCharge = total.divide(new BigDecimal("12"), 1, RoundingMode.HALF_UP);
-                   
                     
-                    // AU LIEU DE GENERE : ouvrir la fenetre
-                   ouvrirRevalorisationCharges(idBail, sugCharge, rap, nomFichier);
+                    ouvrirRevalorisationCharges(idBail, sugCharge, rap, nomFichier);
                    
 
             }
         });
+    }
+    
+    public void loadLoyerIntoRapport() {
+    	
+    	Bail bai;
+		try {
+			
+			bai = new DaoBail().findById(fen.getIdBail());
+	    	BigDecimal loyer = new DaoLoyer().getDernierLoyer(bai.getBien().getIdentifiantLogement());
+	    	
+	    	rap.setLoyer(loyer.toString());
+	    	
+		} catch (SQLException | IOException e) {
+			fen.afficherMessageErreur(e.getMessage());
+			e.printStackTrace();
+		}
+    	
+
+    	
     }
     
     public void ouvrirRevalorisationCharges(String idBail, BigDecimal newVal, RapportRegularisation rap, String nomFichier) {

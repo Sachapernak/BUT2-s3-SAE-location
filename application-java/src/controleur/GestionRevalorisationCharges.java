@@ -52,7 +52,6 @@ public class GestionRevalorisationCharges {
 		btnModifier.addActionListener(e -> {
 			try {
 				
-				System.out.println(fen.getValeurNouvelleCharges());
 				
 				ProvisionCharge prov = new ProvisionCharge(fen.getSelectedIdBail(), 
 						fen.getDate().isEmpty() ? LocalDate.now().toString() : fen.getDate(), 
@@ -60,7 +59,12 @@ public class GestionRevalorisationCharges {
 				
 				new DaoProvisionCharge().create(prov);
 				
-				genererRapport();
+				if (fen.getRap() != null) {
+					
+					genererRapport();
+				}
+				
+
 				
 			} catch (SQLException | IOException ex) {
 				ex.printStackTrace();
@@ -74,7 +78,9 @@ public class GestionRevalorisationCharges {
 	
 	public void genererRapport() {
 		RapportRegularisation rap = this.fen.getRap();
-		 // EN BAS : A INTEGRER DANS LA FENETRE CHARGE
+		 
+		rap.setNouvProv(fen.getValeurNouvelleCharges().toString());
+		
         String cheminFichier;
 		try {
 			cheminFichier = rap.genererSoldeToutCompte(rap.getNomFichier());
@@ -184,9 +190,12 @@ public class GestionRevalorisationCharges {
 	
 	public void gestionAffichageChamps() {
 		if (this.fen.getNouvelleValeur() == null) {
+			
 			this.fen.setVisibleComboBoxBail(true);
 			this.fen.setVisibleChampsValeurConseillee(false);
+			
 		} else {
+			fen.setDate(LocalDate.now().toString());
 			this.fen.setVisibleComboBoxBail(false);
 			this.fen.setVisibleChampsValeurConseillee(true);
 			initialiserMontantConseille();
@@ -198,6 +207,7 @@ public class GestionRevalorisationCharges {
 		String newValStr = String.valueOf(newValeur);
 		
 		this.fen.setTextValConseille(newValStr);
+
 	}
 
 }

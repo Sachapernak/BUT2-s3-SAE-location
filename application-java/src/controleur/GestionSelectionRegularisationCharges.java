@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -24,7 +23,6 @@ import modele.dao.DaoLocataire;
 import vue.FenetrePrincipale;
 import vue.SelectionRegularisationCharges;
 import vue.VoirRegularisationCharges;
-import vue.VoirSoldeToutCompte;
 
 public class GestionSelectionRegularisationCharges {
 	

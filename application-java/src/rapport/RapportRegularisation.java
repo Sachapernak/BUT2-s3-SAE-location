@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -70,6 +71,18 @@ public class RapportRegularisation {
     public void setNomFichier(String nomFichier) {
     	this.nomFichier = nomFichier;
     }
+    
+    private void calculerNouvLoyer() {
+    	
+    	BigDecimal loyer = new BigDecimal(this.loyer == null ? "0" : this.loyer);
+    	
+    	BigDecimal provCharge = new BigDecimal(this.nouvProv == null ? "0" : this.nouvProv);
+    	
+    	BigDecimal total = loyer.add(provCharge);
+    	
+    	this.totalLoyerProv = total.toString();
+    	
+    }
 
     /**
      * Construit la map de tous les placeholders de base à utiliser pour le remplacement.
@@ -110,6 +123,11 @@ public class RapportRegularisation {
      * @throws IOException en cas d'erreur d'entrée/sortie.
      */
     public String genererSoldeToutCompte(String nomFichierSortie) throws IOException {
+    	
+    	if (totalLoyerProv == null || totalLoyerProv.isEmpty()) {
+    		calculerNouvLoyer();
+    	}
+    	
         // 1) Construction de la map de placeholders
         Map<String, String> placeholders = construirePlaceholderMap();
 
