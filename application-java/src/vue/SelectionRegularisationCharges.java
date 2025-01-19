@@ -30,8 +30,7 @@ public class SelectionRegularisationCharges extends JInternalFrame {
 	private JButton btnQuitter;
 	
 	private GestionSelectionRegularisationCharges gest;
-	private JTextField textFieldDeb;
-	private JTextField textFieldFin;
+	private JTextField textFieldDate;
 
 
 
@@ -94,40 +93,22 @@ public class SelectionRegularisationCharges extends JInternalFrame {
 		gbcComboBoxLoc.gridy = 1;
 		getContentPane().add(comboBoxLoc, gbcComboBoxLoc);
 		
-		JLabel lblDebut = new JLabel("Du :");
-		GridBagConstraints gbcLblDebut = new GridBagConstraints();
-		gbcLblDebut.anchor = GridBagConstraints.EAST;
-		gbcLblDebut.insets = new Insets(0, 0, 5, 5);
-		gbcLblDebut.gridx = 1;
-		gbcLblDebut.gridy = 2;
-		getContentPane().add(lblDebut, gbcLblDebut);
+		JLabel lblDate = new JLabel("Date :");
+		GridBagConstraints gbc_lblDate = new GridBagConstraints();
+		gbc_lblDate.anchor = GridBagConstraints.EAST;
+		gbc_lblDate.insets = new Insets(0, 0, 5, 5);
+		gbc_lblDate.gridx = 1;
+		gbc_lblDate.gridy = 2;
+		getContentPane().add(lblDate, gbc_lblDate);
 		
-		textFieldDeb = new JTextField();
-		GridBagConstraints gbcTextFieldDeb = new GridBagConstraints();
-		gbcTextFieldDeb.insets = new Insets(0, 0, 5, 5);
-		gbcTextFieldDeb.fill = GridBagConstraints.HORIZONTAL;
-		gbcTextFieldDeb.gridx = 2;
-		gbcTextFieldDeb.gridy = 2;
-		getContentPane().add(textFieldDeb, gbcTextFieldDeb);
-		textFieldDeb.setColumns(10);
-		
-		JLabel lblFin = new JLabel("au :");
-		GridBagConstraints gbcLblFin = new GridBagConstraints();
-		gbcLblFin.insets = new Insets(0, 0, 5, 5);
-		gbcLblFin.anchor = GridBagConstraints.EAST;
-		gbcLblFin.gridx = 3;
-		gbcLblFin.gridy = 2;
-		getContentPane().add(lblFin, gbcLblFin);
-		
-		textFieldFin = new JTextField();
-		GridBagConstraints gbcTextFieldFin = new GridBagConstraints();
-		gbcTextFieldFin.gridwidth = 2;
-		gbcTextFieldFin.insets = new Insets(0, 0, 5, 5);
-		gbcTextFieldFin.fill = GridBagConstraints.HORIZONTAL;
-		gbcTextFieldFin.gridx = 4;
-		gbcTextFieldFin.gridy = 2;
-		getContentPane().add(textFieldFin, gbcTextFieldFin);
-		textFieldFin.setColumns(10);
+		textFieldDate = new JTextField();
+		GridBagConstraints gbc_textFieldDate = new GridBagConstraints();
+		gbc_textFieldDate.insets = new Insets(0, 0, 5, 5);
+		gbc_textFieldDate.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textFieldDate.gridx = 2;
+		gbc_textFieldDate.gridy = 2;
+		getContentPane().add(textFieldDate, gbc_textFieldDate);
+		textFieldDate.setColumns(10);
 		
 		JLabel lblListBail = new JLabel("Bail :");
 		GridBagConstraints gbcLblListBail = new GridBagConstraints();
@@ -200,12 +181,8 @@ public class SelectionRegularisationCharges extends JInternalFrame {
 		return String.valueOf(listBail.getSelectedValue());
 	}
 	
-	public String getDateDebut() {
-		return String.valueOf(textFieldDeb.getText());
-	}
-	
-	public String getDateFin() {
-		return String.valueOf(textFieldFin.getText());
+	public String getDate() {
+		return String.valueOf(textFieldDate.getText());
 	}
 	
 	

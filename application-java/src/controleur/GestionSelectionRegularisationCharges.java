@@ -171,8 +171,10 @@ public class GestionSelectionRegularisationCharges {
 		btnGenerer.addActionListener(e -> 
 		{
 			if (checkInput()) {
+				String dateFin = this.fen.getDate();
+				String dateDebut = getDateDebut(dateFin);
 				JDialog dialog = new VoirRegularisationCharges(fen.getSelectedLoc(), fen.getSelectedBail(), 
-						fen.getDateDebut(), fen.getDateFin());
+						dateDebut, dateFin);
 				dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				dialog.setVisible(true);
 			} else {
@@ -192,21 +194,18 @@ public class GestionSelectionRegularisationCharges {
 	private boolean checkInput() {
 	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	    try {
-	        String dateDebut = fen.getDateDebut();
-	        String dateFin = fen.getDateFin();
+	        String dateFin = fen.getDate();
 
-	        LocalDate deb = null;
 	        LocalDate fin = null;
 
-	        if (dateDebut.isEmpty() || dateFin.isEmpty()) {
+	        if (dateFin.isEmpty()) {
 	            return false;
 	        }
-	        
-	        deb = LocalDate.parse(dateDebut, formatter);
+
 	        fin = LocalDate.parse(dateFin, formatter);
 	 
-	        if (deb != null && fin != null) {
-	            return deb.isBefore(fin) && checkEcartDate(deb,fin);
+	        if (fin != null) {
+	            return true;
 	        }
 
 	        return false;
@@ -215,17 +214,10 @@ public class GestionSelectionRegularisationCharges {
 	    }
 	}
 	
-	/**
-	 * Vérifie que l'écart entre deux dates est compris entre 363 et 368 jours.
-	 * 
-	 * @param dateDeb La date de début.
-	 * @param dateFin La date de fin.
-	 * @return vrai si l'écart est compris entre 363 et 368 jours.
-	 */
-	private boolean checkEcartDate(LocalDate dateDeb, LocalDate dateFin) {
-		long differenceInDays = ChronoUnit.DAYS.between(dateDeb, dateFin);
-	    return dateDeb.isBefore(dateFin) && (differenceInDays >= 363 && differenceInDays <= 368);
+	private String getDateDebut(String dateFin) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		LocalDate fin = LocalDate.parse(dateFin, formatter);
+		return String.valueOf(fin.minusDays(365));
 	}
-
 
 }
