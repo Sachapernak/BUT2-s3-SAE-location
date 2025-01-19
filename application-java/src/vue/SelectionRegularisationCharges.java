@@ -196,6 +196,7 @@ public class SelectionRegularisationCharges extends JInternalFrame {
 	}
 	
 	public String getSelectedBail() {
+		System.out.println("Vue selection regu charge l.199 : " + String.valueOf(listBail.getSelectedValue()));
 		return String.valueOf(listBail.getSelectedValue());
 	}
 	

@@ -78,14 +78,14 @@ public class GestionVoirRegularisationCharges {
                 } catch (InterruptedException e) {
                     // Réinterrompre le thread si l'opération a été interrompue.
                     Thread.currentThread().interrupt();
-                    fen.afficherMessageErreur(OP_INTERROMPUE);
+                    fen.afficherMessageErreur(OP_INTERROMPUE + " ligne 81");
                 } catch (ExecutionException e) {
                     // Gérer les exceptions éventuelles survenues pendant l'exécution.
                     Throwable cause = e.getCause();
                     if (cause instanceof SQLException || cause instanceof IOException) {
-                        fen.afficherMessageErreur(cause.getMessage());
+                        fen.afficherMessageErreur(cause.getMessage() +" ligne 86");
                     } else {
-                        fen.afficherMessageErreur(ERREUR_INATTENDUE + cause.getMessage());
+                        fen.afficherMessageErreur(ERREUR_INATTENDUE + cause.getMessage() +" ligne 88");
                     }
                 } finally {
                     // Réinitialise le curseur et met à jour l'affichage avec les informations du locataire.
@@ -123,33 +123,21 @@ public class GestionVoirRegularisationCharges {
     }
 
     /**
-     * Définit les dates de début et de fin pour la période d'affichage du solde.
-     * Si une date n'est pas spécifiée, on utilise des valeurs par défaut ("Début" pour la date de début
+     * Définit les dates de début et de fin pour la période d'affichage de la régularisation.
      * et "Aujourd'hui" pour la date de fin).
      */
     public void setDates() {
-        if (fen.getDateDebut() == null || fen.getDateDebut().isEmpty()) {
-            fen.setDateDebut("Début");
-            rap.setDateDebut("début du bail");
-        } else {
-            fen.setDateDebut(fen.getDateDebut());
-            rap.setDateDebut(fen.getDateDebut());
-        }
-
-        if (fen.getDateFin() == null || fen.getDateFin().isEmpty()) {
-            fen.setDateFin("Aujourd'hui");
-            rap.setDateFin(LocalDate.now().toString());
-            
-        } else {
-            fen.setDateFin(fen.getDateFin());
-            rap.setDateFin(fen.getDateFin());
-        }
-        
+        fen.setDateDebut(fen.getDateDebut());
+        rap.setDateDebut(fen.getDateDebut());
+       
+        fen.setDateFin(fen.getDateFin());
+        rap.setDateFin(fen.getDateFin());
+       
         rap.setDateCourante(LocalDate.now().toString());
     }
 
     /**
-     * Charge les charges associées au locataire et au bail spécifiés pour la période donnée.
+     * Charge les charges associées au bail spécifiés pour la période donnée.
      * Utilise un SwingWorker pour effectuer l'opération en arrière-plan.
      */
     public void loadCharges() {
@@ -177,13 +165,13 @@ public class GestionVoirRegularisationCharges {
                     
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
-                    fen.afficherMessageErreur(OP_INTERROMPUE);
+                    fen.afficherMessageErreur(OP_INTERROMPUE +" ligne 168");
                 } catch (ExecutionException e) {
                     Throwable cause = e.getCause();
                     if (cause instanceof SQLException || cause instanceof IOException) {
-                        fen.afficherMessageErreur(cause.getMessage());
+                        fen.afficherMessageErreur(cause.getMessage()+" ligne 172");
                     } else {
-                        fen.afficherMessageErreur(ERREUR_INATTENDUE + cause.getMessage());
+                        fen.afficherMessageErreur(ERREUR_INATTENDUE + cause.getMessage()  +" ligne 174");
                     }
                 } finally {
                     // Réinitialisation du curseur après chargement.
@@ -213,6 +201,7 @@ public class GestionVoirRegularisationCharges {
                 List<String[]> lignes = new ArrayList<>();
                 String[] provisions = {"Provisions pour charge", res[1], res[0]};
                 lignes.add(provisions);
+                
                 return lignes;
             }
 
@@ -222,6 +211,7 @@ public class GestionVoirRegularisationCharges {
                 	
                     // Récupération des lignes formatées et mise à jour de la table des déductions.
                     List<String[]> lignes = get();
+                    System.out.println("ligne 214 gestionVoirReguCharge : " + lignes);
                     fen.chargerTableDeduc(lignes);
                     
                     rap.setCalcProv(lignes.get(0)[1]);
@@ -233,9 +223,9 @@ public class GestionVoirRegularisationCharges {
                 } catch (ExecutionException e) {
                     Throwable cause = e.getCause();
                     if (cause instanceof SQLException || cause instanceof IOException) {
-                        fen.afficherMessageErreur(cause.getMessage());
+                        fen.afficherMessageErreur(cause.getMessage() + " ligne 224"); //PB ICI 
                     } else {
-                        fen.afficherMessageErreur(ERREUR_INATTENDUE + cause.getMessage());
+                        fen.afficherMessageErreur(ERREUR_INATTENDUE + cause.getMessage() +" ligne 226");
                     }
                 } finally {
                     // Réinitialisation du curseur après chargement.
@@ -268,6 +258,7 @@ public class GestionVoirRegularisationCharges {
                 try {
                     // Mise à jour des champs de la vue avec les sous-totaux calculés.
                     BigDecimal[] sousTot = get();
+                    System.out.println("ligne 261: gestionVoir Regu : " + sousTot.length);
                     fen.setSousTotCharge(sousTot[0].toString());
                     fen.setSousTotDeduc(sousTot[1].toString());
                     fen.setTotal(sousTot[2].toString());
@@ -283,9 +274,9 @@ public class GestionVoirRegularisationCharges {
                 } catch (ExecutionException e) {
                     Throwable cause = e.getCause();
                     if (cause instanceof SQLException || cause instanceof IOException) {
-                        fen.afficherMessageErreur(cause.getMessage());
+                        fen.afficherMessageErreur(cause.getMessage() + " ligne 274");
                     } else {
-                        fen.afficherMessageErreur(ERREUR_INATTENDUE + cause.getMessage());
+                        fen.afficherMessageErreur(ERREUR_INATTENDUE + cause.getMessage() +" ligne 276");
                     }
                 } finally {
                     // Réinitialisation du curseur après le calcul.

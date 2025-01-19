@@ -14,7 +14,10 @@ public class RequeteSelectSommeProvBail extends Requete<Bail>{
 	}
 
 	public void parametres(CallableStatement prSt, String... id) throws SQLException {
-	    // Paramètre 1 : p_id_bail
+		System.out.println("RequeteSelectSommeProvBail ligne 16 : ");
+		System.out.println("idBail: " + id[0] + ", dateDeb: " + id[1] + ", dateFin: " + id[2]);
+
+		// Paramètre 1 : p_id_bail
 	    prSt.setString(1, id[0]);
 
 	    // Paramètre 2 : p_date_debut
