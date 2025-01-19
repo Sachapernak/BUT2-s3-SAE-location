@@ -1,10 +1,8 @@
 package controleur;
 
 import java.awt.Cursor;
-import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
@@ -17,13 +15,13 @@ import javax.swing.JButton;
 import javax.swing.JLayeredPane;
 import javax.swing.SwingWorker;
 
+import java.math.RoundingMode;
+
 import modele.Locataire;
 import modele.dao.DaoBail;
 import modele.dao.DaoLocataire;
 import rapport.RapportRegularisation;
-import rapport.RapportSoldeToutCompte;
 import vue.FenetrePrincipale;
-import vue.SelectionRegularisationCharges;
 import vue.VoirRegularisationCharges;
 import vue.RevalorisationCharge;
 
@@ -316,7 +314,7 @@ public class GestionVoirRegularisationCharges {
              
                     String idBail = fen.getIdBail();
                     // La suggestion de charge @Erine
-                    BigDecimal sugCharge = total.divide(new BigDecimal("12"));
+                    BigDecimal sugCharge = total.divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP);
                    
                     
                     // AU LIEU DE GENERE : ouvrir la fenetre

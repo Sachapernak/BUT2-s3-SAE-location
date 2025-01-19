@@ -187,7 +187,15 @@ public class GestionRevalorisationCharges {
 		} else {
 			this.fen.setVisibleComboBoxBail(false);
 			this.fen.setVisibleChampsValeurConseillee(true);
+			initialiserMontantConseille();
 		}
+	}
+	
+	public void initialiserMontantConseille() {
+		BigDecimal newValeur = this.fen.getNouvelleValeur();
+		String newValStr = String.valueOf(newValeur);
+		
+		this.fen.setTextValConseille(newValStr);
 	}
 
 }

@@ -299,6 +299,9 @@ public class RevalorisationCharge extends JInternalFrame {
 		return rap;
 	}
 
+    public void setTextValConseille(String valeur) {
+    	this.textFieldValeurConseillee.setText(valeur);
+    }
     
     /**
      * Affiche un message d'erreur dans une boîte de dialogue.
