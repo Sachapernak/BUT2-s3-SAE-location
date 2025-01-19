@@ -1,7 +1,9 @@
 package controleur;
 
 import java.awt.Cursor;
+import java.awt.Desktop;
 import java.awt.event.ItemEvent;
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
@@ -18,6 +20,7 @@ import modele.Bail;
 import modele.ProvisionCharge;
 import modele.dao.DaoBail;
 import modele.dao.DaoProvisionCharge;
+import rapport.RapportRegularisation;
 import vue.DetailProvParBail;
 import vue.RevalorisationCharge;
 
@@ -49,13 +52,19 @@ public class GestionRevalorisationCharges {
 		btnModifier.addActionListener(e -> {
 			try {
 				
-				System.out.println(fen.getValeurNouvelleCharges());
 				
 				ProvisionCharge prov = new ProvisionCharge(fen.getSelectedIdBail(), 
 						fen.getDate().isEmpty() ? LocalDate.now().toString() : fen.getDate(), 
 								new BigDecimal(fen.getValeurNouvelleCharges()));
 				
 				new DaoProvisionCharge().create(prov);
+				
+				if (fen.getRap() != null) {
+					
+					genererRapport();
+				}
+				
+
 				
 			} catch (SQLException | IOException ex) {
 				ex.printStackTrace();
@@ -65,6 +74,33 @@ public class GestionRevalorisationCharges {
 			
 		});
 		
+	}
+	
+	public void genererRapport() {
+		RapportRegularisation rap = this.fen.getRap();
+		 
+		rap.setNouvProv(fen.getValeurNouvelleCharges().toString());
+		
+        String cheminFichier;
+		try {
+			cheminFichier = rap.genererSoldeToutCompte(rap.getNomFichier());
+			
+			// Ouvrir le fichier une fois créé
+	        File fichier = new File(cheminFichier);
+	        
+	        if (fichier.exists()) {
+	            Desktop.getDesktop().open(fichier);
+	            fen.dispose();
+	        } else {
+	            fen.afficherMessageErreur("Le fichier n'a pas été trouvé : " + cheminFichier);
+	        }
+			
+		} catch (IOException e) {
+            fen.afficherMessageErreur("Erreur lors de la génération ou de l'ouverture du fichier : " + e.getMessage());
+            e.printStackTrace();
+        
+		}
+        
 	}
 
     /**
@@ -152,5 +188,26 @@ public class GestionRevalorisationCharges {
 	}
 	
 	
+	public void gestionAffichageChamps() {
+		if (this.fen.getNouvelleValeur() == null) {
+			
+			this.fen.setVisibleComboBoxBail(true);
+			this.fen.setVisibleChampsValeurConseillee(false);
+			
+		} else {
+			fen.setDate(LocalDate.now().toString());
+			this.fen.setVisibleComboBoxBail(false);
+			this.fen.setVisibleChampsValeurConseillee(true);
+			initialiserMontantConseille();
+		}
+	}
+	
+	public void initialiserMontantConseille() {
+		BigDecimal newValeur = this.fen.getNouvelleValeur();
+		String newValStr = String.valueOf(newValeur);
+		
+		this.fen.setTextValConseille(newValStr);
+
+	}
 
 }

@@ -23,6 +23,7 @@ import vue.PageConnexion;
 import vue.ReglesMetier;
 import vue.RevalorisationLoyer;
 import vue.SelectionQuittance;
+import vue.SelectionRegularisationCharges;
 import vue.SetICC;
 import vue.SelectionSoldeToutCompte;
 
@@ -128,6 +129,11 @@ public class GestionMenu implements ActionListener{
 				RevalorisationLoyer reval = new RevalorisationLoyer();
 				fenLayerPane.add(reval, JLayeredPane.PALETTE_LAYER);
 				reval.setVisible(true);
+				break;
+			case "Régulariser les charges" : 
+				SelectionRegularisationCharges regul = new SelectionRegularisationCharges(this.fenPrincipale);
+				fenLayerPane.add(regul, JLayeredPane.PALETTE_LAYER);
+				regul.setVisible(true);
 				break;
 			default:
 				break;

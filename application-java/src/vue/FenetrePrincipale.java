@@ -152,6 +152,10 @@ public class FenetrePrincipale extends JFrame{
 		
 		JMenuItem mntmICC = new JMenuItem("Consulter ICC");
 		menuloyersCharges.add(mntmICC);
+		
+		JMenuItem mntmRegularisationCharges = new JMenuItem("Régulariser les charges");
+		mntmRegularisationCharges.addActionListener(this.gestionMenu);
+		menuloyersCharges.add(mntmRegularisationCharges);
 		mntmICC.addActionListener(this.gestionMenu);
 
 		
@@ -341,4 +345,5 @@ public class FenetrePrincipale extends JFrame{
     public void afficherMessageErreur(String message) {
         JOptionPane.showMessageDialog(this, message, "Erreur", JOptionPane.ERROR_MESSAGE);
     }
+
 }

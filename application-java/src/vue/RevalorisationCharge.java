@@ -3,6 +3,7 @@ package vue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.math.BigDecimal;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -15,8 +16,7 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 
 import controleur.GestionRevalorisationCharges;
-import controleur.GestionRevalorisationLoyer;
-import java.awt.Color;
+import rapport.RapportRegularisation;
 
 /**
  * Fenêtre interne pour la revalorisation des loyers.
@@ -35,49 +35,58 @@ public class RevalorisationCharge extends JInternalFrame {
     private JComboBox<String> comboBoxBail;
     
     private String idBail;
+    private BigDecimal nouvelleValeur;
     private GestionRevalorisationCharges gest;
     private JButton btnHistorique;
     private JLabel lblDate;
     private JTextField textFieldDate;
+    private JTextField textFieldValeurConseillee;
+    private JLabel lblValeurConseillee;
+    private JLabel lblEuro2;
+    private JLabel lblBienLoc;
 
+    private RapportRegularisation rap;
 
     public RevalorisationCharge() {
-        this("");
+        this("", null, null);
     }
     
-    /**
+	/**
      * Crée la fenêtre de revalorisation avec un identifiant de logement initial.
      * @param idLog l'identifiant du logement initialement sélectionné
      */
-    public RevalorisationCharge(String idBail) {
+    public RevalorisationCharge(String idBail, BigDecimal nouvelleValeur, RapportRegularisation rap) {
     	
         this.gest = new GestionRevalorisationCharges(this);
         this.idBail= idBail;
+        this.rap = rap;
+        this.nouvelleValeur = nouvelleValeur;
         
         setBounds(100, 100, 490, 230);
         GridBagLayout gridBagLayout = new GridBagLayout();
         gridBagLayout.columnWidths = new int[]{30, 90, 97, 55, 50, 80, 0};
-        gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0};
+        gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 9, 0, 0, 0, 0};
         gridBagLayout.columnWeights = new double[]{0.0, 0.0, 1.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-        gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
+        gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
         getContentPane().setLayout(gridBagLayout);
         
         // Titre de la fenêtre
         JLabel lblCharges = new JLabel("Modifier les provisions pour charges");
-        GridBagConstraints gbc_lblCharges = new GridBagConstraints();
-        gbc_lblCharges.gridwidth = 6;
-        gbc_lblCharges.insets = new Insets(0, 0, 5, 0);
-        gbc_lblCharges.gridx = 0;
-        gbc_lblCharges.gridy = 0;
-        getContentPane().add(lblCharges, gbc_lblCharges);
+        GridBagConstraints gbcLblCharges = new GridBagConstraints();
+        gbcLblCharges.gridwidth = 6;
+        gbcLblCharges.insets = new Insets(0, 0, 5, 0);
+        gbcLblCharges.gridx = 0;
+        gbcLblCharges.gridy = 0;
+        getContentPane().add(lblCharges, gbcLblCharges);
         
-        JLabel lblBienLoc = new JLabel("Bail :");
+        lblBienLoc = new JLabel("Bail :");
         GridBagConstraints gbcLblBienLoc = new GridBagConstraints();
         gbcLblBienLoc.insets = new Insets(0, 0, 5, 5);
         gbcLblBienLoc.anchor = GridBagConstraints.EAST;
         gbcLblBienLoc.gridx = 1;
         gbcLblBienLoc.gridy = 1;
         getContentPane().add(lblBienLoc, gbcLblBienLoc);
+        
         
         comboBoxBail = new JComboBox<>();
         GridBagConstraints gbc_comboBoxBail = new GridBagConstraints();
@@ -87,24 +96,24 @@ public class RevalorisationCharge extends JInternalFrame {
         gbc_comboBoxBail.gridx = 2;
         gbc_comboBoxBail.gridy = 1;
         getContentPane().add(comboBoxBail, gbc_comboBoxBail);
-        
+
         lblAnciennesCharges = new JLabel("Anciennes provisions :");
-        GridBagConstraints gbc_lblAnciennesCharges = new GridBagConstraints();
-        gbc_lblAnciennesCharges.anchor = GridBagConstraints.EAST;
-        gbc_lblAnciennesCharges.insets = new Insets(0, 0, 5, 5);
-        gbc_lblAnciennesCharges.gridx = 1;
-        gbc_lblAnciennesCharges.gridy = 2;
-        getContentPane().add(lblAnciennesCharges, gbc_lblAnciennesCharges);
+        GridBagConstraints gbcLblAnciennesCharges = new GridBagConstraints();
+        gbcLblAnciennesCharges.anchor = GridBagConstraints.EAST;
+        gbcLblAnciennesCharges.insets = new Insets(0, 0, 5, 5);
+        gbcLblAnciennesCharges.gridx = 1;
+        gbcLblAnciennesCharges.gridy = 2;
+        getContentPane().add(lblAnciennesCharges, gbcLblAnciennesCharges);
         
         textFieldChargeAnciennes = new JTextField();
         textFieldChargeAnciennes.setEditable(false);
-        GridBagConstraints gbc_textFieldChargeAnciennes = new GridBagConstraints();
-        gbc_textFieldChargeAnciennes.gridwidth = 2;
-        gbc_textFieldChargeAnciennes.insets = new Insets(0, 0, 5, 5);
-        gbc_textFieldChargeAnciennes.fill = GridBagConstraints.HORIZONTAL;
-        gbc_textFieldChargeAnciennes.gridx = 2;
-        gbc_textFieldChargeAnciennes.gridy = 2;
-        getContentPane().add(textFieldChargeAnciennes, gbc_textFieldChargeAnciennes);
+        GridBagConstraints gbcTextFieldChargeAnciennes = new GridBagConstraints();
+        gbcTextFieldChargeAnciennes.gridwidth = 2;
+        gbcTextFieldChargeAnciennes.insets = new Insets(0, 0, 5, 5);
+        gbcTextFieldChargeAnciennes.fill = GridBagConstraints.HORIZONTAL;
+        gbcTextFieldChargeAnciennes.gridx = 2;
+        gbcTextFieldChargeAnciennes.gridy = 2;
+        getContentPane().add(textFieldChargeAnciennes, gbcTextFieldChargeAnciennes);
         textFieldChargeAnciennes.setColumns(10);
         
         JLabel lblEuro = new JLabel("€");
@@ -115,41 +124,67 @@ public class RevalorisationCharge extends JInternalFrame {
         gbcLblEuro.gridy = 2;
         getContentPane().add(lblEuro, gbcLblEuro);
         
+        lblValeurConseillee = new JLabel("Valeur conseillée : ");
+        GridBagConstraints gbcLblValeurConseillee = new GridBagConstraints();
+        gbcLblValeurConseillee.insets = new Insets(0, 0, 5, 5);
+        gbcLblValeurConseillee.anchor = GridBagConstraints.EAST;
+        gbcLblValeurConseillee.gridx = 1;
+        gbcLblValeurConseillee.gridy = 3;
+        getContentPane().add(lblValeurConseillee, gbcLblValeurConseillee);
+        
+        textFieldValeurConseillee = new JTextField();
+        textFieldValeurConseillee.setEnabled(false);
+        textFieldValeurConseillee.setEditable(false);
+        GridBagConstraints gbcTextFieldValeurConseillee = new GridBagConstraints();
+        gbcTextFieldValeurConseillee.insets = new Insets(0, 0, 5, 5);
+        gbcTextFieldValeurConseillee.fill = GridBagConstraints.HORIZONTAL;
+        gbcTextFieldValeurConseillee.gridx = 2;
+        gbcTextFieldValeurConseillee.gridy = 3;
+        getContentPane().add(textFieldValeurConseillee, gbcTextFieldValeurConseillee);
+        textFieldValeurConseillee.setColumns(10);
+        
+        lblEuro2 = new JLabel("€");
+        GridBagConstraints gbclblEuro2 = new GridBagConstraints();
+        gbclblEuro2.insets = new Insets(0, 0, 5, 5);
+        gbclblEuro2.gridx = 3;
+        gbclblEuro2.gridy = 3;
+        getContentPane().add(lblEuro2, gbclblEuro2);
+        
         JLabel lblNouvCharges = new JLabel("Nouvelles provisions :");
-        GridBagConstraints gbc_lblNouvCharges = new GridBagConstraints();
-        gbc_lblNouvCharges.anchor = GridBagConstraints.EAST;
-        gbc_lblNouvCharges.insets = new Insets(0, 0, 5, 5);
-        gbc_lblNouvCharges.gridx = 1;
-        gbc_lblNouvCharges.gridy = 4;
-        getContentPane().add(lblNouvCharges, gbc_lblNouvCharges);
+        GridBagConstraints gbcLblNouvCharges = new GridBagConstraints();
+        gbcLblNouvCharges.anchor = GridBagConstraints.EAST;
+        gbcLblNouvCharges.insets = new Insets(0, 0, 5, 5);
+        gbcLblNouvCharges.gridx = 1;
+        gbcLblNouvCharges.gridy = 5;
+        getContentPane().add(lblNouvCharges, gbcLblNouvCharges);
         
         spinnerNouvellesCharges = new JSpinner();
         spinnerNouvellesCharges.setModel(new SpinnerNumberModel(0.0, 0.0, 9999999.0, 50.0));
-        GridBagConstraints gbc_spinnerNouvellesCharges = new GridBagConstraints();
-        gbc_spinnerNouvellesCharges.gridwidth = 2;
-        gbc_spinnerNouvellesCharges.fill = GridBagConstraints.HORIZONTAL;
-        gbc_spinnerNouvellesCharges.insets = new Insets(0, 0, 5, 5);
-        gbc_spinnerNouvellesCharges.gridx = 2;
-        gbc_spinnerNouvellesCharges.gridy = 4;
-        getContentPane().add(spinnerNouvellesCharges, gbc_spinnerNouvellesCharges);
+        GridBagConstraints gbcSpinnerNouvellesCharges = new GridBagConstraints();
+        gbcSpinnerNouvellesCharges.gridwidth = 2;
+        gbcSpinnerNouvellesCharges.fill = GridBagConstraints.HORIZONTAL;
+        gbcSpinnerNouvellesCharges.insets = new Insets(0, 0, 5, 5);
+        gbcSpinnerNouvellesCharges.gridx = 2;
+        gbcSpinnerNouvellesCharges.gridy = 5;
+        getContentPane().add(spinnerNouvellesCharges, gbcSpinnerNouvellesCharges);
         
         lblDate = new JLabel("Date d'effet :");
-        GridBagConstraints gbc_lblDate = new GridBagConstraints();
-        gbc_lblDate.anchor = GridBagConstraints.NORTHEAST;
-        gbc_lblDate.insets = new Insets(0, 0, 5, 5);
-        gbc_lblDate.gridx = 1;
-        gbc_lblDate.gridy = 5;
-        getContentPane().add(lblDate, gbc_lblDate);
+        GridBagConstraints gbcLblDate = new GridBagConstraints();
+        gbcLblDate.anchor = GridBagConstraints.NORTHEAST;
+        gbcLblDate.insets = new Insets(0, 0, 5, 5);
+        gbcLblDate.gridx = 1;
+        gbcLblDate.gridy = 6;
+        getContentPane().add(lblDate, gbcLblDate);
         
         textFieldDate = new JTextField();
-        GridBagConstraints gbc_textFieldDate = new GridBagConstraints();
-        gbc_textFieldDate.anchor = GridBagConstraints.NORTH;
-        gbc_textFieldDate.gridwidth = 2;
-        gbc_textFieldDate.insets = new Insets(0, 0, 5, 5);
-        gbc_textFieldDate.fill = GridBagConstraints.HORIZONTAL;
-        gbc_textFieldDate.gridx = 2;
-        gbc_textFieldDate.gridy = 5;
-        getContentPane().add(textFieldDate, gbc_textFieldDate);
+        GridBagConstraints gbcTextFieldDate = new GridBagConstraints();
+        gbcTextFieldDate.anchor = GridBagConstraints.NORTH;
+        gbcTextFieldDate.gridwidth = 2;
+        gbcTextFieldDate.insets = new Insets(0, 0, 5, 5);
+        gbcTextFieldDate.fill = GridBagConstraints.HORIZONTAL;
+        gbcTextFieldDate.gridx = 2;
+        gbcTextFieldDate.gridy = 6;
+        getContentPane().add(textFieldDate, gbcTextFieldDate);
         textFieldDate.setColumns(10);
         
         btnHistorique = new JButton("Voir l'historique");
@@ -157,24 +192,24 @@ public class RevalorisationCharge extends JInternalFrame {
         gbcBtnHistorique.anchor = GridBagConstraints.WEST;
         gbcBtnHistorique.insets = new Insets(0, 0, 0, 5);
         gbcBtnHistorique.gridx = 1;
-        gbcBtnHistorique.gridy = 6;
+        gbcBtnHistorique.gridy = 7;
         getContentPane().add(btnHistorique, gbcBtnHistorique);
 
         
         btnModifier = new JButton("Modifier");
-        GridBagConstraints gbc_btnModifier = new GridBagConstraints();
-        gbc_btnModifier.anchor = GridBagConstraints.WEST;
-        gbc_btnModifier.gridwidth = 2;
-        gbc_btnModifier.insets = new Insets(0, 0, 0, 5);
-        gbc_btnModifier.gridx = 3;
-        gbc_btnModifier.gridy = 6;
-        getContentPane().add(btnModifier, gbc_btnModifier);
+        GridBagConstraints gbcBtnModifier = new GridBagConstraints();
+        gbcBtnModifier.anchor = GridBagConstraints.WEST;
+        gbcBtnModifier.gridwidth = 2;
+        gbcBtnModifier.insets = new Insets(0, 0, 0, 5);
+        gbcBtnModifier.gridx = 3;
+        gbcBtnModifier.gridy = 7;
+        getContentPane().add(btnModifier, gbcBtnModifier);
         
         btnQuitter = new JButton("Quitter");
         GridBagConstraints gbcBtnQuitter = new GridBagConstraints();
         gbcBtnQuitter.anchor = GridBagConstraints.WEST;
         gbcBtnQuitter.gridx = 5;
-        gbcBtnQuitter.gridy = 6;
+        gbcBtnQuitter.gridy = 7;
         getContentPane().add(btnQuitter, gbcBtnQuitter);
         
         gest.gestionBtnHistorique(btnHistorique);
@@ -188,6 +223,8 @@ public class RevalorisationCharge extends JInternalFrame {
         // les informations de loyer lors du changement de sélection
         // (après le chargement pour pas charger deux fois les infos
         gest.gestionActionComboLog(comboBoxBail);
+        
+        gest.gestionAffichageChamps();
 
     }
     
@@ -197,6 +234,14 @@ public class RevalorisationCharge extends JInternalFrame {
      */
     public String getIdLog() {
         return this.idBail;
+    }
+    
+    /**
+     * Retourne la nouvelle valeur passée en paramètres.
+     * @return nouvelleValeur
+     */
+    public BigDecimal getNouvelleValeur() {
+        return this.nouvelleValeur;
     }
     
     
@@ -238,7 +283,6 @@ public class RevalorisationCharge extends JInternalFrame {
         textFieldChargeAnciennes.setText(val);
     }
     
-
     /**
      * Retourne la valeur saisie pour le nouveau loyer dans le spinner.
      * @return la valeur du nouveau loyer
@@ -251,6 +295,18 @@ public class RevalorisationCharge extends JInternalFrame {
     	return textFieldDate.getText();
     }
     
+    public void setDate(String date) {
+    	textFieldDate.setText(date);
+    }
+    
+    public RapportRegularisation getRap() {
+		return rap;
+	}
+
+    public void setTextValConseille(String valeur) {
+    	this.textFieldValeurConseillee.setText(valeur);
+    }
+    
     /**
      * Affiche un message d'erreur dans une boîte de dialogue.
      * @param message message d'erreur à afficher
@@ -259,4 +315,16 @@ public class RevalorisationCharge extends JInternalFrame {
         JOptionPane.showMessageDialog(this, "Erreur : \n" + message, 
                                       "Erreur", JOptionPane.ERROR_MESSAGE);
     }
+    
+    public void setVisibleComboBoxBail(boolean bool) {
+    	this.comboBoxBail.setVisible(bool);
+    	this.lblBienLoc.setVisible(bool);
+    }
+    
+    public void setVisibleChampsValeurConseillee(boolean bool) {
+    	this.lblValeurConseillee.setVisible(bool);
+    	this.textFieldValeurConseillee.setVisible(bool);
+    	this.lblEuro2.setVisible(bool);
+    }
+
 }
