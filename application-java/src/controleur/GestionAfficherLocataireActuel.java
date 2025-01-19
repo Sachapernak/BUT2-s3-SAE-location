@@ -18,9 +18,11 @@ import modele.Bail;
 import modele.Contracter;
 import modele.Locataire;
 import modele.dao.DaoBail;
+import modele.dao.DaoContracter;
 import modele.dao.DaoLocataire;
 import vue.AfficherLocatairesActuels;
 import vue.AjouterLocataire;
+import vue.VoirSoldeToutCompte;
 
 /**
  * Contrôleur gérant les actions sur la vue {@link AfficherLocatairesActuels}.
@@ -156,48 +158,45 @@ public class GestionAfficherLocataireActuel implements ActionListener {
      * @throws SQLException 
      */
     private void resilierBailSelection(){
-        JTable tableLoc = fenAfficherLocatairesActuels.getTableLocatairesActuels();
-        JTable tableBiens = fenAfficherLocatairesActuels.getTableBiensLoues();
+    	
+        fenAfficherLocatairesActuels.setCursorAttente(true);
+        
+        String idLoc = fenAfficherLocatairesActuels.getSelectedIdLoc();
+        String idBail = fenAfficherLocatairesActuels.getSelectedIdBail();
 
-        int ligneSelectLoc = tableLoc.getSelectedRow();
-        int ligneSelectBiens = tableBiens.getSelectedRow();
-
-        if (ligneSelectLoc > -1 && ligneSelectBiens > -1) {
-            Locataire loc = lireLocataireDepuisTable(tableLoc, ligneSelectLoc);
-            Bail bail = GestionChampsMontantAfficherLocataire.recupererBail(daoBail, tableLoc, ligneSelectLoc);
-
-            if (loc == null || bail == null) {
-                fenAfficherLocatairesActuels.afficherMessageErreur("Impossible de charger le locataire ou le bail.");
-                return;
-            }
-
-            // Tâche de fond pour résilier
-            fenAfficherLocatairesActuels.setCursorAttente(true);
+        
+        if (!idLoc.isEmpty()
+        		&& !idBail.isEmpty()) {
 
             new SwingWorker<Void, Void>() {
                 @Override
-                protected Void doInBackground() throws Exception {
-                    List<Contracter> contrats = loc.getContrats();
-                    for (Contracter contrat : contrats) {
-                        if (contrat.getBail().getIdBail().equals(bail.getIdBail())) {
-                            contrat.setDateSortie(String.valueOf(LocalDate.now()));
-                            // Éventuellement update en base si la structure le permet
-                        }
-                    }
+                protected Void doInBackground() {
+                		
+                		try {
+                			
+                			DaoContracter dao = new DaoContracter();
+                			String dateDebut = dao.findDate(idLoc, idBail);
+                            VoirSoldeToutCompte fenSoldeCompte = new VoirSoldeToutCompte(idLoc, 
+                            		                                  idBail,  dateDebut,  LocalDate.now().toString());
+                			fenSoldeCompte.setVisible(true);
+                			
+                		} catch (SQLException | IOException e) {
+                			e.printStackTrace();
+                			fenAfficherLocatairesActuels.afficherMessageErreur(e.getMessage());
+                		}
+
+ 
+                		
                     return null;
                 }
 
                 @Override
                 protected void done() {
                     fenAfficherLocatairesActuels.setCursorAttente(false);
-                    JOptionPane.showMessageDialog(
-                            fenAfficherLocatairesActuels,
-                            "Bail résilié avec succès.",
-                            "Information",
-                            JOptionPane.INFORMATION_MESSAGE
-                    );
+
                 }
             }.execute();
+            
         } else {
             JOptionPane.showMessageDialog(
                     fenAfficherLocatairesActuels,
@@ -205,6 +204,7 @@ public class GestionAfficherLocataireActuel implements ActionListener {
                     "Impossible de résilier le bail",
                     JOptionPane.ERROR_MESSAGE
             );
+            fenAfficherLocatairesActuels.setCursorAttente(false);
         }
     }
 
@@ -230,7 +230,6 @@ public class GestionAfficherLocataireActuel implements ActionListener {
 			           .getClass()
 			           .getDeclaredMethod("lireLigneTable", JTable.class, int.class)
 			           .invoke(this.gestionChampsLoc, tableLoc, rowIndex) 
-			           // convert the result properly
 			           == null ? null 
 			                   : (Locataire) this.gestionChampsLoc
 			                                    .getClass()
@@ -241,5 +240,16 @@ public class GestionAfficherLocataireActuel implements ActionListener {
 			e.printStackTrace();
 		}
 		return null;
+    }
+    
+    public Bail lireBailDepuisTable() {
+    	try {
+    		return new DaoBail().findById(fenAfficherLocatairesActuels.getSelectedIdBail());
+    	} catch (SQLException | IOException e) {
+    		e.printStackTrace();
+    		fenAfficherLocatairesActuels.afficherMessageErreur(e.getMessage());
+    		return null;
+    	}
+    	
     }
 }

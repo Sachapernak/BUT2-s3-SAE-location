@@ -307,7 +307,9 @@ public class GestionChargerLoyer {
                 BienLocatif bien = daoBien.findById(idLog);
 
                 DocumentComptable doc = new DocumentComptable(numDoc, date, type, montant, lienFichier);
+                System.out.println(doc.toString());
                 doc.setBatiment(bien.getBat());
+                doc.setRecuperableLoc(true);
                 doc.setLocataire(daoLoc.findById(idLoc));
                 
                 daoDoc.create(doc);

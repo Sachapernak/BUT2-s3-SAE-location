@@ -229,9 +229,9 @@ CREATE TABLE sae_facture_du_bien(
 ALTER TABLE SAE_document_comptable
 ADD CONSTRAINT chk_SAE_doc_compta_type
 CHECK (
-    (lower(Type_de_document) in ('quittance','loyer') AND SIRET IS NULL)
+    (lower(Type_de_document) in ('quittance','loyer','regularisation') AND SIRET IS NULL)
     OR
-    (lower(Type_de_document) not in ('quittance','loyer') AND SIRET IS NOT NULL)
+    (lower(Type_de_document) not in ('quittance','loyer','regularisation') AND SIRET IS NOT NULL)
 );
 
 
