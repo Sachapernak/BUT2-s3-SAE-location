@@ -12,11 +12,13 @@ import java.util.concurrent.ExecutionException;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.SwingWorker;
+import javax.swing.WindowConstants;
 
 import modele.Bail;
 import modele.ProvisionCharge;
 import modele.dao.DaoBail;
 import modele.dao.DaoProvisionCharge;
+import vue.DetailProvParBail;
 import vue.RevalorisationCharge;
 
 public class GestionRevalorisationCharges {
@@ -29,7 +31,9 @@ public class GestionRevalorisationCharges {
 
 	public void gestionBtnHistorique(JButton btnHistorique) {
 		btnHistorique.addActionListener(e -> {
-			//TODO : Voir l'historique
+            DetailProvParBail dialog = new DetailProvParBail(fen.getSelectedIdBail());
+            dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+            dialog.setVisible(true);
 		});
 		
 	}
