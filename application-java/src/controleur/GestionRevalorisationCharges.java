@@ -152,5 +152,14 @@ public class GestionRevalorisationCharges {
 	}
 	
 	
+	public void gestionAffichageChamps() {
+		if (this.fen.getNouvelleValeur() == null && this.fen.getNouvelleValeur().isEmpty()) {
+			this.fen.setEnabledComboBoxBail(true);
+			this.fen.setEnabledChampsValeurConseillee(false);
+		} else {
+			this.fen.setEnabledComboBoxBail(false);
+			this.fen.setEnabledChampsValeurConseillee(true);
+		}
+	}
 
 }
