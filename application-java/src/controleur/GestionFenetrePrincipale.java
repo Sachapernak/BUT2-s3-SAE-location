@@ -18,6 +18,7 @@ import vue.FenetrePrincipale;
 import vue.AjouterBatiment;
 import vue.RevalorisationLoyer;
 import vue.PageConnexion;
+import vue.RevalorisationCharge;
 
 public class GestionFenetrePrincipale implements ActionListener{
 
@@ -58,6 +59,11 @@ public class GestionFenetrePrincipale implements ActionListener{
 				AjouterBienLocatif abl = new AjouterBienLocatif();
 				layeredPane.add(abl, JLayeredPane.PALETTE_LAYER);
 				abl.setVisible(true);
+				break;
+			case "Modifier charges":
+				RevalorisationCharge rvC = new RevalorisationCharge();
+				layeredPane.add(rvC, JLayeredPane.PALETTE_LAYER);
+				rvC.setVisible(true);
 				break;
 			default:
 				break;
