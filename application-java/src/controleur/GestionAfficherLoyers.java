@@ -190,8 +190,8 @@ public class GestionAfficherLoyers {
 
                     frame.majTableLoyers(data);
 
-                    //TODO : calculer réellement le ratio payés/total.
-                    String ratio = loyers.size() + " / " + loyers.size();
+                    //TODO : Amelioration priorité faible : calculer le ratio de loyers payers
+                    String ratio = loyers.size() + "";
                     frame.setNbLoyers(ratio);
 
                 } catch (InterruptedException e) {

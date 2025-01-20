@@ -290,5 +290,14 @@ public class DocumentComptable {
 
         return sb.toString();
     }
+    
+    public static DocumentComptable createRevalo(String numDoc, String dateDoc, BigDecimal montant, String fichierDoc) {
+    	DocumentComptable doc = new DocumentComptable(numDoc, dateDoc, TypeDoc.REGULARISATION, montant, fichierDoc);
+    	doc.setRecuperableLoc(true);
+    	
+    	return doc;
+    	
+    }
+    
 
 }

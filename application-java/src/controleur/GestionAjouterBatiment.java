@@ -23,7 +23,8 @@ import vue.AjouterBatiment;
 
 public class GestionAjouterBatiment implements ActionListener {
 
-    private final DaoAdresse daoAdresse; 
+    private static final String ERREUR = "Erreur";
+	private final DaoAdresse daoAdresse; 
     private final DaoBatiment daoBatiment;
     private final AjouterBatiment fenAjoutBatiment;
     private final VerificationChamps verifChamps;
@@ -79,7 +80,7 @@ public class GestionAjouterBatiment implements ActionListener {
 
             }
         } catch (Exception ex) {
-            this.fenAjoutBatiment.afficherMessage("Erreur lors de la création du bâtiment : " + ex.getMessage(),"Erreur", JOptionPane.ERROR_MESSAGE);;
+            this.fenAjoutBatiment.afficherMessage("Erreur lors de la création du bâtiment : " + ex.getMessage(),ERREUR, JOptionPane.ERROR_MESSAGE);;
             ex.printStackTrace();
         }
 
@@ -96,12 +97,12 @@ public class GestionAjouterBatiment implements ActionListener {
         List<String> champs = this.fenAjoutBatiment.getChampsObligatoires();
 
         if (!this.verifChamps.champsRemplis(champs)) {
-            this.fenAjoutBatiment.afficherMessage("Tous les champs obligatoires doivent être remplis.", "Erreur", JOptionPane.ERROR_MESSAGE);
+            this.fenAjoutBatiment.afficherMessage("Tous les champs obligatoires doivent être remplis.", ERREUR, JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
         if (!this.verifChamps.validerCodePostal(this.fenAjoutBatiment.getStringTextFieldCodePostal())) {
-            this.fenAjoutBatiment.afficherMessage("Le code postal doit être composé de 5 chiffres.", "Erreur", JOptionPane.ERROR_MESSAGE);
+            this.fenAjoutBatiment.afficherMessage("Le code postal doit être composé de 5 chiffres.", ERREUR, JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
@@ -120,7 +121,7 @@ public class GestionAjouterBatiment implements ActionListener {
         String idBat = this.fenAjoutBatiment.getStringTextFieldIdentifiant();
         Adresse adresse = creerAdresse();
         if (daoBatiment.findById(idBat) != null) {
-            this.fenAjoutBatiment.afficherMessage("Le bâtiment existe déjà.", "Erreur", JOptionPane.ERROR_MESSAGE);
+            this.fenAjoutBatiment.afficherMessage("Le bâtiment existe déjà.", ERREUR, JOptionPane.ERROR_MESSAGE);
             return null;
         }
         if (daoAdresse.findById(adresse.getIdAdresse()) == null) {

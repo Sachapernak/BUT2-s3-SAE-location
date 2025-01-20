@@ -6,7 +6,8 @@ public enum TypeDoc {
 	FACTURE_CV("facture cv"),
 	FACTURE("facture"),
 	DEVIS("devis"),
-	LOYER("loyer");
+	LOYER("loyer"),
+	REGULARISATION("regularisation");
 
 	private String type;
 	

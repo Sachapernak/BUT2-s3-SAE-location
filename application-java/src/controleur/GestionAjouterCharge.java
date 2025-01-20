@@ -20,7 +20,6 @@ import modele.ChargeFixe;
 import modele.ChargeIndex;
 import modele.ConnexionBD;
 import modele.DocumentComptable;
-import modele.Entreprise;
 import modele.FactureBien;
 import modele.TypeDoc;
 import modele.dao.DaoAssurance;
@@ -39,7 +38,8 @@ import vue.AjouterCharge;
  */
 public class GestionAjouterCharge {
     
-    /**
+    private static final String CHARGEMENTTEXT = "Chargement...";
+	/**
      * Vue associée au contrôleur.
      */
     private final AjouterCharge view;
@@ -78,7 +78,7 @@ public class GestionAjouterCharge {
      */
     private void loadTypeCombo() {
         view.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        view.setComboBoxTypes(Arrays.asList("Chargement..."));
+        view.setComboBoxTypes(Arrays.asList(CHARGEMENTTEXT));
         
         SwingWorker<Void, Void> typeWorker = new SwingWorker<Void, Void>() {
             @Override
@@ -110,7 +110,7 @@ public class GestionAjouterCharge {
      */
     private void loadCompanyCombo() {
         view.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        view.setComboBoxEntreprise(Arrays.asList("Chargement..."));
+        view.setComboBoxEntreprise(Arrays.asList(CHARGEMENTTEXT));
         
         SwingWorker<Void, Void> companyWorker = new SwingWorker<Void, Void>() {
             private List<String> companyNames;
@@ -137,7 +137,7 @@ public class GestionAjouterCharge {
      */
     private void loadBuildingCombo() {
         view.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        view.setComboBoxBat(Arrays.asList("Chargement..."));
+        view.setComboBoxBat(Arrays.asList(CHARGEMENTTEXT));
         
         SwingWorker<Void, Void> buildingWorker = new SwingWorker<Void, Void>() {
             private List<String> buildingIds;
@@ -164,7 +164,7 @@ public class GestionAjouterCharge {
      */
     private void loadTenantCombo() {
         view.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        view.setComboBoxLocataire(Arrays.asList("Chargement..."));
+        view.setComboBoxLocataire(Arrays.asList(CHARGEMENTTEXT));
         
         SwingWorker<Void, Void> tenantWorker = new SwingWorker<Void, Void>() {
             private List<String> tenantNames;
@@ -191,7 +191,7 @@ public class GestionAjouterCharge {
      */
     private void loadAssuranceCombo() {
         view.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        view.setComboBoxAssu(Arrays.asList("Chargement..."));
+        view.setComboBoxAssu(Arrays.asList(CHARGEMENTTEXT));
         
         SwingWorker<Void, Void> assuranceWorker = new SwingWorker<Void, Void>() {
             private List<String> assuranceContracts;
@@ -219,7 +219,7 @@ public class GestionAjouterCharge {
      */
     private void loadChargeIndexCombo() {
         view.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        view.setComboIDCharge(Arrays.asList("Chargement..."));
+        view.setComboIDCharge(Arrays.asList(CHARGEMENTTEXT));
         
         SwingWorker<Void, Void> chargeIndexWorker = new SwingWorker<Void, Void>() {
             private List<String> distinctChargeIndexIds;
@@ -433,7 +433,6 @@ public class GestionAjouterCharge {
         String idBat = view.getIDBat();
         String idAssurance = view.getIDAssu();
         
-        System.out.println(idEntreprise);
 
         DocumentComptable doc = new DocumentComptable(
                 view.getTextNumDoc(), view.getTextDateDoc(), 
@@ -483,8 +482,6 @@ public class GestionAjouterCharge {
                 .add(view.getCoutVarAbon());
 
         String idEntreprise = getSiretEntreprise(view.getIDEntreprise());
-        
-        System.out.println(idEntreprise);
         
         String idBat = view.getIDBat();
         String idAssurance = view.getIDAssu();
@@ -536,8 +533,6 @@ public class GestionAjouterCharge {
         String idEntreprise = view.getIDEntreprise().split(" ")[1];
         String idBat = view.getIDBat();
         
-        System.out.println(idEntreprise);
-
         DocumentComptable doc = new DocumentComptable(
                 view.getTextNumDoc(), view.getTextDateDoc(), 
                 TypeDoc.valueOf(view.getTypeDoc()),

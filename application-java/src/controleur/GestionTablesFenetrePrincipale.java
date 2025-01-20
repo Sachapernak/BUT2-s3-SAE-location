@@ -16,18 +16,36 @@ import modele.dao.DaoBatiment;
 import modele.dao.DaoBienLocatif;
 import vue.FenetrePrincipale;
 
+
+
+/**
+ * Contrôleur pour la gestion des tables dans la fenêtre principale.
+ * Gère la sélection des batiments et le remplissage des tables associées 
+ * (batiments et biens locatifs).
+ */
 public class GestionTablesFenetrePrincipale implements ListSelectionListener{
 
 	private FenetrePrincipale fenPrincipale;
 	private DaoBatiment daoBatiment;
 	private DaoBienLocatif daoBienLocatif;
 	
+	
+	 /**
+     * Constructeur qui initialise le contrôleur avec la fenêtre principale et les DAO nécessaires.
+     * @param fp la fenêtre principale de l'application.
+     */
 	public GestionTablesFenetrePrincipale(FenetrePrincipale fp) {
 		this.fenPrincipale = fp;
 		this.daoBatiment = new DaoBatiment();
 		this.daoBienLocatif = new DaoBienLocatif();
 	}
 	
+	
+    /**
+     * Méthode appelée lors d'un changement de sélection dans la table des bâtiments.
+     * Elle récupère l'ID du bâtiment sélectionné et remplit la table des biens locatifs correspondante.
+     * @param e l'événement de sélection de liste.
+     */
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
 		JTable tableBatiments = this.fenPrincipale.getTableBatiment();
@@ -42,6 +60,11 @@ public class GestionTablesFenetrePrincipale implements ListSelectionListener{
 	}
 	
     
+    /**
+     * Remplit la table des bâtiments avec les informations récupérées depuis la base.
+     * Chaque ligne correspond à un bâtiment avec son adresse et le nombre de logements.
+     * @param tableBatiments la table à remplir avec les données des bâtiments.
+     */
     public void remplirBatiments (JTable tableBatiments) {
     	UtilitaireTable.viderTable(tableBatiments);
     	int nbLogements = 0;
@@ -59,6 +82,13 @@ public class GestionTablesFenetrePrincipale implements ListSelectionListener{
 			} 
     }
     
+    
+    /**
+     * Remplit la table des biens locatifs associés à un bâtiment donné.
+     * Pour chaque bien, affiche notamment le dernier loyer connu.
+     * @param tableBiensLoc la table à remplir avec les biens locatifs.
+     * @param idBatiment l'identifiant du bâtiment dont on veut afficher les biens.
+     */
     public void remplirBiensLoc (JTable tableBiensLoc, String idBatiment) {
     	UtilitaireTable.viderTable(tableBiensLoc);
     	try {

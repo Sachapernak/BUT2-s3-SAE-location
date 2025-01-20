@@ -5,7 +5,6 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.JButton;
@@ -15,7 +14,6 @@ import javax.swing.JTable;
 import javax.swing.SwingWorker;
 
 import modele.Bail;
-import modele.Contracter;
 import modele.Locataire;
 import modele.dao.DaoBail;
 import modele.dao.DaoContracter;
@@ -40,8 +38,6 @@ public class GestionAfficherLocataireActuel implements ActionListener {
     private final AfficherLocatairesActuels fenAfficherLocatairesActuels;
     private final GestionChampsLocataireActuel gestionChampsLoc;
     private final DaoLocataire daoLocataire;
-    private final DaoBail daoBail;
-
     /**
      * Constructeur principal.
      *
@@ -51,7 +47,7 @@ public class GestionAfficherLocataireActuel implements ActionListener {
         this.fenAfficherLocatairesActuels = afl;
         this.gestionChampsLoc = new GestionChampsLocataireActuel(afl);
         this.daoLocataire = new DaoLocataire();
-        this.daoBail = new DaoBail();
+        new DaoBail();
     }
 
     /**

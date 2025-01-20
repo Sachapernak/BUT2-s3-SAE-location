@@ -24,7 +24,8 @@ import vue.AjouterEntreprise;
 
 public class GestionAjouterEntreprise implements ActionListener{
 
-    private final DaoAdresse daoAdresse; 
+    private static final String ERREUR = "Erreur";
+	private final DaoAdresse daoAdresse; 
     private final DaoEntreprise daoEntreprise;
     private final AjouterEntreprise fenAjoutEntreprise;
     private final VerificationChamps verifChamps;
@@ -77,7 +78,7 @@ public class GestionAjouterEntreprise implements ActionListener{
                 this.fenAjoutEntreprise.afficherMessage("Entreprise créé avec succès", "Succès", JOptionPane.INFORMATION_MESSAGE);
             }
         } catch (Exception ex) {
-            this.fenAjoutEntreprise.afficherMessage("Erreur lors de la création de l'entreprise : " + ex.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
+            this.fenAjoutEntreprise.afficherMessage("Erreur lors de la création de l'entreprise : " + ex.getMessage(), ERREUR, JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
         }
         this.fenAjoutEntreprise.dispose();
@@ -93,12 +94,12 @@ public class GestionAjouterEntreprise implements ActionListener{
         List<String> champs = this.fenAjoutEntreprise.getChampsObligatoires();
 
         if (!this.verifChamps.champsRemplis(champs)) {
-            this.fenAjoutEntreprise.afficherMessage("Tous les champs obligatoires doivent être remplis.", "Erreur", JOptionPane.ERROR_MESSAGE);
+            this.fenAjoutEntreprise.afficherMessage("Tous les champs obligatoires doivent être remplis.", ERREUR, JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
         if (!this.verifChamps.validerCodePostal(this.fenAjoutEntreprise.getStringTextFieldCodePostal())) {
-            this.fenAjoutEntreprise.afficherMessage("Le code postal doit être composé de 5 chiffres.", "Erreur", JOptionPane.ERROR_MESSAGE);
+            this.fenAjoutEntreprise.afficherMessage("Le code postal doit être composé de 5 chiffres.", ERREUR, JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
@@ -119,7 +120,7 @@ public class GestionAjouterEntreprise implements ActionListener{
         String siret = this.fenAjoutEntreprise.getStringTextFieldSiret();
         Adresse adresse = creerAdresse();
         if (daoEntreprise.findById(siret) != null) {
-            this.fenAjoutEntreprise.afficherMessage("L'entreprise existe déjà.", "Erreur", JOptionPane.ERROR_MESSAGE);
+            this.fenAjoutEntreprise.afficherMessage("L'entreprise existe déjà.", ERREUR, JOptionPane.ERROR_MESSAGE);
             return null;
         }
         if (daoAdresse.findById(adresse.getIdAdresse()) == null) {
