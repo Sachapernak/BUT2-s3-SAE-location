@@ -20,7 +20,6 @@ import vue.AfficherLoyers;
 import vue.ChargerLoyers;
 import vue.FenetrePrincipale;
 import vue.PageConnexion;
-import vue.ReglesMetier;
 import vue.RevalorisationLoyer;
 import vue.SelectionQuittance;
 import vue.SelectionRegularisationCharges;
@@ -73,12 +72,6 @@ public class GestionMenu implements ActionListener{
 		        fenLayerPane.add(jInternalFrame, JLayeredPane.PALETTE_LAYER);
 				jInternalFrame.setVisible(true);
 				break;
-			case "Afficher les règles métier" : 
-				ReglesMetier rm = new ReglesMetier() ;
-				fenLayerPane.add(rm, JLayeredPane.PALETTE_LAYER);
-				rm.setVisible(true);
-				break;
-
 			case "Consulter les charges" : 
 				AfficherCharges ad = new AfficherCharges();
 				ad.setVisible(true);
