@@ -5,23 +5,17 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
-
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
 import modele.Batiment;
 import modele.BienLocatif;
-import modele.Loyer;
 import modele.TypeDeBien;
 import modele.dao.DaoBatiment;
 import modele.dao.DaoBienLocatif;
-import modele.dao.DaoLoyer;
 import vue.AjouterBienLocatif;
 
 /**
@@ -33,7 +27,8 @@ import vue.AjouterBienLocatif;
 
 public class GestionAjouterBienLocatif implements ActionListener {
 
-    private final DaoBatiment daoBatiment;
+    private static final String ERREUR = "Erreur";
+	private final DaoBatiment daoBatiment;
     private final DaoBienLocatif daoBienLoc;
     private final AjouterBienLocatif fenAjoutBienLocatif;
     private final VerificationChamps verifChamps;
@@ -88,7 +83,7 @@ public class GestionAjouterBienLocatif implements ActionListener {
 
             }
         } catch (Exception ex) {
-            this.fenAjoutBienLocatif.afficherMessage("Erreur lors de la création du bâtiment : " + ex.getMessage(),"Erreur", JOptionPane.ERROR_MESSAGE);
+            this.fenAjoutBienLocatif.afficherMessage("Erreur lors de la création du bâtiment : " + ex.getMessage(),ERREUR, JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
         }
 
@@ -106,24 +101,24 @@ public class GestionAjouterBienLocatif implements ActionListener {
         List<String> champs = this.fenAjoutBienLocatif.getChampsObligatoiresBienLocatif();
 
         if (!this.verifChamps.champsRemplis(champs)) {
-            this.fenAjoutBienLocatif.afficherMessage("Tous les champs obligatoires doivent être remplis.", "Erreur", JOptionPane.ERROR_MESSAGE);
+            this.fenAjoutBienLocatif.afficherMessage("Tous les champs obligatoires doivent être remplis.", ERREUR, JOptionPane.ERROR_MESSAGE);
             erreurTrouvee = true;
         }
         
         if (!this.verifChamps.validerBigDecimal(this.fenAjoutBienLocatif.getTextLoyerBase())) {
-        	this.fenAjoutBienLocatif.afficherMessage("Le loyer doit être un nombre", "Erreur", JOptionPane.ERROR_MESSAGE);
+        	this.fenAjoutBienLocatif.afficherMessage("Le loyer doit être un nombre", ERREUR, JOptionPane.ERROR_MESSAGE);
         	erreurTrouvee = true;
         }
         
         //Verification des  entiers
         String nbPiecesStr = this.fenAjoutBienLocatif.getTextNbPieces();
         if (!nbPiecesStr.isEmpty() &&!this.verifChamps.validerInteger(nbPiecesStr)) {
-            this.fenAjoutBienLocatif.afficherMessage("Le nombre de pieces doit être un entier", "Erreur", JOptionPane.ERROR_MESSAGE);
+            this.fenAjoutBienLocatif.afficherMessage("Le nombre de pieces doit être un entier", ERREUR, JOptionPane.ERROR_MESSAGE);
             erreurTrouvee = true;
         }
         String surfaceStr = this.fenAjoutBienLocatif.getTextSurface();
         if (!surfaceStr.isEmpty() &&!this.verifChamps.validerInteger(surfaceStr)) {
-            this.fenAjoutBienLocatif.afficherMessage("La surface doit être un entier", "Erreur", JOptionPane.ERROR_MESSAGE);
+            this.fenAjoutBienLocatif.afficherMessage("La surface doit être un entier", ERREUR, JOptionPane.ERROR_MESSAGE);
             erreurTrouvee = true;
         }
 
@@ -156,7 +151,7 @@ public class GestionAjouterBienLocatif implements ActionListener {
     	String idBien = this.fenAjoutBienLocatif.getTextIdBien();
         try {
 			if (daoBienLoc.findById(idBien) != null) {
-			    this.fenAjoutBienLocatif.afficherMessage("Le bâtiment existe déjà.", "Erreur", JOptionPane.ERROR_MESSAGE);
+			    this.fenAjoutBienLocatif.afficherMessage("Le bâtiment existe déjà.", ERREUR, JOptionPane.ERROR_MESSAGE);
 			    return null;
 			}
 		} catch (SQLException | IOException e) {
@@ -219,8 +214,7 @@ public class GestionAjouterBienLocatif implements ActionListener {
      */
     private int convertStrToInt(String valeur) {
     	try {
-	        int entier = Integer.parseInt(valeur);
-	        return entier; 
+	        return Integer.parseInt(valeur); 
 	    } catch (NumberFormatException e) {
 	        return -1;
 	    }
@@ -253,7 +247,8 @@ public class GestionAjouterBienLocatif implements ActionListener {
     public void remplirComboBoxTypeBienLoc() {
     	List<String> types = Arrays.stream(TypeDeBien.values())
                 .map(TypeDeBien::getValeur) 
-                .collect(Collectors.toList());
+                .toList();
+    	
     	this.fenAjoutBienLocatif.setComboBoxTypeBien(types);
 
     }

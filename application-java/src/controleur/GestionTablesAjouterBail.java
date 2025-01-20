@@ -18,6 +18,13 @@ import modele.dao.DaoContracter;
 import vue.AjouterBail;
 import vue.AjouterLocataire;
 
+
+/**
+ * GestionTablesAjouterBail gère les interactions entre les tables d'affichage dans les vues
+ * {@link AjouterBail} et {@link AjouterLocataire} liées à l'ajout d'un bail.
+ * Elle écoute les sélections de lignes de tables et les saisies clavier pour effectuer 
+ * des mises à jour correspondantes.
+ */
 public class GestionTablesAjouterBail implements ListSelectionListener, KeyListener{
 
 	private AjouterBail fenAjouterBail;
@@ -25,6 +32,12 @@ public class GestionTablesAjouterBail implements ListSelectionListener, KeyListe
 	private DaoBail daoBail;
 	private DaoContracter daoContracter;
 	
+	
+    /**
+     * Constructeur pour initialiser le gestionnaire avec les vues et les DAO nécessaires.
+     * @param fenAjouterBail la vue pour ajouter un bail.
+     * @param fenAjouterLocataire la vue pour ajouter un locataire.
+     */
 	public GestionTablesAjouterBail(AjouterBail fenAjouterBail, AjouterLocataire fenAjouterLocataire)  {
 		this.fenAjouterBail = fenAjouterBail;
 		this.fenAjouterLocataire = fenAjouterLocataire;
@@ -32,6 +45,11 @@ public class GestionTablesAjouterBail implements ListSelectionListener, KeyListe
 		this.daoContracter= new DaoContracter();
 	}
 	
+    /**
+     * Méthode appelée lors d'un changement de sélection dans une table.
+     * Elle récupère le bail sélectionné et remplit les parts de loyer associées.
+     * @param e l'événement de sélection de liste.
+     */
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
 		
@@ -49,6 +67,10 @@ public class GestionTablesAjouterBail implements ListSelectionListener, KeyListe
 		
 	}
 	
+    /**
+     * Remplit la table des baux existants avec les données récupérées depuis la base.
+     * @param tableBauxExistant la table à remplir.
+     */
 	public void remplirTableBauxExistant(JTable tableBauxExistant) {
 		List<Bail> baux;
 		try {
@@ -69,23 +91,33 @@ public class GestionTablesAjouterBail implements ListSelectionListener, KeyListe
 					
 	}
 	
+    /**
+     * Remplit la table des parts de loyer pour un bail donné.
+     * @param bail le bail pour lequel remplir les parts de loyer.
+     */
 	private void remplirPartsLoyer(Bail bail) {
 		JTable tablePartsLoyer = this.fenAjouterBail.getTablePartsLoyer();
 		JTable tableTotal = this.fenAjouterBail.getTableTotal();
 		DefaultTableModel modelTableParts = (DefaultTableModel) tablePartsLoyer.getModel();
 		DefaultTableModel modelTotal = (DefaultTableModel) tableTotal.getModel();
 				
+		// Vider la table avant de la remplir
 		UtilitaireTable.viderTable(tablePartsLoyer);
 		try {
+			// Remplit la table avec les parts de loyer existantes pour chaque contrat
 			List<Contracter> contrats = this.daoContracter.getContrats(bail);
 			for (Contracter contrat : contrats) {
 				modelTableParts.addRow(new Object[] {contrat.getLocataire().getIdLocataire(), contrat.getPartLoyer()});
 			}
+			
+            // Ajoute une nouvelle ligne pour un locataire à ajouter
 			String idNewLoc = this.fenAjouterLocataire.getTextFieldIdLocataire();
 			modelTableParts.addRow(new Object[] {idNewLoc, 0F});
-						
+			
+            // Ajoute une ligne pour afficher le total des parts calculées
 			modelTableParts.addRow(new Object[] {" ",calculerPartsTotal(tablePartsLoyer)});
 			modelTotal.setRowCount(contrats.size()+1);
+			
 			modelTotal.addRow(new String[] {"Total"}); 
 					        
 		} catch (SQLException | IOException e) {
@@ -93,6 +125,12 @@ public class GestionTablesAjouterBail implements ListSelectionListener, KeyListe
 		} 
 	}
 	
+	
+    /**
+     * Calcule la somme des parts de loyer présentes dans la table.
+     * @param tablePartsLoyer la table contenant les parts de loyer.
+     * @return la somme des parts de loyer.
+     */
 	public float calculerPartsTotal(JTable tablePartsLoyer) {
 		float somme = 0;
 		for (int i = 0; i < tablePartsLoyer.getRowCount()-1; i ++) {

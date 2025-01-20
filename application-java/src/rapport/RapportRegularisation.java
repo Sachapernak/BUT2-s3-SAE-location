@@ -74,13 +74,13 @@ public class RapportRegularisation {
     
     private void calculerNouvLoyer() {
     	
-    	BigDecimal loyer = new BigDecimal(this.loyer == null ? "0" : this.loyer);
+    	BigDecimal loyerNb = new BigDecimal(this.loyer == null ? "0" : this.loyer);
     	
-    	BigDecimal provCharge = new BigDecimal(this.nouvProv == null ? "0" : this.nouvProv);
+    	BigDecimal provChargeNb = new BigDecimal(this.nouvProv == null ? "0" : this.nouvProv);
     	
-    	BigDecimal total = loyer.add(provCharge);
+    	BigDecimal totalNb = loyerNb.add(provChargeNb);
     	
-    	this.totalLoyerProv = total.toString();
+    	this.totalLoyerProv = totalNb.toString();
     	
     }
 
@@ -147,7 +147,6 @@ public class RapportRegularisation {
             // 4) Écriture du document final
             try (OutputStream fileOut = new FileOutputStream(nomFichierSortie + FORMATDOC)) {
                 document.write(fileOut);
-                System.out.println("Fichier généré: " + nomFichierSortie + FORMATDOC);
                 
                 return nomFichierSortie + FORMATDOC;
             }
@@ -300,8 +299,7 @@ public class RapportRegularisation {
             rapport.setCharges(listCV);
 
             // Génération du document
-            String nomFichierGenere = rapport.genererSoldeToutCompte("testRapRegu");
-            System.out.println("Document généré : " + nomFichierGenere);
+            rapport.genererSoldeToutCompte("testRapRegu");
             
         } catch (IOException e) {
             e.printStackTrace();

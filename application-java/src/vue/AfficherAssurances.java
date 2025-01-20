@@ -83,9 +83,15 @@ public class AfficherAssurances extends JInternalFrame  {
 				"Num\u00E9ro de contrat", "Ann\u00E9e", "Type"
 			}
 		) {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+			@SuppressWarnings("rawtypes")
 			Class[] columnTypes = new Class[] {
 				String.class, String.class, String.class
 			};
+			@Override
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
 			}

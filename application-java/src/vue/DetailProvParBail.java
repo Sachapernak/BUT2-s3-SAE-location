@@ -13,7 +13,6 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.RowSorter;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
@@ -22,7 +21,6 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
-import controleur.GestionDetailLoyers;
 import controleur.GestionDetailProv;
 
 /**
@@ -96,7 +94,7 @@ public class DetailProvParBail extends JDialog {
         gblContentPanel.rowWeights = new double[]{0.0, 1.0, 0.0, Double.MIN_VALUE};
         contentPanel.setLayout(gblContentPanel);
 
-        // Label titre (Logement : XXX)
+        // Label titre 
         lblTitre = new JLabel("Bail : chargement");
         GridBagConstraints gbcLblTitre = new GridBagConstraints();
         gbcLblTitre.gridwidth = 2;

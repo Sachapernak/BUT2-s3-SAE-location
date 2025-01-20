@@ -2,8 +2,6 @@ package controleur;
 
 import java.awt.Cursor;
 import java.awt.Desktop;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -16,12 +14,16 @@ import java.util.concurrent.ExecutionException;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
-
 import modele.Adresse;
 import modele.Bail;
+import modele.BienLocatif;
+import modele.DocumentComptable;
+import modele.FactureBien;
 import modele.Locataire;
 import modele.dao.DaoBail;
 import modele.dao.DaoContracter;
+import modele.dao.DaoDocumentComptable;
+import modele.dao.DaoFactureBien;
 import modele.dao.DaoLocataire;
 import rapport.RapportSoldeToutCompte;
 import vue.VoirSoldeToutCompte;
@@ -46,6 +48,10 @@ public class GestionVoirSoldeToutCompte {
     private VoirSoldeToutCompte fen;
     
     private RapportSoldeToutCompte rap;
+    
+    private BigDecimal total;
+    
+    private BienLocatif log;
     
     	
     
@@ -269,6 +275,8 @@ public class GestionVoirSoldeToutCompte {
             @Override
             protected List<String[]> doInBackground() throws Exception {
                 // Récupération des données de déduction depuis la base de données.
+            	log = new DaoBail().findById(fen.getIdBail()).getBien();
+            	
                 String[] res = new DaoBail().findAllDeducBaiLoc(
                         fen.getIdBail(),
                         fen.getIdLoc(),
@@ -346,6 +354,7 @@ public class GestionVoirSoldeToutCompte {
                     rap.setTotalDeduc(sousTot[1].toString());
                     rap.setTotal(sousTot[2].toString());
                     
+                    total = sousTot[2];
                     
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
@@ -371,7 +380,7 @@ public class GestionVoirSoldeToutCompte {
             try {
             	
         		int nbLignes = new DaoContracter().updateDateDeSortie(fen.getIdBail(),
-						fen.getIdLoc(), fen.getDateFin());
+						fen.getIdLoc(), fen.getDateFin().isEmpty() ? LocalDate.now().toString() : fen.getDateFin());
         		
         		if ( nbLignes == 1) {
 
@@ -400,7 +409,7 @@ public class GestionVoirSoldeToutCompte {
         		}
         		
 
-                // TODO : Régu ? 
+
                 
 
             } catch (IOException | SQLException e1) {

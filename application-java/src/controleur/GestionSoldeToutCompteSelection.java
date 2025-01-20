@@ -25,6 +25,7 @@ import vue.VoirSoldeToutCompte;
 
 public class GestionSoldeToutCompteSelection {
 	
+	private static final String OPÉRATION_INTERROMPUE = "Opération interrompue.";
 	private SelectionSoldeToutCompte fen;
 	
 	public GestionSoldeToutCompteSelection(SelectionSoldeToutCompte fen) {
@@ -52,7 +53,7 @@ public class GestionSoldeToutCompteSelection {
                     fen.setComboBoxLocataire(noms);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
-                    fen.afficherMessageErreur("Opération interrompue.");
+                    fen.afficherMessageErreur(OPÉRATION_INTERROMPUE);
                 } catch (ExecutionException e) {
                     Throwable cause = e.getCause();
                     if (cause instanceof SQLException || cause instanceof IOException) {
@@ -90,7 +91,7 @@ public class GestionSoldeToutCompteSelection {
                     fen.setComboBoxBien(noms);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
-                    fen.afficherMessageErreur("Opération interrompue.");
+                    fen.afficherMessageErreur(OPÉRATION_INTERROMPUE);
                 } catch (ExecutionException e) {
                     Throwable cause = e.getCause();
                     if (cause instanceof SQLException || cause instanceof IOException) {
@@ -153,7 +154,7 @@ public class GestionSoldeToutCompteSelection {
                     fen.setTableBail(baux);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
-                    fen.afficherMessageErreur("Opération interrompue.");
+                    fen.afficherMessageErreur(OPÉRATION_INTERROMPUE);
                 } catch (ExecutionException e) {
                     Throwable cause = e.getCause();
                     fen.afficherMessageErreur(cause != null ? cause.getMessage() : "Erreur inconnue.");

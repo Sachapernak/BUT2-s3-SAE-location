@@ -159,12 +159,12 @@ public class RevalorisationLoyer extends JInternalFrame {
         
         lblLoyerAugmentable = new JLabel("Attention, le loyer n'est actuellement pas augmentable");
         lblLoyerAugmentable.setForeground(new Color(255, 0, 0));
-        GridBagConstraints gbc_lblLoyerAugmentable = new GridBagConstraints();
-        gbc_lblLoyerAugmentable.gridwidth = 6;
-        gbc_lblLoyerAugmentable.insets = new Insets(0, 0, 5, 5);
-        gbc_lblLoyerAugmentable.gridx = 0;
-        gbc_lblLoyerAugmentable.gridy = 6;
-        getContentPane().add(lblLoyerAugmentable, gbc_lblLoyerAugmentable);
+        GridBagConstraints gbcLblLoyerAugmentable = new GridBagConstraints();
+        gbcLblLoyerAugmentable.gridwidth = 6;
+        gbcLblLoyerAugmentable.insets = new Insets(0, 0, 5, 5);
+        gbcLblLoyerAugmentable.gridx = 0;
+        gbcLblLoyerAugmentable.gridy = 6;
+        getContentPane().add(lblLoyerAugmentable, gbcLblLoyerAugmentable);
         
         btnICC = new JButton("Voir ICC");
         GridBagConstraints gbcBtnICC = new GridBagConstraints();

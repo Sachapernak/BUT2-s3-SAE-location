@@ -24,17 +24,28 @@ import vue.FenetrePrincipale;
 import vue.SelectionRegularisationCharges;
 import vue.VoirRegularisationCharges;
 
+/**
+ * Contrôleur pour la sélection de la régularisation des charges.
+ * Gère les interactions entre la vue {@link SelectionRegularisationCharges} et les opérations métier associées.
+ */
 public class GestionSelectionRegularisationCharges {
 	
 	private SelectionRegularisationCharges fen;
 	private FenetrePrincipale fenPrincipale;
 	
+	/**
+	 * Constructeur qui initialise le contrôleur avec les vues nécessaires.
+	 * @param selectionRegularisationCharges la vue de sélection pour la régularisation des charges.
+	 * @param fp la fenêtre principale de l'application.
+	 */
 	public GestionSelectionRegularisationCharges(SelectionRegularisationCharges selectionRegularisationCharges, FenetrePrincipale fp) {
 		this.fen = selectionRegularisationCharges;
 		this.fenPrincipale = fp;
 	}
+	
     /**
-     * Charge la liste des logements pour le bâtiment sélectionné dans la ComboBox.
+     * Charge la liste des locataires pour le bien sélectionné et met à jour la ComboBox correspondante.
+     * Utilise un {@link SwingWorker} pour ne pas bloquer l'interface utilisateur.
      */
     public void chargerComboBoxLoc() {
         String idBien = fen.getSelectedBien();
@@ -43,6 +54,7 @@ public class GestionSelectionRegularisationCharges {
         new SwingWorker<List<String>, Void>() {
             @Override
             protected List<String> doInBackground() throws Exception {
+                // Récupère la liste des identifiants de locataires associés au bien sélectionné
                 return new DaoLocataire().findByIdBien(idBien).stream()
                                                    .map(e -> e.getIdLocataire())
                                                    .toList();
@@ -72,15 +84,16 @@ public class GestionSelectionRegularisationCharges {
     }
     
     /**
-     * Charge la liste des logements pour le bâtiment sélectionné dans la ComboBox.
+     * Charge la liste des identifiants de logements et met à jour la ComboBox correspondante.
+     * Utilise un {@link SwingWorker} pour récupérer les données en arrière-plan.
      */
     public void chargerComboBoxLogement() {
-
         fen.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         
         new SwingWorker<List<String>, Void>() {
             @Override
             protected List<String> doInBackground() throws Exception {
+                // Récupère la liste des identifiants de tous les logements
                 return new DaoBienLocatif().findAll().stream()
                                                    .map(e -> e.getIdentifiantLogement())
                                                    .toList();
@@ -110,7 +123,8 @@ public class GestionSelectionRegularisationCharges {
     }
     
     /**
-     * Gère l'action de changement de sélection sur la ComboBox des locataires
+     * Ajoute un écouteur pour gérer les changements de sélection dans la ComboBox des locataires.
+     * @param combo la ComboBox des locataires.
      */
     public void gestionComboLoc(JComboBox<String> combo) {
         combo.addItemListener(evt -> {
@@ -121,7 +135,8 @@ public class GestionSelectionRegularisationCharges {
     }
     
     /**
-     * Gère l'action de changement de sélection sur la ComboBox des bien.
+     * Ajoute un écouteur pour gérer les changements de sélection dans la ComboBox des logements.
+     * @param combo la ComboBox des logements.
      */
     public void gestionComboBien(JComboBox<String> combo) {
         combo.addItemListener(evt -> {
@@ -132,17 +147,16 @@ public class GestionSelectionRegularisationCharges {
     }
     
     /**
-     * Charge la liste des baux pour le logement sélectionné, en utilisant un SwingWorker.
-     * La table est mise à jour avec les résultats.
+     * Charge la liste des baux pour le logement sélectionné et met à jour la table correspondante.
+     * Utilise un {@link SwingWorker} pour exécuter la tâche en arrière-plan.
      */
     public void chargerList() {
-        // Change le curseur pour indiquer un chargement en cours
         fen.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
         new SwingWorker<List<String>, Void>() {
             @Override
             protected List<String> doInBackground() throws Exception {
-                // Récupère la liste des identifiants de baux associés au logement sélectionné
+                // Récupère les identifiants des baux liés au logement sélectionné
                 return new DaoBail().findByIdLogement(fen.getSelectedBien()).stream()
                         .map(Bail::getIdBail)
                         .toList();
@@ -151,7 +165,6 @@ public class GestionSelectionRegularisationCharges {
             @Override
             protected void done() {
                 try {
-                    // Met à jour la table avec les résultats obtenus
                     List<String> baux = get();
                     fen.setTableBail(baux);
                 } catch (InterruptedException e) {
@@ -167,54 +180,65 @@ public class GestionSelectionRegularisationCharges {
         }.execute();
     }
 
-
+    /**
+     * Configure le bouton "Générer" pour afficher la fenêtre de visualisation des régularisations charges.
+     * @param btnGenerer le bouton à configurer.
+     */
 	public void gestionBtnGenerer(JButton btnGenerer) {
-		btnGenerer.addActionListener(e -> 
-		{
+		btnGenerer.addActionListener(e -> {
 			if (checkInput()) {
 				String dateFin = this.getDateFin();
 				String dateDebut = this.getDateDebut(dateFin);
-				JDialog dialog = new VoirRegularisationCharges(fen.getSelectedLoc(), fen.getSelectedBail(), 
-						dateDebut, dateFin, this.fenPrincipale);
+				// Crée et affiche la fenêtre de visualisation des régularisations charges
+				JDialog dialog = new VoirRegularisationCharges(
+                        fen.getSelectedLoc(), 
+                        fen.getSelectedBail(), 
+                        dateDebut, 
+                        dateFin, 
+                        this.fenPrincipale
+                );
 				dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				dialog.setVisible(true);
 			} else {
-				fen.afficherMessageErreur("Les dates doivent etre  saisies au format yyyy-MM-dd."
+				fen.afficherMessageErreur("Les dates doivent etre saisies au format yyyy-MM-dd."
 						+ "\nExemple : 2024-12-24");
 			}
-
-			
 		});
-		
 	}
 	
 	/**
-	 * Vérifie si la date est soit nulle, soit au format yyyy-MM-dd
-	 * @return vrai si la date est nulle ou au bon format .
+	 * Vérifie si la date entrée est valide (soit vide, soit au format yyyy-MM-dd).
+	 * @return vrai si la date est valide, faux sinon.
 	 */
 	private boolean checkInput() {
 	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	    try {
 	        String dateFin = fen.getDate();
 
-	        LocalDate fin = null;
-
-	        if (!dateFin.isEmpty()) {
-	            fin = LocalDate.parse(dateFin, formatter);
-	        }
-
+	        if (!dateFin.isEmpty()) { 
+                LocalDate.parse(dateFin, formatter);
+            }
 	        return true;
 	    } catch (DateTimeParseException e) {
 	        return false;
 	    }
 	}
 	
+	/**
+	 * Calcule la date de début correspondant à une période d'un an avant la date de fin donnée.
+	 * @param dateFin la date de fin au format yyyy-MM-dd.
+	 * @return la date de début calculée.
+	 */
 	private String getDateDebut(String dateFin) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		LocalDate fin = LocalDate.parse(dateFin, formatter);
 		return String.valueOf(fin.minusDays(365));
 	}
 	
+	/**
+	 * Récupère la date de fin à utiliser. Si aucune date n'est spécifiée, renvoie la date actuelle.
+	 * @return la date de fin.
+	 */
 	private String getDateFin() {
 		String date = this.fen.getDate();
 		if (date.isEmpty()) {
@@ -222,5 +246,4 @@ public class GestionSelectionRegularisationCharges {
 		}
 		return date;
 	}
-
 }

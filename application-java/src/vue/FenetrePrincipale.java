@@ -30,8 +30,6 @@ import java.awt.Font;
 import java.awt.Color;
 import javax.swing.JSeparator;
 import javax.swing.ListSelectionModel;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class FenetrePrincipale extends JFrame{
 
@@ -157,15 +155,6 @@ public class FenetrePrincipale extends JFrame{
 		mntmRegularisationCharges.addActionListener(this.gestionMenu);
 		menuloyersCharges.add(mntmRegularisationCharges);
 		mntmICC.addActionListener(this.gestionMenu);
-
-		
-		JMenu reglesMetier = new JMenu("Règles métier");
-		reglesMetier.setForeground(new Color(255, 255, 255));
-		menuBar.add(reglesMetier);
-		
-		JMenuItem mntmReglesMetier = new JMenuItem("Afficher les règles métier");
-		reglesMetier.add(mntmReglesMetier);
-		mntmReglesMetier.addActionListener(this.gestionMenu);
 		
 		JMenu declarationFiscale = new JMenu("Déclaration fiscale");
 		declarationFiscale.setForeground(new Color(255, 255, 255));

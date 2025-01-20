@@ -226,6 +226,7 @@ CREATE TABLE sae_facture_du_bien(
    CONSTRAINT fk_sae_facture_num_date FOREIGN KEY (numero_document, Date_document) REFERENCES SAE_document_comptable(numero_document, Date_document)
 );
 
+
 ALTER TABLE SAE_document_comptable
 ADD CONSTRAINT chk_SAE_doc_compta_type
 CHECK (

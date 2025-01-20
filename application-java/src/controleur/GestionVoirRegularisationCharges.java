@@ -1,8 +1,6 @@
 package controleur;
 
 import java.awt.Cursor;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
@@ -306,9 +304,16 @@ public class GestionVoirRegularisationCharges {
     }
     
     
+    /**
+     * Ajoute un action sur le bouton generer
+     * 
+     * Ouvre la page de revalorisation des charges, en lui passant les données
+     * nécessaires au rapport
+     * 
+     * @param btnGenerer
+     */
     public void gestionBtnGenerer(JButton btnGenerer) {
-        btnGenerer.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+        btnGenerer.addActionListener(e ->{
 
                     String nomFichier = loc.getNom() + "-REGULARISATIONCHARGES-" + LocalDate.now().toString();
                     String idBail = fen.getIdBail();
@@ -318,9 +323,13 @@ public class GestionVoirRegularisationCharges {
                    
 
             }
-        });
+        );
     }
     
+    /**
+     * Charge le loyer du bien, dans le rapport
+     * 
+     */
     public void loadLoyerIntoRapport() {
     	
     	Bail bai;
@@ -340,6 +349,14 @@ public class GestionVoirRegularisationCharges {
     	
     }
     
+    /**
+     * Ouvre la page revalorisation des prov pour charges
+     * 
+     * @param idBail le bail a preselectionner
+     * @param newVal la valeur préconisé pour les provisions pour charges
+     * @param rap    le rapport
+     * @param nomFichier  le nom du fichier a generer
+     */
     public void ouvrirRevalorisationCharges(String idBail, BigDecimal newVal, RapportRegularisation rap, String nomFichier) {
     	FenetrePrincipale fp = fen.getFenPrincipale();
     	JLayeredPane fenLayerPane = fp.getLayeredPane();

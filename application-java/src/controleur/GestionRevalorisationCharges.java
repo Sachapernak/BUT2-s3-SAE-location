@@ -24,62 +24,78 @@ import rapport.RapportRegularisation;
 import vue.DetailProvParBail;
 import vue.RevalorisationCharge;
 
+/**
+ * Contrôleur pour la gestion de la revalorisation des charges.
+ * Gère les interactions entre la vue {@link RevalorisationCharge} et les opérations métier.
+ */
 public class GestionRevalorisationCharges {
 	
 	private RevalorisationCharge fen;
 
+	/**
+	 * Constructeur qui initialise le contrôleur avec la vue correspondante.
+	 * @param fen la fenêtre de revalorisation des charges.
+	 */
 	public GestionRevalorisationCharges(RevalorisationCharge fen) {
 		this.fen = fen;
 	}
 
+	/**
+	 * Configure le bouton "Historique" pour afficher le détail de l'historique des provisions pour un bail sélectionné.
+	 * @param btnHistorique le bouton historique à configurer.
+	 */
 	public void gestionBtnHistorique(JButton btnHistorique) {
 		btnHistorique.addActionListener(e -> {
             DetailProvParBail dialog = new DetailProvParBail(fen.getSelectedIdBail());
             dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             dialog.setVisible(true);
 		});
-		
 	}
 
+	/**
+	 * Configure le bouton "Quitter" pour fermer la fenêtre.
+	 * @param btnQuitter le bouton quitter à configurer.
+	 */
 	public void gestionBtnQuitter(JButton btnQuitter) {
-		btnQuitter.addActionListener(e -> {
-			fen.dispose();
-		});
-		
+		btnQuitter.addActionListener(e -> fen.dispose());
 	}
 
+	/**
+	 * Configure le bouton "Revaloriser" pour créer une nouvelle provision charge et, si on viens d'une régularisation,
+	 * générer un rapport.
+	 * @param btnModifier le bouton revaloriser à configurer.
+	 */
 	public void gestionBtnRevaloriser(JButton btnModifier) {
 		btnModifier.addActionListener(e -> {
 			try {
-				
-				
-				ProvisionCharge prov = new ProvisionCharge(fen.getSelectedIdBail(), 
-						fen.getDate().isEmpty() ? LocalDate.now().toString() : fen.getDate(), 
-								new BigDecimal(fen.getValeurNouvelleCharges()));
+				// Création d'une nouvelle provision de charge
+				ProvisionCharge prov = new ProvisionCharge(
+                    fen.getSelectedIdBail(), 
+					fen.getDate().isEmpty() ? LocalDate.now().toString() : fen.getDate(), 
+					new BigDecimal(fen.getValeurNouvelleCharges())
+                );
 				
 				new DaoProvisionCharge().create(prov);
 				
+				// Génération du rapport si nécessaire
 				if (fen.getRap() != null) {
-					
 					genererRapport();
 				}
-				
-
 				
 			} catch (SQLException | IOException ex) {
 				ex.printStackTrace();
 				fen.afficherMessageErreur(ex.getMessage());
 			}
-
-			
 		});
-		
 	}
 	
+	/**
+	 * Génère et ouvre un document de régularisation des charges.
+	 * Affiche un message d'erreur si le fichier du rapport ne peut être généré ou ouvert.
+	 */
 	public void genererRapport() {
 		RapportRegularisation rap = this.fen.getRap();
-		 
-		rap.setNouvProv(fen.getValeurNouvelleCharges().toString());
+		rap.setNouvProv(fen.getValeurNouvelleCharges());
 		
         String cheminFichier;
 		try {
@@ -98,14 +114,12 @@ public class GestionRevalorisationCharges {
 		} catch (IOException e) {
             fen.afficherMessageErreur("Erreur lors de la génération ou de l'ouverture du fichier : " + e.getMessage());
             e.printStackTrace();
-        
 		}
-        
 	}
 
     /**
-     * Charge de manière asynchrone la liste bails actifs dans la ComboBox.
-     * Utilise un SwingWorker pour éviter de bloquer l'interface utilisateur.
+     * Charge de manière asynchrone la liste des baux actifs dans la ComboBox de la vue.
+     * Utilise un {@link SwingWorker} pour ne pas bloquer l'interface utilisateur pendant la récupération.
      */
     public void chargerComboBoxBail() {
         fen.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -113,51 +127,47 @@ public class GestionRevalorisationCharges {
         new SwingWorker<List<String>, Void>() {
             @Override
             protected List<String> doInBackground() throws Exception {
-                // Récupération des identifiants de logements en arrière-plan
+                // Récupération des identifiants de baux actifs en arrière-plan
                 return new DaoBail().findAll().stream()
-                							.filter(e -> {
-                								String date = e.getDateDeFin();
-                								return (date == null || date.compareTo(LocalDate.now().toString()) > 1);
-                							})
-                						   .map(Bail::getIdBail)
-                                           .toList();
+                	.filter(e -> {
+                		String date = e.getDateDeFin();
+                		return (date == null || date.compareTo(LocalDate.now().toString()) > 1);
+                	})
+                    .map(Bail::getIdBail)
+                    .toList();
             }
 
             @Override
             protected void done() {
-                try {
-                	
+                try { 
                     List<String> noms = get();
                     fen.setListBail(noms);
-                    
                 } catch (InterruptedException e) {
-                	
-                	e.printStackTrace();
+                    e.printStackTrace();
                     Thread.currentThread().interrupt();
                     fen.afficherMessageErreur("Opération interrompue.");
-                    
                 } catch (ExecutionException e) {
-                	
-                	e.printStackTrace();
+                    e.printStackTrace();
                     Throwable cause = e.getCause();
                     if (cause instanceof SQLException || cause instanceof IOException) {
                         fen.afficherMessageErreur(cause.getMessage());
                     } else {
                         fen.afficherMessageErreur("Erreur inattendue : " + cause.getMessage());
                     }
-                    
                 } finally {
                     fen.setItemInCombo(fen.getIdLog() == null ? "" : fen.getIdLog());
                     chargerInfoCharges();
                     fen.setCursor(Cursor.getDefaultCursor());
-                    
                 }
             }
         }.execute();
     }
 
-	public void gestionActionComboLog(JComboBox<String> combo) {
-		
+	/**
+	 * Gère l'action sur la sélection d'un élément dans la ComboBox des baux.
+	 * @param combo la ComboBox à laquelle ajouter l'écouteur d'événements.
+	 */
+	public void gestionActionComboLog(JComboBox<String> combo) {	
         combo.addItemListener(evt -> {
             if (evt.getStateChange() == ItemEvent.SELECTED) {
             	chargerInfoCharges();
@@ -165,6 +175,9 @@ public class GestionRevalorisationCharges {
         });
 	}
 	
+	/**
+	 * Charge et affiche les informations de charges pour le bail sélectionné.
+	 */
 	public void chargerInfoCharges() {
   		try {
 			Bail bai = new DaoBail().findById(fen.getSelectedIdBail());
@@ -172,9 +185,8 @@ public class GestionRevalorisationCharges {
 			if (bai != null) {
 				List<ProvisionCharge> provs = bai.getProvisionCharge();
 
-    			if( !provs.isEmpty() ) {
-    				
-    				BigDecimal val = bai.getProvisionCharge().get(0).getProvisionPourCharge();
+    			if(!provs.isEmpty()) {
+    				BigDecimal val = provs.get(0).getProvisionPourCharge();
     				fen.setAnciennesCharges(val.toString());
     			} else {
     				fen.setAnciennesCharges("Aucune");
@@ -187,13 +199,13 @@ public class GestionRevalorisationCharges {
 		}
 	}
 	
-	
+	/**
+	 * Ajuste l'affichage des champs dans la vue en fonction de si on a la nouvelle valeur de charge suggerée.
+	 */
 	public void gestionAffichageChamps() {
 		if (this.fen.getNouvelleValeur() == null) {
-			
 			this.fen.setVisibleComboBoxBail(true);
 			this.fen.setVisibleChampsValeurConseillee(false);
-			
 		} else {
 			fen.setDate(LocalDate.now().toString());
 			this.fen.setVisibleComboBoxBail(false);
@@ -202,12 +214,12 @@ public class GestionRevalorisationCharges {
 		}
 	}
 	
+	/**
+	 * Initialise le montant conseillé dans la vue en utilisant la nouvelle valeur fournie.
+	 */
 	public void initialiserMontantConseille() {
 		BigDecimal newValeur = this.fen.getNouvelleValeur();
 		String newValStr = String.valueOf(newValeur);
-		
 		this.fen.setTextValConseille(newValStr);
-
 	}
-
 }
