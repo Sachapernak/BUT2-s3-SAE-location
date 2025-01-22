@@ -4,7 +4,7 @@ Projet universitaire pour la gestion de locations
 Groupe 7 : Pernak Sacha, Draux Erine, Allasia Lévi, Bourdon--Novellas Eliott, Montagard Matéo
 
 
-#JARs requis pour l'application : 
+JARs requis pour l'application : 
 ---------------------------------
 1. OJDBC (Oracle JDBC Driver)  
    - Version recommandée : ojdbc11.jar  
@@ -16,7 +16,7 @@ Groupe 7 : Pernak Sacha, Draux Erine, Allasia Lévi, Bourdon--Novellas Eliott, M
 
 
 
-#Etapes d'installation de l'application : 
+Etapes d'installation de l'application : 
 -----------------------------------------
 
 1. Récupérer les fichiers contenu dans le répertoire 'SQL' sur Oracle SQL Developer
