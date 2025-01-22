@@ -175,7 +175,8 @@ public class GestionAfficherCharge {
                             doc.getNumeroDoc(),
                             doc.getTypeDoc(),
                             dao.findMontantProrata(doc, selLog),
-                            doc.getDateDoc()
+                            doc.getDateDoc(),
+                            doc.isRecuperableLoc() ? "Oui." : "Non."
                         };
                     } catch (SQLException | IOException e) {
                         return null;

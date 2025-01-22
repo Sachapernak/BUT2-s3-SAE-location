@@ -281,7 +281,7 @@ public class AfficherCharges extends JFrame {
      * @param liste liste des lignes à afficher dans la table
      */
     public void chargerTable(List<Object[]> liste) {
-        String[] nomsColonnes = {"Numéro", "Type", "Montant au prorata", "Date"};
+        String[] nomsColonnes = {"Numéro", "Type", "Montant au prorata", "Date", "Récup. Loc"};
 
         DefaultTableModel model = new DefaultTableModel(nomsColonnes, 0) {
             private static final long serialVersionUID = 1L;
