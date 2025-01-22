@@ -60,7 +60,7 @@ FROM       sae_charge_index cv
 -- Jointure pour retrouver l’index précédent
 LEFT JOIN sae_charge_index cvpreced
        ON  cvpreced.id_charge_index = cv.id_charge_index_preced
-       AND cvpreced.date_de_releve < cv.date_de_releve
+       AND cvpreced.date_de_releve = cv.date_releve_precedent
 
 -- Jointure pour accéder à la facture/document
 JOIN       sae_document_comptable doc

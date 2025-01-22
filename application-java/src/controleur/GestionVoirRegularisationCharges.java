@@ -3,6 +3,7 @@ package controleur;
 import java.awt.Cursor;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -13,8 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JLayeredPane;
 import javax.swing.SwingWorker;
 
-import java.math.RoundingMode;
-
+import modele.Adresse;
 import modele.Bail;
 import modele.Locataire;
 import modele.dao.DaoBail;
@@ -22,9 +22,8 @@ import modele.dao.DaoLocataire;
 import modele.dao.DaoLoyer;
 import rapport.RapportRegularisation;
 import vue.FenetrePrincipale;
-import vue.VoirRegularisationCharges;
 import vue.RevalorisationCharge;
-
+import vue.VoirRegularisationCharges;
 
 /**
  * Contrôleur pour la gestion de l'affichage du solde de tous les comptes d'un locataire.
@@ -33,37 +32,39 @@ import vue.RevalorisationCharge;
  * l'interface utilisateur lors des opérations de lecture en base de données.
  */
 public class GestionVoirRegularisationCharges {
-	
-	private BigDecimal total;
-
-
-    private static final String ERREUR_INATTENDUE = "Erreur inattendue : ";
-	private static final String OP_INTERROMPUE = "Opération interrompue.";
-	/** Le locataire dont on affiche les détails. */
-    private Locataire loc;
-    /** La vue associée pour l'affichage des soldes et des informations du locataire. */
-    private VoirRegularisationCharges fen;
     
+    private static final String ERREUR_INATTENDUE = "Erreur inattendue : ";
+    private static final String OP_INTERROMPUE = "Opération interrompue.";
+
+    /** Stocke le total des charges pour calculer une suggestion de provision mensuelle. */
+    private BigDecimal total;
+
+    /** Locataire dont on affiche les détails. */
+    private Locataire loc;
+    
+    /** Rapport de régularisation (utilisé pour la génération de documents). */
     private RapportRegularisation rap;
     
-    	
+    /** Vue associée pour l'affichage des soldes et des informations du locataire. */
+    private VoirRegularisationCharges fen;
+
 
     /**
      * Constructeur du contrôleur.
      * 
-     * @param regulariserCharges la vue associée à ce contrôleur
+     * @param voirRegulariserCharges la vue associée à ce contrôleur
      */
     public GestionVoirRegularisationCharges(VoirRegularisationCharges voirRegulariserCharges) {
         this.fen = voirRegulariserCharges;
         this.rap = new RapportRegularisation();
     }
 
+
     /**
      * Charge les informations d'un locataire à partir de la base de données en utilisant un SwingWorker.
      * Le curseur est mis en sablier pendant le chargement.
      */
     public void loadLocataire() {
-        // Change le curseur pour indiquer une opération en cours.
         fen.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
         new SwingWorker<Locataire, Void>() {
@@ -76,26 +77,20 @@ public class GestionVoirRegularisationCharges {
             @Override
             protected void done() {
                 try {
-                    // Récupère le résultat de l'opération en arrière-plan.
-                    loc = get();
+                    loc = get();  // Récupère le locataire chargé en background
                 } catch (InterruptedException e) {
-                    // Réinterrompre le thread si l'opération a été interrompue.
                     Thread.currentThread().interrupt();
                     fen.afficherMessageErreur(OP_INTERROMPUE + " ligne 81");
                 } catch (ExecutionException e) {
-                	
-                	e.printStackTrace();
-                    // Gérer les exceptions éventuelles survenues pendant l'exécution.
+                    e.printStackTrace();
                     Throwable cause = e.getCause();
                     if (cause instanceof SQLException || cause instanceof IOException) {
-                        fen.afficherMessageErreur(cause.getMessage() +" ligne 86");
+                        fen.afficherMessageErreur(cause.getMessage() + " ligne 86");
                     } else {
-                        fen.afficherMessageErreur(ERREUR_INATTENDUE + cause.getMessage() +" ligne 88");
+                        fen.afficherMessageErreur(ERREUR_INATTENDUE + cause.getMessage() + " ligne 88");
                     }
                 } finally {
-                    // Réinitialise le curseur et met à jour l'affichage avec les informations du locataire.
                     fen.setCursor(Cursor.getDefaultCursor());
-                    
                     setInfoLoc();
                 }
             }
@@ -116,20 +111,43 @@ public class GestionVoirRegularisationCharges {
         // Met à jour les champs de la vue avec les données du locataire.
         fen.setNomLoc(loc.getNom());
         fen.setPrenom(loc.getPrenom());
-        fen.setAdresse(loc.getAdresse().toString());
         
-        rap.setNom(loc.getNom());
+        rap.setNom(loc.getNom());   // Le locataire n'a pas d'adresse, mais on garde son nom
         rap.setPrenom(loc.getPrenom());
-        
-        rap.setAdresse(loc.getAdresse().getAdressePostale());
-        rap.setComplement(loc.getAdresse().getComplementAdresse());
-        rap.setCodePostal(String.valueOf(loc.getAdresse().getCodePostal()));
-        rap.setVille(loc.getAdresse().getVille());
+
+        if (loc.getAdresse() != null) {
+            // Cas : Le locataire a une adresse renseignée
+            fen.setAdresse(loc.getAdresse().toString());
+            
+
+            rap.setAdresse(loc.getAdresse().getAdressePostale());
+            rap.setComplement(loc.getAdresse().getComplementAdresse());
+            rap.setCodePostal(String.valueOf(loc.getAdresse().getCodePostal()));
+            rap.setVille(loc.getAdresse().getVille());
+        } else {
+            // Cas : Le locataire n'a pas d'adresse -> Récupérer celle du bail
+            try {
+                Bail bai = new DaoBail().findById(fen.getIdBail());
+                if (bai != null && bai.getBien() != null && bai.getBien().getBat() != null) {
+                    fen.setAdresse(bai.getBien().getBat().getAdresse().toString());
+                    
+                    Adresse adresse = bai.getBien().getBat().getAdresse();
+
+                    rap.setAdresse(adresse.getAdressePostale());
+                    rap.setComplement(adresse.getComplementAdresse());
+                    rap.setCodePostal(String.valueOf(adresse.getCodePostal()));
+                    rap.setVille(adresse.getVille());
+                }
+            } catch (SQLException | IOException e) {
+                e.printStackTrace();
+                fen.afficherMessageErreur("Impossible de charger l'adresse du bail : " + e.getMessage());
+            }
+        }
     }
 
     /**
-     * Définit les dates de début et de fin pour la période d'affichage de la régularisation.
-     * et "Aujourd'hui" pour la date de fin).
+     * Définit les dates de début et de fin pour la période d'affichage de la régularisation 
+     * et les stocke dans le rapport.
      */
     public void setDates() {
         fen.setDateDebut(fen.getDateDebut());
@@ -142,7 +160,7 @@ public class GestionVoirRegularisationCharges {
     }
 
     /**
-     * Charge les charges associées au bail spécifiés pour la période donnée.
+     * Charge les charges associées au bail spécifié pour la période donnée.
      * Utilise un SwingWorker pour effectuer l'opération en arrière-plan.
      */
     public void loadCharges() {
@@ -151,39 +169,32 @@ public class GestionVoirRegularisationCharges {
         new SwingWorker<List<String[]>, Void>() {
             @Override
             protected List<String[]> doInBackground() throws Exception {
-                // Récupération de la liste des charges depuis la base de données.
-            	
+                // Récupération de la liste des charges depuis la base de données
                 return new DaoBail().findAllChargesBail(
-                        fen.getIdBail(),
-                        fen.getDateDebut(),
-                        fen.getDateFin());
+                    fen.getIdBail(),
+                    fen.getDateDebut(),
+                    fen.getDateFin()
+                );
             }
 
             @Override
             protected void done() {
                 try {
-                	
-                    // Récupération et traitement des résultats une fois l'opération terminée.
                     List<String[]> lignes = get();
                     fen.chargerTableCharges(lignes);
-                    
-                    rap.setCharges(lignes);
-                    
+                    rap.setCharges(lignes);  
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
-                    fen.afficherMessageErreur(OP_INTERROMPUE +" ligne 168");
+                    fen.afficherMessageErreur(OP_INTERROMPUE + " ligne 168");
                 } catch (ExecutionException e) {
-                	
-                	e.printStackTrace();
-                	
+                    e.printStackTrace();
                     Throwable cause = e.getCause();
                     if (cause instanceof SQLException || cause instanceof IOException) {
-                        fen.afficherMessageErreur(cause.getMessage()+" ligne 172");
+                        fen.afficherMessageErreur(cause.getMessage() + " ligne 172");
                     } else {
-                        fen.afficherMessageErreur(ERREUR_INATTENDUE + cause.getMessage()  +" ligne 174");
+                        fen.afficherMessageErreur(ERREUR_INATTENDUE + cause.getMessage() + " ligne 174");
                     }
                 } finally {
-                    // Réinitialisation du curseur après chargement.
                     fen.setCursor(Cursor.getDefaultCursor());
                 }
             }
@@ -200,14 +211,16 @@ public class GestionVoirRegularisationCharges {
         new SwingWorker<List<String[]>, Void>() {
             @Override
             protected List<String[]> doInBackground() throws Exception {
-                // Récupération des données de déduction depuis la base de données.
                 String[] res = new DaoBail().findAllDeducBail(
-                        fen.getIdBail(),
-                        fen.getDateDebut(),
-                        fen.getDateFin());
+                    fen.getIdBail(),
+                    fen.getDateDebut(),
+                    fen.getDateFin()
+                );
 
-                // Préparation des lignes pour l'affichage.
+                // Préparation de la ligne pour l'affichage
                 List<String[]> lignes = new ArrayList<>();
+                // res[0] = total provisions
+                // res[1] = détail calcul
                 String[] provisions = {"Provisions pour charge", res[1], res[0]};
                 lignes.add(provisions);
                 
@@ -217,35 +230,29 @@ public class GestionVoirRegularisationCharges {
             @Override
             protected void done() {
                 try {
-                	
-                    // Récupération des lignes formatées et mise à jour de la table des déductions.
                     List<String[]> lignes = get();
                     fen.chargerTableDeduc(lignes);
                     
+                    // Mémoriser le détail de calcul et le total
                     rap.setCalcProv(lignes.get(0)[1]);
                     rap.setTotalProv(lignes.get(0)[2]);
-                    
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     fen.afficherMessageErreur(OP_INTERROMPUE);
                 } catch (ExecutionException e) {
-                	
-                	e.printStackTrace();
-                	
+                    e.printStackTrace();
                     Throwable cause = e.getCause();
                     if (cause instanceof SQLException || cause instanceof IOException) {
-                        fen.afficherMessageErreur(cause.getMessage() + " ligne 224"); //PB ICI 
+                        fen.afficherMessageErreur(cause.getMessage() + " ligne 224");
                     } else {
-                        fen.afficherMessageErreur(ERREUR_INATTENDUE + cause.getMessage() +" ligne 226");
+                        fen.afficherMessageErreur(ERREUR_INATTENDUE + cause.getMessage() + " ligne 226");
                     }
                 } finally {
-                    // Réinitialisation du curseur après chargement.
                     fen.setCursor(Cursor.getDefaultCursor());
                 }
             }
         }.execute();
     }
-    
 
     /**
      * Charge les sous-totaux des charges et des déductions pour la période définie.
@@ -257,17 +264,16 @@ public class GestionVoirRegularisationCharges {
         new SwingWorker<BigDecimal[], Void>() {
             @Override
             protected BigDecimal[] doInBackground() throws Exception {
-                // Calcul des totaux à partir de la base de données.
                 return new DaoBail().findTotalChargeDeducBail(
-                        fen.getIdBail(),
-                        fen.getDateDebut(),
-                        fen.getDateFin());
+                    fen.getIdBail(),
+                    fen.getDateDebut(),
+                    fen.getDateFin()
+                );
             }
 
             @Override
             protected void done() {
                 try {
-                    // Mise à jour des champs de la vue avec les sous-totaux calculés.
                     BigDecimal[] sousTot = get();
                     fen.setSousTotCharge(sousTot[0].toString());
                     fen.setSousTotDeduc(sousTot[1].toString());
@@ -277,96 +283,77 @@ public class GestionVoirRegularisationCharges {
                     rap.setTotalDeduc(sousTot[1].toString());
                     rap.setTotal(sousTot[2].toString());
                     
-                    total = sousTot[0];
-                    
+                    total = sousTot[0];  // total charges pour suggestion de provision
+
+                    // Charger le loyer (pour l'affichage dans le rapport) une fois qu'on a tout
                     loadLoyerIntoRapport();
-                    
-                    
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     fen.afficherMessageErreur(OP_INTERROMPUE);
                 } catch (ExecutionException e) {
-                	
-                	e.printStackTrace();
-                	
+                    e.printStackTrace();
                     Throwable cause = e.getCause();
                     if (cause instanceof SQLException || cause instanceof IOException) {
                         fen.afficherMessageErreur(cause.getMessage() + " ligne 274");
                     } else {
-                        fen.afficherMessageErreur(ERREUR_INATTENDUE + cause.getMessage() +" ligne 276");
+                        fen.afficherMessageErreur(ERREUR_INATTENDUE + cause.getMessage() + " ligne 276");
                     }
                 } finally {
-                    // Réinitialisation du curseur après le calcul.
                     fen.setCursor(Cursor.getDefaultCursor());
                 }
             }
         }.execute();
     }
-    
-    
+
     /**
-     * Ajoute un action sur le bouton generer
-     * 
-     * Ouvre la page de revalorisation des charges, en lui passant les données
-     * nécessaires au rapport
-     * 
-     * @param btnGenerer
+     * Ajoute un Listener sur le bouton "Générer" pour ouvrir la page de revalorisation des charges
+     * en lui passant les données nécessaires au rapport (nouvelle provision conseillée).
      */
     public void gestionBtnGenerer(JButton btnGenerer) {
-        btnGenerer.addActionListener(e ->{
+        btnGenerer.addActionListener(e -> {
+            String nomFichier = loc.getNom() + "-REGULARISATIONCHARGES-" + LocalDate.now().toString();
+            String idBail = fen.getIdBail();
 
-                    String nomFichier = loc.getNom() + "-REGULARISATIONCHARGES-" + LocalDate.now().toString();
-                    String idBail = fen.getIdBail();
-                    BigDecimal sugCharge = total.divide(new BigDecimal("12"), 1, RoundingMode.HALF_UP);
-                    
-                    ouvrirRevalorisationCharges(idBail, sugCharge, rap, nomFichier);
-                   
-
-            }
-        );
+            // Suggérer la nouvelle provision mensuelle = totalCharges / 12
+            BigDecimal sugCharge = total.divide(new BigDecimal("12"), 1, RoundingMode.HALF_UP);
+            
+            ouvrirRevalorisationCharges(idBail, sugCharge, rap, nomFichier);
+        });
     }
-    
+
     /**
-     * Charge le loyer du bien, dans le rapport
-     * 
+     * Charge le loyer du bien dans le rapport.
+     * On va chercher le bail, puis le dernier loyer connu via DaoLoyer.
      */
     public void loadLoyerIntoRapport() {
-    	
-    	Bail bai;
-		try {
-			
-			bai = new DaoBail().findById(fen.getIdBail());
-	    	BigDecimal loyer = new DaoLoyer().getDernierLoyer(bai.getBien().getIdentifiantLogement());
-	    	
-	    	rap.setLoyer(loyer.toString());
-	    	
-		} catch (SQLException | IOException e) {
-			fen.afficherMessageErreur(e.getMessage());
-			e.printStackTrace();
-		}
-    	
-
-    	
+        try {
+            Bail bai = new DaoBail().findById(fen.getIdBail());
+            BigDecimal loyer = new DaoLoyer().getDernierLoyer(bai.getBien().getIdentifiantLogement());
+            rap.setLoyer(loyer.toString());
+        } catch (SQLException | IOException e) {
+            fen.afficherMessageErreur(e.getMessage());
+            e.printStackTrace();
+        }
     }
-    
+
     /**
-     * Ouvre la page revalorisation des prov pour charges
-     * 
-     * @param idBail le bail a preselectionner
-     * @param newVal la valeur préconisé pour les provisions pour charges
-     * @param rap    le rapport
-     * @param nomFichier  le nom du fichier a generer
+     * Ouvre la page RevalorisationCharge, en lui passant un bail, 
+     * la valeur préconisée pour les provisions pour charges, et le rapport. 
+     * @param idBail     Identifiant du bail à pré-sélectionner
+     * @param newVal     Montant préconisé pour la provision mensuelle
+     * @param rap        RapportRegularisation qui contient les infos à afficher
+     * @param nomFichier Nom du fichier de rapport à générer
      */
     public void ouvrirRevalorisationCharges(String idBail, BigDecimal newVal, RapportRegularisation rap, String nomFichier) {
-    	FenetrePrincipale fp = fen.getFenPrincipale();
-    	JLayeredPane fenLayerPane = fp.getLayeredPane();
-    	rap.setNomFichier(nomFichier);
-    	RevalorisationCharge reval = new RevalorisationCharge(idBail, newVal, rap);
-		fenLayerPane.add(reval, JLayeredPane.PALETTE_LAYER);
-		reval.setVisible(true);
+        FenetrePrincipale fp = fen.getFenPrincipale();
+        JLayeredPane fenLayerPane = fp.getLayeredPane();
+        rap.setNomFichier(nomFichier);
 
-        
+        RevalorisationCharge reval = new RevalorisationCharge(idBail, newVal, rap);
+        fenLayerPane.add(reval, JLayeredPane.PALETTE_LAYER);
+        reval.setVisible(true);
+
+        // Fermer la fenêtre actuelle
         fen.dispose();
     }
-
 }

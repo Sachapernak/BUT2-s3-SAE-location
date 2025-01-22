@@ -54,7 +54,7 @@ FROM       sae_charge_index cv
 -- Jointure pour retrouver l?index pr?c?dent
 LEFT JOIN sae_charge_index cvpreced
        ON  cvpreced.id_charge_index = cv.id_charge_index_preced
-       AND cvpreced.date_de_releve < cv.date_de_releve
+       AND cvpreced.date_de_releve = cv.date_releve_precedent
 
 -- Jointure pour acc?der ? la facture/document
 JOIN       sae_document_comptable doc
@@ -77,7 +77,6 @@ JOIN       sae_bail bai
 WHERE      doc.recuperable_locataire = 1
 ORDER BY doc.date_document DESC;
 /
-
 
 CREATE OR REPLACE PACKAGE pkg_regularisation_charge AS
   -- D?claration de la proc?dure calculer_somme_provision

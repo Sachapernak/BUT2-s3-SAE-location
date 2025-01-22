@@ -175,6 +175,8 @@ public class GestionVoirSoldeToutCompte {
             rap.setVille(loc.getAdresse().getVille());
         } else {
         	
+        	
+        	// Ajout la recherche de bail
         	Adresse adresse = bail.getBien().getBat().getAdresse();
         	
             fen.setAdresse(adresse.toString());
