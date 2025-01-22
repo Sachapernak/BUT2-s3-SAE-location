@@ -482,6 +482,7 @@ public class GestionAjouterCharge {
                 .add(view.getCoutVarAbon());
 
         String idEntreprise = getSiretEntreprise(view.getIDEntreprise());
+        System.out.println(idEntreprise);
         
         String idBat = view.getIDBat();
         String idAssurance = view.getIDAssu();
@@ -495,13 +496,14 @@ public class GestionAjouterCharge {
         doc.setBatiment(new DaoBatiment().findById(idBat));
         
         doc.setEntreprise(new DaoEntreprise().findById(idEntreprise));
+        
         if (!idAssurance.equalsIgnoreCase("aucune")) {
             String[] parts = idAssurance.split(" ");
             doc.setAssurance(new DaoAssurance().findById(parts[0], parts[1]));
         }
         
         
-        daoDoc.create(doc);
+        //daoDoc.create(doc);
 
         processParts(daoFacture, daoBien, doc);
 

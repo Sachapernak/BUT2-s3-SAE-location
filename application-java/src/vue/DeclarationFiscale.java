@@ -17,12 +17,16 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.border.TitledBorder;
 import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
 import controleur.GestionDeclarationFiscale;
 
+/**
+ * Vue (IHM) de la déclaration fiscale.
+ * Présente un récapitulatif par bâtiment (loyers encaissés, frais/charges, bénéfice).
+ */
 public class DeclarationFiscale extends JInternalFrame {
 
     private static final long serialVersionUID = 1L;
@@ -37,12 +41,13 @@ public class DeclarationFiscale extends JInternalFrame {
     // -------------------------------------------------------------------------
     // Contrôleur associé
     // -------------------------------------------------------------------------
-    private GestionDeclarationFiscale gestionDecla;
+    private final GestionDeclarationFiscale gestionDecla;
 
     /**
      * Constructeur : Initialise la fenêtre et configure les composants.
      */
     public DeclarationFiscale() {
+        super("Déclaration Fiscale", true, true, true, true);
         
         this.gestionDecla = new GestionDeclarationFiscale(this);
         
@@ -70,10 +75,12 @@ public class DeclarationFiscale extends JInternalFrame {
         
         // Panneau récapitulatif des bâtiments
         JPanel panelRecapBatiment = new JPanel();
-        panelRecapBatiment.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, 
-                new Color(255, 255, 255), new Color(160, 160, 160)),
-                "R\u00E9capitulatif par b\u00E2timent", 
-                TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+        panelRecapBatiment.setBorder(new TitledBorder(
+            new EtchedBorder(EtchedBorder.LOWERED, Color.WHITE, Color.LIGHT_GRAY),
+            "Récapitulatif par bâtiment",
+            TitledBorder.LEADING, TitledBorder.TOP,
+            null, Color.BLACK
+        ));
         panelRecapBatiment.setBounds(26, 116, 580, 155);
         getContentPane().add(panelRecapBatiment);
         panelRecapBatiment.setLayout(new BorderLayout(0, 0));
@@ -111,7 +118,7 @@ public class DeclarationFiscale extends JInternalFrame {
         textFieldTotal.setBounds(113, 10, 96, 19);
         panelBas.add(textFieldTotal);
 
-        // Panneau bas : boutons
+        // Panneau bas : boutons (Générer, Retour)
         JPanel panel = new JPanel();
         panel.setBounds(339, 362, 267, 31);
         getContentPane().add(panel);
@@ -124,9 +131,10 @@ public class DeclarationFiscale extends JInternalFrame {
         btnRetour.addActionListener(this.gestionDecla);
         panel.add(btnRetour);
         
-        // Configuration du contrôleur : actions initiales
-        gestionDecla.gestionActionComboBoxAnnee(this.comboBoxAnnee);
+        // Configuration des actions initiales
+
         gestionDecla.remplirComboBoxAnnee();
+        gestionDecla.gestionActionComboBoxAnnee(this.comboBoxAnnee);
 
     }
     
@@ -170,7 +178,7 @@ public class DeclarationFiscale extends JInternalFrame {
      */
     public void setComboBoxAnnee(List<String> annees) {
         comboBoxAnnee.removeAllItems();
-        for(String annee : annees) {
+        for (String annee : annees) {
             comboBoxAnnee.addItem(annee);
         }
     }

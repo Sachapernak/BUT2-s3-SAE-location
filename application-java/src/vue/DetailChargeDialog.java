@@ -36,7 +36,7 @@ import modele.dao.DaoAssurance;
 import modele.dao.DaoLocataire;
 
 /**
- * Boîte de dialogue pour afficher les détails d'une charge documentaire.
+ * Boîte de dialogue pour afficher les détails d'une charge.
  * Présente les informations du DocumentComptable dans une interface en grille.
  */
 public class DetailChargeDialog extends JDialog {
@@ -159,6 +159,7 @@ public class DetailChargeDialog extends JDialog {
                 dialog.setVisible(true);
                 this.dispose();
             } catch(Exception ex) { 
+            	ex.printStackTrace();
                 JOptionPane.showMessageDialog(DetailChargeDialog.this, 
                     "Erreur lors de l'affichage de l'entreprise : " + ex.getMessage());
             }

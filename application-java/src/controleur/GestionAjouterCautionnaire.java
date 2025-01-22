@@ -5,7 +5,6 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -395,8 +394,8 @@ public class GestionAjouterCautionnaire implements ActionListener {
 		String montantProvisionStr =  this.fenAjouterBail.getTextCharges();
 		BigDecimal montantProvision = new BigDecimal(montantProvisionStr);
 		
-		LocalDate dateProvision = LocalDate.now();
-        String dateProvisionStr = dateProvision.toString();
+		String dateProvisionStr = fenAjouterBail.getTextDateDebut();
+
 		
 		
 		return new ProvisionCharge(idBail,dateProvisionStr, montantProvision );
