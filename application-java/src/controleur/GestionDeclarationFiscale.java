@@ -245,7 +245,7 @@ public class GestionDeclarationFiscale implements  ActionListener {
 
             // Vérifier si le logement est loué sur le mois
             try {
-				if (!new DaoBienLocatif().est_loue_entre(idLog, date.toString(), finMois.toString()).equals(BigDecimal.ZERO)) {
+				if (!new DaoBienLocatif().estLoueEntre(idLog, date.toString(), finMois.toString()).equals(BigDecimal.ZERO)) {
 				    totalLoyersLog = totalLoyersLog.add(new DaoLoyer().getDernierLoyer(idLog, finMois.toString()));
 				}
 			} catch (SQLException | IOException e) {

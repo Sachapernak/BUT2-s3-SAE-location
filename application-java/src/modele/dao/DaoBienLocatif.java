@@ -2,6 +2,7 @@ package modele.dao;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -107,6 +108,24 @@ public class DaoBienLocatif extends DaoModele<BienLocatif> {
 
         return res;
     }
+	
+	public BigDecimal estLoueEntre(String idLog, String debutPeriode, String finPeriode) throws SQLException, IOException {
+		Connection cn = ConnexionBD.getInstance().getConnexion();
+        String call = "{call pkg_Bien_Locatif.est_loue_entre("
+        		+ "?, to_date(?, 'YYYY-MM-DD'), to_date(?, 'YYYY-MM-DD'), ?)}";
+        
+        try (CallableStatement prCl = cn.prepareCall(call)) {
+            prCl.setString(1, idLog);
+            prCl.setString(2, debutPeriode);
+            prCl.setString(3, finPeriode);
+            prCl.registerOutParameter(4, java.sql.Types.DECIMAL);
+            
+            prCl.execute();
+            
+            return prCl.getBigDecimal(4);	
+        }
+}
+
 
 	@Override
 	protected BienLocatif createInstance(ResultSet curseur) throws SQLException, IOException {
