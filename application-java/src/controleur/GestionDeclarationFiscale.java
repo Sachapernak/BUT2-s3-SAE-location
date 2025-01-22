@@ -8,7 +8,10 @@ import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -101,11 +104,10 @@ public class GestionDeclarationFiscale implements  ActionListener {
 	            try {
 	                List<String> annees = get();
 	                fenDeclarationFiscale.setComboBoxAnnee(annees);
-	            } catch (Exception e) {
+	            } catch (InterruptedException | ExecutionException e) {
 	                e.printStackTrace();
-	                // Vous pouvez afficher un message d'erreur ici si nécessaire
+	                fenDeclarationFiscale.afficherMessageErreur(e.getMessage());
 	            } finally {
-	                // Remet le curseur par défaut une fois le travail terminé
 	                fenDeclarationFiscale.setDefaultCursor();
 	            }
 	        }
@@ -116,40 +118,29 @@ public class GestionDeclarationFiscale implements  ActionListener {
 	/**
 	 * Cette méthode remplit la table des bâtiments avec les données des bâtiments, des loyers encaissés, 
 	 * des frais et des bénéfices en utilisant un SwingWorker pour ne pas bloquer l'interface utilisateur.
-	 * Elle récupère les bâtiments via le DAO, calcule les loyers et frais pour chaque bâtiment en 
-	 * arrière-plan, puis met à jour la table et le champ total des bénéfices sur l'EDT.
 	 */
 	public void remplirTableBatiments() {
-		
 	    // Met la fenêtre en mode sablier avant de commencer l'opération
 	    fenDeclarationFiscale.setWaitCursor();
-	    JTable tableBatiments = fenDeclarationFiscale.getTableBatiments();
-	    DefaultTableModel model = (DefaultTableModel) tableBatiments.getModel();
-	    model.setRowCount(0); // Réinitialiser les données
 
-	    // Mettre en place un SwingWorker pour effectuer les calculs en arrière-plan
-	    new SwingWorker<java.util.Map<String, Object>, Void>() {
+	    new SwingWorker<BatimentDataResult, Void>() {
 	        @Override
-	        protected java.util.Map<String, Object> doInBackground() {
-	            java.util.Map<String, Object> result = new java.util.HashMap<>();
+	        protected BatimentDataResult doInBackground() {
+	            List<String[]> rows = new ArrayList<>();
 	            BigDecimal totalBenefices = BigDecimal.ZERO;
-	            java.util.List<Object[]> rows = new java.util.ArrayList<>();
 
 	            try {
-	                // Obtenir les bâtiments via DAO
 	                List<Batiment> batiments = new DaoBatiment().findAll();
 	                int annee = Integer.parseInt((String) fenDeclarationFiscale.getSelectedItemComboAnnee());
 
 	                for (Batiment batiment : batiments) {
-	                    // Calcul des loyers, frais et bénéfices par bâtiment
 	                    BigDecimal totalLoyersBat = calculerTotalLoyers(batiment, annee);
-	                    BigDecimal totalFraisBat = calculerTotalFrais(batiment, annee);
-
+	                    BigDecimal totalFraisBat  = calculerTotalFrais(batiment, annee);
 	                    BigDecimal benefice = totalLoyersBat.subtract(totalFraisBat);
+
 	                    totalBenefices = totalBenefices.add(benefice);
 
-	                    // Préparation des données de la ligne à ajouter à la table
-	                    rows.add(new Object[]{
+	                    rows.add(new String[]{
 	                        batiment.getIdBat(),
 	                        totalLoyersBat.toString(),
 	                        totalFraisBat.toString(),
@@ -158,43 +149,57 @@ public class GestionDeclarationFiscale implements  ActionListener {
 	                }
 	            } catch (SQLException | IOException e) {
 	                e.printStackTrace();
-	                // En cas d'erreur, on peut stocker l'exception dans le résultat si nécessaire
+	                // Gestion des erreurs selon les besoins
 	            }
 
-	            result.put("rows", rows);
-	            result.put("totalBenefices", totalBenefices);
-	            return result;
+	            return new BatimentDataResult(rows, totalBenefices);
 	        }
 
 	        @Override
 	        protected void done() {
 	            try {
-	                // Récupérer les résultats du traitement en arrière-plan
-	                java.util.Map<String, Object> result = get();
-	                @SuppressWarnings("unchecked")
-	                List<Object[]> rows = (List<Object[]>) result.get("rows");
-	                BigDecimal totalBenefices = (BigDecimal) result.get("totalBenefices");
+	                BatimentDataResult result = get();
 
-	                // Mise à jour de la table des bâtiments sur l'EDT
-	                DefaultTableModel model = (DefaultTableModel) tableBatiments.getModel();
-	                for (Object[] row : rows) {
-	                    model.addRow(row);
-	                }
+	                // Mise à jour de la table via la méthode de la vue
+	                fenDeclarationFiscale.remplirTable(result.getRows());
 
 	                // Mettre à jour le champ "Total Bénéfices"
-	                fenDeclarationFiscale.setTextTotal(totalBenefices.toString());
-	            } catch (Exception e) {
+	                fenDeclarationFiscale.setTextTotal(result.getTotalBenefices().toString());
+
+	            } catch (InterruptedException | ExecutionException e) {
 	                e.printStackTrace();
 	                fenDeclarationFiscale.afficherMessageErreur(
 	                    "Erreur lors du remplissage des données : " + e.getMessage()
 	                );
 	            } finally {
-	                // Remet le curseur par défaut une fois le travail terminé
 	                fenDeclarationFiscale.setDefaultCursor();
 	            }
 	        }
 	    }.execute();
 	}
+
+	
+	/**
+	 * Classe de résulat utilisé pour recuperer les resultat du swingWorker
+	 */
+	private static class BatimentDataResult {
+	    private final List<String[]> rows;
+	    private final BigDecimal totalBenefices;
+
+	    public BatimentDataResult(List<String[]> rows, BigDecimal totalBenefices) {
+	        this.rows = rows;
+	        this.totalBenefices = totalBenefices;
+	    }
+
+	    public List<String[]> getRows() {
+	        return rows;
+	    }
+
+	    public BigDecimal getTotalBenefices() {
+	        return totalBenefices;
+	    }
+	}
+
 
 
 	/**
@@ -279,8 +284,8 @@ public class GestionDeclarationFiscale implements  ActionListener {
             // Calculer les frais pour chaque logement
             List<DocumentComptable> documents = new DaoDocumentComptable().findByIdLogement(logement.getIdentifiantLogement());
             for (DocumentComptable document : documents) {
-                if (!document.isRecuperableLoc() && document.getDateDoc().compareTo(finAnnee) == -1 
-                		&& document.getDateDoc().compareTo(debutAnnee) == 1) {
+                if (!document.isRecuperableLoc() && document.getDateDoc().compareTo(finAnnee) < 0 
+                		&& document.getDateDoc().compareTo(debutAnnee) > 0) {
                     totalFraisBat = totalFraisBat.add(new DaoDocumentComptable().findMontantProrata(document, logement.getIdentifiantLogement()));
                 }
             }
