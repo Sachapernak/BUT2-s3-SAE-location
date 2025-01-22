@@ -188,7 +188,11 @@ public class SelectionBailQuittance extends JDialog {
 	public String getSelectedIdBail() {
 		int rowNum = tableBail.getSelectedRow();
 		
-		if (rowNum < 0) {
+		
+		if (rowNum < 0 && tableBail.getRowCount() > 0) {
+			return String.valueOf(tableBail.getModel().getValueAt(0, 0));
+		} else if (tableBail.getRowCount() > 0){
+			afficherMessageErreur("Veuillez selectionner un bail");
 			return "";
 		}
 		

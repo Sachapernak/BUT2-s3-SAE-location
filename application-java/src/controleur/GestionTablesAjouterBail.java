@@ -134,7 +134,7 @@ public class GestionTablesAjouterBail implements ListSelectionListener, KeyListe
 	public float calculerPartsTotal(JTable tablePartsLoyer) {
 		float somme = 0;
 		for (int i = 0; i < tablePartsLoyer.getRowCount()-1; i ++) {
-			float valeur = (float) tablePartsLoyer.getValueAt(i, 1);
+			float valeur = Float.parseFloat(String.valueOf(tablePartsLoyer.getValueAt(i, 1)));
 			somme += valeur;
 		}
 		return somme;

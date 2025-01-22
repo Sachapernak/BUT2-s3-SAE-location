@@ -503,7 +503,7 @@ public class GestionAjouterCharge {
         }
         
         
-        //daoDoc.create(doc);
+        daoDoc.create(doc);
 
         processParts(daoFacture, daoBien, doc);
 
