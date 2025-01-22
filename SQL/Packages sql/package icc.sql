@@ -9,6 +9,12 @@ CREATE OR REPLACE PACKAGE pkg_icc AS
         p_dernier_loyer OUT NUMBER
     );
     
+    PROCEDURE dernier_loyer_at(
+        p_logement      IN  VARCHAR2,
+        p_date          IN DATE,
+        p_dernier_loyer OUT NUMBER
+    );
+    
     PROCEDURE date_debut_bail(
         p_logement in varchar2,
         p_date_bail out date
@@ -248,6 +254,59 @@ CREATE OR REPLACE PACKAGE BODY pkg_icc AS
         ----------------------------------------------------------------------
         RETURN 1;
     END loyer_augmentable_exact;
+
+
+    -- Definition de la procedure dernier_loyer reste inchange
+    PROCEDURE dernier_loyer_at(
+        p_logement      IN  VARCHAR2,
+        p_date          IN DATE,
+        p_dernier_loyer OUT NUMBER
+    ) AS
+        v_dernier_loyer   NUMBER;
+        v_base_loyer      NUMBER;
+    BEGIN
+        ----------------------------------------------------------------------
+        -- 1) Dernier loyer (si d�j� un) sinon on utilisera le loyer de base
+        ----------------------------------------------------------------------
+        BEGIN
+            SELECT montant_loyer
+              INTO v_dernier_loyer
+              FROM (
+                   SELECT montant_loyer
+                     FROM sae_loyer
+                    WHERE identifiant_logement = p_logement
+                    AND date_de_changement < p_date
+                 ORDER BY date_de_changement DESC
+              )
+             WHERE ROWNUM = 1;
+        EXCEPTION
+            WHEN NO_DATA_FOUND THEN
+                v_dernier_loyer := NULL;
+        END;
+        
+        ----------------------------------------------------------------------
+        -- 2) R�cup�ration du loyer de base
+        ----------------------------------------------------------------------
+        BEGIN
+            SELECT loyer_de_base
+              INTO v_base_loyer
+              FROM sae_bien_locatif
+             WHERE identifiant_logement = p_logement;
+        EXCEPTION
+            WHEN NO_DATA_FOUND THEN
+                RAISE_APPLICATION_ERROR(-20502, 'Logement introuvable');
+        END;
+
+        ----------------------------------------------------------------------
+        -- 3) Loyer actuel = dernier loyer s'il existe, sinon loyer de base
+        ----------------------------------------------------------------------
+        IF v_dernier_loyer IS NOT NULL THEN
+            p_dernier_loyer := v_dernier_loyer;
+        ELSE
+            p_dernier_loyer := v_base_loyer;
+        END IF;
+    
+    END dernier_loyer_at;
 
 
     FUNCTION loyer_augmentable(

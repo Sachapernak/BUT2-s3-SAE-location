@@ -2,6 +2,14 @@ CREATE OR REPLACE PACKAGE pkg_Bien_Locatif AS
   PROCEDURE supprimer_Bien_Locatif(
     p_identifiant_logement IN SAE_Bien_locatif.identifiant_logement%TYPE
   );
+  
+  PROCEDURE est_loue_entre(
+    p_identifiant_logement IN SAE_Bien_locatif.identifiant_logement%TYPE,
+    p_debut_periode IN DATE,
+    p_fin_periode IN DATE,
+    p_result OUT NUMBER
+  );
+
 END pkg_Bien_Locatif;
 /
 
@@ -41,6 +49,33 @@ CREATE OR REPLACE PACKAGE BODY pkg_Bien_Locatif AS
     WHERE identifiant_logement = p_identifiant_logement;
 
   END supprimer_Bien_Locatif;
+  
+  
+  PROCEDURE est_loue_entre(
+    p_identifiant_logement IN SAE_Bien_locatif.identifiant_logement%TYPE,
+    p_debut_periode IN DATE,
+    p_fin_periode IN DATE,
+    p_result OUT NUMBER
+  ) IS
+    v_bail_count NUMBER;
+  BEGIN
+    -- V�rifier s'il existe des baux li�s au bien locatif
+    SELECT COUNT(*)
+    INTO v_bail_count
+    FROM sae_bail
+    WHERE identifiant_logement = p_identifiant_logement
+    AND date_de_debut <= p_fin_periode 
+    AND (date_de_fin >= p_debut_periode OR date_de_fin is NULL);
+
+    IF v_bail_count = 0 THEN
+      p_result := 0;
+    ELSE
+      p_result := 1;
+    END IF;
+
+  END est_loue_entre;
+
+  
 END pkg_Bien_Locatif;
 
 
