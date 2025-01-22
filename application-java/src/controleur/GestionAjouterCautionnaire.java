@@ -149,8 +149,7 @@ public class GestionAjouterCautionnaire implements ActionListener {
 		Adresse adresseLoc;
 		Bail bailLoc;
 
-		// La part de loyer est de 1 pour un locataire sans cautionnaire
-		this.partLoyer = 1F;
+
 		
 		newLocataire = recupererInfosLocataire();
 		adresseLoc = newLocataire.getAdresse();
@@ -218,17 +217,23 @@ public class GestionAjouterCautionnaire implements ActionListener {
 		Adresse adresseLocataire = nouveauLocataire.getAdresse();
 		Bail bail = recupererBail();
 		
+		// La part de loyer est de 1 pour un locataire sans cautionnaire
+
+		
 		// Récupération du cautionnaire et de la relation cautionner
 		Cautionnaire cautionnaire = recupInfosCautionnaire();
 		Adresse adresseCautionnaire = cautionnaire.getAdresse();
 		Cautionner cautionner = recupererInfosCautionner(bail, cautionnaire);
 
+		
+		// Création en base du bail s’il est nouveau
+		creationBail(bail);
+		
 		// Création du contrat
 		Contracter ctr = new Contracter(nouveauLocataire, bail, dateDebut, this.partLoyer);
 		nouveauLocataire.getContrats().add(ctr);
 
-		// Création en base du bail s’il est nouveau
-		creationBail(bail);
+
 		
 		//Recupération et creation de la provision pour charge lors de l'ajout d'un nouveau bail
 
@@ -351,10 +356,10 @@ public class GestionAjouterCautionnaire implements ActionListener {
 				dateDebut = this.fenAjouterBail.getTextDateDebut();
 
 				JTable tableParts = this.fenAjouterBail.getTablePartsLoyer();
-				this.setPartLoyer((float) tableParts.getValueAt(
+				this.setPartLoyer(Float.parseFloat( String.valueOf(tableParts.getValueAt(
 						tableParts.getRowCount() - 2, 
 						1
-				));
+				))));
 
 				try {
 					bail = daoBail.findById(bailSelectionne);
@@ -372,6 +377,8 @@ public class GestionAjouterCautionnaire implements ActionListener {
 	 * Sinon, met à jour les parts de loyer des locataires déjà existants.
 	 */
 	public void creationBail(Bail bail) {
+		
+		this.partLoyer = 1F;
 		
 		if (this.fenAjouterBail.getRdbtnNouveauBail().isSelected()) {
 			ProvisionCharge provisionCharge = recupererMontantProvisionPourCharges(bail.getIdBail());
@@ -594,8 +601,8 @@ public class GestionAjouterCautionnaire implements ActionListener {
 				for (Contracter contrat : contrats) {
 					if (contrat.getBail().getIdBail().equals(bail.getIdBail())) {
 						contrat.modifierPartLoyer(
-								(float) tablePartsLoyer.getValueAt(i, 1)
-						);
+								Float.parseFloat(String.valueOf(tablePartsLoyer.getValueAt(i, 1)
+						)));
 						daoLocataire.update(loc);
 					}
 				}

@@ -163,7 +163,7 @@ public class AjouterBail extends JInternalFrame {
         	}
         ) {
         	public boolean isCellEditable(int row, int column) {
-        		return false;
+        		return column == 1 ? true : false;
         	}
         });
         tablePartsLoyer.getColumnModel().getColumn(0).setPreferredWidth(150);

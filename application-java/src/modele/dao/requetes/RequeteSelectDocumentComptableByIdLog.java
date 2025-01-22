@@ -9,7 +9,7 @@ public class RequeteSelectDocumentComptableByIdLog extends Requete<DocumentCompt
 
 	@Override
 	public String requete() {
-		return "select d.* from sae_document_comptable d, sae_facture_du_bien f "
+		return "select distinct d.* from sae_document_comptable d, sae_facture_du_bien f "
 				+ "where d.numero_document = f.numero_document "
 				+ "and identifiant_logement = ? "
 				+ "and Type_de_document!= 'loyer'";

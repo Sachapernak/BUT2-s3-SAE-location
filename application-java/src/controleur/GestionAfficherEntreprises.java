@@ -155,7 +155,7 @@ public class GestionAfficherEntreprises implements ActionListener{
     	List<Entreprise> entreprises = recupererEntreprises(valeurComboBox);
     	
         DefaultTableModel tableModel = new DefaultTableModel();
-        tableModel.setColumnIdentifiers(new String[] { "Siret", "Nom", "Adresse" });
+        tableModel.setColumnIdentifiers(new String[] { "Siret", "Nom", "Secteur" });
 
         for (Entreprise entreprise : entreprises) {
             tableModel.addRow(new Object[] {

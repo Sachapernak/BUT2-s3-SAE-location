@@ -61,6 +61,9 @@ public class GestionSelectionBailQuittance {
 	            DaoDocumentComptable daoDoc = new DaoDocumentComptable();
 
 	            // Récupération des informations nécessaires pour générer la quittance
+	            
+	            
+	            
 	            Bail bai = daoBail.findById(fen.getSelectedIdBail());
 	            BienLocatif bien = bai.getBien();
 	            Adresse adresse = bien.getBat().getAdresse();
