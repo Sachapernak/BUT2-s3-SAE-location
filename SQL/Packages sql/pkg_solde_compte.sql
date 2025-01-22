@@ -6,7 +6,7 @@ select * from sae_cf_par_loc;
 
 -- Recuperer les charges fixes des locataires
 CREATE OR REPLACE VIEW SAE_CF_PAR_LOC AS
-SELECT
+SELECT DISTINCT
     doc.date_document as dateDoc, 
     l.identifiant_locataire as idLoc, 
     b.identifiant_logement  as idLog,
@@ -34,7 +34,7 @@ order by doc.date_document DESC;
 
 -- Recup charge variables
 CREATE OR REPLACE VIEW SAE_CV_PAR_LOC AS
-SELECT
+SELECT DISTINCT
     doc.date_document as dateDoc, 
     l.identifiant_locataire as idLoc, 
     b.identifiant_logement  as idLog,
@@ -60,7 +60,7 @@ FROM       sae_charge_index cv
 -- Jointure pour retrouver l’index précédent
 LEFT JOIN sae_charge_index cvpreced
        ON  cvpreced.id_charge_index = cv.id_charge_index_preced
-       AND cvpreced.date_de_releve < cv.date_de_releve
+       AND cvpreced.date_de_releve = cv.date_releve_precedent
 
 -- Jointure pour accéder à la facture/document
 JOIN       sae_document_comptable doc

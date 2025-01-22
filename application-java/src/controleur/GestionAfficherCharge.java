@@ -232,10 +232,6 @@ public class GestionAfficherCharge {
         sorter.setRowFilter(filters.isEmpty() ? null : RowFilter.andFilter(filters));
     }
 
-    // -------------------------------------------------------------------------
-    //  NOUVELLES FONCTIONNALITÉS
-    // -------------------------------------------------------------------------
-
     /**
      * Ouvre la boîte de dialogue pour ajouter une nouvelle charge.
      */

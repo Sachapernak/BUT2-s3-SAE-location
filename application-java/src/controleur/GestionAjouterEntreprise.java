@@ -117,7 +117,7 @@ public class GestionAjouterEntreprise implements ActionListener{
      * @throws IOException en cas d'erreur d'entrée/sortie.
      */
     private Entreprise creerEntreprise() throws SQLException, IOException {
-        String siret = this.fenAjoutEntreprise.getStringTextFieldSiret();
+        String siret = this.fenAjoutEntreprise.getStringTextFieldSiret().replaceAll("\\s","");
         Adresse adresse = creerAdresse();
         if (daoEntreprise.findById(siret) != null) {
             this.fenAjoutEntreprise.afficherMessage("L'entreprise existe déjà.", ERREUR, JOptionPane.ERROR_MESSAGE);

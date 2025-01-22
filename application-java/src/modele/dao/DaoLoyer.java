@@ -90,6 +90,21 @@ public class DaoLoyer extends DaoModele<Loyer> {
             return prCl.getBigDecimal(2);
         }
     }
+    
+    public BigDecimal getDernierLoyer(String idLog, String date) throws SQLException, IOException {
+        Connection cn = ConnexionBD.getInstance().getConnexion();
+        String call = "{call pkg_icc.dernier_loyer_at(?, to_date(?, 'YYYY-MM-DD'),?)}";
+        
+        try (CallableStatement prCl = cn.prepareCall(call)) {
+            prCl.setString(1, idLog);
+            prCl.setString(2, date);
+            prCl.registerOutParameter(3, java.sql.Types.DECIMAL);
+            
+            prCl.execute();
+            
+            return prCl.getBigDecimal(3);
+        }
+    }
 
 
     @Override
