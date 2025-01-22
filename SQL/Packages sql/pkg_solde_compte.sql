@@ -6,7 +6,7 @@ select * from sae_cf_par_loc;
 
 -- Recuperer les charges fixes des locataires
 CREATE OR REPLACE VIEW SAE_CF_PAR_LOC AS
-SELECT
+SELECT DISTINCT
     doc.date_document as dateDoc, 
     l.identifiant_locataire as idLoc, 
     b.identifiant_logement  as idLog,
@@ -34,7 +34,7 @@ order by doc.date_document DESC;
 
 -- Recup charge variables
 CREATE OR REPLACE VIEW SAE_CV_PAR_LOC AS
-SELECT
+SELECT DISTINCT
     doc.date_document as dateDoc, 
     l.identifiant_locataire as idLoc, 
     b.identifiant_logement  as idLog,
