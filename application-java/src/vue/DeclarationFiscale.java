@@ -127,7 +127,7 @@ public class DeclarationFiscale extends JInternalFrame {
         // Configuration du contrôleur : actions initiales
         gestionDecla.gestionActionComboBoxAnnee(this.comboBoxAnnee);
         gestionDecla.remplirComboBoxAnnee();
-        gestionDecla.remplirTableBatiments();
+
     }
     
     // -------------------------------------------------------------------------

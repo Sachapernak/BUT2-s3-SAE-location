@@ -109,6 +109,7 @@ public class GestionDeclarationFiscale implements  ActionListener {
 	                fenDeclarationFiscale.afficherMessageErreur(e.getMessage());
 	            } finally {
 	                fenDeclarationFiscale.setDefaultCursor();
+	                remplirTableBatiments();
 	            }
 	        }
 	    }.execute();
