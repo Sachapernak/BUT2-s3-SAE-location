@@ -160,7 +160,11 @@ public class FenetrePrincipale extends JFrame{
 		declarationFiscale.setForeground(new Color(255, 255, 255));
 		declarationFiscale.setHorizontalAlignment(SwingConstants.CENTER);
 		menuBar.add(declarationFiscale);
-		declarationFiscale.addActionListener(this.gestionMenu);
+		
+		JMenuItem mntmDeclarationFiscale = new JMenuItem("Afficher la déclaration fiscale");
+		declarationFiscale.add(mntmDeclarationFiscale);
+		mntmDeclarationFiscale.addActionListener(this.gestionMenu);
+
 		
 		JMenu mnAdministratif = new JMenu("Administratif");
 		mnAdministratif.setForeground(new Color(255, 255, 255));

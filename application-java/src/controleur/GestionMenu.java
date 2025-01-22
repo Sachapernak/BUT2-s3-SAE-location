@@ -18,6 +18,7 @@ import vue.AfficherEntreprises;
 import vue.AfficherLocatairesActuels;
 import vue.AfficherLoyers;
 import vue.ChargerLoyers;
+import vue.DeclarationFiscale;
 import vue.FenetrePrincipale;
 import vue.PageConnexion;
 import vue.RevalorisationLoyer;
@@ -76,13 +77,11 @@ public class GestionMenu implements ActionListener{
 				AfficherCharges ad = new AfficherCharges();
 				ad.setVisible(true);
 				break;
-
 			case "Consulter les loyers" : 
 				AfficherLoyers afloyers = new AfficherLoyers();
 				fenLayerPane.add(afloyers, JLayeredPane.PALETTE_LAYER);
 				afloyers.setVisible(true);
-				break;
-				
+				break;	
 			case "Charger les loyers" : 
 				ChargerLoyers chLoyer = new ChargerLoyers();
 				chLoyer.setVisible(true);
@@ -97,7 +96,12 @@ public class GestionMenu implements ActionListener{
 				fenLayerPane.add(sdTc, JLayeredPane.PALETTE_LAYER);
 				sdTc.setVisible(true);
 				break;
-			
+			case "Afficher la déclaration fiscale" : 
+				DeclarationFiscale df = new DeclarationFiscale();
+				JLayeredPane layeredPaneDecla = this.fenPrincipale.getLayeredPane();
+				layeredPaneDecla.add(df, JLayeredPane.PALETTE_LAYER);
+				df.setVisible(true);
+				break;
 			case "Consulter ICC" : 
 				SetICC stIcc= new SetICC();
 				fenLayerPane.add(stIcc, JLayeredPane.PALETTE_LAYER);
